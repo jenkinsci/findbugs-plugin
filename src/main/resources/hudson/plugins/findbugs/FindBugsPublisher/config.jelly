@@ -1,0 +1,19 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+  <f:entry title="Findbugs results"
+           description="
+             &lt;a href='http://ant.apache.org/manual/CoreTypes/fileset.html'>Fileset 'includes'&lt;/a>
+             setting that specifies the generated raw FindBugs XML report files,
+             such as '**/target/findbugs.xml'.
+             Basedir of the fileset is &lt;a href='ws/'>the workspace root&lt;/a>.
+
+             If no value is set, then the default '**/target/findbugs.xml' is used.
+           ">
+    <f:textbox name="findbugs_pattern" value="${instance.pattern}"/>
+  </f:entry>
+  <f:entry title="Unstable threshold"
+           description="If the number of potential bugs exceeds this threshold then a build is
+           considered as unstable. Leave this field empty if the unstable state of the build
+           should not be touched by this plugin.">
+    <f:textbox name="findbugs_threshold" value="${instance.threshold}"/>
+  </f:entry>
+</j:jelly>
