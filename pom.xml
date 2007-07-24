@@ -10,7 +10,7 @@
   <artifactId>findbugs</artifactId>
   <packaging>hpi</packaging>
   <name>Hudson FindBugs Plug-in</name>
-  <version>1.0</version>
+  <version>1.0-SNAPSHOT</version>
 
   <dependencies>
     <dependency>
