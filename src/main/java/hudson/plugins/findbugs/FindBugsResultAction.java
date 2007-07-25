@@ -44,6 +44,7 @@ public class FindBugsResultAction implements StaplerProxy, HealthReportingAction
     private final int unHealthy;
     /** Determines whether to use the provided healthy thresholds. */
     private final boolean isHealthyReportEnabled;
+    /** Warning threshold. */
     private final int minimumBugs;
 
     /**
@@ -107,7 +108,7 @@ public class FindBugsResultAction implements StaplerProxy, HealthReportingAction
             else {
                 percentage = 100 - ((numberOfWarnings - healthy) * 100 / (unHealthy - healthy));
             }
-            return new HealthReport(percentage, numberOfWarnings + " FindBugs warning found.");
+            return new HealthReport(percentage, "FindBugs: " + numberOfWarnings + " warnings found.");
         }
         else {
             return null;

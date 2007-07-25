@@ -33,7 +33,7 @@
 			<tbody>
 				<tr>
 					<th>
-						<img src="/images/16x16/health-80plus.gif"
+						<img src="${rootURL}/images/16x16/health-80plus.gif"
 							alt="100%"
 							title="Report health as 100% when the number of warnings is less than this value" />
 					</th>
@@ -44,7 +44,7 @@
 				</tr>
 				<tr>
 					<th>
-						<img src="/images/16x16/health-00to19.gif"
+						<img src="${rootURL}/images/16x16/health-00to19.gif"
 							alt="0%"
 							title="Report health as 0% when the number of warnings is greater than this value" />
 					</th>
