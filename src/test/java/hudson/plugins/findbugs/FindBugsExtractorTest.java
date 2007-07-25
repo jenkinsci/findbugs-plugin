@@ -25,7 +25,7 @@ public class FindBugsExtractorTest {
      *             if the files could not be read
      */
     @Test
-    public void testSomeBugs() throws Exception {
+    public void scanFileWithSomeBugs() throws Exception {
         InputStream file = FindBugsExtractorTest.class.getClassLoader().getResourceAsStream("findbugs.xml");
         assertEquals(ERROR_MESSAGE, NUMBER_OF_BUGS, new FindBugsCounter().count(readLines(file)));
     }
@@ -37,7 +37,7 @@ public class FindBugsExtractorTest {
      *             if the files could not be read
      */
     @Test
-    public void testNoBugs() throws Exception {
+    public void scanFileWithNoBugs() throws Exception {
         InputStream file = FindBugsExtractorTest.class.getClassLoader().getResourceAsStream("findbugs-no-errors.xml");
         assertEquals(ERROR_MESSAGE, 0, new FindBugsCounter().count(readLines(file)));
     }

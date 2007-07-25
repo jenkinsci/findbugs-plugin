@@ -1,6 +1,8 @@
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
-  <f:entry title="Findbugs results"
-           description="
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler"
+	xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson"
+	xmlns:f="/lib/form">
+	<f:entry title="Findbugs results"
+		description="
              &lt;a href='http://ant.apache.org/manual/CoreTypes/fileset.html'>Fileset 'includes'&lt;/a>
              setting that specifies the generated raw FindBugs XML report files,
              such as '**/target/findbugs.xml'.
@@ -8,12 +10,51 @@
 
              If no value is set, then the default '**/target/findbugs.xml' is used.
            ">
-    <f:textbox name="findbugs_pattern" value="${instance.pattern}"/>
-  </f:entry>
-  <f:entry title="Unstable threshold"
-           description="If the number of potential bugs exceeds this threshold then a build is
+		<f:textbox name="findbugs_pattern" value="${instance.pattern}" />
+	</f:entry>
+	<f:entry title="Unstable threshold"
+		description="If the number of potential bugs exceeds this threshold then a build is
            considered as unstable. Leave this field empty if the unstable state of the build
            should not be touched by this plugin.">
-    <f:textbox name="findbugs_threshold" value="${instance.threshold}"/>
-  </f:entry>
+		<f:textbox name="findbugs_threshold"
+			value="${instance.threshold}" />
+	</f:entry>
+	<f:entry title="Health reporting"
+		description="
+             Configure health reporting thresholds. If the actual number of warnings is between
+             the provided thresholds, then the healthiness is interpolated.">
+		<table>
+			<thead>
+				<tr>
+					<td width="20%"></td>
+					<td width="80%">Number of Warnings</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<th>
+						<img src="/images/16x16/health-80plus.gif"
+							alt="100%"
+							title="Report health as 100% when the number of warnings is less than this value" />
+					</th>
+					<td>
+						<f:textbox name="findbugs_healthy"
+							value="${instance.healthy}" />
+					</td>
+				</tr>
+				<tr>
+					<th>
+						<img src="/images/16x16/health-00to19.gif"
+							alt="0%"
+							title="Report health as 0% when the number of warnings is greater than this value" />
+					</th>
+					<td>
+						<f:textbox name="findbugs_unHealthy"
+							value="${instance.unHealthy}" />
+					</td>
+				</tr>
+			</tbody>
+
+		</table>
+	</f:entry>
 </j:jelly>

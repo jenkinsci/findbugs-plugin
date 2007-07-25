@@ -1,28 +1,24 @@
 package hudson.plugins.findbugs;
 
-import hudson.FilePath;
-import hudson.Launcher;
-import hudson.model.Build;
-import hudson.model.BuildListener;
-import hudson.model.Descriptor;
-import hudson.model.Result;
-import hudson.tasks.Publisher;
+import hudson.*;
+import hudson.model.*;
+import hudson.tasks.*;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.io.*;
+import org.apache.commons.lang.*;
 
 /**
  * Publishes the results of the FindBugs analysis.
  * <p>
- * TODO: Add checking of ant path like in the JUNIT plugin
+ * TODO: Add checking of ant path like in the JUNIT plug-in
  *
  * @author Ulli Hafner
  */
 public class FindBugsPublisher extends Publisher {
+    /** Default findbugs pattern. */
+    private static final String DEFAULT_PATTERN = "**/findbugs.xml";
     /** Descriptor of this publisher. */
     public static final FindBugsDescriptor FIND_BUGS_DESCRIPTOR = new FindBugsDescriptor();
     /** Ant file-set pattern to scan for FindBugs files. */
@@ -33,6 +29,16 @@ public class FindBugsPublisher extends Publisher {
     private boolean isThresholdEnabled;
     /** Integer bug threshold to be reached if a build should be considered as unstable. */
     private int minimumBugs;
+    /** Report health as 100% when the number of warnings is less than this value. */
+    private final String healthy;
+    /** Report health as 0% when the number of warnings is greater than this value. */
+    private final String unHealthy;
+    /** Report health as 100% when the number of warnings is less than this value. */
+    private int healthyBugs;
+    /** Report health as 0% when the number of warnings is greater than this value. */
+    private int unHealthyBugs;
+    /** Determines whether to use the provided healthy thresholds. */
+    private boolean isHealthyReportEnabled;
 
     /**
      * Creates a new instance of <code>FindBugsPublisher</code>.
@@ -42,12 +48,22 @@ public class FindBugsPublisher extends Publisher {
      * @param threshold
      *            Bug threshold to be reached if a build should be considered as
      *            unstable.
+     * @param healthy
+     *            Report health as 100% when the number of warnings is less than
+     *            this value
+     * @param unHealthy
+     *            Report health as 0% when the number of warnings is greater
+     *            than this value
      * @stapler-constructor
      */
-    public FindBugsPublisher(final String pattern, final String threshold) {
+    // FIXME: how do we report validation errors?
+    public FindBugsPublisher(final String pattern, final String threshold,
+            final String healthy, final String unHealthy) {
         super();
         this.threshold = threshold;
-        this.pattern = StringUtils.defaultIfEmpty(pattern, "**/target/findbugs.xml");
+        this.healthy = healthy;
+        this.unHealthy = unHealthy;
+        this.pattern = pattern;
 
         if (!StringUtils.isEmpty(threshold)) {
             try {
@@ -58,6 +74,24 @@ public class FindBugsPublisher extends Publisher {
                 // nothing to do, we use the default value
             }
         }
+        if (!StringUtils.isEmpty(healthy) && !StringUtils.isEmpty(unHealthy)) {
+            try {
+                healthyBugs = Integer.valueOf(healthy);
+                unHealthyBugs = Integer.valueOf(unHealthy);
+                if (healthyBugs >= 0 && unHealthyBugs > healthyBugs) {
+                    isHealthyReportEnabled = true;
+                }
+            }
+            catch (NumberFormatException exception) {
+                // nothing to do, we use the default value
+            }
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Action getProjectAction(final Project project) {
+        return new FindBugsProjectAction(project);
     }
 
     /**
@@ -67,6 +101,24 @@ public class FindBugsPublisher extends Publisher {
      */
     public String getThreshold() {
         return threshold;
+    }
+
+    /**
+     * Returns the healthy threshold.
+     *
+     * @return the healthy
+     */
+    public String getHealthy() {
+        return healthy;
+    }
+
+    /**
+     * Returns the unhealthy threshold.
+     *
+     * @return the unHealthy
+     */
+    public String getUnHealthy() {
+        return unHealthy;
     }
 
     /**
@@ -112,20 +164,20 @@ public class FindBugsPublisher extends Publisher {
 
     /**
      * Persists the state of this FindBugs analysis by creating a
-     * {@link FindBugsResult} and attaching it to a {@link FindBugsBuildAction}.
+     * {@link FindBugsResult} and attaching it to a {@link FindBugsResultAction}.
      *
      * @param build the current build
      * @param warnings the number of found warnings
      */
     private void persistBuildReport(final Build<?, ?> build, final int warnings) {
-        FindBugsBuildAction action = new FindBugsBuildAction(build);
+        int previousNumberOfWarnings = warnings;
+
+        FindBugsResultAction action = new FindBugsResultAction(build, minimumBugs, isHealthyReportEnabled, healthyBugs, unHealthyBugs);
         if (action.hasPreviousResult()) {
-            FindBugsResult result = action.getPreviousResult().getResult();
-            action.setResult(new FindBugsResult(warnings, result.getNumberOfWarnings()));
+            FindBugsResult previousResult = action.getPreviousResult().getResult();
+            previousNumberOfWarnings = previousResult.getNumberOfWarnings();
         }
-        else {
-            action.setResult(new FindBugsResult(warnings));
-        }
+        action.setResult(new FindBugsResult(warnings, previousNumberOfWarnings));
         build.getActions().add(action);
     }
 
@@ -184,7 +236,8 @@ public class FindBugsPublisher extends Publisher {
             final FilePath buildFolder) throws IOException, InterruptedException {
         try {
             build.getProject().getWorkspace().act(
-                    new FindBugsCollector(listener, buildFolder, build.getTimestamp().getTimeInMillis(), pattern));
+                    new FindBugsCollector(listener, buildFolder, build.getTimestamp().getTimeInMillis(),
+                            StringUtils.defaultIfEmpty(pattern, DEFAULT_PATTERN)));
             return true;
         }
         catch (AbortException exception) {
