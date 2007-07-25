@@ -5,10 +5,9 @@
 		description="
              &lt;a href='http://ant.apache.org/manual/CoreTypes/fileset.html'>Fileset 'includes'&lt;/a>
              setting that specifies the generated raw FindBugs XML report files,
-             such as '**/target/findbugs.xml'.
+             such as '**/findbugs.xml'.
              Basedir of the fileset is &lt;a href='ws/'>the workspace root&lt;/a>.
-
-             If no value is set, then the default '**/target/findbugs.xml' is used.
+             If no value is set, then the default '**/findbugs.xml' is used.
            ">
 		<f:textbox name="findbugs_pattern" value="${instance.pattern}" />
 	</f:entry>
