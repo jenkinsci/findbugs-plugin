@@ -1,15 +1,14 @@
 package hudson.plugins.findbugs;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import hudson.model.*;
+import static org.junit.Assert.*;
+import hudson.model.HealthReport;
 
-import org.junit.*;
-
+import org.junit.Test;
 
 /**
  *  Tests the healthiness report of class {@link FindBugsResultAction}.
  */
+// CHECKSTYLE:OFF
 public class FindBugsResultActionTest {
     /** Error message. */
     private static final String ERROR_MESSAGE = "Wrong healthiness calculation.";
@@ -72,8 +71,7 @@ public class FindBugsResultActionTest {
     private HealthReport createFixture(final boolean isEnabled, final int min, final int max, final int actual) {
         FindBugsResultAction action = new FindBugsResultAction(null, 0, isEnabled, min, max);
         action.setResult(new FindBugsResult(actual, actual));
-        HealthReport health = action.getBuildHealth();
-        return health;
+        return action.getBuildHealth();
     }
 }
 

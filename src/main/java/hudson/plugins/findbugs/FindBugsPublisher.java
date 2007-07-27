@@ -1,18 +1,24 @@
 package hudson.plugins.findbugs;
 
-import hudson.*;
-import hudson.model.*;
-import hudson.tasks.*;
+import hudson.FilePath;
+import hudson.Launcher;
+import hudson.model.Action;
+import hudson.model.Build;
+import hudson.model.BuildListener;
+import hudson.model.Descriptor;
+import hudson.model.Project;
+import hudson.model.Result;
+import hudson.tasks.Publisher;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 
-import org.apache.commons.io.*;
-import org.apache.commons.lang.*;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * Publishes the results of the FindBugs analysis.
- * <p>
- * TODO: Add checking of ant path like in the JUNIT plug-in
  *
  * @author Ulli Hafner
  */
@@ -68,7 +74,9 @@ public class FindBugsPublisher extends Publisher {
         if (!StringUtils.isEmpty(threshold)) {
             try {
                 minimumBugs = Integer.valueOf(threshold);
-                isThresholdEnabled = true;
+                if (minimumBugs >= 0) {
+                    isThresholdEnabled = true;
+                }
             }
             catch (NumberFormatException exception) {
                 // nothing to do, we use the default value

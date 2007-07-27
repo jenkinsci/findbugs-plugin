@@ -9,14 +9,15 @@
              Basedir of the fileset is &lt;a href='ws/'>the workspace root&lt;/a>.
              If no value is set, then the default '**/findbugs.xml' is used.
            ">
-		<f:textbox name="findbugs_pattern" value="${instance.pattern}" />
+		<f:textbox name="findbugs_pattern" value="${instance.pattern}"
+			checkUrl="'${rootURL}/publisher/FindBugsPublisher/checkPattern?job=${it.fullName}&amp;value='+escape(this.value)"/>
 	</f:entry>
 	<f:entry title="Unstable threshold"
 		description="If the number of potential bugs exceeds this threshold then a build is
            considered as unstable. Leave this field empty if the unstable state of the build
            should not be touched by this plugin.">
-		<f:textbox name="findbugs_threshold"
-			value="${instance.threshold}" />
+		<f:textbox name="findbugs_threshold" value="${instance.threshold}"
+		    checkUrl="'${rootURL}/publisher/FindBugsPublisher/checkThreshold?job=${it.fullName}&amp;value='+escape(this.value)"/>
 	</f:entry>
 	<f:entry title="Health reporting"
 		description="
@@ -37,8 +38,7 @@
 							title="Report health as 100% when the number of warnings is less than this value" />
 					</th>
 					<td>
-						<f:textbox name="findbugs_healthy"
-							value="${instance.healthy}" />
+						<f:textbox name="findbugs_healthy" value="${instance.healthy}"/>
 					</td>
 				</tr>
 				<tr>
@@ -48,8 +48,7 @@
 							title="Report health as 0% when the number of warnings is greater than this value" />
 					</th>
 					<td>
-						<f:textbox name="findbugs_unHealthy"
-							value="${instance.unHealthy}" />
+						<f:textbox name="findbugs_unHealthy" value="${instance.unHealthy}"/>
 					</td>
 				</tr>
 			</tbody>

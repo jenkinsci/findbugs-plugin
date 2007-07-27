@@ -14,6 +14,8 @@ import org.kohsuke.stapler.StaplerResponse;
 /**
  * Entry point to visualize the FindBugs trend graph. Drawing of the graph is
  * delegated to the associated {@link FindBugsResultAction}.
+ *
+ * @author Ulli Hafner
  */
 public class FindBugsProjectAction implements Action {
     /** Unique identifier of this class. */
@@ -24,7 +26,8 @@ public class FindBugsProjectAction implements Action {
     /**
      * Instantiates a new find bugs project action.
      *
-     * @param project the project that owns this action
+     * @param project
+     *            the project that owns this action
      */
     public FindBugsProjectAction(final Project<?, ?> project) {
         this.project = project;
@@ -66,7 +69,8 @@ public class FindBugsProjectAction implements Action {
      *             in case of an error in
      *             {@link FindBugsResultAction#doGraph(StaplerRequest, StaplerResponse)}
      */
-    public void doGraph(final StaplerRequest request, final StaplerResponse response) throws IOException {
+    public void doGraph(final StaplerRequest request, final StaplerResponse response)
+            throws IOException {
         AbstractBuild<?, ?> lastBuild = project.getLastSuccessfulBuild();
         if (lastBuild != null) {
             FindBugsResultAction action = lastBuild.getAction(FindBugsResultAction.class);

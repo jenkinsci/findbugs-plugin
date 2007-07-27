@@ -1,5 +1,5 @@
 package hudson.plugins.findbugs;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,24 +20,18 @@ public class FindBugsExtractorTest {
 
     /**
      * Checks whether we correctly detect all 8 bugs.
-     *
-     * @throws Exception
-     *             if the files could not be read
      */
     @Test
-    public void scanFileWithSomeBugs() throws Exception {
+    public void scanFileWithSomeBugs() throws IOException {
         InputStream file = FindBugsExtractorTest.class.getClassLoader().getResourceAsStream("findbugs.xml");
         assertEquals(ERROR_MESSAGE, NUMBER_OF_BUGS, new FindBugsCounter().count(readLines(file)));
     }
 
     /**
      * Checks whether we correctly detect that the file contains no bugs.
-     *
-     * @throws Exception
-     *             if the files could not be read
      */
     @Test
-    public void scanFileWithNoBugs() throws Exception {
+    public void scanFileWithNoBugs() throws IOException {
         InputStream file = FindBugsExtractorTest.class.getClassLoader().getResourceAsStream("findbugs-no-errors.xml");
         assertEquals(ERROR_MESSAGE, 0, new FindBugsCounter().count(readLines(file)));
     }

@@ -1,22 +1,33 @@
 package hudson.plugins.findbugs;
 
-import hudson.model.*;
-import hudson.util.*;
+import hudson.model.AbstractBuild;
+import hudson.model.Build;
+import hudson.model.HealthReport;
+import hudson.model.HealthReportingAction;
+import hudson.util.ChartUtil;
 import hudson.util.ColorPalette;
-import hudson.util.ChartUtil.*;
+import hudson.util.DataSetBuilder;
+import hudson.util.ShiftedCategoryAxis;
+import hudson.util.StackedAreaRenderer2;
+import hudson.util.ChartUtil.NumberOnlyBuildLabel;
 
-import java.awt.*;
-import java.io.*;
-import java.util.*;
+import java.awt.Color;
+import java.io.IOException;
+import java.util.NoSuchElementException;
 
-import org.apache.commons.lang.*;
-import org.jfree.chart.*;
-import org.jfree.chart.axis.*;
-import org.jfree.chart.plot.*;
-import org.jfree.chart.renderer.category.*;
-import org.jfree.data.category.*;
-import org.jfree.ui.*;
-import org.kohsuke.stapler.*;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.CategoryAxis;
+import org.jfree.chart.axis.CategoryLabelPositions;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.renderer.category.StackedAreaRenderer;
+import org.jfree.data.category.CategoryDataset;
+import org.jfree.ui.RectangleInsets;
+import org.kohsuke.stapler.StaplerProxy;
+import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.StaplerResponse;
 
 /**
  * Controls the live cycle of the FindBugs results. This action persists the
@@ -26,6 +37,8 @@ import org.kohsuke.stapler.*;
  * <p>
  * Moreover, this class renders the FindBugs result trend.
  * </p>
+ *
+ * @author Ulli Hafner
  */
 public class FindBugsResultAction implements StaplerProxy, HealthReportingAction {
     /** Height of the graph. */
@@ -246,10 +259,8 @@ public class FindBugsResultAction implements StaplerProxy, HealthReportingAction
      * @return the chart
      */
     private JFreeChart createChart(final StaplerRequest request) {
-        final CategoryDataset dataset = buildDataSet(request);
-        final String relativePath = StringUtils.defaultIfEmpty(request.getParameter("rel"), "");
-
-        final JFreeChart chart = ChartFactory.createStackedAreaChart(
+        CategoryDataset dataset = buildDataSet(request);
+        JFreeChart chart = ChartFactory.createStackedAreaChart(
             null,                     // chart title
             null,                     // unused
             "count",                  // range axis label
@@ -282,10 +293,10 @@ public class FindBugsResultAction implements StaplerProxy, HealthReportingAction
         final NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
         rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
 
-        StackedAreaRenderer ar = new StackedAreaRenderer2();
-        plot.setRenderer(ar);
-        ar.setSeriesPaint(1, ColorPalette.RED);
-        ar.setSeriesPaint(0, ColorPalette.BLUE);
+        StackedAreaRenderer renderer = new StackedAreaRenderer2();
+        plot.setRenderer(renderer);
+        renderer.setSeriesPaint(1, ColorPalette.RED);
+        renderer.setSeriesPaint(0, ColorPalette.BLUE);
 
         // crop extra space around the graph
         plot.setInsets(new RectangleInsets(0, 0, 0, 5.0));

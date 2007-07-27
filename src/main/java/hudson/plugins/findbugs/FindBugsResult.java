@@ -7,6 +7,8 @@ import java.io.Serializable;
 /**
  * Represents the results of the FindBugs analysis. One instance of this class is persisted for
  * each build via an XML file.
+ *
+ * @author Ulli Hafner
  */
 public class FindBugsResult implements ModelObject, Serializable {
     /** Unique identifier of this class. */

@@ -5,9 +5,9 @@ import org.apache.commons.io.LineIterator;
 /**
  * Counts the number of bugs in a FindBugs analysis file.
  *
- * <p>
- * TODO: extract all FindBugs information instead of just counting
+ * @author Ulli Hafner
  */
+// TODO: extract all FindBugs information instead of just counting
 public class FindBugsCounter {
     /**
      * Returns the number of bugs in the FindBugs analysis file.
