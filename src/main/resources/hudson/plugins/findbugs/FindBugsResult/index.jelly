@@ -6,56 +6,57 @@
 		<l:main-panel>
 			<h1>${it.title}</h1>
 
- 			<j:set var="prev" value="${it.previousResult}" />
+			<j:set var="prev" value="${it.previousResult}" />
 
 			<j:if test="${it.numberOfWarnings != 0}">
 				<h2>FindBugs Warnings</h2>
-				<table class="pane sortable" id="warnings">
-					<tr>
-						<td class="pane-header">Package</td>
-						<td class="pane-header" style="width:5em">
-							High
-						</td>
-						<td class="pane-header" style="width:5em">
-							Normal
-						</td>
-						<td class="pane-header" style="width:5em">
-							Low
-						</td>
-						<td class="pane-header" style="width:5em">
-							(Delta)
-						</td>
-					</tr>
- 					<tbody>
-						<j:forEach var="p" items="${it.packages}">
-							<j:set var="prev"
-								value="${p.previousResult}" />
+				<j:forEach var="module" items="${it.project.modules}">
+
+					<j:if test="${module.numberOfWarnings != 0}">
+						<h3>Module ${module.name}</h3>
+						<table class="pane sortable" id="warnings">
 							<tr>
-								<td class="pane">
-									<a href="${p.name}/">${p.name}</a>
+								<td class="pane-header">Package</td>
+								<td class="pane-header" style="width:5em">
+									High
 								</td>
-								<td class="pane"
-									style="text-align:right">
-									${p.failCount}
+								<td class="pane-header" style="width:5em">
+									Normal
 								</td>
-								<td class="pane"
-									style="text-align:right">
-									${h.getDiffString2(p.failCount-prev.failCount)}
+								<td class="pane-header" style="width:5em">
+									Low
 								</td>
-								<td class="pane"
-									style="text-align:right">
-									${p.totalCount}
-								</td>
-								<td class="pane"
-									style="text-align:right">
-									${h.getDiffString2(p.totalCount-prev.totalCount)}
+								<td class="pane-header" style="width:5em">
+									(Delta)
 								</td>
 							</tr>
-						</j:forEach>
-					</tbody>
-				</table>
+							<tbody>
+								<j:forEach var="p"
+									items="${module.packages}">
+									<j:set var="prev" value="${p.previousResult}" />
+									<tr>
+										<td class="pane">
+											${p.name}
+										</td>
+										<td class="pane" style="text-align:right">
+											${p.numberOfHighWarnings}
+										</td>
+										<td class="pane" style="text-align:right">
+											${p.numberOfNormalWarnings}
+										</td>
+										<td class="pane" style="text-align:right">
+											${p.numberOfLowWarnings}
+										</td>
+										<td class="pane" style="text-align:right">
+											${h.getDiffString2(p.numberOfWarnings)}
+										</td>
+									</tr>
+								</j:forEach>
+							</tbody>
+						</table>
+					</j:if>
+				</j:forEach>
 			</j:if>
-
 		</l:main-panel>
 	</l:layout>
 </j:jelly>

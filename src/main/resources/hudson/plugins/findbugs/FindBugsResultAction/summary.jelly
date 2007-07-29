@@ -2,7 +2,7 @@
 	xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson"
 	xmlns:f="/lib/form" xmlns:i="jelly:fmt">
 	<t:summary icon="graph.gif">
-		Findbugs: a total of ${it.result.numberOfWarnings} warnings have
+		Findbugs: a total of <a href="findbugsResult">${it.result.numberOfWarnings} warnings</a> have
 		been found
 		<j:choose>
 			<j:when test="${it.result.delta > 0}">

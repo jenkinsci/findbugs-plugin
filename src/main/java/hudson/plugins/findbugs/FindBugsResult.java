@@ -84,6 +84,11 @@ public class FindBugsResult implements ModelObject, Serializable {
         return delta;
     }
 
+    /**
+     * Returns the associated project of this result.
+     *
+     * @return the associated project of this result.
+     */
     public JavaProject getProject() {
         return project;
     }

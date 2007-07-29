@@ -37,5 +37,29 @@ public class JavaPackage {
         }
         return warnings;
     }
+
+    public int getNumberOfLowWarnings() {
+        int warnings = 0;
+        for (JavaClass javaClass : classes) {
+            warnings += javaClass.getNumberOfLowWarnings();
+        }
+        return warnings;
+    }
+
+    public int getNumberOfHighWarnings() {
+        int warnings = 0;
+        for (JavaClass javaClass : classes) {
+            warnings += javaClass.getNumberOfHighWarnings();
+        }
+        return warnings;
+    }
+
+    public int getNumberOfNormalWarnings() {
+        int warnings = 0;
+        for (JavaClass javaClass : classes) {
+            warnings += javaClass.getNumberOfNormalWarnings();
+        }
+        return warnings;
+    }
 }
 

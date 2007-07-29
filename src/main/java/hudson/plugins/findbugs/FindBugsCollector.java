@@ -9,6 +9,7 @@ import hudson.util.IOException2;
 import java.io.File;
 import java.io.IOException;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.tools.ant.types.FileSet;
 
 /**
@@ -65,7 +66,9 @@ class FindBugsCollector implements FileCallable<Void> {
             }
             else {
                 try {
-                    new FilePath(originalFile).copyTo(workingDirectory.child("report-" + counter + ".xml"));
+                    String destinationName = StringUtils.defaultIfEmpty(guessModuleName(originalFile.getAbsolutePath()), "report-" + counter) + ".xml";
+                    listener.getLogger().println("FILE destination" + destinationName);
+                    new FilePath(originalFile).copyTo(workingDirectory.child(destinationName));
                 }
                 catch (InterruptedException exception) {
                     throw new IOException2("Aborted while copying " + originalFile, exception);
@@ -74,6 +77,31 @@ class FindBugsCollector implements FileCallable<Void> {
             counter++;
         }
         return null;
+    }
+
+    /**
+     * Guesses the module name based on the specified file name. Actually works only for maven projects.
+     * @param fileName the filename to guess the module name from
+     * @return the module name
+     */
+    public String guessModuleName(final String fileName) {
+        String separator;
+        if (fileName.contains("/")) {
+            separator = "/";
+        }
+        else {
+            separator = "\\";
+        }
+        String path = StringUtils.substringBefore(fileName, separator + "target");
+        if (fileName.equals(path)) {
+            return "";
+        }
+        if (path.contains(separator)) {
+            return StringUtils.substringAfterLast(path, separator);
+        }
+        else {
+            return path;
+        }
     }
 
     /**

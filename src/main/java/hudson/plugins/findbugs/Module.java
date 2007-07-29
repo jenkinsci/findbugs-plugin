@@ -11,6 +11,7 @@ public class Module {
     private String version;
     private String threshold;
     private String effort;
+    private String name;
 
     public void addClass(final JavaClass javaClass) {
         String packageName = javaClass.getPackage();
@@ -86,6 +87,24 @@ public class Module {
      */
     public void setEffort(final String effort) {
         this.effort = effort;
+    }
+
+    /**
+     * Returns the name.
+     *
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Sets the name to the specified value.
+     *
+     * @param name the value to set
+     */
+    public void setName(final String name) {
+        this.name = name;
     }
 }
 

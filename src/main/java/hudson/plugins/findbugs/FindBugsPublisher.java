@@ -214,6 +214,7 @@ public class FindBugsPublisher extends Publisher {
         JavaProject project = new JavaProject();
         for (FilePath filePath : list) {
             Module module = findBugsCounter.parse(filePath.read());
+            module.setName(StringUtils.substringBefore(filePath.getName(), ".xml"));
             project.addModule(module);
         }
         int warnings = project.getNumberOfWarnings();
