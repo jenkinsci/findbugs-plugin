@@ -1,0 +1,61 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler"
+	xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson"
+	xmlns:f="/lib/form" xmlns:i="jelly:fmt">
+	<l:layout>
+		<st:include it="${it.owner}" page="sidepanel.jelly" />
+		<l:main-panel>
+			<h1>${it.title}</h1>
+
+ 			<j:set var="prev" value="${it.previousResult}" />
+
+			<j:if test="${it.numberOfWarnings != 0}">
+				<h2>FindBugs Warnings</h2>
+				<table class="pane sortable" id="warnings">
+					<tr>
+						<td class="pane-header">Package</td>
+						<td class="pane-header" style="width:5em">
+							High
+						</td>
+						<td class="pane-header" style="width:5em">
+							Normal
+						</td>
+						<td class="pane-header" style="width:5em">
+							Low
+						</td>
+						<td class="pane-header" style="width:5em">
+							(Delta)
+						</td>
+					</tr>
+ 					<tbody>
+						<j:forEach var="p" items="${it.packages}">
+							<j:set var="prev"
+								value="${p.previousResult}" />
+							<tr>
+								<td class="pane">
+									<a href="${p.name}/">${p.name}</a>
+								</td>
+								<td class="pane"
+									style="text-align:right">
+									${p.failCount}
+								</td>
+								<td class="pane"
+									style="text-align:right">
+									${h.getDiffString2(p.failCount-prev.failCount)}
+								</td>
+								<td class="pane"
+									style="text-align:right">
+									${p.totalCount}
+								</td>
+								<td class="pane"
+									style="text-align:right">
+									${h.getDiffString2(p.totalCount-prev.totalCount)}
+								</td>
+							</tr>
+						</j:forEach>
+					</tbody>
+				</table>
+			</j:if>
+
+		</l:main-panel>
+	</l:layout>
+</j:jelly>

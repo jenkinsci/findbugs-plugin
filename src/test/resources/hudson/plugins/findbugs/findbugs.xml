@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <BugCollection version="1.2.0" threshold="Low" effort="Max" >
-<file classname="com.avaloq.adt.env.internal.ui.docu.DocuEditorInput" >
+<file classname="com.avaloq.adt.internal.ui.docu.DocuEditorInput" >
 <BugInstance type="HE_EQUALS_USE_HASHCODE" priority="High" category="BAD_PRACTICE" message="HE: com.avaloq.adt.env.internal.ui.docu.DocuEditorInput defines equals and uses Object.hashCode()" lineNumber="110-113" />
 <BugInstance type="HE_EQUALS_USE_HASHCODE" priority="High" category="BAD_PRACTICE" message="HE: com.avaloq.adt.env.internal.ui.docu.DocuEditorInput defines equals and uses Object.hashCode()" lineNumber="110-113" />
 </file>

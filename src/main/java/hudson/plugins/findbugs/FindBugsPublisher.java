@@ -12,9 +12,7 @@ import hudson.tasks.Publisher;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -62,7 +60,6 @@ public class FindBugsPublisher extends Publisher {
      *            than this value
      * @stapler-constructor
      */
-    // FIXME: how do we report validation errors?
     public FindBugsPublisher(final String pattern, final String threshold,
             final String healthy, final String unHealthy) {
         super();
@@ -163,9 +160,8 @@ public class FindBugsPublisher extends Publisher {
             return true;
         }
 
-        int warnings = findBugs(build, listener, workingDirectory);
-
-        persistBuildReport(build, warnings);
+        JavaProject project = findBugs(build, listener, workingDirectory);
+        persistBuildReport(build, project);
 
         return false;
     }
@@ -174,18 +170,25 @@ public class FindBugsPublisher extends Publisher {
      * Persists the state of this FindBugs analysis by creating a
      * {@link FindBugsResult} and attaching it to a {@link FindBugsResultAction}.
      *
-     * @param build the current build
-     * @param warnings the number of found warnings
+     * @param build
+     *            the current build
+     * @param project
+     *            the parsed FindBugs result
      */
-    private void persistBuildReport(final Build<?, ?> build, final int warnings) {
-        int previousNumberOfWarnings = warnings;
-
+    private void persistBuildReport(final Build<?, ?> build, final JavaProject project) {
         FindBugsResultAction action = new FindBugsResultAction(build, minimumBugs, isHealthyReportEnabled, healthyBugs, unHealthyBugs);
         if (action.hasPreviousResult()) {
             FindBugsResult previousResult = action.getPreviousResult().getResult();
-            previousNumberOfWarnings = previousResult.getNumberOfWarnings();
+            if (previousResult != null) {
+                action.setResult(new FindBugsResult(build, project, previousResult.getProject()));
+            }
+            else {
+                action.setResult(new FindBugsResult(build, project));
+            }
         }
-        action.setResult(new FindBugsResult(warnings, previousNumberOfWarnings));
+        else {
+            action.setResult(new FindBugsResult(build, project));
+        }
         build.getActions().add(action);
     }
 
@@ -204,14 +207,16 @@ public class FindBugsPublisher extends Publisher {
      * @throws InterruptedException
      *             if the user canceled the operation
      */
-    private int findBugs(final Build<?, ?> build, final BuildListener listener,
+    private JavaProject findBugs(final Build<?, ?> build, final BuildListener listener,
             final FilePath workingDirectory) throws IOException, InterruptedException {
         FilePath[] list = workingDirectory.list("*.xml");
-        int warnings = 0;
+        FindBugsCounter findBugsCounter = new FindBugsCounter();
+        JavaProject project = new JavaProject();
         for (FilePath filePath : list) {
-            InputStream file = filePath.read();
-            warnings += new FindBugsCounter().count(IOUtils.lineIterator(file, "UTF-8"));
+            Module module = findBugsCounter.parse(filePath.read());
+            project.addModule(module);
         }
+        int warnings = project.getNumberOfWarnings();
         if (warnings > 0) {
             listener.getLogger().println("A total of " + warnings + " potential bugs have been found.");
             if (isThresholdEnabled && warnings >= minimumBugs) {
@@ -221,7 +226,7 @@ public class FindBugsPublisher extends Publisher {
         else {
             listener.getLogger().println("No potential bugs have been found.");
         }
-        return warnings;
+        return project;
     }
 
     /**

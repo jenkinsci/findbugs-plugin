@@ -1,28 +1,46 @@
 package hudson.plugins.findbugs;
 
-import org.apache.commons.io.LineIterator;
+import hudson.util.IOException2;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+import org.apache.commons.digester.Digester;
+import org.xml.sax.SAXException;
 
 /**
  * Counts the number of bugs in a FindBugs analysis file.
  *
  * @author Ulli Hafner
  */
-// TODO: extract all FindBugs information instead of just counting
 public class FindBugsCounter {
     /**
-     * Returns the number of bugs in the FindBugs analysis file.
+     * Returns the parsed FindBugs analysis file.
      *
-     * @param lines the lines of the FindBugs analysis file
-     * @return the number of bugs
+     * @param file
+     *            the FindBugs analysis file
+     * @return the parsed result (stored in the module instance)
+     * @throws IOException
+     *             if the file could not be parsed
      */
-    public int count(final LineIterator lines) {
-        int bugs = 0;
-        while (lines.hasNext()) {
-            String line = lines.nextLine();
-            if (line.contains("<BugInstance ")) {
-                bugs++;
-            }
+    protected Module parse(final InputStream file) throws IOException {
+        try {
+            Digester digester = new Digester();
+            digester.setValidating(false);
+            digester.setClassLoader(FindBugsCounter.class.getClassLoader());
+            digester.addObjectCreate("BugCollection", Module.class);
+            digester.addSetProperties("BugCollection");
+            digester.addObjectCreate("BugCollection/file", JavaClass.class);
+            digester.addSetProperties("BugCollection/file");
+            digester.addSetNext("BugCollection/file", "addClass", JavaClass.class.getName());
+            digester.addObjectCreate("BugCollection/file/BugInstance", Warning.class);
+            digester.addSetProperties("BugCollection/file/BugInstance");
+            digester.addSetNext("BugCollection/file/BugInstance", "addWarning", Warning.class
+                    .getName());
+            return (Module)digester.parse(file);
         }
-        return bugs;
+        catch (SAXException exception) {
+            throw new IOException2(exception);
+        }
     }
 }
