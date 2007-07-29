@@ -29,6 +29,8 @@ import org.kohsuke.stapler.StaplerProxy;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
+import edu.umd.cs.findbugs.annotations.SuppressWarnings;
+
 /**
  * Controls the live cycle of the FindBugs results. This action persists the
  * results of the FindBugs analysis of a build and displays the results on the
@@ -48,6 +50,7 @@ public class FindBugsResultAction implements StaplerProxy, HealthReportingAction
     /** Unique identifier of this class. */
     private static final long serialVersionUID = -5329651349674842873L;
     /** The associated build of this action. */
+    @SuppressWarnings("Se")
     private final Build<?, ?> owner;
     /** The actual result of the FindBugs analysis. */
     private FindBugsResult result;

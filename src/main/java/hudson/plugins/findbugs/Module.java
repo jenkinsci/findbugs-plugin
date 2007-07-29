@@ -106,5 +106,19 @@ public class Module {
     public void setName(final String name) {
         this.name = name;
     }
+
+    /**
+     * Returns the number of warnings of the specified package.
+     *
+     * @param packageName
+     *            the package to return the warnings for
+     * @return number of warnings of the specified package.
+     */
+    public int getNumberOfWarnings(final String packageName) {
+        if (packages.containsKey(packageName)) {
+            return packages.get(packageName).getNumberOfWarnings();
+        }
+        return 0;
+    }
 }
 

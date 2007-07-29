@@ -18,6 +18,8 @@ import org.apache.tools.ant.types.FileSet;
  * @author Ulli Hafner
  */
 class FindBugsCollector implements FileCallable<Void> {
+    /** Slash separator on UNIX. */
+    private static final String SLASH = "/";
     /** Generated ID. */
     private static final long serialVersionUID = -6415863872891783891L;
     /** Determines whether to skip old files. */
@@ -86,8 +88,8 @@ class FindBugsCollector implements FileCallable<Void> {
      */
     public String guessModuleName(final String fileName) {
         String separator;
-        if (fileName.contains("/")) {
-            separator = "/";
+        if (fileName.contains(SLASH)) {
+            separator = SLASH;
         }
         else {
             separator = "\\";

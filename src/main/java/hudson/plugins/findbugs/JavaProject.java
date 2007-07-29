@@ -24,5 +24,20 @@ public class JavaProject {
         }
         return warnings;
     }
+
+    /**
+     * Returns the number of warnings of the specified package.
+     *
+     * @param packageName
+     *            the package to return the warnings for
+     * @return number of warnings of the specified package.
+     */
+    public int getNumberOfWarnings(final String packageName) {
+        int warnings = 0;
+        for (Module module : modules) {
+            warnings += module.getNumberOfWarnings(packageName);
+        }
+        return warnings;
+    }
 }
 

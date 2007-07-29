@@ -32,13 +32,15 @@ public class FindBugsCounter {
             digester.addObjectCreate("BugCollection", Module.class);
             digester.addSetProperties("BugCollection");
 
-            digester.addObjectCreate("BugCollection/file", JavaClass.class);
-            digester.addSetProperties("BugCollection/file");
-            digester.addSetNext("BugCollection/file", "addClass", JavaClass.class.getName());
+            String classXpath = "BugCollection/file";
+            digester.addObjectCreate(classXpath, JavaClass.class);
+            digester.addSetProperties(classXpath);
+            digester.addSetNext(classXpath, "addClass", JavaClass.class.getName());
 
-            digester.addObjectCreate("BugCollection/file/BugInstance", Warning.class);
-            digester.addSetProperties("BugCollection/file/BugInstance");
-            digester.addSetNext("BugCollection/file/BugInstance", "addWarning", Warning.class .getName());
+            String warningXpath = "BugCollection/file/BugInstance";
+            digester.addObjectCreate(warningXpath, Warning.class);
+            digester.addSetProperties(warningXpath);
+            digester.addSetNext(warningXpath, "addWarning", Warning.class .getName());
 
             return (Module)digester.parse(file);
         }

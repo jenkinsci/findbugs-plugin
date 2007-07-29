@@ -177,19 +177,8 @@ public class FindBugsPublisher extends Publisher {
      */
     private void persistBuildReport(final Build<?, ?> build, final JavaProject project) {
         FindBugsResultAction action = new FindBugsResultAction(build, minimumBugs, isHealthyReportEnabled, healthyBugs, unHealthyBugs);
-        if (action.hasPreviousResult()) {
-            FindBugsResult previousResult = action.getPreviousResult().getResult();
-            if (previousResult != null) {
-                action.setResult(new FindBugsResult(build, project, previousResult.getProject()));
-            }
-            else {
-                action.setResult(new FindBugsResult(build, project));
-            }
-        }
-        else {
-            action.setResult(new FindBugsResult(build, project));
-        }
         build.getActions().add(action);
+        action.setResult(new FindBugsResult(build, project));
     }
 
     /**

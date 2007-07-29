@@ -48,7 +48,7 @@
 											${p.numberOfLowWarnings}
 										</td>
 										<td class="pane" style="text-align:right">
-											${h.getDiffString2(p.numberOfWarnings)}
+											${h.getDiffString2(p.numberOfWarnings - it.getPreviousNumberOfWarnings(p.name))}
 										</td>
 									</tr>
 								</j:forEach>

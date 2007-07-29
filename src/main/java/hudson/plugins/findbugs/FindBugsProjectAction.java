@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
+import edu.umd.cs.findbugs.annotations.SuppressWarnings;
+
 /**
  * Entry point to visualize the FindBugs trend graph. Drawing of the graph is
  * delegated to the associated {@link FindBugsResultAction}.
@@ -21,6 +23,7 @@ public class FindBugsProjectAction implements Action {
     /** Unique identifier of this class. */
     private static final long serialVersionUID = -654316141132780561L;
     /** Project that owns this action. */
+    @SuppressWarnings("Se")
     private final Project<?, ?> project;
 
     /**
