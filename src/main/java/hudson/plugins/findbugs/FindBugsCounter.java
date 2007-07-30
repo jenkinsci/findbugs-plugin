@@ -2,7 +2,6 @@ package hudson.plugins.findbugs;
 
 import hudson.FilePath;
 import hudson.model.Build;
-import hudson.util.IOException2;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,31 +36,27 @@ public class FindBugsCounter {
      * @return the parsed result (stored in the module instance)
      * @throws IOException
      *             if the file could not be parsed
+     * @throws SAXException if the file is not in valid XML format
      */
-    protected Module parse(final InputStream file) throws IOException {
-        try {
-            Digester digester = new Digester();
-            digester.setValidating(false);
-            digester.setClassLoader(FindBugsCounter.class.getClassLoader());
+    protected Module parse(final InputStream file) throws IOException, SAXException {
+        Digester digester = new Digester();
+        digester.setValidating(false);
+        digester.setClassLoader(FindBugsCounter.class.getClassLoader());
 
-            digester.addObjectCreate("BugCollection", Module.class);
-            digester.addSetProperties("BugCollection");
+        digester.addObjectCreate("BugCollection", Module.class);
+        digester.addSetProperties("BugCollection");
 
-            String classXpath = "BugCollection/file";
-            digester.addObjectCreate(classXpath, JavaClass.class);
-            digester.addSetProperties(classXpath);
-            digester.addSetNext(classXpath, "addClass", JavaClass.class.getName());
+        String classXpath = "BugCollection/file";
+        digester.addObjectCreate(classXpath, JavaClass.class);
+        digester.addSetProperties(classXpath);
+        digester.addSetNext(classXpath, "addClass", JavaClass.class.getName());
 
-            String warningXpath = "BugCollection/file/BugInstance";
-            digester.addObjectCreate(warningXpath, Warning.class);
-            digester.addSetProperties(warningXpath);
-            digester.addSetNext(warningXpath, "addWarning", Warning.class .getName());
+        String warningXpath = "BugCollection/file/BugInstance";
+        digester.addObjectCreate(warningXpath, Warning.class);
+        digester.addSetProperties(warningXpath);
+        digester.addSetNext(warningXpath, "addWarning", Warning.class .getName());
 
-            return (Module)digester.parse(file);
-        }
-        catch (SAXException exception) {
-            throw new IOException2(exception);
-        }
+        return (Module)digester.parse(file);
     }
 
     /**
@@ -74,14 +69,15 @@ public class FindBugsCounter {
     }
 
     /**
-     * Scans all the FibndBugs files in the specified directory and returns the
+     * Scans all the FindBugs files in the specified directory and returns the
      * result as a {@link JavaProject}.
      *
      * @return the results
      * @throws IOException if the files could not be read
      * @throws InterruptedException if the operation has been canceled
+     * @throws SAXException if the file is not in valid XML format
      */
-    public JavaProject findBugs() throws IOException, InterruptedException {
+    public JavaProject findBugs() throws IOException, InterruptedException, SAXException {
         FilePath[] list = getWorkingDirectory().list("*.xml");
         JavaProject project = new JavaProject();
         for (FilePath filePath : list) {

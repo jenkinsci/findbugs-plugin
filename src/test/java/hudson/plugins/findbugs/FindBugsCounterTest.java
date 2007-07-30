@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.junit.Test;
+import org.xml.sax.SAXException;
 
 /**
  *  Tests the extraction of findbugs analysis results.
@@ -20,7 +21,7 @@ public class FindBugsCounterTest {
      * Checks whether we correctly detect that the file contains no bugs.
      */
     @Test
-    public void scanFileWithNoBugs() throws IOException {
+    public void scanFileWithNoBugs() throws IOException, SAXException {
         InputStream file = FindBugsCounterTest.class.getResourceAsStream("findbugs-no-errors.xml");
         Module module = new FindBugsCounter(null).parse(file);
         assertEquals(ERROR_MESSAGE, 0, module.getNumberOfWarnings());
@@ -30,7 +31,7 @@ public class FindBugsCounterTest {
      * Checks whether we correctly detect all 8 bugs.
      */
     @Test
-    public void scanFileWithSomeBugs() throws IOException {
+    public void scanFileWithSomeBugs() throws IOException, SAXException {
         InputStream file = FindBugsCounterTest.class.getResourceAsStream("findbugs.xml");
         Module module = new FindBugsCounter(null).parse(file);
         assertEquals(ERROR_MESSAGE, NUMBER_OF_BUGS, module.getNumberOfWarnings());

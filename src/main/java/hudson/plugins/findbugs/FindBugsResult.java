@@ -2,12 +2,15 @@ package hudson.plugins.findbugs;
 
 import hudson.model.Build;
 import hudson.model.ModelObject;
+import hudson.util.IOException2;
 
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.xml.sax.SAXException;
 
 import edu.umd.cs.findbugs.annotations.SuppressWarnings;
 
@@ -28,6 +31,7 @@ public class FindBugsResult implements ModelObject, Serializable {
     @SuppressWarnings("Se")
     private final Build<?, ?> owner;
     /** The parsed FindBugs result. */
+    @SuppressWarnings("Se")
     private transient WeakReference<JavaProject> project;
     /** The number of warnings in this build. */
     private final int numberOfWarnings;
@@ -118,8 +122,13 @@ public class FindBugsResult implements ModelObject, Serializable {
      * @throws InterruptedException if the operation has been canceled
      */
     private void loadResult() throws IOException, InterruptedException {
-        JavaProject result = new FindBugsCounter(owner).findBugs();
-        project = new WeakReference<JavaProject>(result);
+        try {
+            JavaProject result = new FindBugsCounter(owner).findBugs();
+            project = new WeakReference<JavaProject>(result);
+        }
+        catch (SAXException exception) {
+            throw new IOException2(exception);
+        }
     }
 
     /**

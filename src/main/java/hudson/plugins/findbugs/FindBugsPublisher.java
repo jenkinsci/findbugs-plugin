@@ -13,6 +13,7 @@ import hudson.tasks.Publisher;
 import java.io.IOException;
 
 import org.apache.commons.lang.StringUtils;
+import org.xml.sax.SAXException;
 
 /**
  * Publishes the results of the FindBugs analysis.
@@ -161,21 +162,29 @@ public class FindBugsPublisher extends Publisher {
             return true;
         }
 
-        FindBugsResultAction action = new FindBugsResultAction(build, minimumBugs, isHealthyReportEnabled, healthyBugs, unHealthyBugs);
-        build.getActions().add(action);
+        try {
+            JavaProject project = findBugsCounter.findBugs();
 
-        JavaProject project = findBugsCounter.findBugs();
-        action.setResult(new FindBugsResult(build, project));
+            FindBugsResultAction action = new FindBugsResultAction(build, minimumBugs, isHealthyReportEnabled, healthyBugs, unHealthyBugs);
+            build.getActions().add(action);
+            action.setResult(new FindBugsResult(build, project));
 
-        int warnings = project.getNumberOfWarnings();
-        if (warnings > 0) {
-            listener.getLogger().println("A total of " + warnings + " potential bugs have been found.");
-            if (isThresholdEnabled && warnings >= minimumBugs) {
-                build.setResult(Result.UNSTABLE);
+            int warnings = project.getNumberOfWarnings();
+            if (warnings > 0) {
+                listener.getLogger().println("A total of " + warnings + " potential bugs have been found.");
+                if (isThresholdEnabled && warnings >= minimumBugs) {
+                    build.setResult(Result.UNSTABLE);
+                }
+            }
+            else {
+                listener.getLogger().println("No potential bugs have been found.");
             }
         }
-        else {
-            listener.getLogger().println("No potential bugs have been found.");
+        catch (SAXException exception) {
+            listener.getLogger().println();
+            exception.printStackTrace(listener.fatalError("Could not parse FindBugs files. Please check if the file pattern is correct\nand the latest FindBugs scanner is used (i.e., maven-findbugs-plugin >= 1.1.1)"));
+            build.setResult(Result.FAILURE);
+            return true;
         }
 
         return false;

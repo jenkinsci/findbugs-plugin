@@ -138,7 +138,7 @@ public class FindBugsResultAction implements StaplerProxy, HealthReportingAction
 
     /** {@inheritDoc} */
     public String getIconFileName() {
-        return "/plugins/findbugs/icons/SplashBug1.png";
+        return "/plugin/findbugs/icons/findbugs-24x24.png";
     }
 
     /** {@inheritDoc} */

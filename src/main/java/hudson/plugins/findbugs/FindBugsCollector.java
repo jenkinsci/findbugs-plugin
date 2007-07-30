@@ -69,7 +69,6 @@ class FindBugsCollector implements FileCallable<Void> {
             else {
                 try {
                     String destinationName = StringUtils.defaultIfEmpty(guessModuleName(originalFile.getAbsolutePath()), "report-" + counter) + ".xml";
-                    listener.getLogger().println("FILE destination" + destinationName);
                     new FilePath(originalFile).copyTo(workingDirectory.child(destinationName));
                 }
                 catch (InterruptedException exception) {
