@@ -3,7 +3,11 @@ package hudson.plugins.findbugs;
 import hudson.model.Build;
 import hudson.model.ModelObject;
 
+import java.io.IOException;
 import java.io.Serializable;
+import java.lang.ref.WeakReference;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import edu.umd.cs.findbugs.annotations.SuppressWarnings;
 
@@ -13,18 +17,20 @@ import edu.umd.cs.findbugs.annotations.SuppressWarnings;
  *
  * @author Ulli Hafner
  */
-// FIXME: make the result non-transient and reload on request
 public class FindBugsResult implements ModelObject, Serializable {
     /** Unique identifier of this class. */
     private static final long serialVersionUID = 2768250056765266658L;
+    /** Logger. */
+    private static final Logger LOGGER = Logger.getLogger(FindBugsResult.class.getName());
     /** Difference between this and the previous build. */
     private final int delta;
     /** The current build as owner of this action. */
     @SuppressWarnings("Se")
     private final Build<?, ?> owner;
     /** The parsed FindBugs result. */
-    @SuppressWarnings("Se")
-    private final JavaProject project;
+    private transient WeakReference<JavaProject> project;
+    /** The number of warnings in this build. */
+    private final int numberOfWarnings;
 
     /**
      * Creates a new instance of <code>FindBugsResult</code>.
@@ -36,7 +42,8 @@ public class FindBugsResult implements ModelObject, Serializable {
      */
     public FindBugsResult(final Build<?, ?> build, final JavaProject project) {
         owner = build;
-        this.project = project;
+        numberOfWarnings = project.getNumberOfWarnings();
+        this.project = new WeakReference<JavaProject>(project);
         FindBugsResultAction action = build.getAction(FindBugsResultAction.class);
         if (action.hasPreviousResult()) {
             delta = project.getNumberOfWarnings() - action.getPreviousResult().getResult().getNumberOfWarnings();
@@ -66,7 +73,7 @@ public class FindBugsResult implements ModelObject, Serializable {
      * @return the numberOfWarnings
      */
     public int getNumberOfWarnings() {
-        return project.getNumberOfWarnings();
+        return numberOfWarnings;
     }
 
     /**
@@ -84,7 +91,35 @@ public class FindBugsResult implements ModelObject, Serializable {
      * @return the associated project of this result.
      */
     public JavaProject getProject() {
-        return project;
+        try {
+            if (project == null) {
+                loadResult();
+            }
+            JavaProject result = project.get();
+            if (result == null) {
+                loadResult();
+            }
+            return project.get();
+        }
+        catch (IOException exception) {
+            LOGGER.log(Level.WARNING, "Failed to load FindBugs files.", exception);
+        }
+        catch (InterruptedException exception) {
+            LOGGER.log(Level.WARNING, "Failed to load FindBugs files: operation has been canceled.", exception);
+        }
+        return new JavaProject();
+    }
+
+    /**
+     * Loads the FindBugs results and wraps them in a weak reference that might
+     * get removed by the garbage collector.
+     *
+     * @throws IOException if the files could not be read
+     * @throws InterruptedException if the operation has been canceled
+     */
+    private void loadResult() throws IOException, InterruptedException {
+        JavaProject result = new FindBugsCounter(owner).findBugs();
+        project = new WeakReference<JavaProject>(result);
     }
 
     /**

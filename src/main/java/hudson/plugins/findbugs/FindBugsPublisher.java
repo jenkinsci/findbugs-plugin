@@ -10,7 +10,6 @@ import hudson.model.Project;
 import hudson.model.Result;
 import hudson.tasks.Publisher;
 
-import java.io.File;
 import java.io.IOException;
 
 import org.apache.commons.lang.StringUtils;
@@ -154,58 +153,20 @@ public class FindBugsPublisher extends Publisher {
      */
     public boolean perform(final Build<?, ?> build, final Launcher launcher, final BuildListener listener) throws InterruptedException, IOException {
         listener.getLogger().println("Collecting findbugs analysis files...");
-        FilePath workingDirectory = createWorkingDirectory(build.getRootDir());
+        FindBugsCounter findBugsCounter = new FindBugsCounter(build);
 
+        FilePath workingDirectory = findBugsCounter.getWorkingDirectory();
+        workingDirectory.mkdirs();
         if (!copyFilesFromWorkspaceToBuild(build, listener, workingDirectory)) {
             return true;
         }
 
-        JavaProject project = findBugs(build, listener, workingDirectory);
-        persistBuildReport(build, project);
-
-        return false;
-    }
-
-    /**
-     * Persists the state of this FindBugs analysis by creating a
-     * {@link FindBugsResult} and attaching it to a {@link FindBugsResultAction}.
-     *
-     * @param build
-     *            the current build
-     * @param project
-     *            the parsed FindBugs result
-     */
-    private void persistBuildReport(final Build<?, ?> build, final JavaProject project) {
         FindBugsResultAction action = new FindBugsResultAction(build, minimumBugs, isHealthyReportEnabled, healthyBugs, unHealthyBugs);
         build.getActions().add(action);
-        action.setResult(new FindBugsResult(build, project));
-    }
 
-    /**
-     * Finds the bugs reported in the FindBugs xml files.
-     *
-     * @param build
-     *            the current build
-     * @param listener
-     *            the build listener
-     * @param workingDirectory
-     *            the working directory where the FindBugs files are stored
-     * @return the number of warnings found
-     * @throws IOException
-     *             in case of an IO error
-     * @throws InterruptedException
-     *             if the user canceled the operation
-     */
-    private JavaProject findBugs(final Build<?, ?> build, final BuildListener listener,
-            final FilePath workingDirectory) throws IOException, InterruptedException {
-        FilePath[] list = workingDirectory.list("*.xml");
-        FindBugsCounter findBugsCounter = new FindBugsCounter();
-        JavaProject project = new JavaProject();
-        for (FilePath filePath : list) {
-            Module module = findBugsCounter.parse(filePath.read());
-            module.setName(StringUtils.substringBefore(filePath.getName(), ".xml"));
-            project.addModule(module);
-        }
+        JavaProject project = findBugsCounter.findBugs();
+        action.setResult(new FindBugsResult(build, project));
+
         int warnings = project.getNumberOfWarnings();
         if (warnings > 0) {
             listener.getLogger().println("A total of " + warnings + " potential bugs have been found.");
@@ -216,7 +177,8 @@ public class FindBugsPublisher extends Publisher {
         else {
             listener.getLogger().println("No potential bugs have been found.");
         }
-        return project;
+
+        return false;
     }
 
     /**
@@ -248,20 +210,6 @@ public class FindBugsPublisher extends Publisher {
             build.setResult(Result.FAILURE);
             return false;
         }
-    }
-
-    /**
-     * Creates the working directory where all reports will be copied to.
-     *
-     * @param rootDirectory root directory of the current build
-     *
-     * @return the created directory
-     */
-    private FilePath createWorkingDirectory(final File rootDirectory) {
-        File dataDir =  new File(rootDirectory, "findbugs-results");
-        dataDir.mkdirs();
-
-        return new FilePath(dataDir);
     }
 
     /** {@inheritDoc} */

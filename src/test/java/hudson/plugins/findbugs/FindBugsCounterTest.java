@@ -10,7 +10,7 @@ import org.junit.Test;
 /**
  *  Tests the extraction of findbugs analysis results.
  */
-public class FindBugsExtractorTest {
+public class FindBugsCounterTest {
     /** Error message. */
     private static final String ERROR_MESSAGE = "Wrong number of bugs parsed.";
     /** Expected number of bugs. */
@@ -21,8 +21,8 @@ public class FindBugsExtractorTest {
      */
     @Test
     public void scanFileWithNoBugs() throws IOException {
-        InputStream file = FindBugsExtractorTest.class.getResourceAsStream("findbugs-no-errors.xml");
-        Module module = new FindBugsCounter().parse(file);
+        InputStream file = FindBugsCounterTest.class.getResourceAsStream("findbugs-no-errors.xml");
+        Module module = new FindBugsCounter(null).parse(file);
         assertEquals(ERROR_MESSAGE, 0, module.getNumberOfWarnings());
     }
 
@@ -31,8 +31,8 @@ public class FindBugsExtractorTest {
      */
     @Test
     public void scanFileWithSomeBugs() throws IOException {
-        InputStream file = FindBugsExtractorTest.class.getResourceAsStream("findbugs.xml");
-        Module module = new FindBugsCounter().parse(file);
+        InputStream file = FindBugsCounterTest.class.getResourceAsStream("findbugs.xml");
+        Module module = new FindBugsCounter(null).parse(file);
         assertEquals(ERROR_MESSAGE, NUMBER_OF_BUGS, module.getNumberOfWarnings());
         assertEquals("Wrong Version detected", "1.2.0", module.getVersion());
         assertEquals("Wrong number of packages detected", 2, module.getPackages().size());
