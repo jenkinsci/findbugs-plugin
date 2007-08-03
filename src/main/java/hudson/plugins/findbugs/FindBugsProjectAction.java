@@ -48,12 +48,12 @@ public class FindBugsProjectAction implements Action {
 
     /** {@inheritDoc} */
     public String getDisplayName() {
-        return "FindBugs Results";
+        return "FindBugs Result";
     }
 
     /** {@inheritDoc} */
     public String getIconFileName() {
-        return FindBugsDescriptor.FINDBUGS_ACTION_LOGO;
+        return null;
     }
 
     /** {@inheritDoc} */

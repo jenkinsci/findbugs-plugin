@@ -133,7 +133,7 @@ public class FindBugsResultAction implements StaplerProxy, HealthReportingAction
 
     /** {@inheritDoc} */
     public String getDisplayName() {
-        return "FindBugs Results";
+        return "FindBugs Result";
     }
 
     /** {@inheritDoc} */
