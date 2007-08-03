@@ -14,6 +14,6 @@ public class FindBugsPlugin extends Plugin {
     @Override
     @SuppressWarnings("PMD")
     public void start() throws Exception {
-        BuildStep.PUBLISHERS.add(FindBugsPublisher.FIND_BUGS_DESCRIPTOR);
+        BuildStep.PUBLISHERS.addRecorder(FindBugsPublisher.FIND_BUGS_DESCRIPTOR);
     }
 }
