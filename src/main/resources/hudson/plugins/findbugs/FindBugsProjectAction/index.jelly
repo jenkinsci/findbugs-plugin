@@ -5,7 +5,7 @@
       <h1>FindBugs Trend</h1>
 
       <div>
-        <img src="./graph?width=640&amp;height=480" width="640" height="480" />
+        <img src="graph" lazymap="graphMap"/>
       </div>
     </l:main-panel>
   </l:layout>

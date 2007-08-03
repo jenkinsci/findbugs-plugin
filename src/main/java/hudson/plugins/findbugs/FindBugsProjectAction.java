@@ -92,17 +92,50 @@ public class FindBugsProjectAction implements Action {
      *             in case of an error in
      *             {@link FindBugsResultAction#doGraph(StaplerRequest, StaplerResponse)}
      */
-    public void doGraph(final StaplerRequest request, final StaplerResponse response)
-            throws IOException {
+    public void doTrend(final StaplerRequest request, final StaplerResponse response) throws IOException {
+        FindBugsResultAction action = getLastAction();
+        if (action == null) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        }
+        else {
+            action.doGraph(request, response);
+        }
+    }
+
+    /**
+     * Display the warnings trend map. Delegates to the the associated
+     * {@link FindBugsResultAction}.
+     *
+     * @param request
+     *            Stapler request
+     * @param response
+     *            Stapler response
+     * @throws IOException
+     *             in case of an error in
+     *             {@link FindBugsResultAction#doGraph(StaplerRequest, StaplerResponse)}
+     */
+    public void doTrendMap(final StaplerRequest request, final StaplerResponse response) throws IOException {
+        FindBugsResultAction action = getLastAction();
+        if (action == null) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        }
+        else {
+            action.doGraphMap(request, response);
+        }
+    }
+
+    /**
+     * Returns the last valid FindBugs result action.
+     *
+     * @return the last valid FindBugs result action, or null if no such action
+     *         is found
+     */
+    public FindBugsResultAction getLastAction() {
         AbstractBuild<?, ?> lastBuild = project.getLastSuccessfulBuild();
         if (lastBuild != null) {
-            FindBugsResultAction action = lastBuild.getAction(FindBugsResultAction.class);
-            if (action != null) {
-                action.doGraph(request, response);
-                return;
-            }
+            return lastBuild.getAction(FindBugsResultAction.class);
         }
-        response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        return null;
     }
 }
 

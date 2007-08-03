@@ -1,5 +1,6 @@
 package hudson.plugins.findbugs;
 
+import hudson.Util;
 import hudson.model.AbstractBuild;
 import hudson.model.Build;
 import hudson.model.HealthReport;
@@ -219,8 +220,25 @@ public class FindBugsResultAction implements StaplerProxy, HealthReportingAction
         if (request.checkIfModified(owner.getTimestamp(), response)) {
             return;
         }
-
         ChartUtil.generateGraph(request, response, createChart(request), WIDTH, HEIGHT);
+    }
+
+    /**
+     * Generates a PNG image for the test result trend.
+     *
+     * @param request
+     *            Stapler request
+     * @param response
+     *            Stapler response
+     * @throws IOException
+     *             in case of an error in
+     *             {@link FindBugsResultAction#doGraph(StaplerRequest, StaplerResponse)}
+     */
+    public void doGraphMap(final StaplerRequest request, final StaplerResponse response) throws IOException {
+        if (request.checkIfModified(owner.getTimestamp(), response)) {
+            return;
+        }
+        ChartUtil.generateClickableMap(request, response, createChart(request), WIDTH, HEIGHT);
     }
 
     /**
@@ -296,7 +314,20 @@ public class FindBugsResultAction implements StaplerProxy, HealthReportingAction
         final NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
         rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
 
-        StackedAreaRenderer renderer = new StackedAreaRenderer2();
+        StackedAreaRenderer renderer = new StackedAreaRenderer2() {
+                @Override
+                public String generateURL(CategoryDataset dataset, int row, int column) {
+                    NumberOnlyBuildLabel label = (NumberOnlyBuildLabel) dataset.getColumnKey(column);
+                    return label.build.getNumber() + "/findbugsResult/";
+                }
+
+                @Override
+                public String generateToolTip(CategoryDataset dataset, int row, int column) {
+                    NumberOnlyBuildLabel label = (NumberOnlyBuildLabel) dataset.getColumnKey(column);
+                    FindBugsResultAction action = label.build.getAction(FindBugsResultAction.class);
+                    return String.valueOf(Util.combine(action.getResult().getNumberOfWarnings(), "warning"));
+                }
+            };
         plot.setRenderer(renderer);
         renderer.setSeriesPaint(1, ColorPalette.RED);
         renderer.setSeriesPaint(0, ColorPalette.BLUE);
