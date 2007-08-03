@@ -2,6 +2,7 @@ package hudson.plugins.findbugs;
 
 import hudson.model.AbstractBuild;
 import hudson.model.Action;
+import hudson.model.Build;
 import hudson.model.Project;
 
 import java.io.IOException;
@@ -47,17 +48,36 @@ public class FindBugsProjectAction implements Action {
 
     /** {@inheritDoc} */
     public String getDisplayName() {
-        return "FindBugs Trend";
+        return "FindBugs Results";
     }
 
     /** {@inheritDoc} */
     public String getIconFileName() {
-        return null; // i.e., don't show the link in the side bar
+        return FindBugsDescriptor.FINDBUGS_ACTION_LOGO;
     }
 
     /** {@inheritDoc} */
     public String getUrlName() {
         return "findbugs";
+    }
+
+    /**
+     * Returns whether we have enough valid results in order to draw a
+     * meaningful graph.
+     *
+     * @param build
+     *            the build to look backward from
+     * @return <code>true</code> if the results are valid in order to draw a
+     *         graph
+     */
+    public boolean hasValidResults(final Build<?, ?> build) {
+        if (build != null) {
+            FindBugsResultAction resultAction = build.getAction(FindBugsResultAction.class);
+            if (resultAction != null) {
+                return resultAction.hasPreviousResult();
+            }
+        }
+        return false;
     }
 
     /**
@@ -82,7 +102,6 @@ public class FindBugsProjectAction implements Action {
                 return;
             }
         }
-
         response.setStatus(HttpServletResponse.SC_NOT_FOUND);
     }
 }
