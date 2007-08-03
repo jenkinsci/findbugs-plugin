@@ -7,6 +7,7 @@ public class Warning {
     private String priority;
     private String message;
     private String lineNumber;
+    private String classname;
     /**
      * Returns the type.
      *
@@ -83,6 +84,19 @@ public class Warning {
 
     public String getPriority() {
         return priority;
+    }
+
+    public void setClassname(final String classname) {
+        this.classname = classname;
+    }
+
+    /**
+     * Returns the classname.
+     *
+     * @return the classname
+     */
+    public String getClassName() {
+        return classname;
     }
 }
 

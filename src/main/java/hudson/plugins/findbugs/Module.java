@@ -35,6 +35,15 @@ public class Module {
         return warnings;
     }
 
+    public Collection<Warning> getWarnings(final String packageName) {
+        if (packages.containsKey(packageName)) {
+            return packages.get(packageName).getWarnings();
+        }
+        else {
+            return Collections.emptyList();
+        }
+    }
+
     /**
      * Returns the version.
      *

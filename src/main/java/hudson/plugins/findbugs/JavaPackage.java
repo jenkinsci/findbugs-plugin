@@ -26,6 +26,14 @@ public class JavaPackage {
         return Collections.unmodifiableCollection(classes);
     }
 
+    public Collection<Warning> getWarnings() {
+        ArrayList<Warning> warnings = new ArrayList<Warning>();
+        for (JavaClass javaClass : classes) {
+            warnings.addAll(javaClass.getWarnings());
+        }
+        return warnings;
+    }
+
     public final String getName() {
         return name;
     }

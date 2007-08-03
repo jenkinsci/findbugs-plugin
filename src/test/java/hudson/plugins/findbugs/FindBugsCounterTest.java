@@ -37,6 +37,15 @@ public class FindBugsCounterTest {
         assertEquals(ERROR_MESSAGE, NUMBER_OF_BUGS, module.getNumberOfWarnings());
         assertEquals("Wrong Version detected", "1.2.0", module.getVersion());
         assertEquals("Wrong number of packages detected", 2, module.getPackages().size());
+
+        assertEquals("Wrong number of classes detected", 6, module.getWarnings("com.avaloq.adt.internal.ui.spell").size());
+        assertEquals("Wrong number of classes detected", 2, module.getWarnings("com.avaloq.adt.internal.ui.docu").size());
+        JavaProject javaProject = new JavaProject();
+        javaProject.addModule(module);
+        assertEquals("Wrong number of classes detected", 6, javaProject.getWarnings("com.avaloq.adt.internal.ui.spell").size());
+        assertEquals("Wrong number of classes detected", 2, javaProject.getWarnings("com.avaloq.adt.internal.ui.docu").size());
+
+        assertEquals("Wrong number of classes detected", 0, javaProject.getWarnings("wrong.package").size());
     }
 }
 

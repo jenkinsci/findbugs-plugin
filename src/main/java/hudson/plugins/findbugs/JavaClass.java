@@ -16,6 +16,7 @@ public class JavaClass {
 
     public void addWarning(final Warning warning) {
         warnings.add(warning);
+        warning.setClassname(StringUtils.substringAfterLast(classname, "."));
         if ("low".equalsIgnoreCase(warning.getPriority())) {
             low++;
         }

@@ -39,5 +39,13 @@ public class JavaProject {
         }
         return warnings;
     }
+
+    public Collection<Warning> getWarnings(final String packageName) {
+        ArrayList<Warning> warnings = new ArrayList<Warning>();
+        for (Module module : modules) {
+            warnings.addAll(module.getWarnings(packageName));
+        }
+        return warnings;
+    }
 }
 

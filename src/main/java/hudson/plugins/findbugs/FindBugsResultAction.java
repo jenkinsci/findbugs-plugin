@@ -314,20 +314,7 @@ public class FindBugsResultAction implements StaplerProxy, HealthReportingAction
         final NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
         rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
 
-        StackedAreaRenderer renderer = new StackedAreaRenderer2() {
-                @Override
-                public String generateURL(CategoryDataset dataset, int row, int column) {
-                    NumberOnlyBuildLabel label = (NumberOnlyBuildLabel) dataset.getColumnKey(column);
-                    return label.build.getNumber() + "/findbugsResult/";
-                }
-
-                @Override
-                public String generateToolTip(CategoryDataset dataset, int row, int column) {
-                    NumberOnlyBuildLabel label = (NumberOnlyBuildLabel) dataset.getColumnKey(column);
-                    FindBugsResultAction action = label.build.getAction(FindBugsResultAction.class);
-                    return String.valueOf(Util.combine(action.getResult().getNumberOfWarnings(), "warning"));
-                }
-            };
+        StackedAreaRenderer renderer = new AreaRenderer();
         plot.setRenderer(renderer);
         renderer.setSeriesPaint(1, ColorPalette.RED);
         renderer.setSeriesPaint(0, ColorPalette.BLUE);
@@ -336,5 +323,28 @@ public class FindBugsResultAction implements StaplerProxy, HealthReportingAction
         plot.setInsets(new RectangleInsets(0, 0, 0, 5.0));
 
         return chart;
+    }
+
+    /**
+     * Renderer that provides access to the individual FindBugs results.
+     */
+    static final class AreaRenderer extends StackedAreaRenderer2 {
+        /** Unique identifier of this class. */
+        private static final long serialVersionUID = -4683951507836348304L;
+
+        /** {@inheritDoc} */
+        @Override
+        public String generateURL(final CategoryDataset dataset, final int row, final int column) {
+            NumberOnlyBuildLabel label = (NumberOnlyBuildLabel) dataset.getColumnKey(column);
+            return label.build.getNumber() + "/findbugsResult/";
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public String generateToolTip(final CategoryDataset dataset, final int row, final int column) {
+            NumberOnlyBuildLabel label = (NumberOnlyBuildLabel) dataset.getColumnKey(column);
+            FindBugsResultAction action = label.build.getAction(FindBugsResultAction.class);
+            return String.valueOf(Util.combine(action.getResult().getNumberOfWarnings(), "warning"));
+        }
     }
 }

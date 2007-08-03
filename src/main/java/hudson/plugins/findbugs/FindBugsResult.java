@@ -10,6 +10,8 @@ import java.lang.ref.WeakReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.StaplerResponse;
 import org.xml.sax.SAXException;
 
 import edu.umd.cs.findbugs.annotations.SuppressWarnings;
@@ -59,7 +61,7 @@ public class FindBugsResult implements ModelObject, Serializable {
 
     /** {@inheritDoc} */
     public String getDisplayName() {
-        return "FindBugs Package Statistics";
+        return "FindBugs Result";
     }
 
     /**
@@ -129,6 +131,20 @@ public class FindBugsResult implements ModelObject, Serializable {
         catch (SAXException exception) {
             throw new IOException2(exception);
         }
+    }
+
+    /**
+     * Returns the dynamic result of the FindBugs analysis (detail page for a package).
+     *
+     * @param packageName the packe name to get the result for
+     * @param request
+     *            Stapler request
+     * @param response
+     *            Stapler response
+     * @return the dynamic result of the FindBugs analysis (detail page for a package).
+     */
+    public FindBugsDetail getDynamic(final String packageName, final StaplerRequest request, final StaplerResponse response) {
+        return new FindBugsDetail(owner, getProject(), packageName);
     }
 
     /**

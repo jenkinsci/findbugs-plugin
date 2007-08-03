@@ -54,7 +54,7 @@ public class FindBugsCounter {
         String warningXpath = "BugCollection/file/BugInstance";
         digester.addObjectCreate(warningXpath, Warning.class);
         digester.addSetProperties(warningXpath);
-        digester.addSetNext(warningXpath, "addWarning", Warning.class .getName());
+        digester.addSetNext(warningXpath, "addWarning", Warning.class.getName());
 
         return (Module)digester.parse(file);
     }

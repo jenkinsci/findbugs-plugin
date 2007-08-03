@@ -36,7 +36,7 @@
 									<j:set var="prev" value="${p.previousResult}" />
 									<tr>
 										<td class="pane">
-											${p.name}
+											<a href="${p.name}/">${p.name}</a>
 										</td>
 										<td class="pane" style="text-align:right">
 											${p.numberOfHighWarnings}
