@@ -95,7 +95,7 @@ public class Warning {
      *
      * @return the classname
      */
-    public String getClassName() {
+    public String getClassname() {
         return classname;
     }
 }
