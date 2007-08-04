@@ -139,7 +139,12 @@ public class FindBugsResultAction implements StaplerProxy, HealthReportingAction
 
     /** {@inheritDoc} */
     public String getIconFileName() {
-        return FindBugsDescriptor.FINDBUGS_ACTION_LOGO;
+        if (result.getNumberOfWarnings() > 0) {
+            return FindBugsDescriptor.FINDBUGS_ACTION_LOGO;
+        }
+        else {
+            return null;
+        }
     }
 
     /** {@inheritDoc} */
@@ -335,8 +340,15 @@ public class FindBugsResultAction implements StaplerProxy, HealthReportingAction
         /** {@inheritDoc} */
         @Override
         public String generateURL(final CategoryDataset dataset, final int row, final int column) {
-            NumberOnlyBuildLabel label = (NumberOnlyBuildLabel) dataset.getColumnKey(column);
-            return label.build.getNumber() + "/findbugsResult/";
+            NumberOnlyBuildLabel label = (NumberOnlyBuildLabel)dataset.getColumnKey(column);
+            FindBugsResultAction action = label.build.getAction(FindBugsResultAction.class);
+
+            if (action.getResult().getNumberOfWarnings() > 0) {
+                return label.build.getNumber() + "/findbugsResult/";
+            }
+            else {
+                return null;
+            }
         }
 
         /** {@inheritDoc} */

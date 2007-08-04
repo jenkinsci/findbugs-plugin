@@ -13,6 +13,7 @@
   <version>1.3-SNAPSHOT</version>
   <licenses>
   	<license><name>MIT license</name><comments>All source code is under the MIT license.</comments></license>
+  	<license><name>GNU LESSER GENERAL PUBLIC LICENSE</name><comments>FindBugs messages.xml file from the findbugs 1.2.1 release .</comments></license>
   	<license><comments>The findbugs logo is a trademark by The University of Maryland. These icons are a courtesy of the FindBugs team.</comments></license>
   </licenses>
 

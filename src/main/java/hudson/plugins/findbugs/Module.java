@@ -13,6 +13,21 @@ public class Module {
     private String effort;
     private String name;
 
+    /**
+     * Creates a new instance of <code>Module</code>.
+     */
+    public Module() {
+        // nothing to do
+    }
+
+    /**
+     * Creates a new instance of <code>Module</code>.
+     * @param string
+     */
+    public Module(final String string) {
+        name = string;
+    }
+
     public void addClass(final JavaClass javaClass) {
         String packageName = javaClass.getPackage();
         if (packages.containsKey(packageName)) {

@@ -39,6 +39,28 @@ public class FindBugsCounterTest {
     }
 
     /**
+     * Checks whether we correctly detect an other file.
+     */
+    @Test
+    public void scanOtherFile() throws IOException, SAXException {
+        InputStream file = FindBugsCounterTest.class.getResourceAsStream("otherfile.xml");
+        Module module = new FindBugsCounter(null).parse(file);
+        assertEquals(ERROR_MESSAGE, 0, module.getNumberOfWarnings());
+        assertEquals(ERROR_MESSAGE, "Unknown file format", module.getName());
+    }
+
+    /**
+     * Checks whether we correctly detect that the file contains no bugs.
+     */
+    // FIXME: this is findbugs 1.2.1 format and currently returns 0 warnings!
+    @Test
+    public void scanFileWithErrors() throws IOException, SAXException {
+        InputStream file = FindBugsCounterTest.class.getResourceAsStream("findbugs-error.xml");
+        Module module = new FindBugsCounter(null).parse(file);
+        assertEquals(ERROR_MESSAGE, 0, module.getNumberOfWarnings());
+    }
+
+    /**
      * Checks whether we correctly detect all 8 bugs.
      */
     @Test

@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.commons.digester.Digester;
+import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.xml.sax.SAXException;
 
@@ -56,7 +57,7 @@ public class FindBugsCounter {
         digester.addSetProperties(warningXpath);
         digester.addSetNext(warningXpath, "addWarning", Warning.class.getName());
 
-        return (Module)digester.parse(file);
+        return (Module)ObjectUtils.defaultIfNull(digester.parse(file), new Module("Unknown file format"));
     }
 
     /**

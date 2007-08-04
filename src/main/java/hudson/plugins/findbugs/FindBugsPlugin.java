@@ -4,7 +4,7 @@ import hudson.Plugin;
 import hudson.tasks.BuildStep;
 
 /**
- * Registers the findbugs plug-in publisher.
+ * Registers the FindBugs plug-in publisher.
  *
  * @author Ulli Hafner
  * @plugin
@@ -15,5 +15,6 @@ public class FindBugsPlugin extends Plugin {
     @SuppressWarnings("PMD")
     public void start() throws Exception {
         BuildStep.PUBLISHERS.addRecorder(FindBugsPublisher.FIND_BUGS_DESCRIPTOR);
+        FindBugsMessages.getInstance().initialize();
     }
 }

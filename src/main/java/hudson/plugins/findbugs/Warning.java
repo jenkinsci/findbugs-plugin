@@ -8,6 +8,7 @@ public class Warning {
     private String message;
     private String lineNumber;
     private String classname;
+
     /**
      * Returns the type.
      *
@@ -16,6 +17,16 @@ public class Warning {
     public String getType() {
         return type;
     }
+
+    /**
+     * Returns the bug pattern description.
+     *
+     * @return the bug pattern description.
+     */
+    public String getDescription() {
+        return FindBugsMessages.getInstance().getMessage(getType());
+    }
+
     /**
      * Sets the type to the specified value.
      *
@@ -24,6 +35,7 @@ public class Warning {
     public void setType(final String type) {
         this.type = type;
     }
+
     /**
      * Returns the category.
      *
@@ -32,6 +44,7 @@ public class Warning {
     public String getCategory() {
         return category;
     }
+
     /**
      * Sets the category to the specified value.
      *
@@ -49,6 +62,7 @@ public class Warning {
     public void setPriority(final String priority) {
         this.priority = priority;
     }
+
     /**
      * Returns the message.
      *
@@ -57,6 +71,7 @@ public class Warning {
     public String getMessage() {
         return message;
     }
+
     /**
      * Sets the message to the specified value.
      *
@@ -65,6 +80,7 @@ public class Warning {
     public void setMessage(final String message) {
         this.message = message;
     }
+
     /**
      * Returns the lineNumer.
      *
@@ -73,6 +89,7 @@ public class Warning {
     public String getLineNumber() {
         return lineNumber;
     }
+
     /**
      * Sets the lineNumer to the specified value.
      *
@@ -82,10 +99,20 @@ public class Warning {
         this.lineNumber = lineNumber;
     }
 
+    /**
+     * Gets the priority.
+     *
+     * @return the priority
+     */
     public String getPriority() {
         return priority;
     }
 
+    /**
+     * Sets the classname.
+     *
+     * @param classname the new classname
+     */
     public void setClassname(final String classname) {
         this.classname = classname;
     }

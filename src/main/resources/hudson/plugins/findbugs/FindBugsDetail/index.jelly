@@ -10,9 +10,14 @@
 			<j:forEach var="w" items="${it.warnings}">
 			   <h4>Class ${w.classname} (Priority ${w.priority}, Category ${w.category})</h4>
 				<p>
-				${w.type}: ${w.message} <j:if test="${w.line != 'Not available'}">(Line: ${w.lineNumber})</j:if>
+				${w.type}: ${w.message} <j:if test="${w.lineNumber != 'Not available'}">(Line: ${w.lineNumber})</j:if>
+				</p>
+				<p>
+				${w.description}
 				</p>
 			</j:forEach>
+
+			<hr/>
 
 		</l:main-panel>
 	</l:layout>
