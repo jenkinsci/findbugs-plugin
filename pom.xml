@@ -10,7 +10,7 @@
   <artifactId>findbugs</artifactId>
   <packaging>hpi</packaging>
   <name>Hudson FindBugs Plug-in</name>
-  <version>1.2-SNAPSHOT</version>
+  <version>1.2</version>
   <licenses>
   	<license><name>MIT license</name><comments>All source code is under the MIT license.</comments></license>
   	<license><comments>The findbugs logo is a trademark by The University of Maryland. These icons are a courtesy of the FindBugs team.</comments></license>
@@ -46,4 +46,8 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+
+  <scm>
+    <tag>findbugs-1_2</tag>
+  </scm>
 </project>
