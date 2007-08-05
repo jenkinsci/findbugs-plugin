@@ -48,10 +48,6 @@
     </dependency>
   </dependencies>
 
-  <properties>
-	<maven.scm.provider.cvs.implementation>cvs_native</maven.scm.provider.cvs.implementation>
-  </properties>
-
   <repositories>
     <repository>
       <id>java.net2</id>
