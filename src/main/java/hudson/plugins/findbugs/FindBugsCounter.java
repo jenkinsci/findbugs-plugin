@@ -128,6 +128,7 @@ public class FindBugsCounter {
         digester.addObjectCreate("BugCollection/BugInstance", Warning.class);
         digester.addSetProperties("BugCollection/BugInstance");
         digester.addSetNext("BugCollection/BugInstance", "addWarning", Warning.class.getName());
+        digester.addCallMethod("BugCollection/BugInstance/LongMessage", "setMessage", 0);
 
         digester.addObjectCreate("BugCollection/BugInstance/Class", JavaClass.class);
         digester.addSetProperties("BugCollection/BugInstance/Class");

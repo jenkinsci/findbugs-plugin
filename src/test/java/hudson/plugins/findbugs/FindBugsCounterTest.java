@@ -85,12 +85,10 @@ public class FindBugsCounterTest {
         assertEquals(ERROR_MESSAGE, 136, module.getNumberOfWarnings());
         assertEquals("Wrong Version detected", "1.2.1", module.getVersion());
 
-        // FIXME: here we have two class references for one bug
-        Collection<Warning> warnings = module.getWarnings("java.lang");
-        assertEquals(WRONG_WARNINGS_IN_PACKAGE_ERROR, 1, warnings.size());
+        assertEquals(WRONG_WARNINGS_IN_PACKAGE_ERROR, 0, module.getNumberOfWarnings("java.lang"));
 
-        for (Warning warning : warnings) {
-            assertNotNull("Description should not be empty.", warning.getDescription());
+        for (Warning warning : module.getWarnings("org.apache.hadoop.ipc")) {
+            assertNotNull("Message should not be empty.", warning.getMessage());
             assertNotNull("Line number should not be empty.", warning.getLineNumber());
         }
     }

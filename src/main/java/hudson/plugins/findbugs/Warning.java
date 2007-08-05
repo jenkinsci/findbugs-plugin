@@ -1,5 +1,7 @@
 package hudson.plugins.findbugs;
 
+import org.apache.commons.lang.StringUtils;
+
 // CHECKSTYLE:OFF
 public class Warning {
     private String type;
@@ -20,8 +22,10 @@ public class Warning {
     }
 
     public void linkClass(final JavaClass owningClass) {
-        javaClass = owningClass;
-        classname = owningClass.getClassname();
+        if (!owningClass.isRoleClass()) {
+            javaClass = owningClass;
+            classname = owningClass.getClassname();
+        }
     }
 
     /**
@@ -102,7 +106,7 @@ public class Warning {
      * @return the lineNumer
      */
     public String getLineNumber() {
-        return lineNumber;
+        return StringUtils.defaultIfEmpty(lineNumber, "Not available");
     }
 
     /**

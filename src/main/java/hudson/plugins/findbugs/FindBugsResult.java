@@ -50,13 +50,22 @@ public class FindBugsResult implements ModelObject, Serializable {
         owner = build;
         numberOfWarnings = project.getNumberOfWarnings();
         this.project = new WeakReference<JavaProject>(project);
-        FindBugsResultAction action = build.getAction(FindBugsResultAction.class);
-        if (action.hasPreviousResult()) {
-            delta = project.getNumberOfWarnings() - action.getPreviousResult().getResult().getNumberOfWarnings();
-        }
-        else {
-            delta = 0;
-        }
+        delta = 0;
+    }
+
+    /**
+     * Creates a new instance of <code>FindBugsResult</code>.
+     * @param build
+     *            the current build as owner of this action
+     * @param project
+     *            the parsed FindBugs result
+     * @param previousResult result of previous build
+     */
+    public FindBugsResult(final Build<?, ?> build, final JavaProject project, final FindBugsResult previousResult) {
+        owner = build;
+        numberOfWarnings = project.getNumberOfWarnings();
+        this.project = new WeakReference<JavaProject>(project);
+        delta = project.getNumberOfWarnings() - previousResult.getNumberOfWarnings();
     }
 
     /** {@inheritDoc} */

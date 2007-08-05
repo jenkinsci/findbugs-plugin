@@ -13,6 +13,7 @@ public class JavaClass {
     private int low;
     private int high;
     private int normal;
+    private String role;
 
     public void addWarning(final Warning warning) {
         warnings.add(warning);
@@ -26,6 +27,15 @@ public class JavaClass {
         else {
             normal++;
         }
+    }
+
+    /**
+     * Sets the role to the specified value.
+     *
+     * @param role the value to set
+     */
+    public void setRole(final String role) {
+        this.role = role;
     }
 
     public Collection<Warning> getWarnings() {
@@ -70,6 +80,14 @@ public class JavaClass {
 
     public String getPackage() {
         return StringUtils.substringBeforeLast(classname, ".");
+    }
+
+    /**
+     * Returns whether this class is a role or a class with an error.
+     * @return <code>true</code> if this is a role class
+     */
+    public boolean isRoleClass() {
+        return role != null;
     }
 }
 

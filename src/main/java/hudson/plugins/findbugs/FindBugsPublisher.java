@@ -164,7 +164,21 @@ public class FindBugsPublisher extends Publisher {
 
         try {
             JavaProject project = findBugsCounter.findBugs();
-            FindBugsResult result = new FindBugsResult(build, project);
+            Object previous = build.getPreviousBuild();
+            FindBugsResult result;
+            if (previous instanceof Build<?, ?>) {
+                Build<?, ?> previousBuild = (Build<?, ?>)previous;
+                FindBugsResultAction previousAction = previousBuild.getAction(FindBugsResultAction.class);
+                if (previousAction == null) {
+                    result = new FindBugsResult(build, project);
+                }
+                else {
+                    result = new FindBugsResult(build, project, previousAction.getResult());
+                }
+            }
+            else {
+                result = new FindBugsResult(build, project);
+            }
 
             build.getActions().add(new FindBugsResultAction(build, result, minimumBugs, isHealthyReportEnabled, healthyBugs, unHealthyBugs));
 

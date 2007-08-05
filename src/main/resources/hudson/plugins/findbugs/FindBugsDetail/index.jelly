@@ -15,9 +15,9 @@
 				<p>
 				${w.description}
 				</p>
+				<hr/>
 			</j:forEach>
 
-			<hr/>
 
 		</l:main-panel>
 	</l:layout>
