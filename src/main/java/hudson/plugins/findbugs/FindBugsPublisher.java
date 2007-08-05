@@ -164,10 +164,9 @@ public class FindBugsPublisher extends Publisher {
 
         try {
             JavaProject project = findBugsCounter.findBugs();
+            FindBugsResult result = new FindBugsResult(build, project);
 
-            FindBugsResultAction action = new FindBugsResultAction(build, minimumBugs, isHealthyReportEnabled, healthyBugs, unHealthyBugs);
-            build.getActions().add(action);
-            action.setResult(new FindBugsResult(build, project));
+            build.getActions().add(new FindBugsResultAction(build, result, minimumBugs, isHealthyReportEnabled, healthyBugs, unHealthyBugs));
 
             int warnings = project.getNumberOfWarnings();
             if (warnings > 0) {

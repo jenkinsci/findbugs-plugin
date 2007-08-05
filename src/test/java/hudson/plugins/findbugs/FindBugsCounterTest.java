@@ -3,9 +3,10 @@ package hudson.plugins.findbugs;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.net.URL;
 import java.util.Collection;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
@@ -22,20 +23,47 @@ public class FindBugsCounterTest {
     /** Expected number of spell checker warnings. */
     private static final int NUMBER_OF_SPELL_WARNINGS = 6;
     /** Error message. */
-    private static final String WRONG_CLASSES_ERROR = "Wrong number of classes detected.";
+    private static final String WRONG_WARNINGS_IN_PACKAGE_ERROR = "Wrong number of warnings in a package detected.";
     /** Error message. */
     private static final String ERROR_MESSAGE = "Wrong number of bugs parsed.";
     /** Expected number of bugs. */
     private static final int NUMBER_OF_BUGS = 8;
 
     /**
+     * Initializes the messages file.
+     *
+     * @throws IOException
+     *             in case of an error
+     * @throws SAXException
+     *             in case of an error
+     */
+    @BeforeClass
+    public static void initialize() throws IOException, SAXException {
+        FindBugsMessages.getInstance().initialize();
+    }
+
+    /**
      * Checks whether we correctly detect that the file contains no bugs.
      */
     @Test
     public void scanFileWithNoBugs() throws IOException, SAXException {
-        InputStream file = FindBugsCounterTest.class.getResourceAsStream("findbugs-no-errors.xml");
-        Module module = new FindBugsCounter(null).parse(file);
+        Module module = parseFile("findbugs-no-errors.xml");
         assertEquals(ERROR_MESSAGE, 0, module.getNumberOfWarnings());
+    }
+
+    /**
+     * Parses the specified file.
+     *
+     * @param fileName the file to read
+     * @return the parsed module
+     * @throws IOException
+     *             in case of an error
+     * @throws SAXException
+     *             in case of an error
+     */
+    private Module parseFile(final String fileName) throws IOException, SAXException {
+        URL file = FindBugsCounterTest.class.getResource(fileName);
+        return new FindBugsCounter(null).parse(file);
     }
 
     /**
@@ -43,21 +71,28 @@ public class FindBugsCounterTest {
      */
     @Test
     public void scanOtherFile() throws IOException, SAXException {
-        InputStream file = FindBugsCounterTest.class.getResourceAsStream("otherfile.xml");
-        Module module = new FindBugsCounter(null).parse(file);
+        Module module = parseFile("otherfile.xml");
         assertEquals(ERROR_MESSAGE, 0, module.getNumberOfWarnings());
         assertEquals(ERROR_MESSAGE, "Unknown file format", module.getName());
     }
 
     /**
-     * Checks whether we correctly detect that the file contains no bugs.
+     * Checks whether we correctly detect a FindBugs 1.2.1 file.
      */
-    // FIXME: this is findbugs 1.2.1 format and currently returns 0 warnings!
     @Test
-    public void scanFileWithErrors() throws IOException, SAXException {
-        InputStream file = FindBugsCounterTest.class.getResourceAsStream("findbugs-error.xml");
-        Module module = new FindBugsCounter(null).parse(file);
-        assertEquals(ERROR_MESSAGE, 0, module.getNumberOfWarnings());
+    public void scan121File() throws IOException, SAXException {
+        Module module = parseFile("findbugs-1.2.1.xml");
+        assertEquals(ERROR_MESSAGE, 136, module.getNumberOfWarnings());
+        assertEquals("Wrong Version detected", "1.2.1", module.getVersion());
+
+        // FIXME: here we have two class references for one bug
+        Collection<Warning> warnings = module.getWarnings("java.lang");
+        assertEquals(WRONG_WARNINGS_IN_PACKAGE_ERROR, 1, warnings.size());
+
+        for (Warning warning : warnings) {
+            assertNotNull("Description should not be empty.", warning.getDescription());
+            assertNotNull("Line number should not be empty.", warning.getLineNumber());
+        }
     }
 
     /**
@@ -65,20 +100,19 @@ public class FindBugsCounterTest {
      */
     @Test
     public void scanFileWithSomeBugs() throws IOException, SAXException {
-        InputStream file = FindBugsCounterTest.class.getResourceAsStream("findbugs.xml");
-        Module module = new FindBugsCounter(null).parse(file);
+        Module module = parseFile("findbugs.xml");
         assertEquals(ERROR_MESSAGE, NUMBER_OF_BUGS, module.getNumberOfWarnings());
         assertEquals("Wrong Version detected", "1.2.0", module.getVersion());
         assertEquals("Wrong number of packages detected", 2, module.getPackages().size());
 
-        assertEquals(WRONG_CLASSES_ERROR, NUMBER_OF_SPELL_WARNINGS, module.getWarnings(SPELL_PACKAGE).size());
-        assertEquals(WRONG_CLASSES_ERROR, NUMBER_OF_DOCU_WARNINGS, module.getWarnings(DOCU_PACKAGE).size());
+        assertEquals(WRONG_WARNINGS_IN_PACKAGE_ERROR, NUMBER_OF_SPELL_WARNINGS, module.getWarnings(SPELL_PACKAGE).size());
+        assertEquals(WRONG_WARNINGS_IN_PACKAGE_ERROR, NUMBER_OF_DOCU_WARNINGS, module.getWarnings(DOCU_PACKAGE).size());
         JavaProject javaProject = new JavaProject();
         javaProject.addModule(module);
-        assertEquals(WRONG_CLASSES_ERROR, NUMBER_OF_SPELL_WARNINGS, javaProject.getWarnings(SPELL_PACKAGE).size());
-        assertEquals(WRONG_CLASSES_ERROR, NUMBER_OF_DOCU_WARNINGS, javaProject.getWarnings(DOCU_PACKAGE).size());
+        assertEquals(WRONG_WARNINGS_IN_PACKAGE_ERROR, NUMBER_OF_SPELL_WARNINGS, javaProject.getWarnings(SPELL_PACKAGE).size());
+        assertEquals(WRONG_WARNINGS_IN_PACKAGE_ERROR, NUMBER_OF_DOCU_WARNINGS, javaProject.getWarnings(DOCU_PACKAGE).size());
 
-        assertEquals(WRONG_CLASSES_ERROR, 0, javaProject.getWarnings("wrong.package").size());
+        assertEquals(WRONG_WARNINGS_IN_PACKAGE_ERROR, 0, javaProject.getWarnings("wrong.package").size());
 
         Collection<Warning> warnings = javaProject.getWarnings(SPELL_PACKAGE);
         for (Warning warning : warnings) {

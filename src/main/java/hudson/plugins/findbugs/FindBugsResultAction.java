@@ -69,8 +69,11 @@ public class FindBugsResultAction implements StaplerProxy, HealthReportingAction
      *
      * @param owner
      *            the associated build of this action
+     * @param result
+     *            the result in this build
      * @param minimumBugs
-     *            Bug threshold to be reached if a build should be considered as unstable.
+     *            Bug threshold to be reached if a build should be considered as
+     *            unstable.
      * @param isHealthyReportEnabled
      *            Determines whether to use the provided healthy thresholds.
      * @param healthy
@@ -80,12 +83,13 @@ public class FindBugsResultAction implements StaplerProxy, HealthReportingAction
      *            Report health as 0% when the number of warnings is greater
      *            than this value
      */
-    public FindBugsResultAction(final Build<?, ?> owner, final int minimumBugs, final boolean isHealthyReportEnabled, final int healthy, final int unHealthy) {
+    public FindBugsResultAction(final Build<?, ?> owner, final FindBugsResult result, final int minimumBugs, final boolean isHealthyReportEnabled, final int healthy, final int unHealthy) {
         this.owner = owner;
         this.minimumBugs = minimumBugs;
         this.isHealthyReportEnabled = isHealthyReportEnabled;
         this.healthy = healthy;
         this.unHealthy = unHealthy;
+        this.result = result;
     }
 
     /**

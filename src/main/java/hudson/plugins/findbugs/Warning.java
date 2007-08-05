@@ -8,6 +8,7 @@ public class Warning {
     private String message;
     private String lineNumber;
     private String classname;
+    private JavaClass javaClass;
 
     /**
      * Returns the type.
@@ -16,6 +17,20 @@ public class Warning {
      */
     public String getType() {
         return type;
+    }
+
+    public void linkClass(final JavaClass owningClass) {
+        javaClass = owningClass;
+        classname = owningClass.getClassname();
+    }
+
+    /**
+     * Returns the javaClass.
+     *
+     * @return the javaClass
+     */
+    public JavaClass getJavaClass() {
+        return javaClass;
     }
 
     /**

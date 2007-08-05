@@ -38,6 +38,12 @@ public class Module {
         }
     }
 
+    public void addWarning(final Warning warning) {
+        JavaClass javaClass = warning.getJavaClass();
+        javaClass.addWarning(warning);
+        addClass(javaClass);
+    }
+
     public Collection<JavaPackage> getPackages() {
         return Collections.unmodifiableCollection(packages.values());
     }

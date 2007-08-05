@@ -86,10 +86,13 @@
         <module name="IllegalThrows"/>
         <module name="InnerAssignment"/>
         <module name="JUnitTestCase"/>
-        <module name="MagicNumber"/>
+        <module name="MagicNumber">
+            <property name="severity" value="ignore"/>
+        </module>
         <module name="MissingSwitchDefault"/>
         <module name="ModifiedControlVariable"/>
         <module name="MultipleStringLiterals">
+            <property name="severity" value="ignore"/>
             <property name="ignoreStringsRegexp" value="^&quot;[a-zA-Z]*&quot;$"/>
         </module>
         <module name="MultipleVariableDeclarations"/>

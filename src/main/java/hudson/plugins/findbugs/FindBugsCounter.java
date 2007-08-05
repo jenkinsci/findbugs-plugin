@@ -6,6 +6,7 @@ import hudson.model.Build;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 
 import org.apache.commons.digester.Digester;
 import org.apache.commons.lang.ObjectUtils;
@@ -18,6 +19,8 @@ import org.xml.sax.SAXException;
  * @author Ulli Hafner
  */
 public class FindBugsCounter {
+    /** Parent XPATH element. */
+    private static final String BUG_COLLECTION_XPATH = "BugCollection";
     /** Associated build. */
     private final Build<?, ?> build;
 
@@ -39,13 +42,55 @@ public class FindBugsCounter {
      *             if the file could not be parsed
      * @throws SAXException if the file is not in valid XML format
      */
-    protected Module parse(final InputStream file) throws IOException, SAXException {
+    public Module parse(final URL file) throws IOException, SAXException {
+        boolean use120Scanner = isIn120Format(file.openStream());
+        if (use120Scanner) {
+            return parse120Format(file.openStream());
+        }
+        else {
+            return parse121Format(file.openStream());
+        }
+    }
+
+    /**
+     * Returns the parsed FindBugs analysis file.
+     *
+     * @param file
+     *            the FindBugs analysis file
+     * @return the parsed result (stored in the module instance)
+     * @throws IOException
+     *             if the file could not be parsed
+     * @throws SAXException if the file is not in valid XML format
+     */
+    public Module parse(final FilePath file) throws IOException, SAXException {
+        boolean use120Scanner = isIn120Format(file.read());
+        if (use120Scanner) {
+            return parse120Format(file.read());
+        }
+        else {
+            return parse121Format(file.read());
+        }
+    }
+
+    /**
+     * Returns the parsed FindBugs analysis file. The used scanner is 1.2.0
+     * format.
+     *
+     * @param file
+     *            the FindBugs analysis file
+     * @return the parsed result (stored in the module instance)
+     * @throws IOException
+     *             if the file could not be parsed
+     * @throws SAXException
+     *             if the file is not in valid XML format
+     */
+    private Module parse120Format(final InputStream file) throws IOException, SAXException {
         Digester digester = new Digester();
         digester.setValidating(false);
         digester.setClassLoader(FindBugsCounter.class.getClassLoader());
 
-        digester.addObjectCreate("BugCollection", Module.class);
-        digester.addSetProperties("BugCollection");
+        digester.addObjectCreate(BUG_COLLECTION_XPATH, Module.class);
+        digester.addSetProperties(BUG_COLLECTION_XPATH);
 
         String classXpath = "BugCollection/file";
         digester.addObjectCreate(classXpath, JavaClass.class);
@@ -58,6 +103,62 @@ public class FindBugsCounter {
         digester.addSetNext(warningXpath, "addWarning", Warning.class.getName());
 
         return (Module)ObjectUtils.defaultIfNull(digester.parse(file), new Module("Unknown file format"));
+    }
+
+    /**
+     * Returns the parsed FindBugs analysis file. The used scanner is 1.2.0
+     * format.
+     *
+     * @param file
+     *            the FindBugs analysis file
+     * @return the parsed result (stored in the module instance)
+     * @throws IOException
+     *             if the file could not be parsed
+     * @throws SAXException
+     *             if the file is not in valid XML format
+     */
+    private Module parse121Format(final InputStream file) throws IOException, SAXException {
+        Digester digester = new Digester();
+        digester.setValidating(false);
+        digester.setClassLoader(FindBugsCounter.class.getClassLoader());
+
+        digester.addObjectCreate(BUG_COLLECTION_XPATH, Module.class);
+        digester.addSetProperties(BUG_COLLECTION_XPATH);
+
+        digester.addObjectCreate("BugCollection/BugInstance", Warning.class);
+        digester.addSetProperties("BugCollection/BugInstance");
+        digester.addSetNext("BugCollection/BugInstance", "addWarning", Warning.class.getName());
+
+        digester.addObjectCreate("BugCollection/BugInstance/Class", JavaClass.class);
+        digester.addSetProperties("BugCollection/BugInstance/Class");
+        digester.addSetNext("BugCollection/BugInstance/Class", "linkClass", JavaClass.class.getName());
+
+        return (Module)ObjectUtils.defaultIfNull(digester.parse(file), new Module("Unknown file format"));
+    }
+
+    /**
+     * Returns whether the provided file is in FindBugs 1.2.0 format.
+     *
+     * @param file
+     *            the file to check
+     * @return <code>true</code> if the provided file is in FindBugs 1.2.0
+     *         format.
+     * @throws IOException
+     *             if the file could not be parsed
+     * @throws SAXException
+     *             if the file is not in valid XML format
+     */
+    private boolean isIn120Format(final InputStream file) throws IOException, SAXException {
+        Digester digester = new Digester();
+        digester.setValidating(false);
+        digester.setClassLoader(FindBugsCounter.class.getClassLoader());
+
+        digester.addObjectCreate(BUG_COLLECTION_XPATH, Module.class);
+        digester.addSetProperties(BUG_COLLECTION_XPATH);
+
+        Module module = (Module)digester.parse(file);
+
+        return module != null && "1.2.0".equals(module.getVersion());
     }
 
     /**
@@ -82,7 +183,7 @@ public class FindBugsCounter {
         FilePath[] list = getWorkingDirectory().list("*.xml");
         JavaProject project = new JavaProject();
         for (FilePath filePath : list) {
-            Module module = parse(filePath.read());
+            Module module = parse(filePath);
             module.setName(StringUtils.substringBefore(filePath.getName(), ".xml"));
             project.addModule(module);
         }
