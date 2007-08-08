@@ -37,6 +37,10 @@ public class FindBugsResult implements ModelObject, Serializable {
     private transient WeakReference<JavaProject> project;
     /** The number of warnings in this build. */
     private final int numberOfWarnings;
+    /** The number of new warnings in this build. */
+    private final int numberOfNewWarnings;
+    /** The number of fixed warnings in this build. */
+    private final int numberOfFixedWarnings;
 
     /**
      * Creates a new instance of <code>FindBugsResult</code>.
@@ -51,6 +55,8 @@ public class FindBugsResult implements ModelObject, Serializable {
         numberOfWarnings = project.getNumberOfWarnings();
         this.project = new WeakReference<JavaProject>(project);
         delta = 0;
+        numberOfFixedWarnings = 0;
+        numberOfNewWarnings = 0;
     }
 
     /**
@@ -66,6 +72,8 @@ public class FindBugsResult implements ModelObject, Serializable {
         numberOfWarnings = project.getNumberOfWarnings();
         this.project = new WeakReference<JavaProject>(project);
         delta = project.getNumberOfWarnings() - previousResult.getNumberOfWarnings();
+        numberOfFixedWarnings = WarningDifferencer.getFixedWarnings(project, previousResult.getProject()).size();
+        numberOfNewWarnings = WarningDifferencer.getNewWarnings(project, previousResult.getProject()).size();
     }
 
     /** {@inheritDoc} */
@@ -83,12 +91,30 @@ public class FindBugsResult implements ModelObject, Serializable {
     }
 
     /**
-     * Returns the numberOfWarnings.
+     * Gets the number of warnings.
      *
-     * @return the numberOfWarnings
+     * @return the number of warnings
      */
     public int getNumberOfWarnings() {
         return numberOfWarnings;
+    }
+
+    /**
+     * Gets the number of fixed warnings.
+     *
+     * @return the number of fixed warnings
+     */
+    public int getNumberOfFixedWarnings() {
+        return numberOfFixedWarnings;
+    }
+
+    /**
+     * Gets the number of new warnings.
+     *
+     * @return the number of new warnings
+     */
+    public int getNumberOfNewWarnings() {
+        return numberOfNewWarnings;
     }
 
     /**

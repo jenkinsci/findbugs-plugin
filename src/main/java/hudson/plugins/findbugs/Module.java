@@ -3,7 +3,9 @@ package hudson.plugins.findbugs;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 // CHECKSTYLE:OFF
 public class Module {
@@ -63,6 +65,14 @@ public class Module {
         else {
             return Collections.emptyList();
         }
+    }
+
+    public Set<Warning> getWarnings() {
+        Set<Warning> allWarnings = new HashSet<Warning>();
+        for (JavaPackage javaPackage : packages.values()) {
+            allWarnings.addAll(javaPackage.getWarnings());
+        }
+        return allWarnings;
     }
 
     /**

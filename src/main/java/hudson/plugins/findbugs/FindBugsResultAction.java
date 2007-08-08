@@ -5,6 +5,7 @@ import hudson.model.AbstractBuild;
 import hudson.model.Build;
 import hudson.model.HealthReport;
 import hudson.model.HealthReportingAction;
+import hudson.plugins.util.HealthReportBuilder;
 import hudson.util.ChartUtil;
 import hudson.util.ColorPalette;
 import hudson.util.DataSetBuilder;
@@ -55,14 +56,10 @@ public class FindBugsResultAction implements StaplerProxy, HealthReportingAction
     private final Build<?, ?> owner;
     /** The actual result of the FindBugs analysis. */
     private FindBugsResult result;
-    /** Report health as 100% when the number of warnings is less than this value. */
-    private final int healthy;
-    /** Report health as 0% when the number of warnings is greater than this value. */
-    private final int unHealthy;
-    /** Determines whether to use the provided healthy thresholds. */
-    private final boolean isHealthyReportEnabled;
     /** Warning threshold. */
     private final int minimumBugs;
+    /** Builds a health report. */
+    private transient final HealthReportBuilder healthReportBuilder;
 
     /**
      * Creates a new instance of <code>FindBugsBuildAction</code>.
@@ -86,10 +83,8 @@ public class FindBugsResultAction implements StaplerProxy, HealthReportingAction
     public FindBugsResultAction(final Build<?, ?> owner, final FindBugsResult result, final int minimumBugs, final boolean isHealthyReportEnabled, final int healthy, final int unHealthy) {
         this.owner = owner;
         this.minimumBugs = minimumBugs;
-        this.isHealthyReportEnabled = isHealthyReportEnabled;
-        this.healthy = healthy;
-        this.unHealthy = unHealthy;
         this.result = result;
+        healthReportBuilder = new HealthReportBuilder("FindBugs", "warning", isHealthyReportEnabled, healthy, unHealthy);
     }
 
     /**
@@ -117,23 +112,7 @@ public class FindBugsResultAction implements StaplerProxy, HealthReportingAction
 
     /** {@inheritDoc} */
     public HealthReport getBuildHealth() {
-        if (isHealthyReportEnabled) {
-            int numberOfWarnings = getResult().getNumberOfWarnings();
-            int percentage;
-            if (numberOfWarnings < healthy) {
-                percentage = 100;
-            }
-            else if (numberOfWarnings > unHealthy) {
-                percentage = 0;
-            }
-            else {
-                percentage = 100 - ((numberOfWarnings - healthy) * 100 / (unHealthy - healthy));
-            }
-            return new HealthReport(percentage, "FindBugs: " + numberOfWarnings + " warnings found.");
-        }
-        else {
-            return null;
-        }
+        return healthReportBuilder.computeHealth(getResult().getNumberOfWarnings());
     }
 
     /** {@inheritDoc} */

@@ -1,9 +1,9 @@
-package hudson.plugins.findbugs;
+package hudson.plugins.util;
 
 /**
  * Indicates an orderly abortion of the processing.
  */
-final class AbortException extends RuntimeException {
+public final class AbortException extends RuntimeException {
     /** Generated ID. */
     private static final long serialVersionUID = -5897876033901702893L;
 
@@ -12,7 +12,7 @@ final class AbortException extends RuntimeException {
      *
      * @param message the exception message
      */
-    AbortException(final String message) {
+    public AbortException(final String message) {
         super(message);
     }
 }

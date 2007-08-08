@@ -1,29 +1,34 @@
-package hudson.plugins.findbugs;
+package hudson.plugins.util;
 
-import static org.easymock.EasyMock.*;
-import static org.easymock.classextension.EasyMock.*;
-import static org.junit.Assert.*;
 import hudson.model.HealthReport;
+import junit.framework.TestCase;
 
-import org.junit.After;
 import org.junit.Test;
 
 /**
- *  Tests the healthiness report of class {@link FindBugsResultAction}.
+ * Tests the class {@link HealthReportBuilder}.
  */
-public class FindBugsResultActionTest {
+public class HealthReportBuilderTest extends TestCase {
     /** Error message. */
     private static final String ERROR_MESSAGE = "Wrong healthiness calculation.";
-    /** Mock of the FindBugs result. */
-    private FindBugsResult findBugsResult;
 
     /**
      * Tests whether we evaluate correctly to a 50% health.
      */
     @Test
     public void testMiddle() {
-        HealthReport health = createFixture(true, 50, 150, 100);
+        HealthReport health = createHelthReport(true, 50, 150, 100);
         assertEquals(ERROR_MESSAGE, 50, health.getScore());
+    }
+
+    /**
+     * Tests whether we correctly display the result.
+     */
+    @Test
+    public void testDisplay() {
+        assertEquals(ERROR_MESSAGE, "FindBugs: 0 warnings found.", createHelthReport(true, 50, 150, 0).getDescription());
+        assertEquals(ERROR_MESSAGE, "FindBugs: 1 warning found.", createHelthReport(true, 50, 150, 1).getDescription());
+        assertEquals(ERROR_MESSAGE, "FindBugs: 2 warnings found.", createHelthReport(true, 50, 150, 2).getDescription());
     }
 
     /**
@@ -31,7 +36,7 @@ public class FindBugsResultActionTest {
      */
     @Test
     public void testHigh() {
-        HealthReport health = createFixture(true, 50, 150, 20);
+        HealthReport health = createHelthReport(true, 50, 150, 20);
         assertEquals(ERROR_MESSAGE, 100, health.getScore());
     }
 
@@ -40,7 +45,7 @@ public class FindBugsResultActionTest {
      */
     @Test
     public void testHighBoundary() {
-        HealthReport health = createFixture(true, 50, 150, 50);
+        HealthReport health = createHelthReport(true, 50, 150, 50);
         assertEquals(ERROR_MESSAGE, 100, health.getScore());
     }
 
@@ -49,7 +54,7 @@ public class FindBugsResultActionTest {
      */
     @Test
     public void testLow() {
-        HealthReport health = createFixture(true, 50, 150, 200);
+        HealthReport health = createHelthReport(true, 50, 150, 200);
         assertEquals(ERROR_MESSAGE, 0, health.getScore());
     }
 
@@ -58,7 +63,7 @@ public class FindBugsResultActionTest {
      */
     @Test
     public void testLowBoundary() {
-        HealthReport health = createFixture(true, 50, 150, 150);
+        HealthReport health = createHelthReport(true, 50, 150, 150);
         assertEquals(ERROR_MESSAGE, 0, health.getScore());
     }
 
@@ -67,7 +72,7 @@ public class FindBugsResultActionTest {
      */
     @Test
     public void test25Percent() {
-        HealthReport health = createFixture(true, 0, 100, 75);
+        HealthReport health = createHelthReport(true, 0, 100, 75);
         assertEquals(ERROR_MESSAGE, 25, health.getScore());
     }
 
@@ -76,10 +81,8 @@ public class FindBugsResultActionTest {
      */
     @Test
     public void testNoHealthyReport() {
-        HealthReport health = createFixture(false, 0, 100, 75);
+        HealthReport health = createHelthReport(false, 0, 100, 75);
         assertNull(ERROR_MESSAGE, health);
-
-        assertEquals("Mock test failed", 75, findBugsResult.getNumberOfWarnings()); // so the mock will get invoked once
     }
 
     /**
@@ -95,23 +98,9 @@ public class FindBugsResultActionTest {
      *            actual number of bugs
      * @return the actual healthiness
      */
-    private HealthReport createFixture(final boolean isEnabled, final int min, final int max, final int actual) {
-        findBugsResult = createMock(FindBugsResult.class);
-        expect(findBugsResult.getNumberOfWarnings()).andReturn(actual);
-
-        FindBugsResultAction action = new FindBugsResultAction(null, findBugsResult, 0, isEnabled, min, max);
-        replay(findBugsResult);
-        return action.getBuildHealth();
+    private HealthReport createHelthReport(final boolean isEnabled, final int min, final int max, final int actual) {
+        HealthReportBuilder builder = new HealthReportBuilder("FindBugs", "warning", isEnabled, min, max);
+        return builder.computeHealth(actual);
     }
-
-    /**
-     * Verifies the mock.
-     */
-    @After
-    public void verifyMock() {
-        verify(findBugsResult);
-    }
-
 }
-
 

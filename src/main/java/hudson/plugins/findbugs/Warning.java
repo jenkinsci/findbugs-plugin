@@ -144,5 +144,57 @@ public class Warning {
     public String getClassname() {
         return classname;
     }
+
+    /** {@inheritDoc} */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((classname == null) ? 0 : classname.hashCode());
+        result = prime * result + ((lineNumber == null) ? 0 : lineNumber.hashCode());
+        result = prime * result + ((type == null) ? 0 : type.hashCode());
+        return result;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Warning other = (Warning)obj;
+        if (classname == null) {
+            if (other.classname != null) {
+                return false;
+            }
+        }
+        else if (!classname.equals(other.classname)) {
+            return false;
+        }
+        if (lineNumber == null) {
+            if (other.lineNumber != null) {
+                return false;
+            }
+        }
+        else if (!lineNumber.equals(other.lineNumber)) {
+            return false;
+        }
+        if (type == null) {
+            if (other.type != null) {
+                return false;
+            }
+        }
+        else if (!type.equals(other.type)) {
+            return false;
+        }
+        return true;
+    }
+
 }
 

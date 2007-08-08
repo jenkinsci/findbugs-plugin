@@ -3,7 +3,9 @@ package hudson.plugins.findbugs;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 // CHECKSTYLE:OFF
 public class JavaProject {
@@ -44,6 +46,14 @@ public class JavaProject {
         ArrayList<Warning> warnings = new ArrayList<Warning>();
         for (Module module : modules) {
             warnings.addAll(module.getWarnings(packageName));
+        }
+        return warnings;
+    }
+
+    public Set<Warning> getWarnings() {
+        Set<Warning> warnings = new HashSet<Warning>();
+        for (Module module : modules) {
+            warnings.addAll(module.getWarnings());
         }
         return warnings;
     }

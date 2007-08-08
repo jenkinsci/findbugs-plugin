@@ -1,6 +1,7 @@
 package hudson.plugins.findbugs;
 
 import hudson.model.Descriptor;
+import hudson.plugins.util.ThresholdValidator;
 import hudson.tasks.Publisher;
 import hudson.util.FormFieldValidator;
 

@@ -3,6 +3,7 @@ package hudson.plugins.findbugs;
 import hudson.FilePath;
 import hudson.FilePath.FileCallable;
 import hudson.model.BuildListener;
+import hudson.plugins.util.AbortException;
 import hudson.remoting.VirtualChannel;
 import hudson.util.IOException2;
 
