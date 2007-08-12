@@ -59,7 +59,7 @@ public class FindBugsResultAction implements StaplerProxy, HealthReportingAction
     /** Warning threshold. */
     private final int minimumBugs;
     /** Builds a health report. */
-    private transient final HealthReportBuilder healthReportBuilder;
+    private final HealthReportBuilder healthReportBuilder;
 
     /**
      * Creates a new instance of <code>FindBugsBuildAction</code>.

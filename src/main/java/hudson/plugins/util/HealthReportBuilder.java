@@ -1,5 +1,7 @@
 package hudson.plugins.util;
 
+import java.io.Serializable;
+
 import hudson.Util;
 import hudson.model.HealthReport;
 
@@ -9,7 +11,9 @@ import hudson.model.HealthReport;
  *
  * @see HealthReport
  */
-public class HealthReportBuilder {
+public class HealthReportBuilder implements Serializable {
+    /** Unique identifier of this class. */
+    private static final long serialVersionUID = 5191317904662711835L;
     /** Report health as 100% when the number of warnings is less than this value. */
     private final int healthy;
     /** Report health as 0% when the number of warnings is greater than this value. */
