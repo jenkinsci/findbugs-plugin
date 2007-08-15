@@ -1,0 +1,31 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler"
+	xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson"
+	xmlns:f="/lib/form" xmlns:i="jelly:fmt">
+	<t:summary icon="/plugin/findbugs/icons/findbugs-48x48.gif">
+		<a href="findbugsResult">FindBugs</a>:
+	    <j:if test="${it.result.numberOfWarnings > 0}">
+	    	a total of ${it.result.numberOfWarnings} warnings have been found
+	    	<j:choose>
+	    		<j:when test="${it.result.numberOfNewWarnings > 0 &amp;&amp; it.result.numberOfFixedWarnings > 0}">
+	    			(${it.result.numberOfNewWarnings} new and ${it.result.numberOfFixedWarnings} fixed).
+	    		</j:when>
+	    		<j:when test="${it.result.numberOfFixedWarnings > 0}">
+	    			(${it.result.numberOfFixedWarnings} fixed).
+	    		</j:when>
+	    		<j:when test="${it.result.numberOfNewWarnings > 0}">
+	    			(${it.result.numberOfNewWarnings} new).
+	    		</j:when>
+	    		<j:otherwise>(+/-0).</j:otherwise>
+	    	</j:choose>
+	    </j:if>
+	    <j:if test="${it.result.numberOfWarnings == 0}">
+	    	no warnings have been
+	    	<j:choose>
+	    		<j:when test="${it.result.numberOfFixedWarnings > 0}">
+	    			 found (${it.result.numberOfFixedWarnings} fixed).
+	    		</j:when>
+	    		<j:otherwise>found.</j:otherwise>
+	    	</j:choose>
+	    </j:if>
+	</t:summary>
+</j:jelly>
