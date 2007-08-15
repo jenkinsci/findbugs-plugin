@@ -12,9 +12,9 @@ import org.apache.commons.lang.StringUtils;
 import org.xml.sax.SAXException;
 
 /**
- *  Parses the FindBugs pattern description.
+ *  Parses the FindBugs pattern descriptions and provides access to these HTML messages.
  */
-// TODO: also read the category description
+// TODO: maybe we should also read the category description
 public final class FindBugsMessages {
     /** Maps a key to HTML description. */
     private Map<String, String> messages;
@@ -22,9 +22,9 @@ public final class FindBugsMessages {
     private static final FindBugsMessages INSTANCE = new FindBugsMessages();
 
     /**
-     * Returns the iNSTANCE.
+     * Returns the instance.
      *
-     * @return the iNSTANCE
+     * @return the instance
      */
     public static FindBugsMessages getInstance() {
         return INSTANCE;
