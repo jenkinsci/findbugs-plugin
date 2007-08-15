@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<BugCollection version="1.2.0" threshold="Low" effort="Default" >
+<file classname="com.workbrain.resultprocessor.DataProcessorContext" >
+<BugInstance type="SE_NO_SERIALVERSIONID" priority="Low" category="BAD_PRACTICE" message="SnVI: com.workbrain.resultprocessor.DataProcessorContext is Serializable; consider declaring a serialVersionUID" lineNumber="Not available" />
+</file>
+<file classname="com.workbrain.resultprocessor.grinder.GrinderResultsXMLRenderer" >
+<BugInstance type="BC_UNCONFIRMED_CAST" priority="Low" category="STYLE" message="BC: Unchecked/unconfirmed cast from org.apache.commons.chain.Context to com.workbrain.resultprocessor.DataProcessorContext in com.workbrain.resultprocessor.grinder.GrinderResultsXMLRenderer.execute(Context)" lineNumber="26" />
+</file>
+<file classname="com.workbrain.resultprocessor.grinder.GrinderDataProcessor" >
+<BugInstance type="BC_UNCONFIRMED_CAST" priority="Low" category="STYLE" message="BC: Unchecked/unconfirmed cast from org.apache.commons.chain.Context to com.workbrain.resultprocessor.DataProcessorContext in com.workbrain.resultprocessor.grinder.GrinderDataProcessor.execute(Context)" lineNumber="57" />
+</file>
+<file classname="com.workbrain.resultprocessor.jrobin.AbstractRrdGrapher" >
+<BugInstance type="BC_UNCONFIRMED_CAST" priority="Low" category="STYLE" message="BC: Unchecked/unconfirmed cast from org.apache.commons.chain.Context to com.workbrain.resultprocessor.DataProcessorContext in com.workbrain.resultprocessor.jrobin.AbstractRrdGrapher.execute(Context)" lineNumber="78" />
+</file>
+<file classname="com.workbrain.resultprocessor.jrobin.GraphConverter" >
+<BugInstance type="REC_CATCH_EXCEPTION" priority="Low" category="STYLE" message="REC: Exception is caught when Exception is not thrown in com.workbrain.resultprocessor.jrobin.GraphConverter.convertFile(File, String)" lineNumber="97" />
+</file>
+<file classname="com.workbrain.wbclient.WorkbrainContext" >
+<BugInstance type="SE_NO_SERIALVERSIONID" priority="Low" category="BAD_PRACTICE" message="SnVI: com.workbrain.wbclient.WorkbrainContext is Serializable; consider declaring a serialVersionUID" lineNumber="Not available" />
+</file>
+<file classname="com.workbrain.wbclient.lfso.model.Activity" >
+<BugInstance type="NP_EQUALS_SHOULD_HANDLE_NULL_ARGUMENT" priority="Normal" category="BAD_PRACTICE" message="NP: com.workbrain.wbclient.lfso.model.Activity.equals(Object) does not check for null argument" lineNumber="219" />
+</file>
+<file classname="com.workbrain.wbclient.lfso.model.Shift" >
+<BugInstance type="NP_EQUALS_SHOULD_HANDLE_NULL_ARGUMENT" priority="Normal" category="BAD_PRACTICE" message="NP: com.workbrain.wbclient.lfso.model.Shift.equals(Object) does not check for null argument" lineNumber="280" />
+<BugInstance type="CN_IDIOM" priority="Normal" category="BAD_PRACTICE" message="CN: Class com.workbrain.wbclient.lfso.model.Shift implements Cloneable but does not define or use clone method" lineNumber="Not available" />
+<BugInstance type="EI_EXPOSE_REP" priority="Normal" category="MALICIOUS_CODE" message="EI: com.workbrain.wbclient.lfso.model.Shift.getDate() may expose internal representation by returning Shift.date" lineNumber="298" />
+</file>
+<file classname="com.workbrain.wbclient.lfso.LFSOContext" >
+<BugInstance type="SE_NO_SERIALVERSIONID" priority="Low" category="BAD_PRACTICE" message="SnVI: com.workbrain.wbclient.lfso.LFSOContext is Serializable; consider declaring a serialVersionUID" lineNumber="Not available" />
+<BugInstance type="SE_BAD_FIELD" priority="Normal" category="BAD_PRACTICE" message="Se: Class com.workbrain.wbclient.lfso.LFSOContext defines non-transient non-serializable instance field shiftModification" lineNumber="Not available" />
+<BugInstance type="SE_BAD_FIELD" priority="Normal" category="BAD_PRACTICE" message="Se: Class com.workbrain.wbclient.lfso.LFSOContext defines non-transient non-serializable instance field shift" lineNumber="Not available" />
+</file>
+<file classname="com.workbrain.wbclient.lfso.massconfig.model.ResultFrame" >
+<BugInstance type="DM_NUMBER_CTOR" priority="Normal" category="PERFORMANCE" message="Bx: Method com.workbrain.wbclient.lfso.massconfig.model.ResultFrame.getColumnWidths(int, int) invokes inefficient Integer(int) constructor; use Integer.valueOf(int) instead" lineNumber="124" />
+</file>
+<file classname="com.workbrain.wbclient.lfso.massconfig.MassConfigContext" >
+<BugInstance type="DM_NUMBER_CTOR" priority="Normal" category="PERFORMANCE" message="Bx: Method com.workbrain.wbclient.lfso.massconfig.MassConfigContext.MassConfigContext() invokes inefficient Integer(int) constructor; use Integer.valueOf(int) instead" lineNumber="22" />
+<BugInstance type="DM_NUMBER_CTOR" priority="Normal" category="PERFORMANCE" message="Bx: Method com.workbrain.wbclient.lfso.massconfig.MassConfigContext.getRootLocation() invokes inefficient Integer(int) constructor; use Integer.valueOf(int) instead" lineNumber="51" />
+<BugInstance type="EI_EXPOSE_REP2" priority="Normal" category="MALICIOUS_CODE" message="EI2: com.workbrain.wbclient.lfso.massconfig.MassConfigContext.setEntityIds(String[]) may expose internal representation by storing an externally mutable object into MassConfigContext.entityIds" lineNumber="59" />
+<BugInstance type="EI_EXPOSE_REP" priority="Normal" category="MALICIOUS_CODE" message="EI: com.workbrain.wbclient.lfso.massconfig.MassConfigContext.getCorporateHierarchy() may expose internal representation by returning MassConfigContext.corporateHierarchy" lineNumber="71" />
+<BugInstance type="EI_EXPOSE_REP2" priority="Normal" category="MALICIOUS_CODE" message="EI2: com.workbrain.wbclient.lfso.massconfig.MassConfigContext.setCorporateHierarchy(String[]) may expose internal representation by storing an externally mutable object into MassConfigContext.corporateHierarchy" lineNumber="75" />
+<BugInstance type="EI_EXPOSE_REP" priority="Normal" category="MALICIOUS_CODE" message="EI: com.workbrain.wbclient.lfso.massconfig.MassConfigContext.getEntityIds() may expose internal representation by returning MassConfigContext.entityIds" lineNumber="90" />
+<BugInstance type="SE_NO_SERIALVERSIONID" priority="Low" category="BAD_PRACTICE" message="SnVI: com.workbrain.wbclient.lfso.massconfig.MassConfigContext is Serializable; consider declaring a serialVersionUID" lineNumber="Not available" />
+<BugInstance type="SE_BAD_FIELD" priority="Normal" category="BAD_PRACTICE" message="Se: Class com.workbrain.wbclient.lfso.massconfig.MassConfigContext defines non-transient non-serializable instance field requestProcessor" lineNumber="Not available" />
+<BugInstance type="SE_BAD_FIELD" priority="Normal" category="BAD_PRACTICE" message="Se: Class com.workbrain.wbclient.lfso.massconfig.MassConfigContext defines non-transient non-serializable instance field resultFrame" lineNumber="Not available" />
+</file>
+<file classname="com.workbrain.wbclient.mvs.SRJobtimeClient" >
+<BugInstance type="DLS_DEAD_LOCAL_STORE" priority="Normal" category="STYLE" message="DLS: Dead store to req in com.workbrain.wbclient.mvs.SRJobtimeClient.addNextSRStep2(SRRow)" lineNumber="79" />
+<BugInstance type="UWF_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR" priority="Low" category="STYLE" message="UwF: ResultFrame.entities not initialized in constructor" lineNumber="Not available" />
+<BugInstance type="SIC_INNER_SHOULD_BE_STATIC_ANON" priority="Low" category="PERFORMANCE" message="SIC: The class com.workbrain.resultprocessor.HTMLRendererChain$2 could be refactored into a named _static_ inner class" lineNumber="Not available" />
+<BugInstance type="URF_UNREAD_FIELD" priority="Normal" category="PERFORMANCE" message="UrF: Unread field: com.workbrain.resultprocessor.grinder.DataPoint.msSinceStart" lineNumber="35" />
+<BugInstance type="UUF_UNUSED_FIELD" priority="Normal" category="PERFORMANCE" message="UuF: Unused field: com.workbrain.resultprocessor.grinder.GrinderResults.hitsPerSecond" lineNumber="Not available" />
+<BugInstance type="UUF_UNUSED_FIELD" priority="Normal" category="PERFORMANCE" message="UuF: Unused field: com.workbrain.resultprocessor.grinder.GrinderResults.throughPut" lineNumber="Not available" />
+<BugInstance type="UUF_UNUSED_FIELD" priority="Normal" category="PERFORMANCE" message="UuF: Unused field: com.workbrain.resultprocessor.grinder.Metric.max" lineNumber="Not available" />
+<BugInstance type="UUF_UNUSED_FIELD" priority="Normal" category="PERFORMANCE" message="UuF: Unused field: com.workbrain.resultprocessor.grinder.Metric.mean" lineNumber="Not available" />
+<BugInstance type="UUF_UNUSED_FIELD" priority="Normal" category="PERFORMANCE" message="UuF: Unused field: com.workbrain.resultprocessor.grinder.Metric.median" lineNumber="Not available" />
+<BugInstance type="UUF_UNUSED_FIELD" priority="Normal" category="PERFORMANCE" message="UuF: Unused field: com.workbrain.resultprocessor.grinder.Metric.min" lineNumber="Not available" />
+<BugInstance type="UUF_UNUSED_FIELD" priority="Normal" category="PERFORMANCE" message="UuF: Unused field: com.workbrain.resultprocessor.grinder.Metric.standardDeviation" lineNumber="Not available" />
+<BugInstance type="URF_UNREAD_FIELD" priority="Normal" category="PERFORMANCE" message="UrF: Unread field: com.workbrain.resultprocessor.jrobin.GraphConverter.rrdFileDir" lineNumber="45" />
+<BugInstance type="MS_PKGPROTECT" priority="Low" category="MALICIOUS_CODE" message="MS: com.workbrain.wbclient.Statistics.CORE_STATISTICS should be package protected" lineNumber="21" />
+<BugInstance type="MS_PKGPROTECT" priority="Low" category="MALICIOUS_CODE" message="MS: com.workbrain.wbclient.Statistics.CUSTOM_STATISTICS should be package protected" lineNumber="24" />
+<BugInstance type="MS_SHOULD_BE_FINAL" priority="High" category="MALICIOUS_CODE" message="MS: com.workbrain.wbclient.utils.RegexUtils.parameterPattern isn't final but should be" lineNumber="25" />
+<BugInstance type="MS_SHOULD_BE_FINAL" priority="High" category="MALICIOUS_CODE" message="MS: com.workbrain.wbclient.lfso.shiftEdit.ShiftNoEditOp.INSTANCE isn't final but should be" lineNumber="15" />
+<BugInstance type="MS_MUTABLE_ARRAY" priority="High" category="MALICIOUS_CODE" message="MS: com.workbrain.wbclient.lfso.massconfig.model.ResultFrame.ENTITY_TYPES is a mutable array" lineNumber="25" />
+<BugInstance type="MS_MUTABLE_ARRAY" priority="Normal" category="MALICIOUS_CODE" message="MS: com.workbrain.wbclient.lfso.massconfig.model.ResultFrame.COLUMNS_BY_TYPE is a mutable array" lineNumber="26" />
+<BugInstance type="MS_SHOULD_BE_FINAL" priority="High" category="MALICIOUS_CODE" message="MS: com.workbrain.wbclient.mvs.model.SRRow.REQ_CSV_PATTRN isn't final but should be" lineNumber="48" />
+<BugInstance type="MS_SHOULD_BE_FINAL" priority="High" category="MALICIOUS_CODE" message="MS: com.workbrain.wbclient.mvs.model.SRRow.REQ_PATTRN isn't final but should be" lineNumber="49" />
+<BugInstance type="MS_SHOULD_BE_FINAL" priority="High" category="MALICIOUS_CODE" message="MS: com.workbrain.wbclient.mvs.SRRowConvertor.conversionMap isn't final but should be" lineNumber="46" />
+<BugInstance type="NM_CONFUSING" priority="Low" category="BAD_PRACTICE" message="Nm: Confusing to have methods com.workbrain.wbclient.lfso.model.Shift.getWorklocID() and com.workbrain.wbclient.lfso.model.Activity.getWorkLocID()" lineNumber="218" />
+</file>
+<Errors>
+</Errors>
+</BugCollection>
