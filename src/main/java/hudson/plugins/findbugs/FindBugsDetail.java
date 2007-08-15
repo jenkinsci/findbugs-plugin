@@ -4,7 +4,8 @@ import hudson.model.Build;
 import hudson.model.ModelObject;
 
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.Collections;
+import java.util.Set;
 
 import edu.umd.cs.findbugs.annotations.SuppressWarnings;
 
@@ -54,12 +55,12 @@ public class FindBugsDetail implements ModelObject, Serializable  {
     }
 
     /**
-     * Returns all the warnings in this package.
+     * Returns all warnings for this package details view. The returned collection is read-only.
      *
-     * @return all warnings of this package
+     * @return the warnings for this package details view
      */
-    public Collection<Warning> getWarnings() {
-        return project.getWarnings(packageName);
+    public Set<Warning> getWarnings() {
+        return Collections.unmodifiableSet(project.getWarnings(packageName));
     }
 
     /**

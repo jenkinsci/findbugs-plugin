@@ -1,9 +1,12 @@
 package hudson.plugins.findbugs;
 
-
-// CHECKSTYLE:OFF
+/**
+ * Bug pattern describing a bug type.
+ */
 public class Pattern {
+    /** Type of the bug. */
     private String type;
+    /** Detailed HTML description of the bug. */
     private String description;
 
     /**

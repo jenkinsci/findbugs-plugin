@@ -2,15 +2,25 @@ package hudson.plugins.findbugs;
 
 import org.apache.commons.lang.StringUtils;
 
-// CHECKSTYLE:OFF
+/**
+ * A FindBugs warning.
+ */
+@SuppressWarnings("PMD.CyclomaticComplexity")
 public class Warning {
+    /** Type of warning. */
     private String type;
+    /** Category of warning. */
     private String category;
+    /** Priority of warning. */
     private String priority;
+    /** Message of warning. */
     private String message;
+    /** Line number of warning. */
     private String lineNumber;
-    private String classname;
+    /** Corresponding Java class. */
     private JavaClass javaClass;
+    /** Corresponding qualified class name. */
+    private String qualifiedName;
 
     /**
      * Returns the type.
@@ -21,10 +31,15 @@ public class Warning {
         return type;
     }
 
+    /**
+     * Links this warning to the specified class.
+     *
+     * @param owningClass the class that contains this warning
+     */
     public void linkClass(final JavaClass owningClass) {
         if (!owningClass.isRoleClass()) {
             javaClass = owningClass;
-            classname = owningClass.getClassname();
+            setQualifiedName(owningClass.getClassname());
         }
     }
 
@@ -128,12 +143,12 @@ public class Warning {
     }
 
     /**
-     * Sets the classname.
+     * Returns the qualifiedName.
      *
-     * @param classname the new classname
+     * @return the qualifiedName
      */
-    public void setClassname(final String classname) {
-        this.classname = classname;
+    public String getQualifiedName() {
+        return qualifiedName;
     }
 
     /**
@@ -142,17 +157,18 @@ public class Warning {
      * @return the classname
      */
     public String getClassname() {
-        return classname;
+        return StringUtils.substringAfterLast(qualifiedName, ".");
     }
 
+    // CHECKSTYLE:OFF
     /** {@inheritDoc} */
     @Override
     public int hashCode() {
-        final int prime = 31;
+        int prime = 31;
         int result = 1;
-        result = prime * result + ((classname == null) ? 0 : classname.hashCode());
+        result = prime * result + ((qualifiedName == null) ? 0 : qualifiedName.hashCode());
         result = prime * result + ((lineNumber == null) ? 0 : lineNumber.hashCode());
-        result = prime * result + ((type == null) ? 0 : type.hashCode());
+        result = prime * result + ((message == null) ? 0 : message.hashCode());
         return result;
     }
 
@@ -169,12 +185,12 @@ public class Warning {
             return false;
         }
         final Warning other = (Warning)obj;
-        if (classname == null) {
-            if (other.classname != null) {
+        if (qualifiedName == null) {
+            if (other.qualifiedName != null) {
                 return false;
             }
         }
-        else if (!classname.equals(other.classname)) {
+        else if (!qualifiedName.equals(other.qualifiedName)) {
             return false;
         }
         if (lineNumber == null) {
@@ -185,16 +201,25 @@ public class Warning {
         else if (!lineNumber.equals(other.lineNumber)) {
             return false;
         }
-        if (type == null) {
-            if (other.type != null) {
+        if (message == null) {
+            if (other.message != null) {
                 return false;
             }
         }
-        else if (!type.equals(other.type)) {
+        else if (!message.equals(other.message)) {
             return false;
         }
         return true;
     }
 
+    /**
+     * Sets the fully qualified name of the containing class.
+     *
+     * @param name
+     *            the name of the class
+     */
+    public void setQualifiedName(final String name) {
+        qualifiedName = name;
+    }
 }
 

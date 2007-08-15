@@ -174,7 +174,7 @@ public class FindBugsPublisher extends Publisher {
                     result = new FindBugsResult(build, project);
                 }
                 else {
-                    result = new FindBugsResult(build, project, previousAction.getResult());
+                    result = new FindBugsResult(build, project, previousAction.getResult().getProject());
                 }
             }
             else {

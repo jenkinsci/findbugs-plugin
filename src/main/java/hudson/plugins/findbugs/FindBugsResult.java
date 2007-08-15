@@ -7,6 +7,8 @@ import hudson.util.IOException2;
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
+import java.util.Collections;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,6 +25,8 @@ import edu.umd.cs.findbugs.annotations.SuppressWarnings;
  * @author Ulli Hafner
  */
 public class FindBugsResult implements ModelObject, Serializable {
+    /** No result at all. */
+    private static final Set<Warning> EMPTY_SET = Collections.EMPTY_SET;
     /** Unique identifier of this class. */
     private static final long serialVersionUID = 2768250056765266658L;
     /** Logger. */
@@ -35,6 +39,12 @@ public class FindBugsResult implements ModelObject, Serializable {
     /** The parsed FindBugs result. */
     @SuppressWarnings("Se")
     private transient WeakReference<JavaProject> project;
+    /** All new warnings in the current build.*/
+    @SuppressWarnings("Se")
+    private transient WeakReference<Set<Warning>> newWarnings;
+    /** All fixed warnings in the current build.*/
+    @SuppressWarnings("Se")
+    private transient WeakReference<Set<Warning>> fixedWarnings;
     /** The number of warnings in this build. */
     private final int numberOfWarnings;
     /** The number of new warnings in this build. */
@@ -51,12 +61,7 @@ public class FindBugsResult implements ModelObject, Serializable {
      *            the parsed FindBugs result
      */
     public FindBugsResult(final Build<?, ?> build, final JavaProject project) {
-        owner = build;
-        numberOfWarnings = project.getNumberOfWarnings();
-        this.project = new WeakReference<JavaProject>(project);
-        delta = 0;
-        numberOfFixedWarnings = 0;
-        numberOfNewWarnings = 0;
+        this(build, project, new JavaProject());
     }
 
     /**
@@ -65,15 +70,21 @@ public class FindBugsResult implements ModelObject, Serializable {
      *            the current build as owner of this action
      * @param project
      *            the parsed FindBugs result
-     * @param previousResult result of previous build
+     * @param previousProject the parsed FindBugs result of the previous build
      */
-    public FindBugsResult(final Build<?, ?> build, final JavaProject project, final FindBugsResult previousResult) {
+    public FindBugsResult(final Build<?, ?> build, final JavaProject project, final JavaProject previousProject) {
         owner = build;
         numberOfWarnings = project.getNumberOfWarnings();
         this.project = new WeakReference<JavaProject>(project);
-        delta = project.getNumberOfWarnings() - previousResult.getNumberOfWarnings();
-        numberOfFixedWarnings = WarningDifferencer.getFixedWarnings(project, previousResult.getProject()).size();
-        numberOfNewWarnings = WarningDifferencer.getNewWarnings(project, previousResult.getProject()).size();
+        delta = project.getNumberOfWarnings() - previousProject.getNumberOfWarnings();
+
+        Set<Warning> warnings = WarningDifferencer.getNewWarnings(project.getWarnings(), previousProject.getWarnings());
+        numberOfNewWarnings = warnings.size();
+        newWarnings = new WeakReference<Set<Warning>>(warnings);
+
+        warnings = WarningDifferencer.getFixedWarnings(project.getWarnings(), previousProject.getWarnings());
+        numberOfFixedWarnings = warnings.size();
+        fixedWarnings = new WeakReference<Set<Warning>>(warnings);
     }
 
     /** {@inheritDoc} */
@@ -152,6 +163,56 @@ public class FindBugsResult implements ModelObject, Serializable {
     }
 
     /**
+     * Returns the new warnings of this build.
+     *
+     * @return the new warnings of this build.
+     */
+    public Set<Warning> getNewWarnings() {
+        try {
+            if (newWarnings == null) {
+                loadResult();
+            }
+            Set<Warning> result = newWarnings.get();
+            if (result == null) {
+                loadResult();
+            }
+            return newWarnings.get();
+        }
+        catch (IOException exception) {
+            LOGGER.log(Level.WARNING, "Failed to load FindBugs files.", exception);
+        }
+        catch (InterruptedException exception) {
+            LOGGER.log(Level.WARNING, "Failed to load FindBugs files: operation has been canceled.", exception);
+        }
+        return EMPTY_SET;
+    }
+
+    /**
+     * Returns the fixed warnings of this build.
+     *
+     * @return the fixed warnings of this build.
+     */
+    public Set<Warning> getFixedWarnings() {
+        try {
+            if (fixedWarnings == null) {
+                loadResult();
+            }
+            Set<Warning> result = fixedWarnings.get();
+            if (result == null) {
+                loadResult();
+            }
+            return fixedWarnings.get();
+        }
+        catch (IOException exception) {
+            LOGGER.log(Level.WARNING, "Failed to load FindBugs files.", exception);
+        }
+        catch (InterruptedException exception) {
+            LOGGER.log(Level.WARNING, "Failed to load FindBugs files: operation has been canceled.", exception);
+        }
+        return EMPTY_SET;
+    }
+
+    /**
      * Loads the FindBugs results and wraps them in a weak reference that might
      * get removed by the garbage collector.
      *
@@ -162,6 +223,21 @@ public class FindBugsResult implements ModelObject, Serializable {
         try {
             JavaProject result = new FindBugsCounter(owner).findBugs();
             project = new WeakReference<JavaProject>(result);
+
+            if (hasPreviousResult()) {
+                newWarnings = new WeakReference<Set<Warning>>(
+                        WarningDifferencer.getNewWarnings(result.getWarnings(), getPreviousResult().getWarnings()));
+            }
+            else {
+                newWarnings = new WeakReference<Set<Warning>>(result.getWarnings());
+            }
+            if (hasPreviousResult()) {
+                fixedWarnings = new WeakReference<Set<Warning>>(
+                        WarningDifferencer.getFixedWarnings(result.getWarnings(), getPreviousResult().getWarnings()));
+            }
+            else {
+                fixedWarnings = new WeakReference<Set<Warning>>(EMPTY_SET);
+            }
         }
         catch (SAXException exception) {
             throw new IOException2(exception);
@@ -171,14 +247,14 @@ public class FindBugsResult implements ModelObject, Serializable {
     /**
      * Returns the dynamic result of the FindBugs analysis (detail page for a package).
      *
-     * @param packageName the packe name to get the result for
+     * @param packageName the package name to get the result for
      * @param request
      *            Stapler request
      * @param response
      *            Stapler response
      * @return the dynamic result of the FindBugs analysis (detail page for a package).
      */
-    public FindBugsDetail getDynamic(final String packageName, final StaplerRequest request, final StaplerResponse response) {
+    public Object getDynamic(final String packageName, final StaplerRequest request, final StaplerResponse response) {
         return new FindBugsDetail(owner, getProject(), packageName);
     }
 
@@ -197,5 +273,30 @@ public class FindBugsResult implements ModelObject, Serializable {
         else {
             return 0;
         }
+    }
+
+    /**
+     * Returns the results of the previous build.
+     *
+     * @return the result of the previous build, or <code>null</code> if no
+     *         such build exists
+     */
+    public JavaProject getPreviousResult() {
+        FindBugsResultAction action = owner.getAction(FindBugsResultAction.class);
+        if (action.hasPreviousResult()) {
+            return action.getPreviousResult().getResult().getProject();
+        }
+        else {
+            return null;
+        }
+    }
+
+    /**
+     * Returns whether a previous build result exists.
+     *
+     * @return <code>true</code> if a previous build result exists.
+     */
+    public boolean hasPreviousResult() {
+        return owner.getAction(FindBugsResultAction.class).hasPreviousResult();
     }
 }

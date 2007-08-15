@@ -1,32 +1,31 @@
 package hudson.plugins.findbugs;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 
-// CHECKSTYLE:OFF
+/**
+ * Represents a Java class that contains several warnings.
+ */
 public class JavaClass {
-    private final List<Warning> warnings = new ArrayList<Warning>();
-    private int low;
-    private int high;
-    private int normal;
+    /** The warnings in this class. */
+    private final Set<Warning> warnings = new HashSet<Warning>();
+    /** Name of this class. */
+    private String classname;
+    /** Role of this class. */
     private String role;
 
+    /**
+     * Adds a new warning to this class.
+     *
+     * @param warning
+     *            the new warning
+     */
     public void addWarning(final Warning warning) {
         warnings.add(warning);
-        warning.setClassname(StringUtils.substringAfterLast(classname, "."));
-        if ("low".equalsIgnoreCase(warning.getPriority())) {
-            low++;
-        }
-        else if ("high".equalsIgnoreCase(warning.getPriority())) {
-            high++;
-        }
-        else {
-            normal++;
-        }
+        warning.setQualifiedName(classname);
     }
 
     /**
@@ -38,39 +37,54 @@ public class JavaClass {
         this.role = role;
     }
 
-    public Collection<Warning> getWarnings() {
-        return Collections.unmodifiableCollection(warnings);
+    /**
+     * Returns all warnings in this class. The returned collection is
+     * read-only.
+     *
+     * @return all warnings in this class
+     */
+    public Set<Warning> getWarnings() {
+        return Collections.unmodifiableSet(warnings);
     }
-
-    public int getNumberOfWarnings() {
-        return warnings.size();
-    }
-
-    public int getNumberOfLowWarnings() {
-        return low;
-    }
-
-    public int getNumberOfHighWarnings() {
-        return high;
-    }
-
-    public int getNumberOfNormalWarnings() {
-        return normal;
-    }
-
-    private String classname;
 
     /**
-     * Returns the classname.
+     * Returns the total number of warnings with priority LOW in this package.
      *
-     * @return the classname
+     * @return the total number of warnings with priority LOW in this package
+     */
+    public int getNumberOfLowWarnings() {
+        return WarningDifferencer.countLowPriorityWarnings(getWarnings());
+    }
+
+    /**
+     * Returns the total number of warnings with priority HIGH in this package.
+     *
+     * @return the total number of warnings with priority HIGH in this package
+     */
+    public int getNumberOfHighWarnings() {
+        return WarningDifferencer.countHighPriorityWarnings(getWarnings());
+    }
+
+    /**
+     * Returns the total number of warnings with priority NORMAL in this package.
+     *
+     * @return the total number of warnings with priority NORMAL in this package
+     */
+    public int getNumberOfNormalWarnings() {
+        return WarningDifferencer.countNormalPriorityWarnings(getWarnings());
+    }
+
+    /**
+     * Returns the class name.
+     *
+     * @return the class name
      */
     public String getClassname() {
         return classname;
     }
 
     /**
-     * Sets the classname to the specified value.
+     * Sets the class name to the specified value.
      *
      * @param classname the value to set
      */
@@ -78,12 +92,18 @@ public class JavaClass {
         this.classname = classname;
     }
 
+    /**
+     * Returns the package name of this class.
+     *
+     * @return the package name of this class
+     */
     public String getPackage() {
         return StringUtils.substringBeforeLast(classname, ".");
     }
 
     /**
      * Returns whether this class is a role or a class with an error.
+     *
      * @return <code>true</code> if this is a role class
      */
     public boolean isRoleClass() {
