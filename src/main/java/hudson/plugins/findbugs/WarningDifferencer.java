@@ -3,28 +3,99 @@ package hudson.plugins.findbugs;
 import java.util.HashSet;
 import java.util.Set;
 
-public class WarningDifferencer {
-    public static Set<Warning> getNewWarnings(final Module actual, final Module previous) {
-        Set<Warning> warnings = new HashSet<Warning>(actual.getWarnings());
-        warnings.removeAll(previous.getWarnings());
+/**
+ * Provides several utility methods based on sets of warnings.
+ */
+public final class WarningDifferencer {
+    /**
+     * Returns the new warnings, i.e., the warnings that are in the actual build
+     * but not in the previous.
+     *
+     * @param actual
+     *            warnings in actual build
+     * @param previous
+     *            warnings in previous build
+     * @return the new warnings
+     */
+    public static Set<Warning> getNewWarnings(final Set<Warning> actual, final Set<Warning> previous) {
+        Set<Warning> warnings = new HashSet<Warning>(actual);
+        warnings.removeAll(previous);
         return warnings;
     }
 
-    public static Set<Warning> getFixedWarnings(final Module actual, final Module previous) {
-        Set<Warning> warnings = new HashSet<Warning>(previous.getWarnings());
-        warnings.removeAll(actual.getWarnings());
-        return warnings;
-    }
-    public static Set<Warning> getNewWarnings(final JavaProject actual, final JavaProject previous) {
-        Set<Warning> warnings = new HashSet<Warning>(actual.getWarnings());
-        warnings.removeAll(previous.getWarnings());
+    /**
+     * Returns the fixed warnings, i.e., the warnings that are in the previous build
+     * but not in the actial.
+     *
+     * @param actual
+     *            warnings in actual build
+     * @param previous
+     *            warnings in previous build
+     * @return the new warnings
+     */
+    public static Set<Warning> getFixedWarnings(final Set<Warning> actual, final Set<Warning> previous) {
+        Set<Warning> warnings = new HashSet<Warning>(previous);
+        warnings.removeAll(actual);
         return warnings;
     }
 
-    public static Set<Warning> getFixedWarnings(final JavaProject actual, final JavaProject previous) {
-        Set<Warning> warnings = new HashSet<Warning>(previous.getWarnings());
-        warnings.removeAll(actual.getWarnings());
-        return warnings;
+    /**
+     * Returns the number of warnings with HIGH priority.
+     *
+     * @param warnings
+     *            the warnings to scan
+     * @return the number warnings of the specified priority.
+     */
+    public static int countHighPriorityWarnings(final Set<Warning> warnings) {
+        return countWarnings(warnings, "high");
+    }
+
+    /**
+     * Returns the number of warnings of the specified priority.
+     *
+     * @param warnings
+     *            the warnings to scan
+     * @param priority
+     *            the priority
+     * @return the number warnings of the specified priority.
+     */
+    private static int countWarnings(final Set<Warning> warnings, final String priority) {
+        int count = 0;
+        for (Warning warning : warnings) {
+            if (priority.equalsIgnoreCase(warning.getPriority())) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    /**
+     * Returns the number of warnings with NORMAL priority.
+     *
+     * @param warnings
+     *            the warnings to scan
+     * @return the number warnings of the specified priority.
+     */
+    public static int countNormalPriorityWarnings(final Set<Warning> warnings) {
+        return countWarnings(warnings, "normal");
+    }
+
+    /**
+     * Returns the number of warnings with LOW priority.
+     *
+     * @param warnings
+     *            the warnings to scan
+     * @return the number warnings of the specified priority.
+     */
+    public static int countLowPriorityWarnings(final Set<Warning> warnings) {
+        return countWarnings(warnings, "low");
+    }
+
+    /**
+     * Creates a new instance of <code>WarningDifferencer</code>.
+     */
+    private WarningDifferencer() {
+        // prevents instantiation
     }
 }
 
