@@ -47,7 +47,7 @@ public final class WarningDifferencer {
      * @return the number warnings of the specified priority.
      */
     public static int countHighPriorityWarnings(final Set<Warning> warnings) {
-        return countWarnings(warnings, "high");
+        return countWarnings(warnings, "high", "1");
     }
 
     /**
@@ -57,12 +57,17 @@ public final class WarningDifferencer {
      *            the warnings to scan
      * @param priority
      *            the priority
+     * @param priorityNumber
+     *            the priority as a number
      * @return the number warnings of the specified priority.
      */
-    private static int countWarnings(final Set<Warning> warnings, final String priority) {
+    private static int countWarnings(final Set<Warning> warnings, final String priority, final String priorityNumber) {
         int count = 0;
         for (Warning warning : warnings) {
             if (priority.equalsIgnoreCase(warning.getPriority())) {
+                count++;
+            }
+            else if (priorityNumber.equalsIgnoreCase(warning.getPriority())) {
                 count++;
             }
         }
@@ -77,7 +82,7 @@ public final class WarningDifferencer {
      * @return the number warnings of the specified priority.
      */
     public static int countNormalPriorityWarnings(final Set<Warning> warnings) {
-        return countWarnings(warnings, "normal");
+        return countWarnings(warnings, "normal", "2");
     }
 
     /**
@@ -88,7 +93,7 @@ public final class WarningDifferencer {
      * @return the number warnings of the specified priority.
      */
     public static int countLowPriorityWarnings(final Set<Warning> warnings) {
-        return countWarnings(warnings, "low");
+        return countWarnings(warnings, "low", "3");
     }
 
     /**
