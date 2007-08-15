@@ -14,7 +14,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.tools.ant.types.FileSet;
 
 /**
- * Collects the FindBugs analysis files and copies them to the working directory.
+ * Collects the FindBugs analysis files and copies them to the working
+ * directory.
  *
  * @author Ulli Hafner
  */
@@ -82,8 +83,11 @@ class FindBugsCollector implements FileCallable<Void> {
     }
 
     /**
-     * Guesses the module name based on the specified file name. Actually works only for maven projects.
-     * @param fileName the filename to guess the module name from
+     * Guesses the module name based on the specified file name. Actually works
+     * only for maven projects.
+     *
+     * @param fileName
+     *            the filename to guess the module name from
      * @return the module name
      */
     public String guessModuleName(final String fileName) {
