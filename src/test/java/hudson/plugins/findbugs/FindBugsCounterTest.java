@@ -21,14 +21,11 @@ public class FindBugsCounterTest {
     /** Expected number of documentation warnings. */
     private static final int NUMBER_OF_DOCU_WARNINGS = 2;
     /** Expected number of spell checker warnings. */
-    private static final int NUMBER_OF_SPELL_WARNINGS = 6;
+    private static final int NUMBER_OF_SPELL_WARNINGS = 3;
     /** Error message. */
     private static final String WRONG_WARNINGS_IN_PACKAGE_ERROR = "Wrong number of warnings in a package detected.";
     /** Error message. */
     private static final String ERROR_MESSAGE = "Wrong number of bugs parsed.";
-    /** Expected number of bugs. */
-    private static final int NUMBER_OF_BUGS = 8;
-
     /**
      * Initializes the messages file.
      *
@@ -82,7 +79,7 @@ public class FindBugsCounterTest {
     @Test
     public void scan121File() throws IOException, SAXException {
         Module module = parseFile("findbugs-1.2.1.xml");
-        assertEquals(ERROR_MESSAGE, 136, module.getNumberOfWarnings());
+        assertEquals(ERROR_MESSAGE, 128, module.getNumberOfWarnings());
         assertEquals("Wrong Version detected", "1.2.1", module.getVersion());
 
         assertEquals(WRONG_WARNINGS_IN_PACKAGE_ERROR, 0, module.getNumberOfWarnings("java.lang"));
@@ -99,7 +96,7 @@ public class FindBugsCounterTest {
     @Test
     public void scanFileWithSomeBugs() throws IOException, SAXException {
         Module module = parseFile("findbugs.xml");
-        assertEquals(ERROR_MESSAGE, NUMBER_OF_BUGS, module.getNumberOfWarnings());
+        assertEquals(ERROR_MESSAGE, NUMBER_OF_SPELL_WARNINGS + NUMBER_OF_DOCU_WARNINGS, module.getNumberOfWarnings());
         assertEquals("Wrong Version detected", "1.2.0", module.getVersion());
         assertEquals("Wrong number of packages detected", 2, module.getPackages().size());
 
@@ -117,6 +114,7 @@ public class FindBugsCounterTest {
             assertEquals("Wrong class found.", "SpellingContentAssistProcessor", warning.getClassname());
         }
     }
+
 }
 
 
