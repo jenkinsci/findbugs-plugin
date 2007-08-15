@@ -26,33 +26,30 @@
 		<table>
 			<thead>
 				<tr>
-					<td width="20%"></td>
-					<td width="80%">Number of Warnings</td>
+					<td width="40%"></td>
+					<td width="30%">
+						<img src="${rootURL}/images/16x16/health-80plus.gif" alt="100%"
+							title="Report health as 100% when the number of warnings is less than this value" />
+					</td>
+					<td width="30%">
+						<img src="${rootURL}/images/16x16/health-00to19.gif" alt="0%"
+							title="Report health as 0% when the number of warnings is greater than this value" />
+					</td>
 				</tr>
 			</thead>
 			<tbody>
 				<tr>
 					<th>
-						<img src="${rootURL}/images/16x16/health-80plus.gif"
-							alt="100%"
-							title="Report health as 100% when the number of warnings is less than this value" />
+						Number of open tasks
 					</th>
 					<td>
 						<f:textbox name="findbugs_healthy" value="${instance.healthy}"/>
 					</td>
-				</tr>
-				<tr>
-					<th>
-						<img src="${rootURL}/images/16x16/health-00to19.gif"
-							alt="0%"
-							title="Report health as 0% when the number of warnings is greater than this value" />
-					</th>
 					<td>
 						<f:textbox name="findbugs_unHealthy" value="${instance.unHealthy}"/>
 					</td>
 				</tr>
 			</tbody>
-
 		</table>
 	</f:entry>
 </j:jelly>
