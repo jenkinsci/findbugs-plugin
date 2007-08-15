@@ -2,11 +2,9 @@
 	xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson"
 	xmlns:f="/lib/form" xmlns:i="jelly:fmt">
 	<t:summary icon="/plugin/findbugs/icons/findbugs-48x48.gif">
-	    FindBugs:
+		<a href="findbugsResult">FindBugs</a>:
 	    <j:if test="${it.result.numberOfWarnings > 0}">
-	    	a total of
-    		<a href="findbugsResult">${it.result.numberOfWarnings} warnings</a>
-	    	have been found
+	    	a total of ${it.result.numberOfWarnings} warnings have been found
 	    	<j:choose>
 	    		<j:when test="${it.result.numberOfNewWarnings > 0 &amp;&amp; it.result.numberOfFixedWarnings > 0}">
 	    			(${it.result.numberOfNewWarnings} new and ${it.result.numberOfFixedWarnings} fixed).

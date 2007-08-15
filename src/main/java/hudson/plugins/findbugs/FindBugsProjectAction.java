@@ -53,12 +53,16 @@ public class FindBugsProjectAction implements Action {
 
     /** {@inheritDoc} */
     public String getIconFileName() {
+        Object lastBuild = project.getLastBuild();
+        if ((lastBuild instanceof Build) && hasValidResults((Build<?, ?>)lastBuild)) {
+            return FindBugsDescriptor.FINDBUGS_ACTION_LOGO;
+        }
         return null;
     }
 
     /** {@inheritDoc} */
     public String getUrlName() {
-        return "findbugs";
+        return "lastBuild/findbugsResult";
     }
 
     /**

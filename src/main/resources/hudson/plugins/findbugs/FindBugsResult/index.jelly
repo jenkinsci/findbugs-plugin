@@ -20,14 +20,30 @@
         </tr>
         <tbody>
           <tr>
-            <td class="pane">${it.numberOfWarnings}</td>
-            <td class="pane">${it.numberOfNewWarnings}</td>
-            <td class="pane">${it.numberOfFixedWarnings}</td>
+            <td class="pane">
+            	${it.numberOfWarnings}
+		        <j:if test="${it.numberOfWarnings != 0}">
+          			(<a href="#all">Details</a>)
+          		</j:if>
+            </td>
+            <td class="pane">
+            	${it.numberOfNewWarnings}
+		        <j:if test="${it.numberOfNewWarnings != 0}">
+          			(<a href="#new">Details</a>)
+          		</j:if>
+           	</td>
+            <td class="pane">
+            	${it.numberOfFixedWarnings}
+		        <j:if test="${it.numberOfFixedWarnings != 0}">
+          			(<a href="#fixed">Details</a>)
+          		</j:if>
+           	</td>
           </tr>
         </tbody>
       </table>
 
       <j:if test="${it.numberOfNewWarnings != 0}">
+		<a name="new"/>
         <h2>New Warnings</h2>
 
         <j:forEach var="w" items="${it.newWarnings}">
@@ -47,6 +63,7 @@
       </j:if>
 
       <j:if test="${it.numberOfFixedWarnings != 0}">
+      	<a name="fixed"/>
         <h2>Fixed Warnings</h2>
 
         <table class="pane sortable" id="fixed">
@@ -66,6 +83,7 @@
       </j:if>
 
       <j:if test="${it.numberOfWarnings != 0}">
+        <a name="all"/>
         <h2>All Warnings</h2>
         <j:forEach var="module" items="${it.project.modules}">
 
