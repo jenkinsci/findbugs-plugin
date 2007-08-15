@@ -1,62 +1,106 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler"
-	xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson"
-	xmlns:f="/lib/form" xmlns:i="jelly:fmt">
-	<l:layout>
-		<st:include it="${it.owner}" page="sidepanel.jelly" />
-		<l:main-panel>
-			<h1>${it.title}</h1>
+  xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson"
+  xmlns:f="/lib/form" xmlns:i="jelly:fmt">
+  <l:layout>
+    <st:include it="${it.owner}" page="sidepanel.jelly" />
+    <l:main-panel>
+      <h1>${it.title}</h1>
 
-			<j:set var="prev" value="${it.previousResult}" />
+      <j:set var="prev" value="${it.previousResult}" />
 
-			<j:if test="${it.numberOfWarnings != 0}">
-				<h2>FindBugs Warnings</h2>
-				<j:forEach var="module" items="${it.project.modules}">
+      <h1>FindBugs Result</h1>
 
-					<j:if test="${module.numberOfWarnings != 0}">
-						<h3>Module ${module.name}</h3>
-						<table class="pane sortable" id="warnings">
-							<tr>
-								<td class="pane-header">Package</td>
-								<td class="pane-header" style="width:5em">
-									High
-								</td>
-								<td class="pane-header" style="width:5em">
-									Normal
-								</td>
-								<td class="pane-header" style="width:5em">
-									Low
-								</td>
-								<td class="pane-header" style="width:5em">
-									(Delta)
-								</td>
-							</tr>
-							<tbody>
-								<j:forEach var="p"
-									items="${module.packages}">
-									<j:set var="prev" value="${p.previousResult}" />
-									<tr>
-										<td class="pane">
-											<a href="${p.name}/">${p.name}</a>
-										</td>
-										<td class="pane" style="text-align:right">
-											${p.numberOfHighWarnings}
-										</td>
-										<td class="pane" style="text-align:right">
-											${p.numberOfNormalWarnings}
-										</td>
-										<td class="pane" style="text-align:right">
-											${p.numberOfLowWarnings}
-										</td>
-										<td class="pane" style="text-align:right">
-											${h.getDiffString2(p.numberOfWarnings - it.getPreviousNumberOfWarnings(p.name))}
-										</td>
-									</tr>
-								</j:forEach>
-							</tbody>
-						</table>
-					</j:if>
-				</j:forEach>
-			</j:if>
-		</l:main-panel>
-	</l:layout>
+      <h2>Summary</h2>
+
+      <table class="pane sortable" id="summary">
+        <tr>
+          <td class="pane-header">All Warnings</td>
+          <td class="pane-header">New Warnings</td>
+          <td class="pane-header">Fixed Warnings</td>
+        </tr>
+        <tbody>
+          <tr>
+            <td class="pane">${it.numberOfWarnings}</td>
+            <td class="pane">${it.numberOfNewWarnings}</td>
+            <td class="pane">${it.numberOfFixedWarnings}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <j:if test="${it.numberOfNewWarnings != 0}">
+        <h2>New Warnings</h2>
+
+        <j:forEach var="w" items="${it.newWarnings}">
+          <h4>
+            Class ${w.qualifiedName}
+            (Priority ${w.priority}, Category ${w.category})
+          </h4>
+          <p>
+            ${w.type}: ${w.message}
+            <j:if test="${w.lineNumber != 'Not available'}">
+              (Line: ${w.lineNumber})
+            </j:if>
+          </p>
+          <p>${w.description}</p>
+          <hr />
+        </j:forEach>
+      </j:if>
+
+      <j:if test="${it.numberOfFixedWarnings != 0}">
+        <h2>Fixed Warnings</h2>
+
+        <table class="pane sortable" id="fixed">
+          <tr>
+            <td class="pane-header">Class</td>
+            <td class="pane-header">Warning Type</td>
+          </tr>
+          <tbody>
+            <j:forEach var="w" items="${it.fixedWarnings}">
+              <tr>
+                <td class="pane">${w.qualifiedName}</td>
+                <td class="pane">${w.type}</td>
+              </tr>
+            </j:forEach>
+          </tbody>
+        </table>
+      </j:if>
+
+      <j:if test="${it.numberOfWarnings != 0}">
+        <h2>All Warnings</h2>
+        <j:forEach var="module" items="${it.project.modules}">
+
+          <j:if test="${module.numberOfWarnings != 0}">
+            <h3>Module ${module.name}</h3>
+            <table class="pane sortable" id="warnings">
+              <tr>
+                <td class="pane-header">Package</td>
+                <td class="pane-header" style="width:5em">High</td>
+                <td class="pane-header" style="width:5em">Normal</td>
+                <td class="pane-header" style="width:5em">Low</td>
+              </tr>
+              <tbody>
+                <j:forEach var="p" items="${module.packages}">
+                  <j:set var="prev" value="${p.previousResult}" />
+                  <tr>
+                    <td class="pane">
+                      <a href="${p.name}/">${p.name}</a>
+                    </td>
+                    <td class="pane" style="text-align:right">
+                      ${p.numberOfHighWarnings}
+                    </td>
+                    <td class="pane" style="text-align:right">
+                      ${p.numberOfNormalWarnings}
+                    </td>
+                    <td class="pane" style="text-align:right">
+                      ${p.numberOfLowWarnings}
+                    </td>
+                  </tr>
+                </j:forEach>
+              </tbody>
+            </table>
+          </j:if>
+        </j:forEach>
+      </j:if>
+    </l:main-panel>
+  </l:layout>
 </j:jelly>
