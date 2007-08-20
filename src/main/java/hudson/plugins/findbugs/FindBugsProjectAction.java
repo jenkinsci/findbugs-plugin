@@ -2,7 +2,6 @@ package hudson.plugins.findbugs;
 
 import hudson.model.AbstractBuild;
 import hudson.model.Action;
-import hudson.model.Actionable;
 import hudson.model.Build;
 import hudson.model.Project;
 
@@ -10,7 +9,6 @@ import java.io.IOException;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.kohsuke.stapler.StaplerProxy;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
@@ -22,7 +20,7 @@ import edu.umd.cs.findbugs.annotations.SuppressWarnings;
  *
  * @author Ulli Hafner
  */
-public class FindBugsProjectAction extends Actionable implements Action, StaplerProxy {
+public class FindBugsProjectAction implements Action {
     /** URL for this action. */
     private static final String FINDBUGS_URL = "findbugs";
     /** Unique identifier of this class. */
@@ -57,10 +55,11 @@ public class FindBugsProjectAction extends Actionable implements Action, Stapler
 
     /** {@inheritDoc} */
     public String getIconFileName() {
-        Object lastBuild = project.getLastBuild();
-        if ((lastBuild instanceof Build) && hasValidResults((Build<?, ?>)lastBuild)) {
-            return FindBugsDescriptor.FINDBUGS_ACTION_LOGO;
-        }
+        // FIXME: needs to be enabled if we find a way to show the contents of the last build
+//        Object lastBuild = project.getLastBuild();
+//        if ((lastBuild instanceof Build) && hasValidResults((Build<?, ?>)lastBuild)) {
+//            return FindBugsDescriptor.FINDBUGS_ACTION_LOGO;
+//        }
         return null;
     }
 
@@ -144,16 +143,6 @@ public class FindBugsProjectAction extends Actionable implements Action, Stapler
             return lastBuild.getAction(FindBugsResultAction.class);
         }
         return null;
-    }
-
-    /** {@inheritDoc} */
-    public Object getTarget() {
-        return getLastAction();
-    }
-
-    /** {@inheritDoc} */
-    public String getSearchUrl() {
-        return FINDBUGS_URL;
     }
 }
 
