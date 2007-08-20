@@ -40,7 +40,7 @@
 			<tbody>
 				<tr>
 					<th>
-						Number of open tasks
+						Number of warnings
 					</th>
 					<td>
 						<f:textbox name="findbugs_healthy" value="${instance.healthy}"/>
