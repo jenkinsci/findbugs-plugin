@@ -2,6 +2,7 @@ package hudson.plugins.findbugs;
 
 import hudson.model.AbstractBuild;
 import hudson.model.Action;
+import hudson.model.Actionable;
 import hudson.model.Build;
 import hudson.model.Project;
 
@@ -9,6 +10,7 @@ import java.io.IOException;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.kohsuke.stapler.StaplerProxy;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
@@ -20,7 +22,9 @@ import edu.umd.cs.findbugs.annotations.SuppressWarnings;
  *
  * @author Ulli Hafner
  */
-public class FindBugsProjectAction implements Action {
+public class FindBugsProjectAction extends Actionable implements Action, StaplerProxy {
+    /** URL for this action. */
+    private static final String FINDBUGS_URL = "findbugs";
     /** Unique identifier of this class. */
     private static final long serialVersionUID = -654316141132780561L;
     /** Project that owns this action. */
@@ -62,7 +66,7 @@ public class FindBugsProjectAction implements Action {
 
     /** {@inheritDoc} */
     public String getUrlName() {
-        return "lastBuild/findbugsResult";
+        return FINDBUGS_URL;
     }
 
     /**
@@ -140,6 +144,16 @@ public class FindBugsProjectAction implements Action {
             return lastBuild.getAction(FindBugsResultAction.class);
         }
         return null;
+    }
+
+    /** {@inheritDoc} */
+    public Object getTarget() {
+        return getLastAction();
+    }
+
+    /** {@inheritDoc} */
+    public String getSearchUrl() {
+        return FINDBUGS_URL;
     }
 }
 
