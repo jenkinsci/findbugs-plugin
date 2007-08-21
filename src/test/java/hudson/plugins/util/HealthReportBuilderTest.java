@@ -1,6 +1,7 @@
 package hudson.plugins.util;
 
 import hudson.model.HealthReport;
+import hudson.plugins.findbugs.util.HealthReportBuilder;
 import junit.framework.TestCase;
 
 import org.junit.Test;

@@ -55,17 +55,41 @@ public class FindBugsProjectAction implements Action {
 
     /** {@inheritDoc} */
     public String getIconFileName() {
-        // FIXME: needs to be enabled if we find a way to show the contents of the last build
-//        Object lastBuild = project.getLastBuild();
-//        if ((lastBuild instanceof Build) && hasValidResults((Build<?, ?>)lastBuild)) {
-//            return FindBugsDescriptor.FINDBUGS_ACTION_LOGO;
-//        }
+        Object lastBuild = project.getLastBuild();
+        if ((lastBuild instanceof Build) && hasFindBugsResult((Build<?, ?>)lastBuild)) {
+            return FindBugsDescriptor.FINDBUGS_ACTION_LOGO;
+        }
         return null;
+    }
+
+    /**
+     * Returns whether a FindBugs result is available for the last build.
+     *
+     * @param build
+     *            the build to check
+     * @return <code>true</code> if a FindBugs result is available for the last build.
+     */
+    public boolean hasFindBugsResult(final Build<?, ?> build) {
+        return build.getAction(FindBugsResultAction.class) != null;
     }
 
     /** {@inheritDoc} */
     public String getUrlName() {
         return FINDBUGS_URL;
+    }
+
+    /**
+     * Redirects the index page to the last FindBugs result.
+     *
+     * @param request
+     *            Stapler request
+     * @param response
+     *            Stapler response
+     * @throws IOException
+     *             in case of an error in
+     */
+    public void doIndex(final StaplerRequest request, final StaplerResponse response) throws IOException {
+        response.sendRedirect2("../lastBuild/findbugsResult");
     }
 
     /**

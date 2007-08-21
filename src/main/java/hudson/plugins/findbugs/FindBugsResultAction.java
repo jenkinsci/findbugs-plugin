@@ -5,7 +5,7 @@ import hudson.model.AbstractBuild;
 import hudson.model.Build;
 import hudson.model.HealthReport;
 import hudson.model.HealthReportingAction;
-import hudson.plugins.util.HealthReportBuilder;
+import hudson.plugins.findbugs.util.HealthReportBuilder;
 import hudson.util.ChartUtil;
 import hudson.util.ColorPalette;
 import hudson.util.DataSetBuilder;
