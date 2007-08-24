@@ -10,7 +10,7 @@
   <artifactId>findbugs</artifactId>
   <packaging>hpi</packaging>
   <name>Hudson FindBugs Plug-in</name>
-  <version>1.7-SNAPSHOT</version>
+  <version>1.7</version>
   <licenses>
   	<license><name>MIT license</name><comments>All source code is under the MIT license.</comments></license>
   	<license><name>GNU LESSER GENERAL PUBLIC LICENSE</name><comments>FindBugs messages.xml file from the findbugs 1.2.1 release .</comments></license>
@@ -61,4 +61,8 @@
       </snapshots>
     </repository>
   </repositories>
+
+  <scm>
+    <tag>findbugs-1_7</tag>
+  </scm>
 </project>
