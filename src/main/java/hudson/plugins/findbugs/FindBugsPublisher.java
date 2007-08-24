@@ -9,6 +9,7 @@ import hudson.model.Descriptor;
 import hudson.model.Project;
 import hudson.model.Result;
 import hudson.plugins.findbugs.util.AbortException;
+import hudson.plugins.findbugs.util.HealthReportBuilder;
 import hudson.tasks.Publisher;
 
 import java.io.IOException;
@@ -181,7 +182,8 @@ public class FindBugsPublisher extends Publisher {
                 result = new FindBugsResult(build, project);
             }
 
-            build.getActions().add(new FindBugsResultAction(build, result, minimumBugs, isHealthyReportEnabled, healthyBugs, unHealthyBugs));
+            HealthReportBuilder healthReportBuilder = new HealthReportBuilder("FindBugs", "warning", isThresholdEnabled, minimumBugs, isHealthyReportEnabled, healthyBugs, unHealthyBugs);
+            build.getActions().add(new FindBugsResultAction(build, result, healthReportBuilder));
 
             int warnings = project.getNumberOfWarnings();
             if (warnings > 0) {

@@ -1,9 +1,11 @@
 package hudson.plugins.findbugs.util;
 
-import java.io.Serializable;
-
 import hudson.Util;
 import hudson.model.HealthReport;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Creates a health report for integer values based on healthy and unhealthy
@@ -19,11 +21,15 @@ public class HealthReportBuilder implements Serializable {
     /** Report health as 0% when the number of warnings is greater than this value. */
     private int unHealthy;
     /** Determines whether to use the provided healthy thresholds. */
-    private boolean isEnabled;
+    private boolean isHealthEnabled;
     /** Name of the report. */
     private String reportName;
     /** Name of a item. */
     private String itemName;
+    /** Determines whether to use the provided unstable threshold. */
+    private boolean isThresholdEnabled;
+    /** Bug threshold to be reached if a build should be considered as unstable. */
+    private int threshold;
 
     /**
      * Creates a new instance of <code>HealthReportBuilder</code>.
@@ -32,21 +38,28 @@ public class HealthReportBuilder implements Serializable {
      *            the report name
      * @param itemName
      *            the item name
+     * @param isFailureThresholdEnabled
+     *            determines whether to use the provided unstable threshold
+     * @param threshold
+     *            bug threshold to be reached if a build should be considered as
+     *            unstable.
      * @param isHealthyReportEnabled
-     *            Determines whether to use the provided healthy thresholds.
+     *            determines whether to use the provided healthy thresholds.
      * @param healthy
-     *            Report health as 100% when the number of warnings is less than
+     *            report health as 100% when the number of warnings is less than
      *            this value
      * @param unHealthy
-     *            Report health as 0% when the number of warnings is greater
+     *            report health as 0% when the number of warnings is greater
      *            than this value
      */
-    public HealthReportBuilder(final String reportName, final String itemName, final boolean isHealthyReportEnabled, final int healthy, final int unHealthy) {
+    public HealthReportBuilder(final String reportName, final String itemName, final boolean isFailureThresholdEnabled, final int threshold, final boolean isHealthyReportEnabled, final int healthy, final int unHealthy) {
         this.reportName = reportName;
         this.itemName = itemName;
+        this.threshold = threshold;
         this.healthy = healthy;
         this.unHealthy = unHealthy;
-        isEnabled = isHealthyReportEnabled;
+        isThresholdEnabled = isFailureThresholdEnabled;
+        isHealthEnabled = isHealthyReportEnabled;
     }
 
     /**
@@ -60,7 +73,7 @@ public class HealthReportBuilder implements Serializable {
      * @return the healthiness of a build
      */
     public HealthReport computeHealth(final int counter) {
-        if (isEnabled) {
+        if (isHealthEnabled) {
             int percentage;
             if (counter < healthy) {
                 percentage = 100;
@@ -121,7 +134,7 @@ public class HealthReportBuilder implements Serializable {
      * @return the isHealthyReportEnabled
      */
     public final boolean isHealthyReportEnabled() {
-        return isEnabled;
+        return isHealthEnabled;
     }
 
     /**
@@ -130,7 +143,25 @@ public class HealthReportBuilder implements Serializable {
      * @param isHealthyReportEnabled the value to set
      */
     public final void setHealthyReportEnabled(final boolean isHealthyReportEnabled) {
-        isEnabled = isHealthyReportEnabled;
+        isHealthEnabled = isHealthyReportEnabled;
+    }
+
+    /**
+     * Returns the isThresholdEnabled.
+     *
+     * @return the isThresholdEnabled
+     */
+    public boolean isFailureThresholdEnabled() {
+        return isThresholdEnabled;
+    }
+
+    /**
+     * Sets the isThresholdEnabled to the specified value.
+     *
+     * @param isFailureThresholdEnabled the value to set
+     */
+    public void setFailureThresholdEnabled(final boolean isFailureThresholdEnabled) {
+        isThresholdEnabled = isFailureThresholdEnabled;
     }
 
     /**
@@ -167,6 +198,68 @@ public class HealthReportBuilder implements Serializable {
      */
     public final void setItemName(final String itemName) {
         this.itemName = itemName;
+    }
+
+    /**
+     * Returns the threshold.
+     *
+     * @return the threshold
+     */
+    public int getThreshold() {
+        return threshold;
+    }
+
+    /**
+     * Sets the threshold to the specified value.
+     *
+     * @param threshold the value to set
+     */
+    public void setThreshold(final int threshold) {
+        this.threshold = threshold;
+    }
+
+
+
+
+    /**
+     * Creates a list of integer values used to create a three color graph showing
+     * the items per build.
+     *
+     * @param items
+     *            the number of items
+     * @return the list of values
+     */
+    public List<Integer> createSeries(final int items) {
+        List<Integer> series = new ArrayList<Integer>(3);
+        int remainder = items;
+
+        if (isHealthEnabled) {
+            series.add(Math.min(remainder, healthy));
+
+            int range = unHealthy - healthy;
+            remainder -= healthy;
+            if (remainder > 0) {
+                series.add(Math.min(remainder, range));
+            }
+
+            remainder -= range;
+            if (remainder > 0) {
+                series.add(remainder);
+            }
+        }
+        else if (isThresholdEnabled) {
+            series.add(Math.min(remainder, threshold));
+
+            remainder -= threshold;
+            if (remainder > 0) {
+                series.add(remainder);
+            }
+        }
+        else {
+            series.add(remainder);
+        }
+
+        return series;
     }
 }
 

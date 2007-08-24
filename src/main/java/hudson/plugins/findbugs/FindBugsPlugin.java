@@ -7,7 +7,6 @@ import hudson.tasks.BuildStep;
  * Registers the FindBugs plug-in publisher.
  *
  * @author Ulli Hafner
- * @plugin
  */
 public class FindBugsPlugin extends Plugin {
     /** {@inheritDoc} */

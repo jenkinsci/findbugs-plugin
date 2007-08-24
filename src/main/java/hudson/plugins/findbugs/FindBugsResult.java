@@ -26,6 +26,7 @@ import edu.umd.cs.findbugs.annotations.SuppressWarnings;
  */
 public class FindBugsResult implements ModelObject, Serializable {
     /** No result at all. */
+    @java.lang.SuppressWarnings("unchecked")
     private static final Set<Warning> EMPTY_SET = Collections.EMPTY_SET;
     /** Unique identifier of this class. */
     private static final long serialVersionUID = 2768250056765266658L;
