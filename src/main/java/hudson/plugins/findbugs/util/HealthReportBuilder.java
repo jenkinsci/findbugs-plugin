@@ -218,20 +218,32 @@ public class HealthReportBuilder implements Serializable {
         this.threshold = threshold;
     }
 
-
-
-
     /**
-     * Creates a list of integer values used to create a three color graph showing
-     * the items per build.
-     *
-     * @param items
-     *            the number of items
+     * Creates a list of integer values used to create a three color graph
+     * showing the items per build.
+     * @param numberOfItems
+     *            number of items
      * @return the list of values
      */
-    public List<Integer> createSeries(final int items) {
+    public List<Integer> createSeries(final int numberOfItems) {
+        return createSeries(numberOfItems, 0, 0);
+    }
+
+    /**
+     * Creates a list of integer values used to create a three color graph
+     * showing the items per build.
+     * @param high
+     *            number of high priority items
+     * @param normal
+     *            number of normal priority items
+     * @param low
+     *            number of low priority items
+     *
+     * @return the list of values
+     */
+    public List<Integer> createSeries(final int high, final int normal, final int low) {
         List<Integer> series = new ArrayList<Integer>(3);
-        int remainder = items;
+        int remainder = high + normal + low;
 
         if (isHealthEnabled) {
             series.add(Math.min(remainder, healthy));
@@ -256,7 +268,9 @@ public class HealthReportBuilder implements Serializable {
             }
         }
         else {
-            series.add(remainder);
+            series.add(low);
+            series.add(normal);
+            series.add(high);
         }
 
         return series;

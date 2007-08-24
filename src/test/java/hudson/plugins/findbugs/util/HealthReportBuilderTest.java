@@ -156,17 +156,11 @@ public class HealthReportBuilderTest extends TestCase {
     public void testSimpleSeriesCalculator() {
         HealthReportBuilder builder = new HealthReportBuilder(FIND_BUGS, WARNING, false, 10, false, 10, 30);
 
-        List<Integer> series = builder.createSeries(5);
-        assertEquals(WRONG_NUMBER, 1, series.size());
-        assertEquals(WRONG_SERIES_VALUE, 5, (int)series.get(0));
-
-        series = builder.createSeries(10);
-        assertEquals(WRONG_NUMBER, 1, series.size());
-        assertEquals(WRONG_SERIES_VALUE, 10, (int)series.get(0));
-
-        series = builder.createSeries(11);
-        assertEquals(WRONG_NUMBER, 1, series.size());
-        assertEquals(WRONG_SERIES_VALUE, 11, (int)series.get(0));
+        List<Integer> series = builder.createSeries(5, 10, 15);
+        assertEquals(WRONG_NUMBER, 3, series.size());
+        assertEquals(WRONG_SERIES_VALUE, 5, (int)series.get(2));
+        assertEquals(WRONG_SERIES_VALUE, 10, (int)series.get(1));
+        assertEquals(WRONG_SERIES_VALUE, 15, (int)series.get(0));
     }
 
     /**

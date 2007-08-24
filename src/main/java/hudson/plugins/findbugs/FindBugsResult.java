@@ -52,6 +52,12 @@ public class FindBugsResult implements ModelObject, Serializable {
     private final int numberOfNewWarnings;
     /** The number of fixed warnings in this build. */
     private final int numberOfFixedWarnings;
+    /** The number of low priority warnings in this build. */
+    private int low;
+    /** The number of normal priority warnings in this build. */
+    private int normal;
+    /** The number of high priority warnings in this build. */
+    private int high;
 
     /**
      * Creates a new instance of <code>FindBugsResult</code>.
@@ -76,16 +82,33 @@ public class FindBugsResult implements ModelObject, Serializable {
     public FindBugsResult(final Build<?, ?> build, final JavaProject project, final JavaProject previousProject) {
         owner = build;
         numberOfWarnings = project.getNumberOfWarnings();
+
         this.project = new WeakReference<JavaProject>(project);
         delta = project.getNumberOfWarnings() - previousProject.getNumberOfWarnings();
 
-        Set<Warning> warnings = WarningDifferencer.getNewWarnings(project.getWarnings(), previousProject.getWarnings());
+        Set<Warning> allWarnings = project.getWarnings();
+
+        Set<Warning> warnings = WarningDifferencer.getNewWarnings(allWarnings, previousProject.getWarnings());
         numberOfNewWarnings = warnings.size();
         newWarnings = new WeakReference<Set<Warning>>(warnings);
 
-        warnings = WarningDifferencer.getFixedWarnings(project.getWarnings(), previousProject.getWarnings());
+        warnings = WarningDifferencer.getFixedWarnings(allWarnings, previousProject.getWarnings());
         numberOfFixedWarnings = warnings.size();
         fixedWarnings = new WeakReference<Set<Warning>>(warnings);
+
+        computePriorities(allWarnings);
+    }
+
+    /**
+     * Computes the low, normal and high priority count.
+     *
+     * @param allWarnings
+     *            all project warnings
+     */
+    private void computePriorities(final Set<Warning> allWarnings) {
+        low = WarningDifferencer.countLowPriorityWarnings(allWarnings);
+        normal = WarningDifferencer.countNormalPriorityWarnings(allWarnings);
+        high = WarningDifferencer.countHighPriorityWarnings(allWarnings);
     }
 
     /** {@inheritDoc} */
@@ -223,6 +246,8 @@ public class FindBugsResult implements ModelObject, Serializable {
     private void loadResult() throws IOException, InterruptedException {
         try {
             JavaProject result = new FindBugsCounter(owner).findBugs();
+            computePriorities(result.getWarnings());
+
             project = new WeakReference<JavaProject>(result);
 
             if (hasPreviousResult()) {
@@ -299,5 +324,32 @@ public class FindBugsResult implements ModelObject, Serializable {
      */
     public boolean hasPreviousResult() {
         return owner.getAction(FindBugsResultAction.class).hasPreviousResult();
+    }
+
+    /**
+     * Returns the total number of warnings with priority LOW in this package.
+     *
+     * @return the total number of warnings with priority LOW in this package
+     */
+    public int getNumberOfLowWarnings() {
+        return low;
+    }
+
+    /**
+     * Returns the total number of warnings with priority HIGH in this package.
+     *
+     * @return the total number of warnings with priority HIGH in this package
+     */
+    public int getNumberOfHighWarnings() {
+        return high;
+    }
+
+    /**
+     * Returns the total number of warnings with priority NORMAL in this package.
+     *
+     * @return the total number of warnings with priority NORMAL in this package
+     */
+    public int getNumberOfNormalWarnings() {
+        return normal;
     }
 }

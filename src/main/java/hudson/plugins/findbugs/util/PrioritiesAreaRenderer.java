@@ -9,7 +9,7 @@ import org.jfree.data.category.CategoryDataset;
 /**
  * Renderer that provides direct access to the individual results of a build via links.
  */
-public final class ResultAreaRenderer extends StackedAreaRenderer2 {
+public final class PrioritiesAreaRenderer extends StackedAreaRenderer2 {
     /** Unique identifier of this class. */
     private static final long serialVersionUID = -4683951507836348304L;
     /** Base URL of the graph links. */
@@ -23,7 +23,7 @@ public final class ResultAreaRenderer extends StackedAreaRenderer2 {
      * @param url base URL of the graph links
      * @param name name of the shown items
      */
-    public ResultAreaRenderer(final String url, final String name) {
+    public PrioritiesAreaRenderer(final String url, final String name) {
         super();
         this.url = "/" + url + "/";
         this.name = name;
@@ -38,11 +38,17 @@ public final class ResultAreaRenderer extends StackedAreaRenderer2 {
     /** {@inheritDoc} */
     @Override
     public String generateToolTip(final CategoryDataset dataset, final int row, final int column) {
-        int number = 0;
-        for (int index = 0; index < dataset.getRowCount(); index++) {
-            number += dataset.getValue(index, column).intValue();
+        String prefix;
+        if (row == 2) {
+            prefix = "high priority ";
         }
-        return String.valueOf(Util.combine(number, name));
+        else if (row == 1) {
+            prefix = "normal ";
+        }
+        else {
+            prefix = "low priority ";
+        }
+        return String.valueOf(Util.combine(dataset.getValue(row, column).intValue(), prefix + name));
     }
 
     /**

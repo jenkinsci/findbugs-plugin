@@ -6,6 +6,7 @@ import hudson.model.HealthReport;
 import hudson.model.HealthReportingAction;
 import hudson.plugins.findbugs.util.ChartBuilder;
 import hudson.plugins.findbugs.util.HealthReportBuilder;
+import hudson.plugins.findbugs.util.PrioritiesAreaRenderer;
 import hudson.plugins.findbugs.util.ResultAreaRenderer;
 import hudson.util.ChartUtil;
 import hudson.util.DataSetBuilder;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.renderer.category.StackedAreaRenderer;
 import org.jfree.data.category.CategoryDataset;
 import org.kohsuke.stapler.StaplerProxy;
 import org.kohsuke.stapler.StaplerRequest;
@@ -35,6 +37,8 @@ import edu.umd.cs.findbugs.annotations.SuppressWarnings;
  * @author Ulli Hafner
  */
 public class FindBugsResultAction implements StaplerProxy, HealthReportingAction {
+    /** URL to results. */
+    private static final String FINDBUGS_RESULT_URL = "findbugsResult";
     /** Height of the graph. */
     private static final int HEIGHT = 200;
     /** Width of the graph. */
@@ -110,7 +114,7 @@ public class FindBugsResultAction implements StaplerProxy, HealthReportingAction
 
     /** {@inheritDoc} */
     public String getUrlName() {
-        return "findbugsResult";
+        return FINDBUGS_RESULT_URL;
     }
 
     /**
@@ -182,7 +186,9 @@ public class FindBugsResultAction implements StaplerProxy, HealthReportingAction
             response.sendRedirect2(request.getContextPath() + "/images/headless.png");
             return;
         }
-
+        if (request.checkIfModified(owner.getTimestamp(), response)) {
+            return;
+        }
         ChartUtil.generateGraph(request, response, createChart(), WIDTH, HEIGHT);
     }
 
@@ -198,6 +204,9 @@ public class FindBugsResultAction implements StaplerProxy, HealthReportingAction
      *             {@link FindBugsResultAction#doGraph(StaplerRequest, StaplerResponse)}
      */
     public void doGraphMap(final StaplerRequest request, final StaplerResponse response) throws IOException {
+        if (request.checkIfModified(owner.getTimestamp(), response)) {
+            return;
+        }
         ChartUtil.generateClickableMap(request, response, createChart(), WIDTH, HEIGHT);
     }
 
@@ -208,8 +217,15 @@ public class FindBugsResultAction implements StaplerProxy, HealthReportingAction
      */
     private JFreeChart createChart() {
         ChartBuilder chartBuilder = new ChartBuilder();
-        return chartBuilder.createChart(buildDataSet(), new ResultAreaRenderer("/findbugsResult/", "warning"),
-                healthReportBuilder.getThreshold(), healthReportBuilder.isHealthyReportEnabled());
+        StackedAreaRenderer renderer;
+        if (!healthReportBuilder.isHealthyReportEnabled() && !healthReportBuilder.isFailureThresholdEnabled()) {
+            renderer = new PrioritiesAreaRenderer(FINDBUGS_RESULT_URL, "warning");
+        }
+        else {
+            renderer = new ResultAreaRenderer(FINDBUGS_RESULT_URL, "warning");
+        }
+        return chartBuilder.createChart(buildDataSet(), renderer, healthReportBuilder.getThreshold(),
+                healthReportBuilder.isHealthyReportEnabled() || !healthReportBuilder.isFailureThresholdEnabled());
     }
 
     /**
@@ -221,8 +237,8 @@ public class FindBugsResultAction implements StaplerProxy, HealthReportingAction
     private CategoryDataset buildDataSet() {
         DataSetBuilder<Integer, NumberOnlyBuildLabel> builder = new DataSetBuilder<Integer, NumberOnlyBuildLabel>();
         for (FindBugsResultAction action = this; action != null; action = action.getPreviousBuild()) {
-            int numberOfWarnings = action.getResult().getNumberOfWarnings();
-            List<Integer> series = healthReportBuilder.createSeries(numberOfWarnings);
+            FindBugsResult current = action.getResult();
+            List<Integer> series = healthReportBuilder.createSeries(current.getNumberOfHighWarnings(), current.getNumberOfNormalWarnings(), current.getNumberOfLowWarnings());
             int level = 0;
             for (Integer integer : series) {
                 builder.add(integer, level, new NumberOnlyBuildLabel(action.owner));
