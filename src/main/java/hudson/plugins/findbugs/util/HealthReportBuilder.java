@@ -12,6 +12,7 @@ import java.util.List;
  * thresholds.
  *
  * @see HealthReport
+ * @author Ulli Hafner
  */
 public class HealthReportBuilder implements Serializable {
     /** Unique identifier of this class. */

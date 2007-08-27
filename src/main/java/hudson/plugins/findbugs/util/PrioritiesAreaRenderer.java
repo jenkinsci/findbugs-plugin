@@ -7,7 +7,10 @@ import hudson.util.ChartUtil.NumberOnlyBuildLabel;
 import org.jfree.data.category.CategoryDataset;
 
 /**
- * Renderer that provides direct access to the individual results of a build via links.
+ * Renderer that provides direct access to the individual results of a build via
+ * links.
+ *
+ * @author Ulli Hafner
  */
 public final class PrioritiesAreaRenderer extends StackedAreaRenderer2 {
     /** Unique identifier of this class. */

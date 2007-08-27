@@ -23,6 +23,8 @@ import org.jfree.ui.RectangleInsets;
 
 /**
  * Creates charts in two or three colors.
+ *
+ * @author Ulli Hafner
  */
 public class ChartBuilder {
     /**
