@@ -37,14 +37,14 @@ import edu.umd.cs.findbugs.annotations.SuppressWarnings;
  * @author Ulli Hafner
  */
 public class FindBugsResultAction implements StaplerProxy, HealthReportingAction {
+    /** Unique identifier of this class. */
+    private static final long serialVersionUID = -5329651349674842873L;
     /** URL to results. */
     private static final String FINDBUGS_RESULT_URL = "findbugsResult";
     /** Height of the graph. */
     private static final int HEIGHT = 200;
     /** Width of the graph. */
     private static final int WIDTH = 500;
-    /** Unique identifier of this class. */
-    private static final long serialVersionUID = -5329651349674842873L;
     /** The associated build of this action. */
     @SuppressWarnings("Se")
     private final Build<?, ?> owner;
@@ -61,7 +61,7 @@ public class FindBugsResultAction implements StaplerProxy, HealthReportingAction
      * @param result
      *            the result in this build
      * @param healthReportBuilder
-     *            Health builder to use
+     *            health builder to use
      */
     public FindBugsResultAction(final Build<?, ?> owner, final FindBugsResult result, final HealthReportBuilder healthReportBuilder) {
         this.owner = owner;
