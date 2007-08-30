@@ -43,7 +43,10 @@ public final class ResultAreaRenderer extends StackedAreaRenderer2 {
     public String generateToolTip(final CategoryDataset dataset, final int row, final int column) {
         int number = 0;
         for (int index = 0; index < dataset.getRowCount(); index++) {
-            number += dataset.getValue(index, column).intValue();
+            final Number value = dataset.getValue(index, column);
+            if (value != null) {
+                number += value.intValue();
+            }
         }
         return String.valueOf(Util.combine(number, name));
     }
