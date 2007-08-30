@@ -14,6 +14,8 @@ import org.xml.sax.SAXException;
  * Tests the class {@link WarningDifferencer}.
  */
 public class WarningDifferencerTest {
+    /** Corresponding class. */
+    private static final String FINDBUGS_CLASS = "findbugs.Class";
     /** String for comparison. */
     private static final String STRING = "type1";
     /** Indicates a wrong calculation of warnings. */
@@ -52,13 +54,13 @@ public class WarningDifferencerTest {
         Warning warning = new Warning();
         warning.setMessage(STRING);
         warning.setLineNumber(STRING);
-        warning.setQualifiedName("findbugs.Class");
+        warning.setQualifiedName(FINDBUGS_CLASS);
         actual.add(warning);
 
         warning = new Warning();
         warning.setMessage(STRING);
         warning.setLineNumber(STRING);
-        warning.setQualifiedName("findbugs.Class");
+        warning.setQualifiedName(FINDBUGS_CLASS);
         previous.add(warning);
 
 
@@ -68,7 +70,7 @@ public class WarningDifferencerTest {
         warning = new Warning();
         warning.setMessage("type2");
         warning.setLineNumber(STRING);
-        warning.setQualifiedName("findbugs.Class");
+        warning.setQualifiedName(FINDBUGS_CLASS);
         previous.add(warning);
 
         assertEquals(WARNINGS_COUNT_ERROR, 0, WarningDifferencer.getNewWarnings(actual, previous).size());
@@ -77,7 +79,7 @@ public class WarningDifferencerTest {
         warning = new Warning();
         warning.setMessage("type2");
         warning.setLineNumber(STRING);
-        warning.setQualifiedName("findbugs.Class");
+        warning.setQualifiedName(FINDBUGS_CLASS);
         actual.add(warning);
 
         assertEquals(WARNINGS_COUNT_ERROR, 0, WarningDifferencer.getNewWarnings(actual, previous).size());
@@ -86,7 +88,7 @@ public class WarningDifferencerTest {
         warning = new Warning();
         warning.setMessage("type3");
         warning.setLineNumber(STRING);
-        warning.setQualifiedName("findbugs.Class");
+        warning.setQualifiedName(FINDBUGS_CLASS);
         actual.add(warning);
 
         assertEquals(WARNINGS_COUNT_ERROR, 1, WarningDifferencer.getNewWarnings(actual, previous).size());
@@ -98,8 +100,8 @@ public class WarningDifferencerTest {
      */
     @Test
     public void scanActualFiles() throws IOException, SAXException {
-        Module ui = parseFile("ui.xml");
-        ui.setName("ui");
+        Module uiModule = parseFile("ui.xml");
+        uiModule.setName("ui");
         Module editor = parseFile("editor.xml");
         editor.setName("editor");
         Module core = parseFile("core.xml");
@@ -107,7 +109,7 @@ public class WarningDifferencerTest {
 
         JavaProject project = new JavaProject();
         project.addModule(core);
-        project.addModule(ui);
+        project.addModule(uiModule);
         project.addModule(editor);
 
         assertEquals(WARNINGS_COUNT_ERROR, 91, project.getNumberOfWarnings());
