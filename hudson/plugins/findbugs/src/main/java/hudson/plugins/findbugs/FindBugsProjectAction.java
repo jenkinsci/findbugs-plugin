@@ -1,0 +1,172 @@
+package hudson.plugins.findbugs;
+
+import hudson.model.AbstractBuild;
+import hudson.model.Action;
+import hudson.model.Build;
+import hudson.model.Project;
+
+import java.io.IOException;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.StaplerResponse;
+
+import edu.umd.cs.findbugs.annotations.SuppressWarnings;
+
+/**
+ * Entry point to visualize the FindBugs trend graph. Drawing of the graph is
+ * delegated to the associated {@link FindBugsResultAction}.
+ *
+ * @author Ulli Hafner
+ */
+public class FindBugsProjectAction implements Action {
+    /** URL for this action. */
+    private static final String FINDBUGS_URL = "findbugs";
+    /** Unique identifier of this class. */
+    private static final long serialVersionUID = -654316141132780561L;
+    /** Project that owns this action. */
+    @SuppressWarnings("Se")
+    private final Project<?, ?> project;
+
+    /**
+     * Instantiates a new find bugs project action.
+     *
+     * @param project
+     *            the project that owns this action
+     */
+    public FindBugsProjectAction(final Project<?, ?> project) {
+        this.project = project;
+    }
+
+    /**
+     * Returns the project.
+     *
+     * @return the project
+     */
+    public Project<?, ?> getProject() {
+        return project;
+    }
+
+    /** {@inheritDoc} */
+    public String getDisplayName() {
+        return "FindBugs Result";
+    }
+
+    /** {@inheritDoc} */
+    public String getIconFileName() {
+        Object lastBuild = project.getLastBuild();
+        if ((lastBuild instanceof Build) && hasFindBugsResult((Build<?, ?>)lastBuild)) {
+            return FindBugsDescriptor.FINDBUGS_ACTION_LOGO;
+        }
+        return null;
+    }
+
+    /**
+     * Returns whether a FindBugs result is available for the last build.
+     *
+     * @param build
+     *            the build to check
+     * @return <code>true</code> if a FindBugs result is available for the last build.
+     */
+    public boolean hasFindBugsResult(final Build<?, ?> build) {
+        return build.getAction(FindBugsResultAction.class) != null;
+    }
+
+    /** {@inheritDoc} */
+    public String getUrlName() {
+        return FINDBUGS_URL;
+    }
+
+    /**
+     * Redirects the index page to the last FindBugs result.
+     *
+     * @param request
+     *            Stapler request
+     * @param response
+     *            Stapler response
+     * @throws IOException
+     *             in case of an error in
+     */
+    public void doIndex(final StaplerRequest request, final StaplerResponse response) throws IOException {
+        response.sendRedirect2("../lastBuild/findbugsResult");
+    }
+
+    /**
+     * Returns whether we have enough valid results in order to draw a
+     * meaningful graph.
+     *
+     * @param build
+     *            the build to look backward from
+     * @return <code>true</code> if the results are valid in order to draw a
+     *         graph
+     */
+    public boolean hasValidResults(final Build<?, ?> build) {
+        if (build != null) {
+            FindBugsResultAction resultAction = build.getAction(FindBugsResultAction.class);
+            if (resultAction != null) {
+                return resultAction.hasPreviousResult();
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Display the warnings trend. Delegates to the the associated
+     * {@link FindBugsResultAction}.
+     *
+     * @param request
+     *            Stapler request
+     * @param response
+     *            Stapler response
+     * @throws IOException
+     *             in case of an error in
+     *             {@link FindBugsResultAction#doGraph(StaplerRequest, StaplerResponse)}
+     */
+    public void doTrend(final StaplerRequest request, final StaplerResponse response) throws IOException {
+        FindBugsResultAction action = getLastAction();
+        if (action == null) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        }
+        else {
+            action.doGraph(request, response);
+        }
+    }
+
+    /**
+     * Display the warnings trend map. Delegates to the the associated
+     * {@link FindBugsResultAction}.
+     *
+     * @param request
+     *            Stapler request
+     * @param response
+     *            Stapler response
+     * @throws IOException
+     *             in case of an error in
+     *             {@link FindBugsResultAction#doGraph(StaplerRequest, StaplerResponse)}
+     */
+    public void doTrendMap(final StaplerRequest request, final StaplerResponse response) throws IOException {
+        FindBugsResultAction action = getLastAction();
+        if (action == null) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        }
+        else {
+            action.doGraphMap(request, response);
+        }
+    }
+
+    /**
+     * Returns the last valid FindBugs result action.
+     *
+     * @return the last valid FindBugs result action, or null if no such action
+     *         is found
+     */
+    public FindBugsResultAction getLastAction() {
+        AbstractBuild<?, ?> lastBuild = project.getLastSuccessfulBuild();
+        if (lastBuild != null) {
+            return lastBuild.getAction(FindBugsResultAction.class);
+        }
+        return null;
+    }
+}
+
