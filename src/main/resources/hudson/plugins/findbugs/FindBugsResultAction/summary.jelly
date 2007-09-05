@@ -15,7 +15,7 @@
 	    		<j:when test="${it.result.numberOfNewWarnings > 0}">
 	    			(${it.result.numberOfNewWarnings} new).
 	    		</j:when>
-	    		<j:otherwise>(+/-0).</j:otherwise>
+	    		<j:otherwise>(±0).</j:otherwise>
 	    	</j:choose>
 	    </j:if>
 	    <j:if test="${it.result.numberOfWarnings == 0}">
