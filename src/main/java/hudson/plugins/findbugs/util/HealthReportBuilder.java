@@ -254,10 +254,16 @@ public class HealthReportBuilder implements Serializable {
             if (remainder > 0) {
                 series.add(Math.min(remainder, range));
             }
+            else {
+                series.add(0);
+            }
 
             remainder -= range;
             if (remainder > 0) {
                 series.add(remainder);
+            }
+            else {
+                series.add(0);
             }
         }
         else if (isThresholdEnabled) {
@@ -266,6 +272,9 @@ public class HealthReportBuilder implements Serializable {
             remainder -= threshold;
             if (remainder > 0) {
                 series.add(remainder);
+            }
+            else {
+                series.add(0);
             }
         }
         else {

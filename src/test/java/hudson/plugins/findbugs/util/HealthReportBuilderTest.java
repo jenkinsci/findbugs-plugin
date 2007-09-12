@@ -12,12 +12,16 @@ import org.junit.Test;
  * Tests the class {@link HealthReportBuilder}.
  */
 public class HealthReportBuilderTest extends TestCase {
+    /** Number of elements in a series with failure threshold. */
+    private static final int THRESHOLD_SERIES_SIZE = 2;
+    /** Number of elements in a series with healthy threshold. */
+    private static final int HEALTHY_SERIES_SIZE = 3;
     /** Item name. */
     private static final String WARNING = "warning";
     /** Header. */
     private static final String FIND_BUGS = "FindBugs";
     /** Error message. */
-    private static final String WRONG_SERIES_VALUE = "Wrong serieass value.";
+    private static final String WRONG_SERIES_VALUE = "Wrong series value.";
     /** Error message. */
     private static final String WRONG_NUMBER = "Number of created point is wrong.";
     /** Error message. */
@@ -104,25 +108,31 @@ public class HealthReportBuilderTest extends TestCase {
         HealthReportBuilder builder = new HealthReportBuilder(FIND_BUGS, WARNING, true, 0, true, 10, 30);
 
         List<Integer> series = builder.createSeries(5);
-        assertEquals(WRONG_NUMBER, 1, series.size());
+        assertEquals(WRONG_NUMBER, HEALTHY_SERIES_SIZE, series.size());
         assertEquals(WRONG_SERIES_VALUE, 5, (int)series.get(0));
+        assertEquals(WRONG_SERIES_VALUE, 0, (int)series.get(1));
+        assertEquals(WRONG_SERIES_VALUE, 0, (int)series.get(2));
 
         series = builder.createSeries(10);
-        assertEquals(WRONG_NUMBER, 1, series.size());
+        assertEquals(WRONG_NUMBER, HEALTHY_SERIES_SIZE, series.size());
         assertEquals(WRONG_SERIES_VALUE, 10, (int)series.get(0));
+        assertEquals(WRONG_SERIES_VALUE, 0, (int)series.get(1));
+        assertEquals(WRONG_SERIES_VALUE, 0, (int)series.get(2));
 
         series = builder.createSeries(11);
-        assertEquals(WRONG_NUMBER, 2, series.size());
+        assertEquals(WRONG_NUMBER, HEALTHY_SERIES_SIZE, series.size());
         assertEquals(WRONG_SERIES_VALUE, 10, (int)series.get(0));
         assertEquals(WRONG_SERIES_VALUE, 1, (int)series.get(1));
+        assertEquals(WRONG_SERIES_VALUE, 0, (int)series.get(2));
 
         series = builder.createSeries(30);
-        assertEquals(WRONG_NUMBER, 2, series.size());
+        assertEquals(WRONG_NUMBER, HEALTHY_SERIES_SIZE, series.size());
         assertEquals(WRONG_SERIES_VALUE, 10, (int)series.get(0));
         assertEquals(WRONG_SERIES_VALUE, 20, (int)series.get(1));
+        assertEquals(WRONG_SERIES_VALUE, 0, (int)series.get(2));
 
         series = builder.createSeries(31);
-        assertEquals(WRONG_NUMBER, 3, series.size());
+        assertEquals(WRONG_NUMBER, HEALTHY_SERIES_SIZE, series.size());
         assertEquals(WRONG_SERIES_VALUE, 10, (int)series.get(0));
         assertEquals(WRONG_SERIES_VALUE, 20, (int)series.get(1));
         assertEquals(WRONG_SERIES_VALUE, 1, (int)series.get(2));
@@ -136,17 +146,39 @@ public class HealthReportBuilderTest extends TestCase {
         HealthReportBuilder builder = new HealthReportBuilder(FIND_BUGS, WARNING, true, 10, false, 20, 50);
 
         List<Integer> series = builder.createSeries(5);
-        assertEquals(WRONG_NUMBER, 1, series.size());
+        assertEquals(WRONG_NUMBER, THRESHOLD_SERIES_SIZE, series.size());
         assertEquals(WRONG_SERIES_VALUE, 5, (int)series.get(0));
+        assertEquals(WRONG_SERIES_VALUE, 0, (int)series.get(1));
 
         series = builder.createSeries(10);
-        assertEquals(WRONG_NUMBER, 1, series.size());
+        assertEquals(WRONG_NUMBER, THRESHOLD_SERIES_SIZE, series.size());
         assertEquals(WRONG_SERIES_VALUE, 10, (int)series.get(0));
+        assertEquals(WRONG_SERIES_VALUE, 0, (int)series.get(1));
 
         series = builder.createSeries(11);
-        assertEquals(WRONG_NUMBER, 2, series.size());
+        assertEquals(WRONG_NUMBER, THRESHOLD_SERIES_SIZE, series.size());
         assertEquals(WRONG_SERIES_VALUE, 10, (int)series.get(0));
         assertEquals(WRONG_SERIES_VALUE, 1, (int)series.get(1));
+    }
+
+    /**
+     * Tests Issue 796.
+     */
+    @Test
+    public void testIssue796() {
+        HealthReportBuilder builder = new HealthReportBuilder(FIND_BUGS, WARNING, false, 0, true, 1, 10);
+
+        List<Integer> series = builder.createSeries(1);
+        assertEquals(WRONG_NUMBER, HEALTHY_SERIES_SIZE, series.size());
+        assertEquals(WRONG_SERIES_VALUE, 1, (int)series.get(0));
+        assertEquals(WRONG_SERIES_VALUE, 0, (int)series.get(1));
+        assertEquals(WRONG_SERIES_VALUE, 0, (int)series.get(2));
+
+        series = builder.createSeries(7);
+        assertEquals(WRONG_NUMBER, HEALTHY_SERIES_SIZE, series.size());
+        assertEquals(WRONG_SERIES_VALUE, 1, (int)series.get(0));
+        assertEquals(WRONG_SERIES_VALUE, 6, (int)series.get(1));
+        assertEquals(WRONG_SERIES_VALUE, 0, (int)series.get(2));
     }
 
     /**
