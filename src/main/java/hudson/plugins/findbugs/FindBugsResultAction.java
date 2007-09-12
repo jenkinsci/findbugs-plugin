@@ -51,7 +51,7 @@ public class FindBugsResultAction implements StaplerProxy, HealthReportingAction
     /** The actual result of the FindBugs analysis. */
     private FindBugsResult result;
     /** Builds a health report. */
-    private final HealthReportBuilder healthReportBuilder;
+    private HealthReportBuilder healthReportBuilder;
 
     /**
      * Creates a new instance of <code>FindBugsBuildAction</code>.
@@ -186,7 +186,7 @@ public class FindBugsResultAction implements StaplerProxy, HealthReportingAction
             response.sendRedirect2(request.getContextPath() + "/images/headless.png");
             return;
         }
-        if (request.checkIfModified(owner.getTimestamp(), response) || healthReportBuilder == null) {
+        if (request.checkIfModified(owner.getTimestamp(), response)) {
             return;
         }
         ChartUtil.generateGraph(request, response, createChart(), WIDTH, HEIGHT);
@@ -204,7 +204,7 @@ public class FindBugsResultAction implements StaplerProxy, HealthReportingAction
      *             {@link FindBugsResultAction#doGraph(StaplerRequest, StaplerResponse)}
      */
     public void doGraphMap(final StaplerRequest request, final StaplerResponse response) throws IOException {
-        if (request.checkIfModified(owner.getTimestamp(), response) || healthReportBuilder == null) {
+        if (request.checkIfModified(owner.getTimestamp(), response)) {
             return;
         }
         ChartUtil.generateClickableMap(request, response, createChart(), WIDTH, HEIGHT);
@@ -218,6 +218,9 @@ public class FindBugsResultAction implements StaplerProxy, HealthReportingAction
     private JFreeChart createChart() {
         ChartBuilder chartBuilder = new ChartBuilder();
         StackedAreaRenderer renderer;
+        if (healthReportBuilder == null) {
+            healthReportBuilder = new HealthReportBuilder("Task Scanner", "open tasks", false, 0, false, 0, 0);
+        }
         if (healthReportBuilder.isHealthyReportEnabled() || healthReportBuilder.isFailureThresholdEnabled()) {
             renderer = new ResultAreaRenderer(FINDBUGS_RESULT_URL, "warning");
         }
@@ -238,14 +241,16 @@ public class FindBugsResultAction implements StaplerProxy, HealthReportingAction
         DataSetBuilder<Integer, NumberOnlyBuildLabel> builder = new DataSetBuilder<Integer, NumberOnlyBuildLabel>();
         for (FindBugsResultAction action = this; action != null; action = action.getPreviousBuild()) {
             FindBugsResult current = action.getResult();
-            List<Integer> series = healthReportBuilder.createSeries(
-                    current.getNumberOfHighWarnings(),
-                    current.getNumberOfNormalWarnings(),
-                    current .getNumberOfLowWarnings());
-            int level = 0;
-            for (Integer integer : series) {
-                builder.add(integer, level, new NumberOnlyBuildLabel(action.owner));
-                level++;
+            if (current != null) {
+                List<Integer> series = healthReportBuilder.createSeries(
+                        current.getNumberOfHighWarnings(),
+                        current.getNumberOfNormalWarnings(),
+                        current .getNumberOfLowWarnings());
+                int level = 0;
+                for (Integer integer : series) {
+                    builder.add(integer, level, new NumberOnlyBuildLabel(action.owner));
+                    level++;
+                }
             }
         }
         return builder.build();
