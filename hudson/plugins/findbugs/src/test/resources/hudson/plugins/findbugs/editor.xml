@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<BugCollection version="1.2.0" threshold="Low" effort="Max" >
+<file classname="com.avaloq.adt.env.internal.ui.compare.ChangeDiffNode" >
+<BugInstance type="RI_REDUNDANT_INTERFACES" priority="Low" category="STYLE" message="RI: Class com.avaloq.adt.env.internal.ui.compare.ChangeDiffNode implements same interface as superclass" lineNumber="Not available" />
+</file>
+<file classname="com.avaloq.adt.internal.ui.spell.SpellingTools" >
+<BugInstance type="SBSC_USE_STRINGBUFFER_CONCATENATION" priority="Normal" category="PERFORMANCE" message="SBSC: Method com.avaloq.adt.internal.ui.spell.SpellingTools.getIndentation(String, int) concatenates strings using + in a loop" lineNumber="95" />
+<BugInstance type="SBSC_USE_STRINGBUFFER_CONCATENATION" priority="Normal" category="PERFORMANCE" message="SBSC: Method com.avaloq.adt.internal.ui.spell.SpellingTools.getIndentation(IDocument, int, String, int) concatenates strings using + in a loop" lineNumber="127" />
+</file>
+<file classname="com.avaloq.adt.env.internal.ui.docu.DocuComboElement" >
+<BugInstance type="EQ_COMPARETO_USE_OBJECT_EQUALS" priority="Normal" category="BAD_PRACTICE" message="Eq: com.avaloq.adt.env.internal.ui.docu.DocuComboElement defines compareTo(Object) and uses Object.equals()" lineNumber="64-67" />
+</file>
+<file classname="com.avaloq.adt.internal.core.source.provider.IFunctionItemProvider" >
+<BugInstance type="RI_REDUNDANT_INTERFACES" priority="Low" category="STYLE" message="RI: Class com.avaloq.adt.internal.core.source.provider.IFunctionItemProvider implements same interface as superclass" lineNumber="Not available" />
+</file>
+<file classname="com.avaloq.adt.internal.core.source.provider.IProcedureItemProvider" >
+<BugInstance type="RI_REDUNDANT_INTERFACES" priority="Low" category="STYLE" message="RI: Class com.avaloq.adt.internal.core.source.provider.IProcedureItemProvider implements same interface as superclass" lineNumber="Not available" />
+</file>
+<file classname="com.avaloq.adt.internal.core.source.provider.IUndefinedMemberItemProvider" >
+<BugInstance type="RI_REDUNDANT_INTERFACES" priority="Low" category="STYLE" message="RI: Class com.avaloq.adt.internal.core.source.provider.IUndefinedMemberItemProvider implements same interface as superclass" lineNumber="Not available" />
+</file>
+<file classname="com.avaloq.adt.ui.editors.AvaloqSourceViewerConfiguration" >
+<BugInstance type="ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD" priority="High" category="STYLE" message="ST: Write to static field com.avaloq.adt.ui.editors.AvaloqSourceViewerConfiguration.syntaxColorListModel from instance method com.avaloq.adt.ui.editors.AvaloqSourceViewerConfiguration.AvaloqSourceViewerConfiguration(IPreferenceStore)" lineNumber="92" />
+<BugInstance type="EI_EXPOSE_REP" priority="Normal" category="MALICIOUS_CODE" message="EI: com.avaloq.adt.ui.editors.AvaloqSourceViewerConfiguration.getAutoEditStrategies(ISourceViewer, String) may expose internal representation by returning AvaloqSourceViewerConfiguration.autoEditorStategies" lineNumber="380" />
+<BugInstance type="MS_EXPOSE_REP" priority="Normal" category="MALICIOUS_CODE" message="MS: public static com.avaloq.adt.ui.editors.AvaloqSourceViewerConfiguration.getSyntaxColorListModel() may expose internal representation by returning AvaloqSourceViewerConfiguration.syntaxColorListModel" lineNumber="450" />
+</file>
+<file classname="com.avaloq.adt.env.internal.ui.compare.AvaloqCompareElement" >
+<BugInstance type="EQ_COMPARETO_USE_OBJECT_EQUALS" priority="Low" category="BAD_PRACTICE" message="Eq: com.avaloq.adt.env.internal.ui.compare.AvaloqCompareElement defines compareTo(Object) and uses Object.equals()" lineNumber="84-87" />
+</file>
+<file classname="com.avaloq.adt.internal.sourcetypes.plsql.PLSQLBodyViewerConfiguration" >
+<BugInstance type="EI_EXPOSE_REP" priority="Normal" category="MALICIOUS_CODE" message="EI: com.avaloq.adt.internal.sourcetypes.plsql.PLSQLBodyViewerConfiguration.getAutoEditStrategies(ISourceViewer, String) may expose internal representation by returning PLSQLBodyViewerConfiguration.autoEditStategies" lineNumber="180" />
+</file>
+<file classname="com.avaloq.adt.internal.sourcetypes.plsql.PLSQLViewerConfiguration" >
+<BugInstance type="EI_EXPOSE_REP" priority="Normal" category="MALICIOUS_CODE" message="EI: com.avaloq.adt.internal.sourcetypes.plsql.PLSQLViewerConfiguration.getAutoEditStrategies(ISourceViewer, String) may expose internal representation by returning PLSQLViewerConfiguration.autoEditorStategies" lineNumber="181" />
+</file>
+<file classname="com.avaloq.adt.internal.sourcetypes.scriptpkg.model.DOMNodeSorter" >
+<BugInstance type="SE_COMPARATOR_SHOULD_BE_SERIALIZABLE" priority="Normal" category="BAD_PRACTICE" message="Se: com.avaloq.adt.internal.sourcetypes.scriptpkg.model.DOMNodeSorter implements Comparator but not Serializable" lineNumber="Not available" />
+</file>
+<file classname="com.avaloq.adt.ui.elements.table.ColumnAction" >
+<BugInstance type="EI_EXPOSE_REP2" priority="Normal" category="MALICIOUS_CODE" message="EI2: com.avaloq.adt.ui.elements.table.ColumnAction.ColumnAction(AvaloqTable, String[]) may expose internal representation by storing an externally mutable object into ColumnAction.columnsToIgnore" lineNumber="42" />
+</file>
+<file classname="com.avaloq.adt.internal.sourcetypes.ddict.FieldComparator" >
+<BugInstance type="SE_COMPARATOR_SHOULD_BE_SERIALIZABLE" priority="Normal" category="BAD_PRACTICE" message="Se: com.avaloq.adt.internal.sourcetypes.ddict.FieldComparator implements Comparator but not Serializable" lineNumber="Not available" />
+</file>
+<file classname="com.avaloq.adt.internal.sourcetypes.ddict.FunctionComparator" >
+<BugInstance type="SE_COMPARATOR_SHOULD_BE_SERIALIZABLE" priority="Normal" category="BAD_PRACTICE" message="Se: com.avaloq.adt.internal.sourcetypes.ddict.FunctionComparator implements Comparator but not Serializable" lineNumber="Not available" />
+</file>
+<file classname="com.avaloq.adt.internal.sourcetypes.ddict.TypeComparator" >
+<BugInstance type="SE_COMPARATOR_SHOULD_BE_SERIALIZABLE" priority="Normal" category="BAD_PRACTICE" message="Se: com.avaloq.adt.internal.sourcetypes.ddict.TypeComparator implements Comparator but not Serializable" lineNumber="Not available" />
+</file>
+<file classname="com.avaloq.adt.internal.sourcetypes.scriptpkg.model.ScriptPackageDOM" >
+<BugInstance type="EI_EXPOSE_REP2" priority="Normal" category="MALICIOUS_CODE" message="EI2: com.avaloq.adt.internal.sourcetypes.scriptpkg.model.ScriptPackageDOM.ScriptPackageDOM(CompilationUnit, IProblem[]) may expose internal representation by storing an externally mutable object into ScriptPackageDOM.problems" lineNumber="21" />
+<BugInstance type="EI_EXPOSE_REP" priority="Normal" category="MALICIOUS_CODE" message="EI: com.avaloq.adt.internal.sourcetypes.scriptpkg.model.ScriptPackageDOM.getProblems() may expose internal representation by returning ScriptPackageDOM.problems" lineNumber="48" />
+</file>
+<file classname="com.avaloq.adt.internal.ui.preferences.ContentAssistPreferencePage" >
+<BugInstance type="RI_REDUNDANT_INTERFACES" priority="Low" category="STYLE" message="RI: Class com.avaloq.adt.internal.ui.preferences.ContentAssistPreferencePage implements same interface as superclass" lineNumber="Not available" />
+</file>
+<file classname="com.avaloq.adt.internal.ui.preferences.SourceTypesPreferencePage" >
+<BugInstance type="RI_REDUNDANT_INTERFACES" priority="Low" category="STYLE" message="RI: Class com.avaloq.adt.internal.ui.preferences.SourceTypesPreferencePage implements same interface as superclass" lineNumber="Not available" />
+</file>
+<file classname="com.avaloq.adt.internal.ui.preferences.SyntaxColoringPreferencePage" >
+<BugInstance type="RI_REDUNDANT_INTERFACES" priority="Low" category="STYLE" message="RI: Class com.avaloq.adt.internal.ui.preferences.SyntaxColoringPreferencePage implements same interface as superclass" lineNumber="Not available" />
+</file>
+<file classname="com.avaloq.adt.internal.ui.preferences.TypingPreferencePage" >
+<BugInstance type="RI_REDUNDANT_INTERFACES" priority="Low" category="STYLE" message="RI: Class com.avaloq.adt.internal.ui.preferences.TypingPreferencePage implements same interface as superclass" lineNumber="Not available" />
+</file>
+<file classname="com.avaloq.adt.ui.editors.ShowAbbreviation" >
+<BugInstance type="URF_UNREAD_FIELD" priority="Low" category="PERFORMANCE" message="UrF: Unread field: com.avaloq.adt.internal.ui.editors.AbstractOccurrencesDetector$SelectionListener$1.val$this$0" lineNumber="67" />
+<BugInstance type="URF_UNREAD_FIELD" priority="Low" category="PERFORMANCE" message="UrF: Unread field: com.avaloq.adt.internal.ui.editors.AbstractOccurrencesDetector$SelectionListener$2.val$this$0" lineNumber="84" />
+<BugInstance type="IS2_INCONSISTENT_SYNC" priority="Low" category="MT_CORRECTNESS" message="IS: Inconsistent synchronization of com.avaloq.adt.internal.ui.editors.AvaloqEditor.fileIsReadOnly; locked 50% of time" lineNumber="956" />
+<BugInstance type="IS2_INCONSISTENT_SYNC" priority="Normal" category="MT_CORRECTNESS" message="IS: Inconsistent synchronization of com.avaloq.adt.env.internal.ui.actions.sourceversion.SaveSourceToDbTask.saveSourceToDbService; locked 50% of time" lineNumber="49" />
+</file>
+<Errors>
+</Errors>
+</BugCollection>
