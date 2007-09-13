@@ -188,6 +188,18 @@ public class FindBugsCounter {
             module.setName(StringUtils.substringBefore(filePath.getName(), ".xml"));
             project.addModule(module);
         }
+        if (isCurrent()) {
+            build.getProject().getWorkspace().act(new WorkspaceScanner(project));
+        }
         return project;
+    }
+
+    /**
+     * Returns whether this result belongs to the last build.
+     *
+     * @return <code>true</code> if this result belongs to the last build
+     */
+    public boolean isCurrent() {
+        return build.getProject().getLastBuild().number == build.number;
     }
 }

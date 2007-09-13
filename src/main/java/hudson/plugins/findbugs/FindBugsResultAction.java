@@ -186,9 +186,6 @@ public class FindBugsResultAction implements StaplerProxy, HealthReportingAction
             response.sendRedirect2(request.getContextPath() + "/images/headless.png");
             return;
         }
-        if (request.checkIfModified(owner.getTimestamp(), response)) {
-            return;
-        }
         ChartUtil.generateGraph(request, response, createChart(), WIDTH, HEIGHT);
     }
 
@@ -204,9 +201,6 @@ public class FindBugsResultAction implements StaplerProxy, HealthReportingAction
      *             {@link FindBugsResultAction#doGraph(StaplerRequest, StaplerResponse)}
      */
     public void doGraphMap(final StaplerRequest request, final StaplerResponse response) throws IOException {
-        if (request.checkIfModified(owner.getTimestamp(), response)) {
-            return;
-        }
         ChartUtil.generateClickableMap(request, response, createChart(), WIDTH, HEIGHT);
     }
 

@@ -126,6 +126,15 @@ public class FindBugsResult implements ModelObject, Serializable {
     }
 
     /**
+     * Returns whether this result belongs to the last build.
+     *
+     * @return <code>true</code> if this result belongs to the last build
+     */
+    public boolean isCurrent() {
+        return owner.getProject().getLastBuild().number == owner.number;
+    }
+
+    /**
      * Gets the number of warnings.
      *
      * @return the number of warnings

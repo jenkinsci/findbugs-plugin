@@ -7,6 +7,9 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.Set;
 
+import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.StaplerResponse;
+
 import edu.umd.cs.findbugs.annotations.SuppressWarnings;
 
 /**
@@ -40,9 +43,32 @@ public class FindBugsDetail implements ModelObject, Serializable  {
         this.packageName = packageName;
     }
 
+    /**
+     * Returns whether this result belongs to the last build.
+     *
+     * @return <code>true</code> if this result belongs to the last build
+     */
+    public boolean isCurrent() {
+        return owner.getProject().getLastBuild().number == owner.number;
+    }
+
     /** {@inheritDoc} */
     public String getDisplayName() {
         return "FindBugs Details";
+    }
+
+    /**
+     * Returns the dynamic result of the FindBugs analysis (detail page for a package).
+     *
+     * @param link the package name to get the result for
+     * @param request
+     *            Stapler request
+     * @param response
+     *            Stapler response
+     * @return the dynamic result of the FindBugs analysis (detail page for a package).
+     */
+    public Object getDynamic(final String link, final StaplerRequest request, final StaplerResponse response) {
+        return new FindBugsSource(owner, link);
     }
 
     /**

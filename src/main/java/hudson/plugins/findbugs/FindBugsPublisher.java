@@ -164,8 +164,10 @@ public class FindBugsPublisher extends Publisher {
             return true;
         }
 
+
         try {
             JavaProject project = findBugsCounter.findBugs();
+
             Object previous = build.getPreviousBuild();
             FindBugsResult result;
             if (previous instanceof Build<?, ?>) {

@@ -21,6 +21,8 @@ public class Warning {
     private JavaClass javaClass;
     /** Corresponding qualified class name. */
     private String qualifiedName;
+    /** Filename of the java source. */
+    private String fileName;
 
     /**
      * Returns the type.
@@ -152,6 +154,15 @@ public class Warning {
     }
 
     /**
+     * Returns the qualifiedName.
+     *
+     * @return the qualifiedName
+     */
+    public String getPackageName() {
+        return StringUtils.substringBeforeLast(qualifiedName, ".");
+    }
+
+    /**
      * Returns the classname.
      *
      * @return the classname
@@ -220,6 +231,34 @@ public class Warning {
      */
     public void setQualifiedName(final String name) {
         qualifiedName = name;
+    }
+
+    /**
+     * Sets a reference to the file where this warning is found.
+     *
+     * @param file the file name
+     */
+    public void setFile(final String file) {
+        fileName = file.replace('/', '!').replace('\\', '!');
+    }
+
+    /**
+     * Gets the filename of this warning.
+     *
+     * @return the file
+     */
+    public String getFile() {
+        return fileName;
+    }
+
+    /**
+     * Returns whether a valid filename is available for this warning.
+     *
+     * @return <code>true</code> if a valid filename is available for this
+     *         warning
+     */
+    public boolean hasFile() {
+        return fileName != null;
     }
 }
 

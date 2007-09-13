@@ -48,8 +48,16 @@
 
         <j:forEach var="w" items="${it.newWarnings}">
           <h4>
-            Class ${w.qualifiedName}
-            (Priority ${w.priority}, Category ${w.category})
+	    	<j:choose>
+	    		<j:when test="${it.isCurrent() &amp;&amp; w.file != null}">
+		            Class <a href="${w.packageName}/${w.file}/#${w.lineNumber}">${w.classname}</a>
+		            (Priority ${w.priority}, Category ${w.category})
+	    		</j:when>
+	    		<j:otherwise>
+		            Class ${w.qualifiedName}
+		            (Priority ${w.priority}, Category ${w.category})
+    			</j:otherwise>
+	    	</j:choose>
           </h4>
           <p>
             ${w.type}: ${w.message}

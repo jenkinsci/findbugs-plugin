@@ -8,7 +8,14 @@
 			<h3>FindBugs warnings of package ${it.packageName}</h3>
 
 			<j:forEach var="w" items="${it.warnings}">
-			   <h4>Class ${w.classname} (Priority ${w.priority}, Category ${w.category})</h4>
+		    	<j:choose>
+		    		<j:when test="${it.isCurrent() &amp;&amp; w.file != null}">
+					   <h4>Class <a href="${w.file}/#${w.lineNumber}">${w.classname}</a> (Priority ${w.priority}, Category ${w.category})</h4>
+		    		</j:when>
+		    		<j:otherwise>
+					   <h4>Class ${w.classname} (Priority ${w.priority}, Category ${w.category})</h4>
+	    			</j:otherwise>
+		    	</j:choose>
 				<p>
 				${w.type}: ${w.message} <j:if test="${w.lineNumber != 'Not available'}">(Line: ${w.lineNumber})</j:if>
 				</p>
@@ -17,8 +24,6 @@
 				</p>
 				<hr/>
 			</j:forEach>
-
-
 		</l:main-panel>
 	</l:layout>
 </j:jelly>
