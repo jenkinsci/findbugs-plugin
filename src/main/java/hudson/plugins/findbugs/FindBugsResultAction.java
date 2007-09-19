@@ -213,7 +213,7 @@ public class FindBugsResultAction implements StaplerProxy, HealthReportingAction
         ChartBuilder chartBuilder = new ChartBuilder();
         StackedAreaRenderer renderer;
         if (healthReportBuilder == null) {
-            healthReportBuilder = new HealthReportBuilder("Task Scanner", "open tasks", false, 0, false, 0, 0);
+            healthReportBuilder = new HealthReportBuilder("FindBugs", "warning", false, 0, false, 0, 0);
         }
         if (healthReportBuilder.isHealthyReportEnabled() || healthReportBuilder.isFailureThresholdEnabled()) {
             renderer = new ResultAreaRenderer(FINDBUGS_RESULT_URL, "warning");
