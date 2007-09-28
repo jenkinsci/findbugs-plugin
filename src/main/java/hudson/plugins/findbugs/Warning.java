@@ -39,7 +39,9 @@ public class Warning {
      * @param owningClass the class that contains this warning
      */
     public void linkClass(final JavaClass owningClass) {
-        if (!owningClass.isRoleClass()) {
+        // the '&& javaClass == null' clause ensures we take the
+        // first instance of <Class...> to be the warning target
+        if (!owningClass.isRoleClass() && javaClass == null) {
             javaClass = owningClass;
             setQualifiedName(owningClass.getClassname());
         }

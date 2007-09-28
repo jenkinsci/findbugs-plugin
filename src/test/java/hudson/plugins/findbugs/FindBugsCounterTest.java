@@ -115,6 +115,21 @@ public class FindBugsCounterTest {
         }
     }
 
+    /**
+     * Checks whether, if a bug instance contains more than one <Class>
+     * element, we correctly take the first one as referring to the
+     * buggy class.
+     */
+    @Test
+    public void scanFileWarningsHaveMultipleClasses() throws IOException, SAXException {
+        Module module = parseFile("findbugs-multclass.xml");
+        assertEquals("Wrong Version detected", "1.2.1", module.getVersion());
+        assertEquals(2, module.getNumberOfWarnings());
+        Collection<Warning> ws = module.getWarnings();
+        for(Warning w : ws) {
+            assertTrue(w.getPackageName().startsWith("edu.umd"));
+        }
+    }
 }
 
 
