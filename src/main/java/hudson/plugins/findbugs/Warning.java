@@ -1,12 +1,16 @@
 package hudson.plugins.findbugs;
 
+import java.io.Serializable;
+
 import org.apache.commons.lang.StringUtils;
 
 /**
  * A FindBugs warning.
  */
 @SuppressWarnings("PMD.CyclomaticComplexity")
-public class Warning {
+public class Warning implements Serializable {
+    /** Unique identifier of this class. */
+    private static final long serialVersionUID = -3694883222707674470L;
     /** Type of warning. */
     private String type;
     /** Category of warning. */

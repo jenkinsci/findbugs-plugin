@@ -1,5 +1,6 @@
 package hudson.plugins.findbugs;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -12,7 +13,9 @@ import edu.umd.cs.findbugs.annotations.SuppressWarnings;
 /**
  * A Maven module.
  */
-public class Module {
+public class Module implements Serializable {
+    /** Unique identifier of this class. */
+    private static final long serialVersionUID = -7537223542522170985L;
     /** All packages with warnings. */
     private final Map<String, JavaPackage> packages = new HashMap<String, JavaPackage>();
     /** FindBugs version. */

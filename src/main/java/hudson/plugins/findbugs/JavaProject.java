@@ -1,5 +1,6 @@
 package hudson.plugins.findbugs;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -12,7 +13,9 @@ import java.util.Set;
  * Unit of work for the FindBugs plug-in. A project consists of one or many maven modules.
  * If maven is not used, then a dummy module is created.
  */
-public class JavaProject {
+public class JavaProject implements Serializable {
+    /** Unique identifier of this class. */
+    private static final long serialVersionUID = -7352094165496099767L;
     /** The modules of this project. */
     private final Map<String, Module> modules = new HashMap<String, Module>();
 

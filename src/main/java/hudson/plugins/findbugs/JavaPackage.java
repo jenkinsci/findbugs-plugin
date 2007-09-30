@@ -1,5 +1,6 @@
 package hudson.plugins.findbugs;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -10,7 +11,9 @@ import java.util.Set;
 /**
  * Represents a Java package that contains several classes.
  */
-public class JavaPackage {
+public class JavaPackage implements Serializable {
+    /** Unique identifier of this class. */
+    private static final long serialVersionUID = -984590362411123375L;
     /** The classes in this package. */
     private final List<JavaClass> classes = new ArrayList<JavaClass>();
     /** Unique name of this package. */

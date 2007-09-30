@@ -1,5 +1,6 @@
 package hudson.plugins.findbugs;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -9,7 +10,9 @@ import org.apache.commons.lang.StringUtils;
 /**
  * Represents a Java class that contains several warnings.
  */
-public class JavaClass {
+public class JavaClass implements Serializable {
+    /** Unique identifier of this class. */
+    private static final long serialVersionUID = -1602783729768597487L;
     /** The warnings in this class. */
     private final Set<Warning> warnings = new HashSet<Warning>();
     /** Name of this class. */
