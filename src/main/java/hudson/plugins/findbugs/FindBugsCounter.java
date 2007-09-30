@@ -6,7 +6,9 @@ import hudson.model.Build;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URL;
+import java.util.Properties;
 
 import org.apache.commons.digester.Digester;
 import org.apache.commons.lang.ObjectUtils;
@@ -188,10 +190,58 @@ public class FindBugsCounter {
             module.setName(StringUtils.substringBefore(filePath.getName(), ".xml"));
             project.addModule(module);
         }
-        if (isCurrent()) {
-            build.getProject().getWorkspace().act(new WorkspaceScanner(project));
-        }
         return project;
+    }
+
+    /**
+     * Creates a mapping of warnings to actual workspace files. The result is
+     * persisted in the results folder.
+     *
+     * @param project
+     *            project containing all the warnings
+     * @throws IOException
+     *             in case of an IO error
+     * @throws InterruptedException
+     *             if cancel has been pressed during the processing
+     */
+    public void mapWarnings2Files(final JavaProject project) throws IOException, InterruptedException {
+        build.getProject().getWorkspace().act(new WorkspaceScanner(project));
+        Properties mapping = new Properties();
+        for (Warning warning : project.getWarnings()) {
+            if (warning.getFile() != null) {
+                mapping.setProperty(warning.getQualifiedName(), warning.getFile());
+            }
+        }
+        OutputStream mappingStream = getMappingFilePath().write();
+        mapping.store(mappingStream, "Mapping of FindBugs warnings to Java files");
+        mappingStream.close();
+    }
+
+    /**
+     * Reloads the persisted warning to file mapping.
+     *
+     * @param project
+     *            project containing all the warnings
+     * @throws IOException
+     *             in case of an file error
+     * @throws InterruptedException
+     *             if the user presses cancel
+     */
+    public void restoreMapping(final JavaProject project) throws IOException, InterruptedException {
+        FilePath mappingFilePath = getMappingFilePath();
+        if (mappingFilePath.exists()) {
+            InputStream inputStream = mappingFilePath.read();
+            Properties mapping = new Properties();
+            mapping.load(inputStream);
+            inputStream.close();
+
+            for (Warning warning : project.getWarnings()) {
+                String key = warning.getQualifiedName();
+                if (mapping.containsKey(key)) {
+                    warning.setFile(mapping.getProperty(key));
+                }
+            }
+        }
     }
 
     /**
@@ -201,5 +251,15 @@ public class FindBugsCounter {
      */
     public boolean isCurrent() {
         return build.getProject().getLastBuild().number == build.number;
+    }
+
+    /**
+     * Returns the file path of the mapping file, that maps warnings to actual
+     * Java files.
+     *
+     * @return the file path of the mapping file
+     */
+    private FilePath getMappingFilePath() {
+        return getWorkingDirectory().child("file-mapping.properties");
     }
 }

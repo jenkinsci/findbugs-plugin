@@ -254,7 +254,11 @@ public class FindBugsResult implements ModelObject, Serializable {
      */
     private void loadResult() throws IOException, InterruptedException {
         try {
-            JavaProject result = new FindBugsCounter(owner).findBugs();
+            FindBugsCounter findBugsCounter = new FindBugsCounter(owner);
+            JavaProject result = findBugsCounter.findBugs();
+            if (isCurrent()) {
+                findBugsCounter.restoreMapping(result);
+            }
             computePriorities(result.getWarnings());
 
             project = new WeakReference<JavaProject>(result);

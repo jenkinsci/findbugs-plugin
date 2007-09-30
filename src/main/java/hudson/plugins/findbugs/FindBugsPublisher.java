@@ -167,6 +167,7 @@ public class FindBugsPublisher extends Publisher {
 
         try {
             JavaProject project = findBugsCounter.findBugs();
+            findBugsCounter.mapWarnings2Files(project);
 
             Object previous = build.getPreviousBuild();
             FindBugsResult result;
