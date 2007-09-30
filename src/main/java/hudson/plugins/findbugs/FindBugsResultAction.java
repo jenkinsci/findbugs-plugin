@@ -7,6 +7,7 @@ import hudson.model.HealthReportingAction;
 import hudson.plugins.findbugs.util.ChartBuilder;
 import hudson.plugins.findbugs.util.HealthReportBuilder;
 import hudson.plugins.findbugs.util.PrioritiesAreaRenderer;
+import hudson.plugins.findbugs.util.ResultAction;
 import hudson.plugins.findbugs.util.ResultAreaRenderer;
 import hudson.util.ChartUtil;
 import hudson.util.DataSetBuilder;
@@ -36,7 +37,7 @@ import edu.umd.cs.findbugs.annotations.SuppressWarnings;
  *
  * @author Ulli Hafner
  */
-public class FindBugsResultAction implements StaplerProxy, HealthReportingAction {
+public class FindBugsResultAction implements StaplerProxy, HealthReportingAction, ResultAction<FindBugsResult> {
     /** Unique identifier of this class. */
     private static final long serialVersionUID = -5329651349674842873L;
     /** URL to results. */
@@ -83,11 +84,7 @@ public class FindBugsResultAction implements StaplerProxy, HealthReportingAction
         return getResult();
     }
 
-    /**
-     * Returns the FindBugs result.
-     *
-     * @return the FindBugs result
-     */
+    /** {@inheritDoc} */
     public FindBugsResult getResult() {
         return result;
     }
@@ -118,12 +115,16 @@ public class FindBugsResultAction implements StaplerProxy, HealthReportingAction
     }
 
     /**
-     * Gets the FindBugs result of the previous build.
+     * Returns the URL for the results of the last build.
      *
-     * @return the FindBugs result of the previous build.
-     * @throws NoSuchElementException if there is no previous build for this action
+     * @return URL for the results of the last build
      */
-    public FindBugsResultAction getPreviousResult() {
+    public static String getLatestUrl() {
+        return "../lastBuild/" + FINDBUGS_RESULT_URL;
+    }
+
+    /** {@inheritDoc} */
+    public FindBugsResultAction getPreviousResultAction() {
         FindBugsResultAction previousBuild = getPreviousBuild();
         if (previousBuild == null) {
             throw new NoSuchElementException("There is no previous build for action " + this);
@@ -150,22 +151,12 @@ public class FindBugsResultAction implements StaplerProxy, HealthReportingAction
         }
     }
 
-    /**
-     * Returns whether a previous build already did run with FindBugs.
-     *
-     * @return <code>true</code> if a previous build already did run with
-     *         FindBugs.
-     */
-    public boolean hasPreviousResult() {
+    /** {@inheritDoc} */
+    public boolean hasPreviousResultAction() {
         return getPreviousBuild() != null;
     }
 
-    /**
-     * Sets the FindBugs result for this build. The specified result will be persisted in the build folder
-     * as an XML file.
-     *
-     * @param result the result to set
-     */
+    /** {@inheritDoc} */
     public void setResult(final FindBugsResult result) {
         this.result = result;
     }

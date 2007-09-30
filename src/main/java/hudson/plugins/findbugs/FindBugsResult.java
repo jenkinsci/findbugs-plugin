@@ -302,8 +302,8 @@ public class FindBugsResult implements ModelObject, Serializable {
      */
     public int getPreviousNumberOfWarnings(final String packageName) {
         FindBugsResultAction action = owner.getAction(FindBugsResultAction.class);
-        if (action.hasPreviousResult()) {
-            return action.getPreviousResult().getResult().getProject().getNumberOfWarnings(packageName);
+        if (action.hasPreviousResultAction()) {
+            return action.getPreviousResultAction().getResult().getProject().getNumberOfWarnings(packageName);
         }
         else {
             return 0;
@@ -318,8 +318,8 @@ public class FindBugsResult implements ModelObject, Serializable {
      */
     public JavaProject getPreviousResult() {
         FindBugsResultAction action = owner.getAction(FindBugsResultAction.class);
-        if (action.hasPreviousResult()) {
-            return action.getPreviousResult().getResult().getProject();
+        if (action.hasPreviousResultAction()) {
+            return action.getPreviousResultAction().getResult().getProject();
         }
         else {
             return null;
@@ -332,7 +332,7 @@ public class FindBugsResult implements ModelObject, Serializable {
      * @return <code>true</code> if a previous build result exists.
      */
     public boolean hasPreviousResult() {
-        return owner.getAction(FindBugsResultAction.class).hasPreviousResult();
+        return owner.getAction(FindBugsResultAction.class).hasPreviousResultAction();
     }
 
     /**
