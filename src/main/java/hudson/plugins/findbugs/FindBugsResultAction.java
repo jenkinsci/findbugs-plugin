@@ -4,16 +4,15 @@ import hudson.model.AbstractBuild;
 import hudson.model.Build;
 import hudson.model.HealthReport;
 import hudson.model.HealthReportingAction;
+import hudson.plugins.findbugs.util.AbstractResultAction;
 import hudson.plugins.findbugs.util.ChartBuilder;
 import hudson.plugins.findbugs.util.HealthReportBuilder;
 import hudson.plugins.findbugs.util.PrioritiesAreaRenderer;
 import hudson.plugins.findbugs.util.ResultAction;
 import hudson.plugins.findbugs.util.ResultAreaRenderer;
-import hudson.util.ChartUtil;
 import hudson.util.DataSetBuilder;
 import hudson.util.ChartUtil.NumberOnlyBuildLabel;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -21,10 +20,6 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.renderer.category.StackedAreaRenderer;
 import org.jfree.data.category.CategoryDataset;
 import org.kohsuke.stapler.StaplerProxy;
-import org.kohsuke.stapler.StaplerRequest;
-import org.kohsuke.stapler.StaplerResponse;
-
-import edu.umd.cs.findbugs.annotations.SuppressWarnings;
 
 /**
  * Controls the live cycle of the FindBugs results. This action persists the
@@ -37,18 +32,11 @@ import edu.umd.cs.findbugs.annotations.SuppressWarnings;
  *
  * @author Ulli Hafner
  */
-public class FindBugsResultAction implements StaplerProxy, HealthReportingAction, ResultAction<FindBugsResult> {
+public class FindBugsResultAction extends AbstractResultAction implements StaplerProxy, HealthReportingAction, ResultAction<FindBugsResult> {
     /** Unique identifier of this class. */
     private static final long serialVersionUID = -5329651349674842873L;
     /** URL to results. */
     private static final String FINDBUGS_RESULT_URL = "findbugsResult";
-    /** Height of the graph. */
-    private static final int HEIGHT = 200;
-    /** Width of the graph. */
-    private static final int WIDTH = 500;
-    /** The associated build of this action. */
-    @SuppressWarnings("Se")
-    private final Build<?, ?> owner;
     /** The actual result of the FindBugs analysis. */
     private FindBugsResult result;
     /** Builds a health report. */
@@ -65,18 +53,9 @@ public class FindBugsResultAction implements StaplerProxy, HealthReportingAction
      *            health builder to use
      */
     public FindBugsResultAction(final Build<?, ?> owner, final FindBugsResult result, final HealthReportBuilder healthReportBuilder) {
-        this.owner = owner;
+        super(owner);
         this.result = result;
         this.healthReportBuilder = healthReportBuilder;
-    }
-
-    /**
-     * Returns the associated build of this action.
-     *
-     * @return the associated build of this action
-     */
-    public Build<?, ?> getOwner() {
-        return owner;
     }
 
     /** {@inheritDoc} */
@@ -138,7 +117,7 @@ public class FindBugsResultAction implements StaplerProxy, HealthReportingAction
      * @return the test result of a previous build, or <code>null</code>
      */
     private FindBugsResultAction getPreviousBuild() {
-        AbstractBuild<?, ?> build = owner;
+        AbstractBuild<?, ?> build = getOwner();
         while (true) {
             build = build.getPreviousBuild();
             if (build == null) {
@@ -162,45 +141,12 @@ public class FindBugsResultAction implements StaplerProxy, HealthReportingAction
     }
 
     /**
-     * Generates a PNG image for the test result trend.
-     *
-     * @param request
-     *            Stapler request
-     * @param response
-     *            Stapler response
-     * @throws IOException
-     *             in case of an error in
-     *             {@link FindBugsResultAction#doGraph(StaplerRequest, StaplerResponse)}
-     */
-    public void doGraph(final StaplerRequest request, final StaplerResponse response) throws IOException {
-        if (ChartUtil.awtProblem) {
-            response.sendRedirect2(request.getContextPath() + "/images/headless.png");
-            return;
-        }
-        ChartUtil.generateGraph(request, response, createChart(), WIDTH, HEIGHT);
-    }
-
-    /**
-     * Generates a PNG image for the test result trend.
-     *
-     * @param request
-     *            Stapler request
-     * @param response
-     *            Stapler response
-     * @throws IOException
-     *             in case of an error in
-     *             {@link FindBugsResultAction#doGraph(StaplerRequest, StaplerResponse)}
-     */
-    public void doGraphMap(final StaplerRequest request, final StaplerResponse response) throws IOException {
-        ChartUtil.generateClickableMap(request, response, createChart(), WIDTH, HEIGHT);
-    }
-
-    /**
      * Creates the chart for this action.
      *
      * @return the chart for this action.
      */
-    private JFreeChart createChart() {
+    @Override
+    protected JFreeChart createChart() {
         ChartBuilder chartBuilder = new ChartBuilder();
         StackedAreaRenderer renderer;
         if (healthReportBuilder == null) {
@@ -233,7 +179,7 @@ public class FindBugsResultAction implements StaplerProxy, HealthReportingAction
                         current .getNumberOfLowWarnings());
                 int level = 0;
                 for (Integer integer : series) {
-                    builder.add(integer, level, new NumberOnlyBuildLabel(action.owner));
+                    builder.add(integer, level, new NumberOnlyBuildLabel(action.getOwner()));
                     level++;
                 }
             }
