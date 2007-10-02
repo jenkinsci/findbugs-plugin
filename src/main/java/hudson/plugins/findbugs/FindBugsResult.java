@@ -2,6 +2,8 @@ package hudson.plugins.findbugs;
 
 import hudson.model.Build;
 import hudson.model.ModelObject;
+import hudson.plugins.findbugs.util.ChartBuilder;
+import hudson.util.ChartUtil;
 import hudson.util.IOException2;
 
 import java.io.IOException;
@@ -12,6 +14,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.jfree.chart.JFreeChart;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 import org.xml.sax.SAXException;
@@ -364,5 +367,31 @@ public class FindBugsResult implements ModelObject, Serializable {
      */
     public int getNumberOfNormalWarnings() {
         return normal;
+    }
+
+    /**
+     * Generates a PNG image for high/normal/low distribution of a maven module.
+     *
+     * @param request
+     *            Stapler request
+     * @param response
+     *            Stapler response
+     * @throws IOException
+     *             in case of an error
+     */
+    public final void doModuleStatistics(final StaplerRequest request,
+            final StaplerResponse response) throws IOException {
+        if (ChartUtil.awtProblem) {
+            response.sendRedirect2(request.getContextPath() + "/images/headless.png");
+            return;
+        }
+        Module module = getProject().getModule(request.getParameter("module"));
+
+        ChartBuilder chartBuilder = new ChartBuilder();
+        JFreeChart chart = chartBuilder.createHighNormalLowChart(
+                module.getNumberOfHighWarnings(),
+                module.getNumberOfNormalWarnings(),
+                module.getNumberOfLowWarnings(), getProject().getWarningBound());
+        ChartUtil.generateGraph(request, response, chart, 500, 25);
     }
 }

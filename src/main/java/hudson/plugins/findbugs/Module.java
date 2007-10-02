@@ -133,6 +133,33 @@ public class Module implements Serializable {
     }
 
     /**
+     * Returns the total number of warnings with priority LOW in this package.
+     *
+     * @return the total number of warnings with priority LOW in this package
+     */
+    public int getNumberOfLowWarnings() {
+        return WarningDifferencer.countLowPriorityWarnings(getWarnings());
+    }
+
+    /**
+     * Returns the total number of warnings with priority HIGH in this package.
+     *
+     * @return the total number of warnings with priority HIGH in this package
+     */
+    public int getNumberOfHighWarnings() {
+        return WarningDifferencer.countHighPriorityWarnings(getWarnings());
+    }
+
+    /**
+     * Returns the total number of warnings with priority NORMAL in this package.
+     *
+     * @return the total number of warnings with priority NORMAL in this package
+     */
+    public int getNumberOfNormalWarnings() {
+        return WarningDifferencer.countNormalPriorityWarnings(getWarnings());
+    }
+
+    /**
      * Returns the version.
      *
      * @return the version

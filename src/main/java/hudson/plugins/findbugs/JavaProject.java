@@ -1,8 +1,8 @@
 package hudson.plugins.findbugs;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -31,12 +31,18 @@ public class JavaProject implements Serializable {
 
 
     /**
-     * Returns the modules in this project. The returned collection is read-only.
+     * Returns the modules in this project.
      *
      * @return the modules in this project
      */
     public Collection<Module> getModules() {
-        return Collections.unmodifiableCollection(modules.values());
+        ArrayList<Module> nonEmptyModules = new ArrayList<Module>();
+        for (Module module : modules.values()) {
+            if (module.getNumberOfWarnings() > 0) {
+                nonEmptyModules.add(module);
+            }
+        }
+        return nonEmptyModules;
     }
 
     /**
@@ -114,6 +120,19 @@ public class JavaProject implements Serializable {
             throw new NoSuchElementException("No such module registered: " + name);
         }
         return modules.get(name);
+    }
+
+    /**
+     * Gets the maximum number of warnings in a module.
+     *
+     * @return the maximum number of warnings
+     */
+    public int getWarningBound() {
+        int tasks = 0;
+        for (Module module : modules.values()) {
+            tasks = Math.max(tasks, module.getNumberOfWarnings());
+        }
+        return tasks;
     }
 }
 

@@ -148,10 +148,10 @@ public class FindBugsResultAction extends AbstractResultAction implements Staple
     @Override
     protected JFreeChart createChart() {
         ChartBuilder chartBuilder = new ChartBuilder();
-        StackedAreaRenderer renderer;
         if (healthReportBuilder == null) {
             healthReportBuilder = new HealthReportBuilder("FindBugs", "warning", false, 0, false, 0, 0);
         }
+        StackedAreaRenderer renderer;
         if (healthReportBuilder.isHealthyReportEnabled() || healthReportBuilder.isFailureThresholdEnabled()) {
             renderer = new ResultAreaRenderer(FINDBUGS_RESULT_URL, "warning");
         }
