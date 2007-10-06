@@ -4,9 +4,6 @@
   <l:layout>
     <st:include it="${it.owner}" page="sidepanel.jelly" />
     <l:main-panel>
-      <h1>${it.title}</h1>
-
-      <j:set var="prev" value="${it.previousResult}" />
 
       <h1>FindBugs Result</h1>
 
@@ -132,7 +129,6 @@
 	          </tr>
 	          <tbody>
 	            <j:forEach var="p" items="${module.packages}">
-	              <j:set var="prev" value="${p.previousResult}" />
 	              <tr>
 	                <td class="pane">
 	                  <a href="${p.name}/">${p.name}</a>
