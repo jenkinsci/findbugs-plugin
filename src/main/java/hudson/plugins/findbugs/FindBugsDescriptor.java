@@ -20,7 +20,7 @@ import org.kohsuke.stapler.StaplerResponse;
  */
 public final class FindBugsDescriptor extends Descriptor<Publisher> {
     /** Icon to use for the result and project action. */
-    public static final String FINDBUGS_ACTION_LOGO = "/plugin/findbugs/icons/findbugs-32x32.png";
+    public static final String FINDBUGS_ACTION_LOGO = "/plugin/findbugs/icons/findbugs-32x32.gif";
 
     /**
      * Instantiates a new find bugs descriptor.
