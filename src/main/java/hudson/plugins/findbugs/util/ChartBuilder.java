@@ -15,7 +15,6 @@ import org.jfree.chart.axis.CategoryLabelPositions;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.renderer.category.CategoryItemRenderer;
 import org.jfree.chart.renderer.category.StackedAreaRenderer;
 import org.jfree.data.Range;
 import org.jfree.data.category.CategoryDataset;
@@ -158,7 +157,6 @@ public class ChartBuilder {
         plot.setForegroundAlpha(0.8f);
         plot.setRangeGridlinesVisible(false);
 
-
         CategoryAxis domainAxis = new CategoryAxis();
         plot.setDomainAxis(domainAxis);
         domainAxis.setVisible(false);
@@ -166,10 +164,12 @@ public class ChartBuilder {
         domainAxis.setUpperMargin(0);
         domainAxis.setCategoryMargin(0);
 
-        CategoryItemRenderer renderer = plot.getRenderer();
-        renderer.setSeriesPaint(0, ColorPalette.RED);
-        renderer.setSeriesPaint(1, ColorPalette.YELLOW);
-        renderer.setSeriesPaint(2, ColorPalette.BLUE);
+        plot.getRenderer().setSeriesPaint(0, ColorPalette.RED);
+        plot.getRenderer().setSeriesPaint(1, ColorPalette.YELLOW);
+        plot.getRenderer().setSeriesPaint(2, ColorPalette.BLUE);
+        plot.getRenderer().setSeriesOutlineStroke(0, new BasicStroke(0));
+        plot.getRenderer().setSeriesOutlineStroke(1, new BasicStroke(0));
+        plot.getRenderer().setSeriesOutlineStroke(2, new BasicStroke(0));
 
         final NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
         rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
