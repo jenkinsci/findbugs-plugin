@@ -13,7 +13,7 @@
 				</tr>
 				<tbody>
 					<j:forEach var="warning"
-						items="${it.fixedWarnings}">
+						items="${it.warnings}">
 						<tr>
 							<td class="pane">
 								${warning.qualifiedName}

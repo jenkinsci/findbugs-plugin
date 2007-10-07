@@ -26,7 +26,7 @@
             <td class="pane">
             	${it.numberOfNewWarnings}
 		        <j:if test="${it.numberOfNewWarnings != 0}">
-          			(<a href="#new">Details</a>)
+          			(<a href="new">Details</a>)
           		</j:if>
            	</td>
             <td class="pane">
@@ -64,34 +64,6 @@
 	      		</j:forEach>
 	      	</tbody>
 	      </table>
-      </j:if>
-
-      <j:if test="${it.numberOfNewWarnings != 0}">
-		<a name="new"/>
-        <h2>New Warnings</h2>
-
-        <j:forEach var="w" items="${it.newWarnings}">
-          <h4>
-	    	<j:choose>
-	    		<j:when test="${it.isCurrent() &amp;&amp; w.file != null}">
-		            Class <a href="${w.packageName}/${w.file}/#${w.lineNumber}">${w.classname}</a>
-		            (Priority ${w.priority}, Category ${w.category})
-	    		</j:when>
-	    		<j:otherwise>
-		            Class ${w.qualifiedName}
-		            (Priority ${w.priority}, Category ${w.category})
-    			</j:otherwise>
-	    	</j:choose>
-          </h4>
-          <p>
-            ${w.type}: ${w.message}
-            <j:if test="${w.lineNumber != 'Not available'}">
-              (Line: ${w.lineNumber})
-            </j:if>
-          </p>
-          <p>${w.description}</p>
-          <hr />
-        </j:forEach>
       </j:if>
 
       <j:if test="${it.numberOfWarnings != 0}">

@@ -300,6 +300,9 @@ public class FindBugsResult implements ModelObject, Serializable {
         if ("fixed".equals(packageName)) {
             return new FixedWarningsDetail(owner, getFixedWarnings());
         }
+        else if ("new".equals(packageName)) {
+            return new NewWarningsDetail(owner, getNewWarnings());
+        }
         else {
             return new FindBugsDetail(owner, getProject(), packageName);
         }
