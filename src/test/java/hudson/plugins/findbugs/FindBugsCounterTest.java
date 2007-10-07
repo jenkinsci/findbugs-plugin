@@ -14,6 +14,10 @@ import org.xml.sax.SAXException;
  *  Tests the extraction of FindBugs analysis results.
  */
 public class FindBugsCounterTest {
+    /** Error message. */
+    private static final String WRONG_VERSION_DETECTED = "Wrong Version detected";
+    /** Error message. */
+    private static final String NO_FILE_NAME_FOUND = "No file name found.";
     /** Package of documentation warnings. */
     private static final String DOCU_PACKAGE = "com.avaloq.adt.internal.ui.docu";
     /** Package of spell checker warnings. */
@@ -26,6 +30,7 @@ public class FindBugsCounterTest {
     private static final String WRONG_WARNINGS_IN_PACKAGE_ERROR = "Wrong number of warnings in a package detected.";
     /** Error message. */
     private static final String ERROR_MESSAGE = "Wrong number of bugs parsed.";
+
     /**
      * Initializes the messages file.
      *
@@ -74,19 +79,21 @@ public class FindBugsCounterTest {
     }
 
     /**
-     * Checks whether we correctly detect a FindBugs 1.2.1 file.
+     * Checks whether we correctly detect a file in FindBugs native format.
      */
     @Test
-    public void scan121File() throws IOException, SAXException {
-        Module module = parseFile("findbugs-1.2.1.xml");
+    public void scanNativeFile() throws IOException, SAXException {
+        Module module = parseFile("findbugs-native.xml");
         assertEquals(ERROR_MESSAGE, 128, module.getNumberOfWarnings());
-        assertEquals("Wrong Version detected", "1.2.1", module.getVersion());
+        assertEquals(WRONG_VERSION_DETECTED, "1.2.1", module.getVersion());
 
         assertEquals(WRONG_WARNINGS_IN_PACKAGE_ERROR, 0, module.getNumberOfWarnings("java.lang"));
 
         for (Warning warning : module.getWarnings("org.apache.hadoop.ipc")) {
             assertNotNull("Message should not be empty.", warning.getMessage());
             assertNotNull("Line number should not be empty.", warning.getLineNumber());
+
+            assertNotNull(NO_FILE_NAME_FOUND, warning.getFile());
         }
     }
 
@@ -97,7 +104,7 @@ public class FindBugsCounterTest {
     public void scanFileWithSomeBugs() throws IOException, SAXException {
         Module module = parseFile("findbugs.xml");
         assertEquals(ERROR_MESSAGE, NUMBER_OF_SPELL_WARNINGS + NUMBER_OF_DOCU_WARNINGS, module.getNumberOfWarnings());
-        assertEquals("Wrong Version detected", "1.2.0", module.getVersion());
+        assertEquals(WRONG_VERSION_DETECTED, "1.2.0", module.getVersion());
         assertEquals("Wrong number of packages detected", 2, module.getPackages().size());
 
         assertEquals(WRONG_WARNINGS_IN_PACKAGE_ERROR, NUMBER_OF_SPELL_WARNINGS, module.getWarnings(SPELL_PACKAGE).size());
@@ -116,18 +123,19 @@ public class FindBugsCounterTest {
     }
 
     /**
-     * Checks whether, if a bug instance contains more than one <Class>
+     * Checks whether, if a bug instance contains more than one
      * element, we correctly take the first one as referring to the
      * buggy class.
      */
     @Test
     public void scanFileWarningsHaveMultipleClasses() throws IOException, SAXException {
         Module module = parseFile("findbugs-multclass.xml");
-        assertEquals("Wrong Version detected", "1.2.1", module.getVersion());
-        assertEquals(2, module.getNumberOfWarnings());
-        Collection<Warning> ws = module.getWarnings();
-        for(Warning w : ws) {
-            assertTrue(w.getPackageName().startsWith("edu.umd"));
+        assertEquals(WRONG_VERSION_DETECTED, "1.2.1", module.getVersion());
+        assertEquals(ERROR_MESSAGE, 2, module.getNumberOfWarnings());
+        Collection<Warning> warnings = module.getWarnings();
+        for (Warning warning : warnings) {
+            assertTrue("Wrong package prefix found.", warning.getPackageName().startsWith("edu.umd"));
+            assertNotNull(NO_FILE_NAME_FOUND, warning.getFile());
         }
     }
 }

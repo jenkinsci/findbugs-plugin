@@ -15,10 +15,16 @@ public class JavaClass implements Serializable {
     private static final long serialVersionUID = -1602783729768597487L;
     /** The warnings in this class. */
     private final Set<Warning> warnings = new HashSet<Warning>();
+    /** The warnings in this class. */
+    private final Set<SourceLine> sourceLines = new HashSet<SourceLine>();
     /** Name of this class. */
     private String classname;
     /** Role of this class. */
     private String role;
+    /** Filename of this class. */
+    private String fileName;
+    /** Line number of warning. */
+    private int lineNumber;
 
     /**
      * Adds a new warning to this class.
@@ -29,6 +35,20 @@ public class JavaClass implements Serializable {
     public void addWarning(final Warning warning) {
         warnings.add(warning);
         warning.setQualifiedName(classname);
+    }
+
+    /**
+     * Adds a new source line to this class. Currently, we use the source line
+     * only to obtain a link to the source file name and line number.
+     *
+     * @param sourceLine
+     *            the new sourceLine
+     */
+    public void addSourceLine(final SourceLine sourceLine) {
+        if (fileName == null) {
+            fileName = sourceLine.getSourcepath();
+            lineNumber = sourceLine.getStart();
+        }
     }
 
     /**
@@ -111,6 +131,24 @@ public class JavaClass implements Serializable {
      */
     public boolean isRoleClass() {
         return role != null;
+    }
+
+    /**
+     * Returns the file name to the corresponding source.
+     *
+     * @return the file name to the corresponding source.
+     */
+    public String getFileName() {
+        return fileName;
+    }
+
+    /**
+     * Returns the line number of the warning.
+     *
+     * @return the line number of the warning.
+     */
+    public String getLineNumber() {
+        return String.valueOf(lineNumber);
     }
 }
 

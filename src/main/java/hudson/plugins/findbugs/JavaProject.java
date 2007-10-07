@@ -134,5 +134,19 @@ public class JavaProject implements Serializable {
         }
         return tasks;
     }
+
+
+    /**
+     * Returns whether the warnings format is Maven file format (without source
+     * file information).
+     *
+     * @return <code>true</code> if the Maven file format is used
+     */
+    public boolean isMavenFormat() {
+        if (getModules().isEmpty()) {
+            return true;
+        }
+        return getModules().iterator().next().isMavenFormat();
+    }
 }
 

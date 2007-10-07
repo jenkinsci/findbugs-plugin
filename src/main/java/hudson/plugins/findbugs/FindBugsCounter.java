@@ -16,7 +16,9 @@ import org.apache.commons.lang.StringUtils;
 import org.xml.sax.SAXException;
 
 /**
- * Counts the number of bugs in a FindBugs analysis file.
+ * Counts the number of bugs in a FindBugs analysis file. This parser supports
+ * maven-findbugs-plugin and native FindBugs file formats. If the Maven format
+ * is detected, then the source filenames are guessed and persisted.
  *
  * @author Ulli Hafner
  */
@@ -28,7 +30,9 @@ public class FindBugsCounter {
 
     /**
      * Creates a new instance of <code>FindBugsCounter</code>.
-     * @param build the associated build
+     *
+     * @param build
+     *            the associated build
      */
     public FindBugsCounter(final Build<?, ?> build) {
         this.build = build;
@@ -45,12 +49,11 @@ public class FindBugsCounter {
      * @throws SAXException if the file is not in valid XML format
      */
     public Module parse(final URL file) throws IOException, SAXException {
-        boolean use120Scanner = isIn120Format(file.openStream());
-        if (use120Scanner) {
-            return parse120Format(file.openStream());
+        if (isMavenReport(file.openStream())) {
+            return parseMavenFormat(file.openStream());
         }
         else {
-            return parse121Format(file.openStream());
+            return parseNativeFormat(file.openStream());
         }
     }
 
@@ -65,18 +68,18 @@ public class FindBugsCounter {
      * @throws SAXException if the file is not in valid XML format
      */
     public Module parse(final FilePath file) throws IOException, SAXException {
-        boolean use120Scanner = isIn120Format(file.read());
-        if (use120Scanner) {
-            return parse120Format(file.read());
+        if (isMavenReport(file.read())) {
+            return parseMavenFormat(file.read());
         }
         else {
-            return parse121Format(file.read());
+            return parseNativeFormat(file.read());
         }
     }
 
+
     /**
-     * Returns the parsed FindBugs analysis file. The used scanner is 1.2.0
-     * format.
+     * Returns the parsed FindBugs analysis file. This scanner accepts files in
+     * the Maven FindBugs plug-in format.
      *
      * @param file
      *            the FindBugs analysis file
@@ -86,7 +89,7 @@ public class FindBugsCounter {
      * @throws SAXException
      *             if the file is not in valid XML format
      */
-    private Module parse120Format(final InputStream file) throws IOException, SAXException {
+    private Module parseMavenFormat(final InputStream file) throws IOException, SAXException {
         Digester digester = new Digester();
         digester.setValidating(false);
         digester.setClassLoader(FindBugsCounter.class.getClassLoader());
@@ -104,12 +107,15 @@ public class FindBugsCounter {
         digester.addSetProperties(warningXpath);
         digester.addSetNext(warningXpath, "addWarning", Warning.class.getName());
 
-        return (Module)ObjectUtils.defaultIfNull(digester.parse(file), new Module("Unknown file format"));
+        Module module = (Module)ObjectUtils.defaultIfNull(digester.parse(file), new Module("Unknown file format"));
+        module.setMavenFormat(true);
+
+        return module;
     }
 
     /**
-     * Returns the parsed FindBugs analysis file. The used scanner is 1.2.0
-     * format.
+     * Returns the parsed FindBugs analysis file. This scanner accepts files in the native
+     * FinBugs format.
      *
      * @param file
      *            the FindBugs analysis file
@@ -119,7 +125,7 @@ public class FindBugsCounter {
      * @throws SAXException
      *             if the file is not in valid XML format
      */
-    private Module parse121Format(final InputStream file) throws IOException, SAXException {
+    private Module parseNativeFormat(final InputStream file) throws IOException, SAXException {
         Digester digester = new Digester();
         digester.setValidating(false);
         digester.setClassLoader(FindBugsCounter.class.getClassLoader());
@@ -134,34 +140,42 @@ public class FindBugsCounter {
 
         digester.addObjectCreate("BugCollection/BugInstance/Class", JavaClass.class);
         digester.addSetProperties("BugCollection/BugInstance/Class");
+
+        digester.addObjectCreate("BugCollection/BugInstance/Class/SourceLine", SourceLine.class);
+        digester.addSetProperties("BugCollection/BugInstance/Class/SourceLine");
+        digester.addSetNext("BugCollection/BugInstance/Class/SourceLine", "addSourceLine", SourceLine.class.getName());
+
         digester.addSetNext("BugCollection/BugInstance/Class", "linkClass", JavaClass.class.getName());
 
-        return (Module)ObjectUtils.defaultIfNull(digester.parse(file), new Module("Unknown file format"));
+        Module module = (Module)ObjectUtils.defaultIfNull(digester.parse(file), new Module("Unknown file format"));
+        module.setMavenFormat(false);
+
+        return module;
     }
 
     /**
-     * Returns whether the provided file is in FindBugs 1.2.0 format.
+     * Checks whether the provided file is in FindBugs native or Maven plug-in
+     * format. A file is considered in the Maven format, if it contains the
+     * XPath "BugCollection/file/BugInstance".
      *
      * @param file
      *            the file to check
-     * @return <code>true</code> if the provided file is in FindBugs 1.2.0
-     *         format.
+     * @return <code>true</code> if the provided file is in maven format.
      * @throws IOException
      *             if the file could not be parsed
      * @throws SAXException
      *             if the file is not in valid XML format
      */
-    private boolean isIn120Format(final InputStream file) throws IOException, SAXException {
+    private boolean isMavenReport(final InputStream file) throws IOException, SAXException {
         Digester digester = new Digester();
         digester.setValidating(false);
         digester.setClassLoader(FindBugsCounter.class.getClassLoader());
 
-        digester.addObjectCreate(BUG_COLLECTION_XPATH, Module.class);
-        digester.addSetProperties(BUG_COLLECTION_XPATH);
+        digester.addObjectCreate("BugCollection/file/BugInstance", Module.class);
 
         Module module = (Module)digester.parse(file);
 
-        return module != null && "1.2.0".equals(module.getVersion());
+        return module != null;
     }
 
     /**

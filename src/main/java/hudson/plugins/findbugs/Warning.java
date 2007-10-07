@@ -7,7 +7,6 @@ import org.apache.commons.lang.StringUtils;
 /**
  * A FindBugs warning.
  */
-@SuppressWarnings("PMD.CyclomaticComplexity")
 public class Warning implements Serializable {
     /** Unique identifier of this class. */
     private static final long serialVersionUID = -3694883222707674470L;
@@ -38,16 +37,17 @@ public class Warning implements Serializable {
     }
 
     /**
-     * Links this warning to the specified class.
+     * Links this warning to the specified class. This class is only considered if it
+     * is not a role class and if it is the first class.
      *
      * @param owningClass the class that contains this warning
      */
     public void linkClass(final JavaClass owningClass) {
-        // the '&& javaClass == null' clause ensures we take the
-        // first instance of <Class...> to be the warning target
         if (!owningClass.isRoleClass() && javaClass == null) {
             javaClass = owningClass;
             setQualifiedName(owningClass.getClassname());
+            setLineNumber(javaClass.getLineNumber());
+            setFile(javaClass.getFileName());
         }
     }
 
@@ -191,6 +191,7 @@ public class Warning implements Serializable {
 
     /** {@inheritDoc} */
     @Override
+    @SuppressWarnings("PMD.CyclomaticComplexity")
     public boolean equals(final Object obj) {
         if (this == obj) {
             return true;

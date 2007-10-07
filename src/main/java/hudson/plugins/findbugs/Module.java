@@ -26,6 +26,8 @@ public class Module implements Serializable {
     private String effort;
     /** name of this module. */
     private String name;
+    /** Determines whether the file format is the Maven file format. */
+    private boolean isInMavenFormat;
 
     /**
      * Creates a new instance of <code>Module</code>.
@@ -42,6 +44,24 @@ public class Module implements Serializable {
      */
     public Module(final String name) {
         this.name = name;
+    }
+
+    /**
+     * Sets the isMavenFormat to the specified value.
+     *
+     * @param isMavenFormat the value to set
+     */
+    public void setMavenFormat(final boolean isMavenFormat) {
+        isInMavenFormat = isMavenFormat;
+    }
+
+    /**
+     * Returns the isMavenFormat.
+     *
+     * @return the isMavenFormat
+     */
+    public boolean isMavenFormat() {
+        return isInMavenFormat;
     }
 
     /**

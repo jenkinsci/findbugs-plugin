@@ -259,7 +259,7 @@ public class FindBugsResult implements ModelObject, Serializable {
         try {
             FindBugsCounter findBugsCounter = new FindBugsCounter(owner);
             JavaProject result = findBugsCounter.findBugs();
-            if (isCurrent()) {
+            if (isCurrent() && result.isMavenFormat()) {
                 findBugsCounter.restoreMapping(result);
             }
             computePriorities(result.getWarnings());
@@ -392,6 +392,6 @@ public class FindBugsResult implements ModelObject, Serializable {
                 module.getNumberOfHighWarnings(),
                 module.getNumberOfNormalWarnings(),
                 module.getNumberOfLowWarnings(), getProject().getWarningBound());
-        ChartUtil.generateGraph(request, response, chart, 500, 25);
+        ChartUtil.generateGraph(request, response, chart, 400, 20);
     }
 }
