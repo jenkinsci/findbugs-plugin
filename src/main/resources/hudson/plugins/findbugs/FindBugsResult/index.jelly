@@ -1,105 +1,71 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler"
-  xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson"
-  xmlns:f="/lib/form" xmlns:i="jelly:fmt">
-  <l:layout>
-    <st:include it="${it.owner}" page="sidepanel.jelly" />
-    <l:main-panel>
+	xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson"
+	xmlns:f="/lib/form" xmlns:i="jelly:fmt">
+	<l:layout>
+		<st:include it="${it.owner}" page="sidepanel.jelly" />
+		<l:main-panel>
 
-      <h1>FindBugs Result</h1>
+			<h1>FindBugs Result</h1>
 
-      <h2>Summary</h2>
+			<h2>Summary</h2>
 
-      <table class="pane sortable" id="summary">
-        <tr>
-          <td class="pane-header">All Warnings</td>
-          <td class="pane-header">New Warnings</td>
-          <td class="pane-header">Fixed Warnings</td>
-        </tr>
-        <tbody>
-          <tr>
-            <td class="pane">
-            	${it.numberOfWarnings}
-		        <j:if test="${it.numberOfWarnings != 0}">
-          			(<a href="#all">Details</a>)
-          		</j:if>
-            </td>
-            <td class="pane">
-            	${it.numberOfNewWarnings}
-		        <j:if test="${it.numberOfNewWarnings != 0}">
-          			(<a href="new">Details</a>)
-          		</j:if>
-           	</td>
-            <td class="pane">
-            	${it.numberOfFixedWarnings}
-		        <j:if test="${it.numberOfFixedWarnings != 0}">
-          			(<a href="fixed">Details</a>)
-          		</j:if>
-           	</td>
-          </tr>
-        </tbody>
-      </table>
+			<table class="pane sortable" id="summary">
+				<tr>
+					<td class="pane-header">All Warnings</td>
+					<td class="pane-header">New Warnings</td>
+					<td class="pane-header">Fixed Warnings</td>
+				</tr>
+				<tbody>
+					<tr>
+						<td class="pane">
+							${it.numberOfWarnings}
+						</td>
+						<td class="pane">
+							${it.numberOfNewWarnings}
+							<j:if test="${it.numberOfNewWarnings != 0}">
+								(<a href="new">Details</a>)
+							</j:if>
+						</td>
+						<td class="pane">
+							${it.numberOfFixedWarnings}
+							<j:if test="${it.numberOfFixedWarnings != 0}">
+								(<a href="fixed">Details</a>)
+							</j:if>
+						</td>
+					</tr>
+				</tbody>
+			</table>
 
-      <j:if test="${it.project.modules.size() > 1}">
-	      <h2>Module Statistics</h2>
+			<j:if test="${!it.isSingleModuleProject()}">
+				<h2>Module Statistics</h2>
 
-	      <table class="pane sortable" id="tasks">
-	      	<tr>
-	      		<td class="pane-header">Module</td>
-	      		<td class="pane-header" style="width:2em">Total</td>
-		      	<td class="pane-header" >Distribution</td>
-	      	</tr>
-	      	<tbody>
-	      		<j:forEach var="module" items="${it.project.modules}">
-	      			<tr>
-	      				<td class="pane">
-	      					${module.name}
-	      				</td>
-	      				<td class="pane">
-	      					${module.numberOfWarnings}
-	      				</td>
-	      				<td class="pane">
-						  	<img src="moduleStatistics?module=${module.name}"/>
-	      				</td>
-	      			</tr>
-	      		</j:forEach>
-	      	</tbody>
-	      </table>
-      </j:if>
+				<table class="pane sortable" id="tasks">
+					<tr>
+						<td class="pane-header">Module</td>
+						<td class="pane-header" style="width:2em">Total</td>
+						<td class="pane-header">Distribution</td>
+					</tr>
+					<tbody>
+						<j:forEach var="module" items="${it.modules}">
+							<tr>
+								<td class="pane"><a href="${module.name}/">${module.name}</a></td>
+								<td class="pane">${module.numberOfWarnings}</td>
+								<td class="pane"> <img src="moduleStatistics?module=${module.name}"/></td>
+							</tr>
+						</j:forEach>
+					</tbody>
+				</table>
+			</j:if>
 
-      <j:if test="${it.numberOfWarnings != 0}">
-        <a name="all"/>
-        <h2>All Warnings</h2>
+			<j:if test="${it.isSingleModuleProject()}">
+				<j:if test="${!it.isSinglePackageProject()}">
+					<st:include page="packagesTable.jelly" />
+				</j:if>
 
-        <j:forEach var="module" items="${it.project.modules}">
-	        <h3>Module ${module.name}</h3>
-	        <table class="pane sortable" id="warnings">
-	          <tr>
-	            <td class="pane-header">Package</td>
-	            <td class="pane-header" style="width:5em">High</td>
-	            <td class="pane-header" style="width:5em">Normal</td>
-	            <td class="pane-header" style="width:5em">Low</td>
-	          </tr>
-	          <tbody>
-	            <j:forEach var="p" items="${module.packages}">
-	              <tr>
-	                <td class="pane">
-	                  <a href="${p.name}/">${p.name}</a>
-	                </td>
-	                <td class="pane" style="text-align:right">
-	                  ${p.numberOfHighWarnings}
-	                </td>
-	                <td class="pane" style="text-align:right">
-	                  ${p.numberOfNormalWarnings}
-	                </td>
-	                <td class="pane" style="text-align:right">
-	                  ${p.numberOfLowWarnings}
-	                </td>
-	              </tr>
-	            </j:forEach>
-	          </tbody>
-	        </table>
-        </j:forEach>
-      </j:if>
-    </l:main-panel>
-  </l:layout>
+				<j:if test="${it.isSinglePackageProject()}">
+					<st:include page="warningsTable.jelly" />
+				</j:if>
+			</j:if>
+		</l:main-panel>
+	</l:layout>
 </j:jelly>

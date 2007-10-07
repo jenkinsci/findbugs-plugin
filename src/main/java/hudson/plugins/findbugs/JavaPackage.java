@@ -11,7 +11,7 @@ import java.util.Set;
 /**
  * Represents a Java package that contains several classes.
  */
-public class JavaPackage implements Serializable {
+public class JavaPackage implements Serializable, WarningProvider {
     /** Unique identifier of this class. */
     private static final long serialVersionUID = -984590362411123375L;
     /** The classes in this package. */
@@ -62,11 +62,7 @@ public class JavaPackage implements Serializable {
         return Collections.unmodifiableSet(warnings);
     }
 
-    /**
-     * Returns the total number of warnings in this package.
-     *
-     * @return the total number of warnings in this package
-     */
+    /** {@inheritDoc} */
     public int getNumberOfWarnings() {
         return getWarnings().size();
     }
@@ -80,29 +76,17 @@ public class JavaPackage implements Serializable {
         return name;
     }
 
-    /**
-     * Returns the total number of warnings with priority LOW in this package.
-     *
-     * @return the total number of warnings with priority LOW in this package
-     */
+    /** {@inheritDoc} */
     public int getNumberOfLowWarnings() {
         return WarningDifferencer.countLowPriorityWarnings(getWarnings());
     }
 
-    /**
-     * Returns the total number of warnings with priority HIGH in this package.
-     *
-     * @return the total number of warnings with priority HIGH in this package
-     */
+    /** {@inheritDoc} */
     public int getNumberOfHighWarnings() {
         return WarningDifferencer.countHighPriorityWarnings(getWarnings());
     }
 
-    /**
-     * Returns the total number of warnings with priority NORMAL in this package.
-     *
-     * @return the total number of warnings with priority NORMAL in this package
-     */
+    /** {@inheritDoc} */
     public int getNumberOfNormalWarnings() {
         return WarningDifferencer.countNormalPriorityWarnings(getWarnings());
     }

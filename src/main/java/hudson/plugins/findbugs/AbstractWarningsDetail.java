@@ -2,9 +2,17 @@ package hudson.plugins.findbugs;
 
 import hudson.model.Build;
 import hudson.model.ModelObject;
+import hudson.plugins.findbugs.util.ChartBuilder;
+import hudson.util.ChartUtil;
 
+import java.io.IOException;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
+
+import org.jfree.chart.JFreeChart;
+import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.StaplerResponse;
 
 import edu.umd.cs.findbugs.annotations.SuppressWarnings;
 
@@ -16,7 +24,7 @@ public abstract class AbstractWarningsDetail implements ModelObject, Serializabl
     @SuppressWarnings("Se")
     private final Build<?, ?> owner;
     /** All fixed warnings in this build. */
-    private final Set<Warning> warnings;
+    private transient Set<Warning> warnings;
 
     /**
      * Creates a new instance of <code>AbstractWarningsDetail</code>.
@@ -54,7 +62,38 @@ public abstract class AbstractWarningsDetail implements ModelObject, Serializabl
      *
      * @return the set of warnings
      */
-    public final Set<Warning> getWarnings() {
+    public Set<Warning> getWarnings() {
+        if (warnings == null) {
+            warnings = new HashSet<Warning>();
+        }
         return warnings;
+    }
+
+    /**
+     * Creates a detail graph for the specified detail object.
+     *
+     * @param request
+     *            Stapler request
+     * @param response
+     *            Stapler response
+     * @param detailObject
+     *            the detail object to compute the graph for
+     * @param upperBound
+     *            the upper bound of all tasks
+     * @throws IOException
+     *             in case of an error
+     */
+    protected final void createDetailGraph(final StaplerRequest request, final StaplerResponse response,
+            final WarningProvider detailObject, final int upperBound) throws IOException {
+        if (ChartUtil.awtProblem) {
+            response.sendRedirect2(request.getContextPath() + "/images/headless.png");
+            return;
+        }
+        ChartBuilder chartBuilder = new ChartBuilder();
+        JFreeChart chart = chartBuilder.createHighNormalLowChart(
+                detailObject.getNumberOfHighWarnings(),
+                detailObject.getNumberOfNormalWarnings(),
+                detailObject.getNumberOfLowWarnings(), upperBound);
+        ChartUtil.generateGraph(request, response, chart, 400, 20);
     }
 }

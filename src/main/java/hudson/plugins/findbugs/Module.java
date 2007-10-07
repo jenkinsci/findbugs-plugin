@@ -13,7 +13,7 @@ import edu.umd.cs.findbugs.annotations.SuppressWarnings;
 /**
  * A Maven module.
  */
-public class Module implements Serializable {
+public class Module implements Serializable, WarningProvider {
     /** Unique identifier of this class. */
     private static final long serialVersionUID = -7537223542522170985L;
     /** All packages with warnings. */
@@ -99,6 +99,17 @@ public class Module implements Serializable {
      */
     public Collection<JavaPackage> getPackages() {
         return Collections.unmodifiableCollection(packages.values());
+    }
+
+    /**
+     * Returns the specified package in this module.
+     *
+     * @param packageName
+     *            the package name
+     * @return the package with the specified name
+     */
+    public JavaPackage getPackage(final String packageName) {
+        return packages.get(packageName);
     }
 
     /**
@@ -294,6 +305,19 @@ public class Module implements Serializable {
             return false;
         }
         return true;
+    }
+
+    /**
+     * Gets the maximum number of tasks in a package of this module.
+     *
+     * @return the maximum number of tasks
+     */
+    public int getWarningBound() {
+        int warnings = 0;
+        for (WarningProvider javaPackage : packages.values()) {
+            warnings = Math.max(warnings, javaPackage.getNumberOfWarnings());
+        }
+        return warnings;
     }
 }
 

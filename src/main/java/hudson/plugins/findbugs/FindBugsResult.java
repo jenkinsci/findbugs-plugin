@@ -1,20 +1,17 @@
 package hudson.plugins.findbugs;
 
 import hudson.model.Build;
-import hudson.model.ModelObject;
-import hudson.plugins.findbugs.util.ChartBuilder;
-import hudson.util.ChartUtil;
 import hudson.util.IOException2;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.lang.ref.WeakReference;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.jfree.chart.JFreeChart;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 import org.xml.sax.SAXException;
@@ -27,7 +24,7 @@ import edu.umd.cs.findbugs.annotations.SuppressWarnings;
  *
  * @author Ulli Hafner
  */
-public class FindBugsResult implements ModelObject, Serializable {
+public class FindBugsResult extends AbstractWarningsDetail implements WarningProvider {
     /** No result at all. */
     @java.lang.SuppressWarnings("unchecked")
     private static final Set<Warning> EMPTY_SET = Collections.EMPTY_SET;
@@ -37,9 +34,6 @@ public class FindBugsResult implements ModelObject, Serializable {
     private static final Logger LOGGER = Logger.getLogger(FindBugsResult.class.getName());
     /** Difference between this and the previous build. */
     private final int delta;
-    /** The current build as owner of this action. */
-    @SuppressWarnings("Se")
-    private final Build<?, ?> owner;
     /** The parsed FindBugs result. */
     @SuppressWarnings("Se")
     private transient WeakReference<JavaProject> project;
@@ -83,7 +77,7 @@ public class FindBugsResult implements ModelObject, Serializable {
      * @param previousProject the parsed FindBugs result of the previous build
      */
     public FindBugsResult(final Build<?, ?> build, final JavaProject project, final JavaProject previousProject) {
-        owner = build;
+        super(build, new HashSet<Warning>());
         numberOfWarnings = project.getNumberOfWarnings();
 
         this.project = new WeakReference<JavaProject>(project);
@@ -117,24 +111,6 @@ public class FindBugsResult implements ModelObject, Serializable {
     /** {@inheritDoc} */
     public String getDisplayName() {
         return "FindBugs Result";
-    }
-
-    /**
-     * Returns the owner.
-     *
-     * @return the owner
-     */
-    public Build<?, ?> getOwner() {
-        return owner;
-    }
-
-    /**
-     * Returns whether this result belongs to the last build.
-     *
-     * @return <code>true</code> if this result belongs to the last build
-     */
-    public boolean isCurrent() {
-        return owner.getProject().getLastBuild().number == owner.number;
     }
 
     /**
@@ -257,7 +233,7 @@ public class FindBugsResult implements ModelObject, Serializable {
      */
     private void loadResult() throws IOException, InterruptedException {
         try {
-            FindBugsCounter findBugsCounter = new FindBugsCounter(owner);
+            FindBugsCounter findBugsCounter = new FindBugsCounter(getOwner());
             JavaProject result = findBugsCounter.findBugs();
             if (isCurrent() && result.isMavenFormat()) {
                 findBugsCounter.restoreMapping(result);
@@ -287,25 +263,88 @@ public class FindBugsResult implements ModelObject, Serializable {
     }
 
     /**
-     * Returns the dynamic result of the FindBugs analysis (detail page for a package).
+     * Returns the dynamic result of the FindBugs analysis (a detail page for a
+     * module, package or warnings file or a detail object for new or fixed
+     * warnings).
      *
-     * @param packageName the package name to get the result for
+     * @param link
+     *            the link to identify the sub page to show
      * @param request
      *            Stapler request
      * @param response
      *            Stapler response
-     * @return the dynamic result of the FindBugs analysis (detail page for a package).
+     * @return the dynamic result of the FindBugs analysis (detail page for a
+     *         package).
      */
-    public Object getDynamic(final String packageName, final StaplerRequest request, final StaplerResponse response) {
-        if ("fixed".equals(packageName)) {
-            return new FixedWarningsDetail(owner, getFixedWarnings());
+    public Object getDynamic(final String link, final StaplerRequest request, final StaplerResponse response) {
+        if ("fixed".equals(link)) {
+            return new FixedWarningsDetail(getOwner(), getFixedWarnings());
         }
-        else if ("new".equals(packageName)) {
-            return new NewWarningsDetail(owner, getNewWarnings());
+        else if ("new".equals(link)) {
+            return new NewWarningsDetail(getOwner(), getNewWarnings());
         }
         else {
-            return new FindBugsDetail(owner, getProject(), packageName);
+            if (isSingleModuleProject()) {
+                if (isSinglePackageProject()) {
+                    return new FindBugsSource(getOwner(), link);
+                }
+                else {
+                    return new PackageDetail(getOwner(), getProject().getModules().iterator().next().getPackage(link));
+                }
+            }
+            else {
+                return new ModuleDetail(getOwner(), getProject().getModule(link));
+            }
         }
+    }
+
+    /**
+     * Returns the packages of this project.
+     *
+     * @return the packages of this project
+     */
+    public Set<JavaPackage> getPackages() {
+        return getProject().getPackages();
+    }
+
+    /**
+     * Returns the modules of this project.
+     *
+     * @return the modules of this project
+     */
+    public Collection<Module> getModules() {
+        return getProject().getModules();
+    }
+
+    /**
+     * Returns the warnings of this project.
+     *
+     * @return the warnings of this project
+     */
+    @Override
+    public Set<Warning> getWarnings() {
+        return getProject().getWarnings();
+    }
+
+    /**
+     * Returns whether this project contains just one maven module. In this case
+     * we show package statistics instead of module statistics.
+     *
+     * @return <code>true</code> if this project contains just one maven
+     *         module
+     */
+    public boolean isSingleModuleProject() {
+        return getProject().getModules().size() == 1;
+    }
+
+    /**
+     * Returns whether we only have a single package. In this case the module
+     * and package statistics are suppressed and only the tasks are shown.
+     *
+     * @return <code>true</code> for single module projects
+     */
+    public boolean isSinglePackageProject() {
+        return isSingleModuleProject() && getProject().getPackages().size() == 1;
     }
 
     /**
@@ -316,13 +355,11 @@ public class FindBugsResult implements ModelObject, Serializable {
      * @return number of warnings of the specified package.
      */
     public int getPreviousNumberOfWarnings(final String packageName) {
-        FindBugsResultAction action = owner.getAction(FindBugsResultAction.class);
-        if (action.hasPreviousResultAction()) {
-            return action.getPreviousResultAction().getResult().getProject().getNumberOfWarnings(packageName);
+        JavaProject previousResult = getPreviousResult();
+        if (previousResult != null) {
+            return previousResult.getNumberOfWarnings(packageName);
         }
-        else {
-            return 0;
-        }
+        return 0;
     }
 
     /**
@@ -332,7 +369,7 @@ public class FindBugsResult implements ModelObject, Serializable {
      *         such build exists
      */
     public JavaProject getPreviousResult() {
-        FindBugsResultAction action = owner.getAction(FindBugsResultAction.class);
+        FindBugsResultAction action = getOwner().getAction(FindBugsResultAction.class);
         if (action.hasPreviousResultAction()) {
             return action.getPreviousResultAction().getResult().getProject();
         }
@@ -347,7 +384,7 @@ public class FindBugsResult implements ModelObject, Serializable {
      * @return <code>true</code> if a previous build result exists.
      */
     public boolean hasPreviousResult() {
-        return owner.getAction(FindBugsResultAction.class).hasPreviousResultAction();
+        return getOwner().getAction(FindBugsResultAction.class).hasPreviousResultAction();
     }
 
     /**
@@ -387,19 +424,7 @@ public class FindBugsResult implements ModelObject, Serializable {
      * @throws IOException
      *             in case of an error
      */
-    public final void doModuleStatistics(final StaplerRequest request,
-            final StaplerResponse response) throws IOException {
-        if (ChartUtil.awtProblem) {
-            response.sendRedirect2(request.getContextPath() + "/images/headless.png");
-            return;
-        }
-        Module module = getProject().getModule(request.getParameter("module"));
-
-        ChartBuilder chartBuilder = new ChartBuilder();
-        JFreeChart chart = chartBuilder.createHighNormalLowChart(
-                module.getNumberOfHighWarnings(),
-                module.getNumberOfNormalWarnings(),
-                module.getNumberOfLowWarnings(), getProject().getWarningBound());
-        ChartUtil.generateGraph(request, response, chart, 400, 20);
+    public final void doModuleStatistics(final StaplerRequest request, final StaplerResponse response) throws IOException {
+        createDetailGraph(request, response, getProject().getModule(request.getParameter("module")), getProject().getWarningBound());
     }
 }

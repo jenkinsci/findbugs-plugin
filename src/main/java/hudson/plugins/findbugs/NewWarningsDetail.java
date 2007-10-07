@@ -5,7 +5,7 @@ import hudson.model.Build;
 import java.util.Set;
 
 /**
- * Result object to visualize the fixed warnings in a build.
+ * Result object to visualize the new warnings in a build.
  */
 public class NewWarningsDetail extends AbstractWarningsDetail {
     /** Unique identifier of this class. */

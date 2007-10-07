@@ -148,5 +148,19 @@ public class JavaProject implements Serializable {
         }
         return getModules().iterator().next().isMavenFormat();
     }
+
+
+    /**
+     * Returns the packages of this project.
+     *
+     * @return the packages of this project
+     */
+    public Set<JavaPackage> getPackages() {
+        Set<JavaPackage> packages = new HashSet<JavaPackage>();
+        for (Module module : getModules()) {
+            packages.addAll(module.getPackages());
+        }
+        return packages;
+    }
 }
 

@@ -1,0 +1,28 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler"
+	xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson"
+	xmlns:f="/lib/form" xmlns:i="jelly:fmt">
+
+	<j:forEach var="warning" items="${it.warnings}">
+		<h4>
+			<j:choose>
+				<j:when test="${it.isCurrent() &amp;&amp; warning.file != null}">
+					Class
+					<a href="${warning.file}/#${warning.lineNumber}">${warning.classname}</a>
+					(Priority ${warning.priority}, Category ${warning.category})
+				</j:when>
+				<j:otherwise>
+					Class ${warning.qualifiedName} (Priority ${warning.priority}, Category ${warning.category})
+				</j:otherwise>
+			</j:choose>
+		</h4>
+		<p>
+			${warning.type}: ${warning.message}
+			<j:if test="${warning.lineNumber != 'Not available'}">
+				(Line: ${warning.lineNumber})
+			</j:if>
+		</p>
+		<p>${warning.description}</p>
+		<hr />
+	</j:forEach>
+
+</j:jelly>

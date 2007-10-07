@@ -4,7 +4,7 @@
 	<l:layout>
 		<st:include it="${it.owner}" page="sidepanel.jelly" />
 		<l:main-panel>
-			<h1>FindBugs New Warnings</h1>
+			<h1>FindBugs Warnings of Package ${it.displayName}</h1>
 
 			<st:include page="warningsTable.jelly" />
 

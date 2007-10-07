@@ -15,8 +15,6 @@ public class JavaClass implements Serializable {
     private static final long serialVersionUID = -1602783729768597487L;
     /** The warnings in this class. */
     private final Set<Warning> warnings = new HashSet<Warning>();
-    /** The warnings in this class. */
-    private final Set<SourceLine> sourceLines = new HashSet<SourceLine>();
     /** Name of this class. */
     private String classname;
     /** Role of this class. */
