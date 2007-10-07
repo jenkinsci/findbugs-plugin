@@ -7,6 +7,7 @@ import org.apache.commons.lang.StringUtils;
 /**
  * A FindBugs warning.
  */
+@SuppressWarnings("PMD.CyclomaticComplexity")
 public class Warning implements Serializable {
     /** Unique identifier of this class. */
     private static final long serialVersionUID = -3694883222707674470L;
@@ -191,7 +192,6 @@ public class Warning implements Serializable {
 
     /** {@inheritDoc} */
     @Override
-    @SuppressWarnings("PMD.CyclomaticComplexity")
     public boolean equals(final Object obj) {
         if (this == obj) {
             return true;

@@ -32,7 +32,7 @@
             <td class="pane">
             	${it.numberOfFixedWarnings}
 		        <j:if test="${it.numberOfFixedWarnings != 0}">
-          			(<a href="#fixed">Details</a>)
+          			(<a href="fixed">Details</a>)
           		</j:if>
            	</td>
           </tr>
@@ -92,26 +92,6 @@
           <p>${w.description}</p>
           <hr />
         </j:forEach>
-      </j:if>
-
-      <j:if test="${it.numberOfFixedWarnings != 0}">
-      	<a name="fixed"/>
-        <h2>Fixed Warnings</h2>
-
-        <table class="pane sortable" id="fixed">
-          <tr>
-            <td class="pane-header">Class</td>
-            <td class="pane-header">Warning Type</td>
-          </tr>
-          <tbody>
-            <j:forEach var="w" items="${it.fixedWarnings}">
-              <tr>
-                <td class="pane">${w.qualifiedName}</td>
-                <td class="pane">${w.type}</td>
-              </tr>
-            </j:forEach>
-          </tbody>
-        </table>
       </j:if>
 
       <j:if test="${it.numberOfWarnings != 0}">

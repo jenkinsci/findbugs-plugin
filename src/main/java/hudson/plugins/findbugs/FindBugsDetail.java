@@ -1,4 +1,4 @@
-package hudson.plugins.findbugs;
+    package hudson.plugins.findbugs;
 
 import hudson.model.Build;
 import hudson.model.ModelObject;

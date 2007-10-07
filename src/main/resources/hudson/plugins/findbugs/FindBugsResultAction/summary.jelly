@@ -10,7 +10,7 @@
 	    			(${it.result.numberOfNewWarnings} new and ${it.result.numberOfFixedWarnings} fixed).
 	    		</j:when>
 	    		<j:when test="${it.result.numberOfFixedWarnings > 0}">
-	    			(${it.result.numberOfFixedWarnings} fixed).
+	    			(<a href="findbugsResult/fixed">${it.result.numberOfFixedWarnings} fixed)</a>.
 	    		</j:when>
 	    		<j:when test="${it.result.numberOfNewWarnings > 0}">
 	    			(${it.result.numberOfNewWarnings} new).

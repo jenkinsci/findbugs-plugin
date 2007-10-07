@@ -297,7 +297,12 @@ public class FindBugsResult implements ModelObject, Serializable {
      * @return the dynamic result of the FindBugs analysis (detail page for a package).
      */
     public Object getDynamic(final String packageName, final StaplerRequest request, final StaplerResponse response) {
-        return new FindBugsDetail(owner, getProject(), packageName);
+        if ("fixed".equals(packageName)) {
+            return new FixedWarningsDetail(owner, getFixedWarnings());
+        }
+        else {
+            return new FindBugsDetail(owner, getProject(), packageName);
+        }
     }
 
     /**
