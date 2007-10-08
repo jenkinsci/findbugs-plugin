@@ -12,6 +12,8 @@ import org.kohsuke.stapler.StaplerResponse;
  * Result object to visualize the package statistics of a module.
  */
 public class ModuleDetail extends AbstractWarningsDetail {
+    /** Unique identifier of this class. */
+    private static final long serialVersionUID = -1854984151887397361L;
     /** The module to show the details for. */
     private final Module module;
 

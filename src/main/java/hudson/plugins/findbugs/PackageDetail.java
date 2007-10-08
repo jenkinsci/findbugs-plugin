@@ -9,6 +9,8 @@ import org.kohsuke.stapler.StaplerResponse;
  * Result object to visualize the package statistics of a module.
  */
 public class PackageDetail extends AbstractWarningsDetail {
+    /** Unique identifier of this class. */
+    private static final long serialVersionUID = -5315146140343619856L;
     /** The package to show the details for. */
     private final JavaPackage javaPackage;
 
