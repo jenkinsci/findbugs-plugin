@@ -6,7 +6,6 @@ import hudson.plugins.findbugs.util.ChartBuilder;
 import hudson.util.ChartUtil;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -25,6 +24,7 @@ public abstract class AbstractWarningsDetail implements ModelObject, Serializabl
     @SuppressWarnings("Se")
     private final Build<?, ?> owner;
     /** All fixed warnings in this build. */
+    @SuppressWarnings("Se")
     private transient Set<Warning> warnings;
 
     /**
@@ -38,19 +38,6 @@ public abstract class AbstractWarningsDetail implements ModelObject, Serializabl
     public AbstractWarningsDetail(final Build<?, ?> owner, final Set<Warning> warnings) {
         this.owner = owner;
         this.warnings = warnings;
-    }
-
-    /**
-     * Deserializes this object.
-     *
-     * @param input the input stream
-     *
-     * @throws IOException Signals that an I/O exception has occurred.
-     * @throws ClassNotFoundException the class not found exception
-     */
-    @java.lang.SuppressWarnings("unused")
-    private void readObject(final ObjectInputStream input) throws IOException, ClassNotFoundException {
-        warnings = new HashSet<Warning>();
     }
 
     /**
@@ -77,6 +64,9 @@ public abstract class AbstractWarningsDetail implements ModelObject, Serializabl
      * @return the set of warnings
      */
     public Set<Warning> getWarnings() {
+        if (warnings == null) {
+            warnings = new HashSet<Warning>();
+        }
         return warnings;
     }
 
