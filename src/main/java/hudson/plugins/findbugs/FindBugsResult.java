@@ -182,11 +182,11 @@ public class FindBugsResult extends AbstractWarningsDetail implements WarningPro
     public Set<Warning> getNewWarnings() {
         try {
             if (newWarnings == null) {
-                loadResult();
+                loadPreviousResult();
             }
             Set<Warning> result = newWarnings.get();
             if (result == null) {
-                loadResult();
+                loadPreviousResult();
             }
             return newWarnings.get();
         }
@@ -207,11 +207,11 @@ public class FindBugsResult extends AbstractWarningsDetail implements WarningPro
     public Set<Warning> getFixedWarnings() {
         try {
             if (fixedWarnings == null) {
-                loadResult();
+                loadPreviousResult();
             }
             Set<Warning> result = fixedWarnings.get();
             if (result == null) {
-                loadResult();
+                loadPreviousResult();
             }
             return fixedWarnings.get();
         }
@@ -241,24 +241,37 @@ public class FindBugsResult extends AbstractWarningsDetail implements WarningPro
             computePriorities(result.getWarnings());
 
             project = new WeakReference<JavaProject>(result);
-
-            if (hasPreviousResult()) {
-                newWarnings = new WeakReference<Set<Warning>>(
-                        WarningDifferencer.getNewWarnings(result.getWarnings(), getPreviousResult().getWarnings()));
-            }
-            else {
-                newWarnings = new WeakReference<Set<Warning>>(result.getWarnings());
-            }
-            if (hasPreviousResult()) {
-                fixedWarnings = new WeakReference<Set<Warning>>(
-                        WarningDifferencer.getFixedWarnings(result.getWarnings(), getPreviousResult().getWarnings()));
-            }
-            else {
-                fixedWarnings = new WeakReference<Set<Warning>>(EMPTY_SET);
-            }
         }
         catch (SAXException exception) {
             throw new IOException2(exception);
+        }
+    }
+
+    /**
+     * Loads the FindBugs results and the result of the previous build and wraps
+     * them in a weak reference that might get removed by the garbage collector.
+     *
+     * @throws IOException
+     *             if the files could not be read
+     * @throws InterruptedException
+     *             if the operation has been canceled
+     */
+    private void loadPreviousResult() throws IOException, InterruptedException {
+        loadResult();
+
+        if (hasPreviousResult()) {
+            newWarnings = new WeakReference<Set<Warning>>(
+                    WarningDifferencer.getNewWarnings(getProject().getWarnings(), getPreviousResult().getWarnings()));
+        }
+        else {
+            newWarnings = new WeakReference<Set<Warning>>(getProject().getWarnings());
+        }
+        if (hasPreviousResult()) {
+            fixedWarnings = new WeakReference<Set<Warning>>(
+                    WarningDifferencer.getFixedWarnings(getProject().getWarnings(), getPreviousResult().getWarnings()));
+        }
+        else {
+            fixedWarnings = new WeakReference<Set<Warning>>(EMPTY_SET);
         }
     }
 
@@ -426,5 +439,20 @@ public class FindBugsResult extends AbstractWarningsDetail implements WarningPro
      */
     public final void doModuleStatistics(final StaplerRequest request, final StaplerResponse response) throws IOException {
         createDetailGraph(request, response, getProject().getModule(request.getParameter("module")), getProject().getWarningBound());
+    }
+
+    /**
+     * Generates a PNG image for high/normal/low distribution of a Java package.
+     *
+     * @param request
+     *            Stapler request
+     * @param response
+     *            Stapler response
+     * @throws IOException
+     *             in case of an error
+     */
+    public final void doPackageStatistics(final StaplerRequest request, final StaplerResponse response) throws IOException {
+        Module module = getModules().iterator().next();
+        createDetailGraph(request, response, module.getPackage(request.getParameter("package")), module.getWarningBound());
     }
 }

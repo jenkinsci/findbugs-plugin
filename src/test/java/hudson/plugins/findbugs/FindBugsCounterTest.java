@@ -15,6 +15,8 @@ import org.xml.sax.SAXException;
  */
 public class FindBugsCounterTest {
     /** Error message. */
+    private static final String WRONG_FIND_BUGS_FORMAT = "Wrong FindBugs format.";
+    /** Error message. */
     private static final String WRONG_VERSION_DETECTED = "Wrong Version detected";
     /** Error message. */
     private static final String NO_FILE_NAME_FOUND = "No file name found.";
@@ -86,6 +88,7 @@ public class FindBugsCounterTest {
         Module module = parseFile("findbugs-native.xml");
         assertEquals(ERROR_MESSAGE, 128, module.getNumberOfWarnings());
         assertEquals(WRONG_VERSION_DETECTED, "1.2.1", module.getVersion());
+        assertFalse(WRONG_FIND_BUGS_FORMAT, module.isMavenFormat());
 
         assertEquals(WRONG_WARNINGS_IN_PACKAGE_ERROR, 0, module.getNumberOfWarnings("java.lang"));
 
@@ -106,6 +109,7 @@ public class FindBugsCounterTest {
         assertEquals(ERROR_MESSAGE, NUMBER_OF_SPELL_WARNINGS + NUMBER_OF_DOCU_WARNINGS, module.getNumberOfWarnings());
         assertEquals(WRONG_VERSION_DETECTED, "1.2.0", module.getVersion());
         assertEquals("Wrong number of packages detected", 2, module.getPackages().size());
+        assertTrue(WRONG_FIND_BUGS_FORMAT, module.isMavenFormat());
 
         assertEquals(WRONG_WARNINGS_IN_PACKAGE_ERROR, NUMBER_OF_SPELL_WARNINGS, module.getWarnings(SPELL_PACKAGE).size());
         assertEquals(WRONG_WARNINGS_IN_PACKAGE_ERROR, NUMBER_OF_DOCU_WARNINGS, module.getWarnings(DOCU_PACKAGE).size());
@@ -132,6 +136,7 @@ public class FindBugsCounterTest {
         Module module = parseFile("findbugs-multclass.xml");
         assertEquals(WRONG_VERSION_DETECTED, "1.2.1", module.getVersion());
         assertEquals(ERROR_MESSAGE, 2, module.getNumberOfWarnings());
+        assertFalse(WRONG_FIND_BUGS_FORMAT, module.isMavenFormat());
         Collection<Warning> warnings = module.getWarnings();
         for (Warning warning : warnings) {
             assertTrue("Wrong package prefix found.", warning.getPackageName().startsWith("edu.umd"));
