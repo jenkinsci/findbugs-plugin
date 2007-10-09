@@ -28,6 +28,8 @@ public class Module implements Serializable, WarningProvider {
     private String name;
     /** Determines whether the file format is the Maven file format. */
     private boolean isInMavenFormat;
+    /** FindBugs project information (of the native file format). */
+    private ProjectInformation projectInformation = new ProjectInformation();
 
     /**
      * Creates a new instance of <code>Module</code>.
@@ -62,6 +64,24 @@ public class Module implements Serializable, WarningProvider {
      */
     public boolean isMavenFormat() {
         return isInMavenFormat;
+    }
+
+    /**
+     * Sets the FindBugs project information (of the native file format).
+     *
+     * @param projectInformation the project information
+     */
+    public void setProjectInformation(final ProjectInformation projectInformation) {
+        this.projectInformation = projectInformation;
+    }
+
+    /**
+     * Returns the FindBugs project information (of the native file format).
+     *
+     * @return the FindBugs project information
+     */
+    public ProjectInformation getProjectInformation() {
+        return projectInformation;
     }
 
     /**

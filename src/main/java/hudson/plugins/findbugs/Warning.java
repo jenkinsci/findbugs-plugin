@@ -246,7 +246,7 @@ public class Warning implements Serializable {
      * @param file the file name
      */
     public void setFile(final String file) {
-        fileName = file.replace('/', '!').replace('\\', '!');
+        fileName = file.replace('/', '!').replace('\\', '!').replace(" ", "%20");
     }
 
     /**

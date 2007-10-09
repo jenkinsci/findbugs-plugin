@@ -1,9 +1,14 @@
 package hudson.plugins.findbugs;
 
+import java.io.Serializable;
+
 /**
- * Java Bean class to identify the position of a warning in a source file.
+ * Java Bean class to identify the position of a warning in a source file
+ * (native format only).
  */
-public class SourceLine {
+public class SourceLine implements Serializable {
+    /** Unique identifier of this class. */
+    private static final long serialVersionUID = -1295600457503624679L;
     /** The class name. */
     private String classname;
     /** The first line number of the violation. */

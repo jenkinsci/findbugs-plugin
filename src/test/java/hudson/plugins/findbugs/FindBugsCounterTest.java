@@ -142,6 +142,24 @@ public class FindBugsCounterTest {
             assertTrue("Wrong package prefix found.", warning.getPackageName().startsWith("edu.umd"));
             assertNotNull(NO_FILE_NAME_FOUND, warning.getFile());
         }
+
+        assertEquals("Wrong number of source paths detected", 2, module.getProjectInformation().getSourcePaths().size());
+    }
+
+    /**
+     * Checks whether we correctly assign source paths when the source directory
+     * folder is specified in the FindBugs native file format. element, we
+     * correctly take the first one as referring to the buggy class.
+     */
+    @Test
+    public void checkSourcePathComposition() throws IOException, SAXException {
+        Module module = parseFile("srcpath.xml");
+        assertEquals(WRONG_VERSION_DETECTED, "1.2.1", module.getVersion());
+        assertEquals(ERROR_MESSAGE, 1, module.getNumberOfWarnings());
+        assertFalse(WRONG_FIND_BUGS_FORMAT, module.isMavenFormat());
+        Warning warning = module.getWarnings().iterator().next();
+
+        assertEquals("Wrong filename guessed.", "!usr!local!tomcat!hudson!jobs!FindBugs%20Test!workspace!findBugsTest!src!org!example!SyncBug.java", warning.getFile());
     }
 }
 

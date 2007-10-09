@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.util.Properties;
+import java.util.Set;
 
 import org.apache.commons.digester.Digester;
 import org.apache.commons.lang.ObjectUtils;
@@ -23,8 +24,6 @@ import org.xml.sax.SAXException;
  * @author Ulli Hafner
  */
 public class FindBugsCounter {
-    /** Parent XPATH element. */
-    private static final String BUG_COLLECTION_XPATH = "BugCollection";
     /** Associated build. */
     private final Build<?, ?> build;
 
@@ -94,8 +93,9 @@ public class FindBugsCounter {
         digester.setValidating(false);
         digester.setClassLoader(FindBugsCounter.class.getClassLoader());
 
-        digester.addObjectCreate(BUG_COLLECTION_XPATH, Module.class);
-        digester.addSetProperties(BUG_COLLECTION_XPATH);
+        String root = "BugCollection";
+        digester.addObjectCreate(root, Module.class);
+        digester.addSetProperties(root);
 
         String classXpath = "BugCollection/file";
         digester.addObjectCreate(classXpath, JavaClass.class);
@@ -130,8 +130,12 @@ public class FindBugsCounter {
         digester.setValidating(false);
         digester.setClassLoader(FindBugsCounter.class.getClassLoader());
 
-        digester.addObjectCreate(BUG_COLLECTION_XPATH, Module.class);
-        digester.addSetProperties(BUG_COLLECTION_XPATH);
+        digester.addObjectCreate("BugCollection", Module.class);
+        digester.addSetProperties("BugCollection");
+
+        digester.addObjectCreate("BugCollection/Project", ProjectInformation.class);
+        digester.addSetNext("BugCollection/Project", "setProjectInformation", ProjectInformation.class.getName());
+        digester.addCallMethod("BugCollection/Project/SrcDir", "addSourcePath", 0);
 
         digester.addObjectCreate("BugCollection/BugInstance", Warning.class);
         digester.addSetProperties("BugCollection/BugInstance");
@@ -150,6 +154,13 @@ public class FindBugsCounter {
         Module module = (Module)ObjectUtils.defaultIfNull(digester.parse(file), new Module("Unknown file format"));
         module.setMavenFormat(false);
 
+        Set<String> paths = module.getProjectInformation().getSourcePaths();
+        if (paths.size() == 1) {
+            String prefix = paths.iterator().next();
+            for (Warning warning : module.getWarnings()) {
+                warning.setFile(prefix + "/" + warning.getFile());
+            }
+        }
         return module;
     }
 
@@ -208,8 +219,7 @@ public class FindBugsCounter {
     }
 
     /**
-     * Creates a mapping of warnings to actual workspace files. The result is
-     * persisted in the results folder.
+     * Creates a mapping of warnings to actual workspace files.
      *
      * @param project
      *            project containing all the warnings
@@ -219,7 +229,51 @@ public class FindBugsCounter {
      *             if cancel has been pressed during the processing
      */
     public void mapWarnings2Files(final JavaProject project) throws IOException, InterruptedException {
-        build.getProject().getWorkspace().act(new WorkspaceScanner(project));
+        if (project.isMavenFormat()) {
+            build.getProject().getWorkspace().act(new WorkspaceScanner(project));
+        }
+        else {
+            mapNativeWarnings2Files(project);
+        }
+        writeMappingFile(project);
+    }
+
+    /**
+     * Creates a mapping of warnings to actual workspace files (for native format). The result is
+     * persisted in the results folder.
+     *
+     * @param project
+     *            project containing all the warnings
+     */
+    private void mapNativeWarnings2Files(final JavaProject project) {
+        for (Module module : project.getModules()) {
+            Set<String> paths = module.getProjectInformation().getSourcePaths();
+            if (paths.size() > 1) {
+                for (Warning warning : module.getWarnings()) {
+                    for (String path : paths) {
+                        String actualPath = path + "/" + warning.getFile();
+                        File file = new File(actualPath.replace('!', '/'));
+                        if (file.exists()) {
+                            warning.setFile(actualPath);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Writes the actual source file names to a properties file in the build
+     * folder.
+     *
+     * @param project
+     *            the project containing the warnings
+     * @throws IOException
+     *             in case of an IO error
+     * @throws InterruptedException
+     *             if cancel has been pressed during the processing
+     */
+    private void writeMappingFile(final JavaProject project) throws IOException, InterruptedException {
         Properties mapping = new Properties();
         for (Warning warning : project.getWarnings()) {
             if (warning.getFile() != null) {

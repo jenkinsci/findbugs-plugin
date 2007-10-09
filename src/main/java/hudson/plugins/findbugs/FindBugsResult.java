@@ -237,7 +237,7 @@ public class FindBugsResult extends AbstractWarningsDetail implements WarningPro
         try {
             FindBugsCounter findBugsCounter = new FindBugsCounter(getOwner());
             JavaProject result = findBugsCounter.findBugs();
-            if (isCurrent() && result.isMavenFormat()) {
+            if (isCurrent()) {
                 findBugsCounter.restoreMapping(result);
             }
             computePriorities(result.getWarnings());
