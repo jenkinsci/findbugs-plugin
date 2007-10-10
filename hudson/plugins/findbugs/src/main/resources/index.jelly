@@ -1,0 +1,4 @@
+<div>
+  This plugin collects the <a href="http://findbugs.sourceforge.net/">FindBugs</a> analysis
+  results of the project modules and counts the number of potential bugs.
+</div>
