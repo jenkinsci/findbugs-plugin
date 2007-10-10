@@ -255,6 +255,7 @@ public class FindBugsCounter {
                         File file = new File(actualPath.replace('!', '/'));
                         if (file.exists()) {
                             warning.setFile(actualPath);
+                            break;
                         }
                     }
                 }

@@ -4,6 +4,8 @@ import hudson.FilePath;
 import hudson.model.Build;
 import hudson.model.ModelObject;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
@@ -58,8 +60,14 @@ public class FindBugsSource implements ModelObject, Serializable {
     @java.lang.SuppressWarnings("unchecked")
     public String getContent() {
         try {
-            FilePath content = owner.getProject().getWorkspace().child(linkName);
-            InputStream file = content.read();
+            InputStream file;
+            if (linkName.startsWith("/")) {
+                file = new FileInputStream(new File(linkName));
+            }
+            else {
+                FilePath content = owner.getProject().getWorkspace().child(linkName);
+                file = content.read();
+            }
             JavaSource source = new JavaSourceParser().parse(file);
             file.close();
 
