@@ -1,17 +1,21 @@
 package hudson.plugins.findbugs.util;
 
-import java.io.IOException;
-
-import javax.servlet.http.HttpServletResponse;
-
-import org.kohsuke.stapler.StaplerRequest;
-import org.kohsuke.stapler.StaplerResponse;
-
-import edu.umd.cs.findbugs.annotations.SuppressWarnings;
 import hudson.model.AbstractBuild;
 import hudson.model.Action;
 import hudson.model.Build;
 import hudson.model.Project;
+
+import java.io.IOException;
+import java.util.List;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+
+import org.kohsuke.stapler.Ancestor;
+import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.StaplerResponse;
+
+import edu.umd.cs.findbugs.annotations.SuppressWarnings;
 
 /**
  * A project action displays a link on the side panel of a project.
@@ -21,6 +25,8 @@ import hudson.model.Project;
  * @author Ulli Hafner
  */
 public abstract class AbstractProjectAction<T extends ResultAction<?>> implements Action  {
+    /** One year (in seconds). */
+    private static final int ONE_YEAR = 60 * 60 * 24 * 365;
     /** Project that owns this action. */
     @SuppressWarnings("Se")
     private final Project<?, ?> project;
@@ -179,4 +185,45 @@ public abstract class AbstractProjectAction<T extends ResultAction<?>> implement
     public void doIndex(final StaplerRequest request, final StaplerResponse response) throws IOException {
         response.sendRedirect2(resultsUrl);
     }
+
+    /**
+     * Changes the trend graph display mode.
+     *
+     * @param request
+     *            Stapler request
+     * @param response
+     *            Stapler response
+     * @throws IOException
+     *             in case of an error
+     */
+    public void doFlipTrend(final StaplerRequest request, final StaplerResponse response) throws IOException {
+        boolean useHealthBuilder = true;
+
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals(getCookieName())) {
+                    useHealthBuilder = Boolean.parseBoolean(cookie.getValue());
+                }
+            }
+        }
+
+        useHealthBuilder = !useHealthBuilder;
+
+        Cookie cookie = new Cookie(getCookieName(), String.valueOf(useHealthBuilder));
+        List<?> ancestors = request.getAncestors();
+        Ancestor ancestor = (Ancestor) ancestors.get(ancestors.size() - 2);
+        cookie.setPath(ancestor.getUrl());
+        cookie.setMaxAge(ONE_YEAR);
+        response.addCookie(cookie);
+
+        response.sendRedirect("..");
+    }
+
+    /**
+     * Returns the flip trend cookie name.
+     *
+     * @return the flip trend cookie name.
+     */
+    protected abstract String getCookieName();
 }

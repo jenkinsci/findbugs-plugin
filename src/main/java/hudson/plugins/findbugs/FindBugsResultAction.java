@@ -5,21 +5,21 @@ import hudson.model.Build;
 import hudson.model.HealthReport;
 import hudson.model.HealthReportingAction;
 import hudson.plugins.findbugs.util.AbstractResultAction;
-import hudson.plugins.findbugs.util.ChartBuilder;
 import hudson.plugins.findbugs.util.HealthReportBuilder;
-import hudson.plugins.findbugs.util.PrioritiesAreaRenderer;
 import hudson.plugins.findbugs.util.ResultAction;
-import hudson.plugins.findbugs.util.ResultAreaRenderer;
 import hudson.util.DataSetBuilder;
 import hudson.util.ChartUtil.NumberOnlyBuildLabel;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import org.apache.commons.lang.StringUtils;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.renderer.category.StackedAreaRenderer;
 import org.jfree.data.category.CategoryDataset;
 import org.kohsuke.stapler.StaplerProxy;
+import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.StaplerResponse;
 
 /**
  * Controls the live cycle of the FindBugs results. This action persists the
@@ -143,40 +143,46 @@ public class FindBugsResultAction extends AbstractResultAction implements Staple
     /**
      * Creates the chart for this action.
      *
+     * @param request
+     *            Stapler request
+     * @param response
+     *            Stapler response
      * @return the chart for this action.
      */
     @Override
-    protected JFreeChart createChart() {
-        ChartBuilder chartBuilder = new ChartBuilder();
+    protected JFreeChart createChart(final StaplerRequest request, final StaplerResponse response) {
         if (healthReportBuilder == null) {
             healthReportBuilder = new HealthReportBuilder("FindBugs", "warning", false, 0, false, 0, 0);
         }
-        StackedAreaRenderer renderer;
-        if (healthReportBuilder.isHealthyReportEnabled() || healthReportBuilder.isFailureThresholdEnabled()) {
-            renderer = new ResultAreaRenderer(FINDBUGS_RESULT_URL, "warning");
-        }
-        else {
-            renderer = new PrioritiesAreaRenderer(FINDBUGS_RESULT_URL, "warning");
-        }
-        return chartBuilder.createChart(buildDataSet(), renderer, healthReportBuilder.getThreshold(),
-                healthReportBuilder.isHealthyReportEnabled() || !healthReportBuilder.isFailureThresholdEnabled());
+        String parameter = request.getParameter("useHealthBuilder");
+        boolean useHealthBuilder = Boolean.valueOf(StringUtils.defaultIfEmpty(parameter, "true"));
+        return healthReportBuilder.createGraph(useHealthBuilder, FINDBUGS_RESULT_URL, buildDataSet(useHealthBuilder));
     }
 
     /**
      * Returns the data set that represents the result. For each build, the
      * number of warnings is used as result value.
      *
+     * @param useHealthBuilder
+     *            determines whether the health builder should be used to create
+     *            the data set
      * @return the data set
      */
-    private CategoryDataset buildDataSet() {
+    private CategoryDataset buildDataSet(final boolean useHealthBuilder) {
         DataSetBuilder<Integer, NumberOnlyBuildLabel> builder = new DataSetBuilder<Integer, NumberOnlyBuildLabel>();
         for (FindBugsResultAction action = this; action != null; action = action.getPreviousBuild()) {
             FindBugsResult current = action.getResult();
             if (current != null) {
-                List<Integer> series = healthReportBuilder.createSeries(
-                        current.getNumberOfHighWarnings(),
-                        current.getNumberOfNormalWarnings(),
-                        current .getNumberOfLowWarnings());
+                List<Integer> series;
+                if (useHealthBuilder && healthReportBuilder.isEnabled()) {
+                    series = healthReportBuilder.createSeries(current.getNumberOfWarnings());
+                }
+                else {
+                    series = new ArrayList<Integer>();
+                    series.add(current.getNumberOfLowWarnings());
+                    series.add(current.getNumberOfNormalWarnings());
+                    series.add(current.getNumberOfHighWarnings());
+                }
                 int level = 0;
                 for (Integer integer : series) {
                     builder.add(integer, level, new NumberOnlyBuildLabel(action.getOwner()));

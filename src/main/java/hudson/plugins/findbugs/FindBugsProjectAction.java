@@ -4,6 +4,9 @@ import hudson.model.Project;
 import hudson.plugins.findbugs.util.AbstractProjectAction;
 
 
+
+
+
 /**
  * Entry point to visualize the FindBugs trend graph in the project screen.
  * Drawing of the graph is delegated to the associated
@@ -37,6 +40,12 @@ public class FindBugsProjectAction extends AbstractProjectAction<FindBugsResultA
     /** {@inheritDoc} */
     public String getUrlName() {
         return FINDBUGS_PROJECT_URL;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    protected String getCookieName() {
+        return "FindBugs_displayMode";
     }
 }
 

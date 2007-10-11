@@ -182,20 +182,6 @@ public class HealthReportBuilderTest extends TestCase {
     }
 
     /**
-     * Tests whether we don't get a healthy report if the reporting is disabled.
-     */
-    @Test
-    public void testSimpleSeriesCalculator() {
-        HealthReportBuilder builder = new HealthReportBuilder(FIND_BUGS, WARNING, false, 10, false, 10, 30);
-
-        List<Integer> series = builder.createSeries(5, 10, 15);
-        assertEquals(WRONG_NUMBER, 3, series.size());
-        assertEquals(WRONG_SERIES_VALUE, 5, (int)series.get(2));
-        assertEquals(WRONG_SERIES_VALUE, 10, (int)series.get(1));
-        assertEquals(WRONG_SERIES_VALUE, 15, (int)series.get(0));
-    }
-
-    /**
      * Creates the test fixture.
      *
      * @param isEnabled

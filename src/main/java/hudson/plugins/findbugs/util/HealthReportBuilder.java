@@ -7,6 +7,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.renderer.category.StackedAreaRenderer;
+import org.jfree.data.category.CategoryDataset;
+
 /**
  * Creates a health report for integer values based on healthy and unhealthy
  * thresholds.
@@ -91,6 +95,16 @@ public class HealthReportBuilder implements Serializable {
         else {
             return null;
         }
+    }
+
+    /**
+     * Returns whether this health report build is enabled, i.e. at least one of
+     * the health or failed thresholds are provided.
+     *
+     * @return <code>true</code> if health or failed thresholds are provided
+     */
+    public boolean isEnabled() {
+        return isHealthEnabled || isThresholdEnabled;
     }
 
     /**
@@ -222,29 +236,14 @@ public class HealthReportBuilder implements Serializable {
     /**
      * Creates a list of integer values used to create a three color graph
      * showing the items per build.
-     * @param numberOfItems
-     *            number of items
-     * @return the list of values
-     */
-    public List<Integer> createSeries(final int numberOfItems) {
-        return createSeries(numberOfItems, 0, 0);
-    }
-
-    /**
-     * Creates a list of integer values used to create a three color graph
-     * showing the items per build.
-     * @param high
-     *            number of high priority items
-     * @param normal
-     *            number of normal priority items
-     * @param low
-     *            number of low priority items
      *
+     * @param totalCount
+     *            total number of items
      * @return the list of values
      */
-    public List<Integer> createSeries(final int high, final int normal, final int low) {
+    public List<Integer> createSeries(final int totalCount) {
         List<Integer> series = new ArrayList<Integer>(3);
-        int remainder = high + normal + low;
+        int remainder = totalCount;
 
         if (isHealthEnabled) {
             series.add(Math.min(remainder, healthy));
@@ -277,13 +276,34 @@ public class HealthReportBuilder implements Serializable {
                 series.add(0);
             }
         }
-        else {
-            series.add(low);
-            series.add(normal);
-            series.add(high);
-        }
 
         return series;
+    }
+
+    /**
+     * Creates a trend graph for the corresponding action using the thresholds
+     * of this health builder.
+     *
+     * @param useHealthBuilder
+     *            if the health thresholds should be used at all
+     * @param url
+     *            the URL shown in the tool tips
+     * @param dataset
+     *            the data set of the values to render
+     * @return the created graph
+     */
+    public JFreeChart createGraph(final boolean useHealthBuilder, final String url, final CategoryDataset dataset) {
+        StackedAreaRenderer renderer;
+        if (useHealthBuilder && isEnabled()) {
+            renderer = new ResultAreaRenderer(url, itemName);
+        }
+        else {
+            renderer = new PrioritiesAreaRenderer(url, itemName);
+        }
+
+        ChartBuilder chartBuilder = new ChartBuilder();
+        return chartBuilder.createChart(dataset, renderer, getThreshold(),
+                isHealthyReportEnabled() || !isFailureThresholdEnabled() || !useHealthBuilder);
     }
 }
 

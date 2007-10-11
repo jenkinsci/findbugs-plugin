@@ -72,7 +72,7 @@ public abstract class AbstractResultAction {
             response.sendRedirect2(request.getContextPath() + "/images/headless.png");
             return;
         }
-        ChartUtil.generateGraph(request, response, createChart(), WIDTH, HEIGHT);
+        ChartUtil.generateGraph(request, response, createChart(request, response), WIDTH, HEIGHT);
     }
 
     /**
@@ -86,14 +86,18 @@ public abstract class AbstractResultAction {
      *             in case of an error
      */
     public final void doGraphMap(final StaplerRequest request, final StaplerResponse response) throws IOException {
-        ChartUtil.generateClickableMap(request, response, createChart(), WIDTH, HEIGHT);
+        ChartUtil.generateClickableMap(request, response, createChart(request, response), WIDTH, HEIGHT);
 
     }
 
     /**
      * Creates the chart for this action.
      *
+     * @param request
+     *            Stapler request
+     * @param response
+     *            Stapler response
      * @return the chart for this action.
      */
-    protected abstract JFreeChart createChart();
+    protected abstract JFreeChart createChart(StaplerRequest request, StaplerResponse response);
 }
