@@ -68,6 +68,13 @@ public class HealthReportBuilder implements Serializable {
     }
 
     /**
+     * Creates a new dummy instance of <code>HealthReportBuilder</code>.
+     */
+    public HealthReportBuilder() {
+        this("Items", "item", false, 0, false, 0, 0);
+    }
+
+    /**
      * Computes the healthiness of a build based on the specified counter.
      * Reports a health of 100% when the specified counter is less than
      * {@link #healthy}. Reports a health of 0% when the specified counter is

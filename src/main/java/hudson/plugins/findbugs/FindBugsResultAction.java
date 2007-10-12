@@ -2,8 +2,6 @@ package hudson.plugins.findbugs;
 
 import hudson.model.AbstractBuild;
 import hudson.model.Build;
-import hudson.model.HealthReport;
-import hudson.model.HealthReportingAction;
 import hudson.plugins.findbugs.util.AbstractResultAction;
 import hudson.plugins.findbugs.util.HealthReportBuilder;
 import hudson.plugins.findbugs.util.ResultAction;
@@ -17,7 +15,6 @@ import java.util.NoSuchElementException;
 import org.apache.commons.lang.StringUtils;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.category.CategoryDataset;
-import org.kohsuke.stapler.StaplerProxy;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
@@ -32,15 +29,13 @@ import org.kohsuke.stapler.StaplerResponse;
  *
  * @author Ulli Hafner
  */
-public class FindBugsResultAction extends AbstractResultAction implements StaplerProxy, HealthReportingAction, ResultAction<FindBugsResult> {
+public class FindBugsResultAction extends AbstractResultAction implements ResultAction<FindBugsResult> {
     /** Unique identifier of this class. */
     private static final long serialVersionUID = -5329651349674842873L;
     /** URL to results. */
     private static final String FINDBUGS_RESULT_URL = "findbugsResult";
     /** The actual result of the FindBugs analysis. */
     private FindBugsResult result;
-    /** Builds a health report. */
-    private HealthReportBuilder healthReportBuilder;
 
     /**
      * Creates a new instance of <code>FindBugsBuildAction</code>.
@@ -53,9 +48,8 @@ public class FindBugsResultAction extends AbstractResultAction implements Staple
      *            health builder to use
      */
     public FindBugsResultAction(final Build<?, ?> owner, final FindBugsResult result, final HealthReportBuilder healthReportBuilder) {
-        super(owner);
+        super(owner, healthReportBuilder);
         this.result = result;
-        this.healthReportBuilder = healthReportBuilder;
     }
 
     /** {@inheritDoc} */
@@ -66,11 +60,6 @@ public class FindBugsResultAction extends AbstractResultAction implements Staple
     /** {@inheritDoc} */
     public FindBugsResult getResult() {
         return result;
-    }
-
-    /** {@inheritDoc} */
-    public HealthReport getBuildHealth() {
-        return healthReportBuilder.computeHealth(getResult().getNumberOfWarnings());
     }
 
     /** {@inheritDoc} */
@@ -151,12 +140,9 @@ public class FindBugsResultAction extends AbstractResultAction implements Staple
      */
     @Override
     protected JFreeChart createChart(final StaplerRequest request, final StaplerResponse response) {
-        if (healthReportBuilder == null) {
-            healthReportBuilder = new HealthReportBuilder("FindBugs", "warning", false, 0, false, 0, 0);
-        }
         String parameter = request.getParameter("useHealthBuilder");
         boolean useHealthBuilder = Boolean.valueOf(StringUtils.defaultIfEmpty(parameter, "true"));
-        return healthReportBuilder.createGraph(useHealthBuilder, FINDBUGS_RESULT_URL, buildDataSet(useHealthBuilder));
+        return getHealthReportBuilder().createGraph(useHealthBuilder, FINDBUGS_RESULT_URL, buildDataSet(useHealthBuilder));
     }
 
     /**
@@ -174,8 +160,8 @@ public class FindBugsResultAction extends AbstractResultAction implements Staple
             FindBugsResult current = action.getResult();
             if (current != null) {
                 List<Integer> series;
-                if (useHealthBuilder && healthReportBuilder.isEnabled()) {
-                    series = healthReportBuilder.createSeries(current.getNumberOfWarnings());
+                if (useHealthBuilder && getHealthReportBuilder().isEnabled()) {
+                    series = getHealthReportBuilder().createSeries(current.getNumberOfWarnings());
                 }
                 else {
                     series = new ArrayList<Integer>();
@@ -191,5 +177,11 @@ public class FindBugsResultAction extends AbstractResultAction implements Staple
             }
         }
         return builder.build();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    protected int getHealthCounter() {
+        return getResult().getNumberOfWarnings();
     }
 }

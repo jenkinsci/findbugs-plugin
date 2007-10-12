@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.io.StringWriter;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 
 import de.java2html.converter.JavaSource2HTMLConverter;
@@ -59,8 +60,8 @@ public class FindBugsSource implements ModelObject, Serializable {
      */
     @java.lang.SuppressWarnings("unchecked")
     public String getContent() {
+        InputStream file = null;
         try {
-            InputStream file;
             if (linkName.startsWith("/")) {
                 file = new FileInputStream(new File(linkName));
             }
@@ -69,7 +70,6 @@ public class FindBugsSource implements ModelObject, Serializable {
                 file = content.read();
             }
             JavaSource source = new JavaSourceParser().parse(file);
-            file.close();
 
             JavaSource2HTMLConverter converter = new JavaSource2HTMLConverter();
             StringWriter writer = new StringWriter();
@@ -81,6 +81,9 @@ public class FindBugsSource implements ModelObject, Serializable {
         }
         catch (IOException exception) {
             return "Can't read file: " + exception.getLocalizedMessage();
+        }
+        finally {
+            IOUtils.closeQuietly(file);
         }
     }
 
