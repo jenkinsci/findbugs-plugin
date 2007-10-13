@@ -62,7 +62,7 @@ public class FindBugsSource implements ModelObject, Serializable {
     public String getContent() {
         InputStream file = null;
         try {
-            if (linkName.startsWith("/")) {
+            if (linkName.startsWith("/") || linkName.contains(":")) {
                 file = new FileInputStream(new File(linkName));
             }
             else {
