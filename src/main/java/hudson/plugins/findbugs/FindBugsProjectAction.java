@@ -3,10 +3,6 @@ package hudson.plugins.findbugs;
 import hudson.model.Project;
 import hudson.plugins.findbugs.util.AbstractProjectAction;
 
-
-
-
-
 /**
  * Entry point to visualize the FindBugs trend graph in the project screen.
  * Drawing of the graph is delegated to the associated
@@ -17,8 +13,6 @@ import hudson.plugins.findbugs.util.AbstractProjectAction;
 public class FindBugsProjectAction extends AbstractProjectAction<FindBugsResultAction> {
     /** Unique identifier of this class. */
     private static final long serialVersionUID = -654316141132780561L;
-    /** URL for this action. */
-    private static final String FINDBUGS_PROJECT_URL = "findbugs";
     /** URL to the results of the last build. */
     private static final String FINDBUGS_RESULTS_URL = "../lastBuild/findbugsResult";
 
@@ -39,7 +33,7 @@ public class FindBugsProjectAction extends AbstractProjectAction<FindBugsResultA
 
     /** {@inheritDoc} */
     public String getUrlName() {
-        return FINDBUGS_PROJECT_URL;
+        return "findbugs";
     }
 
     /** {@inheritDoc} */

@@ -71,4 +71,11 @@ public interface ResultAction<T> extends Action {
      *             in case of an error
      */
     void doGraphMap(StaplerRequest request, StaplerResponse response) throws IOException;
+
+    /**
+     * Returns the associated health report builder.
+     *
+     * @return the associated health report builder
+     */
+    HealthReportBuilder getHealthReportBuilder();
 }

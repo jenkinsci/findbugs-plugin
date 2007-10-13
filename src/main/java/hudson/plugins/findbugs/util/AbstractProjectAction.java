@@ -58,6 +58,21 @@ public abstract class AbstractProjectAction<T extends ResultAction<?>> implement
         this.resultsUrl = resultsUrl;
     }
 
+
+    /**
+     * Returns whether we should display the toggle graph type links.
+     *
+     * @return <code>true</code> if we should display the toggle graph type
+     *         links
+     */
+    public final boolean isHealthinessEnabled() {
+        ResultAction<?> lastAction = getLastAction();
+        if (lastAction != null) {
+            return lastAction.getHealthReportBuilder().isEnabled();
+        }
+        return false;
+    }
+
     /**
      * Returns the project.
      *
