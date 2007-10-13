@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,7 +24,7 @@ import edu.umd.cs.findbugs.annotations.SuppressWarnings;
  * @author Ulli Hafner
  */
 // CHECKSTYLE:OFF
-public class FindBugsResult extends AbstractWarningsDetail implements WarningProvider {
+public class FindBugsResult extends AbstractWarningsDetail {
 // CHECKSTYLE:ON
     /** No result at all. */
     @java.lang.SuppressWarnings("unchecked")
@@ -79,7 +78,7 @@ public class FindBugsResult extends AbstractWarningsDetail implements WarningPro
      * @param previousProject the parsed FindBugs result of the previous build
      */
     public FindBugsResult(final Build<?, ?> build, final JavaProject project, final JavaProject previousProject) {
-        super(build, new HashSet<Warning>());
+        super(build, project.getWarnings());
         numberOfWarnings = project.getNumberOfWarnings();
 
         this.project = new WeakReference<JavaProject>(project);
@@ -94,20 +93,6 @@ public class FindBugsResult extends AbstractWarningsDetail implements WarningPro
         warnings = WarningDifferencer.getFixedWarnings(allWarnings, previousProject.getWarnings());
         numberOfFixedWarnings = warnings.size();
         fixedWarnings = new WeakReference<Set<Warning>>(warnings);
-
-        computePriorities(allWarnings);
-    }
-
-    /**
-     * Computes the low, normal and high priority count.
-     *
-     * @param allWarnings
-     *            all project warnings
-     */
-    private void computePriorities(final Set<Warning> allWarnings) {
-        low = WarningDifferencer.countLowPriorityWarnings(allWarnings);
-        normal = WarningDifferencer.countNormalPriorityWarnings(allWarnings);
-        high = WarningDifferencer.countHighPriorityWarnings(allWarnings);
     }
 
     /** {@inheritDoc} */
@@ -120,6 +105,7 @@ public class FindBugsResult extends AbstractWarningsDetail implements WarningPro
      *
      * @return the number of warnings
      */
+    @Override
     public int getNumberOfWarnings() {
         return numberOfWarnings;
     }
@@ -240,7 +226,6 @@ public class FindBugsResult extends AbstractWarningsDetail implements WarningPro
             if (isCurrent()) {
                 findBugsCounter.restoreMapping(result);
             }
-            computePriorities(result.getWarnings());
 
             project = new WeakReference<JavaProject>(result);
         }
@@ -407,6 +392,7 @@ public class FindBugsResult extends AbstractWarningsDetail implements WarningPro
      *
      * @return the total number of warnings with priority LOW in this package
      */
+    @Override
     public int getNumberOfLowWarnings() {
         return low;
     }
@@ -416,6 +402,7 @@ public class FindBugsResult extends AbstractWarningsDetail implements WarningPro
      *
      * @return the total number of warnings with priority HIGH in this package
      */
+    @Override
     public int getNumberOfHighWarnings() {
         return high;
     }
@@ -425,6 +412,7 @@ public class FindBugsResult extends AbstractWarningsDetail implements WarningPro
      *
      * @return the total number of warnings with priority NORMAL in this package
      */
+    @Override
     public int getNumberOfNormalWarnings() {
         return normal;
     }

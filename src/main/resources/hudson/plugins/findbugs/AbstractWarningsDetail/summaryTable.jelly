@@ -1,0 +1,21 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler"
+	xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson"
+	xmlns:f="/lib/form">
+	<h2>Summary</h2>
+	<table class="pane sortable" id="findbugs.summary">
+		<tr>
+			<td class="pane-header">Total</td>
+			<td class="pane-header">High Priority</td>
+			<td class="pane-header">Normal Priority</td>
+			<td class="pane-header">Low Priority</td>
+		</tr>
+		<tbody>
+			<tr>
+				<td class="pane">${it.numberOfWarnings}</td>
+				<td class="pane">${it.numberOfHighWarnings}</td>
+				<td class="pane">${it.numberOfNormalWarnings}</td>
+				<td class="pane">${it.numberOfLowWarnings}</td>
+			</tr>
+		</tbody>
+	</table>
+</j:jelly>

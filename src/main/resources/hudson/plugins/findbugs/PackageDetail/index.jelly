@@ -6,6 +6,8 @@
 		<l:main-panel>
 			<h1>FindBugs Warnings of Package ${it.displayName}</h1>
 
+		    <st:include page="summaryTable.jelly" />
+
 			<st:include page="warningsTable.jelly" />
 
 		</l:main-panel>

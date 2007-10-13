@@ -7,7 +7,7 @@
 
 			<h1>FindBugs Result</h1>
 
-			<h2>Summary</h2>
+			<h2>Warnings Trend</h2>
 
 			<table class="pane sortable" id="summary">
 				<tr>
@@ -35,6 +35,8 @@
 					</tr>
 				</tbody>
 			</table>
+
+	        <st:include page="summaryTable.jelly" />
 
 			<j:if test="${!it.isSingleModuleProject()}">
 				<h2>Module Statistics</h2>
