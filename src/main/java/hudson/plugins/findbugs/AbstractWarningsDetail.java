@@ -119,27 +119,27 @@ public abstract class AbstractWarningsDetail implements ModelObject, Serializabl
     }
 
     /**
-     * Returns the total number of warnings with priority LOW in this package.
+     * Returns the total number of warnings with priority LOW.
      *
-     * @return the total number of warnings with priority LOW in this package
+     * @return the total number of warnings with priority LOW
      */
     public int getNumberOfLowWarnings() {
         return low;
     }
 
     /**
-     * Returns the total number of warnings with priority HIGH in this package.
+     * Returns the total number of warnings with priority HIGH.
      *
-     * @return the total number of warnings with priority HIGH in this package
+     * @return the total number of warnings with priority HIGH
      */
     public int getNumberOfHighWarnings() {
         return high;
     }
 
     /**
-     * Returns the total number of warnings with priority NORMAL in this package.
+     * Returns the total number of warnings with priority NORMAL.
      *
-     * @return the total number of warnings with priority NORMAL in this package
+     * @return the total number of warnings with priority NORMAL
      */
     public int getNumberOfNormalWarnings() {
         return normal;
