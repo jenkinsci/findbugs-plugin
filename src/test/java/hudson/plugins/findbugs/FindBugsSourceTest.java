@@ -17,13 +17,13 @@ public class FindBugsSourceTest {
     private static final String LINE_6_INDICATOR = "<a name=\"6\">";
 
     /**
-     * Checks whether we correctly find a specific line in the generated souce
+     * Checks whether we correctly find a specific line in the generated source
      * code at a fixed line offset.
      *
      * @throws IOException in case of an IO error
      */
     @Test
-    public void testHighlighting() throws IOException {
+    public void checkCorrectOffset() throws IOException {
         InputStream stream = FindBugsSourceTest.class.getResourceAsStream("AbortException.txt");
 
         Warning warning = new Warning();
@@ -46,5 +46,25 @@ public class FindBugsSourceTest {
         Assert.assertEquals("Wrong offset during source highlighting.", 12, offset);
     }
 
+    /**
+     * Checks whether we correctly split the source into prefix, warning and suffix.
+     *
+     * @throws IOException in case of an IO error
+     */
+    @Test
+    public void testSplitting() throws IOException {
+        InputStream stream = FindBugsSourceTest.class.getResourceAsStream("AbortException.txt");
+
+        Warning warning = new Warning();
+        warning.setFile("file/path");
+        warning.setLineNumber("6");
+        FindBugsSource source = new FindBugsSource(null, warning);
+
+        String highlighted = source.highlightSource(stream);
+
+        source.splitSourceFile(highlighted);
+
+        Assert.assertTrue("Wrong line selected as actual warning line.", source.getWarningLine().contains(LINE_6_INDICATOR));
+    }
 }
 
