@@ -93,6 +93,8 @@ public class FindBugsResult extends AbstractWarningsDetail {
         warnings = WarningDifferencer.getFixedWarnings(allWarnings, previousProject.getWarnings());
         numberOfFixedWarnings = warnings.size();
         fixedWarnings = new WeakReference<Set<Warning>>(warnings);
+
+        computePriorities(allWarnings);
     }
 
     /** {@inheritDoc} */
@@ -227,7 +229,7 @@ public class FindBugsResult extends AbstractWarningsDetail {
                 findBugsCounter.restoreMapping(result);
             }
             computeWarningMapping(result.getWarnings());
-
+            computePriorities(result.getWarnings());
             project = new WeakReference<JavaProject>(result);
         }
         catch (SAXException exception) {
@@ -389,9 +391,21 @@ public class FindBugsResult extends AbstractWarningsDetail {
     }
 
     /**
-     * Returns the total number of warnings with priority LOW in this package.
+     * Computes the low, normal and high priority count.
      *
-     * @return the total number of warnings with priority LOW in this package
+     * @param allWarnings
+     *            all project warnings
+     */
+    private void computePriorities(final Set<Warning> allWarnings) {
+        low = WarningDifferencer.countLowPriorityWarnings(allWarnings);
+        normal = WarningDifferencer.countNormalPriorityWarnings(allWarnings);
+        high = WarningDifferencer.countHighPriorityWarnings(allWarnings);
+    }
+
+    /**
+     * Returns the total number of warnings with priority LOW.
+     *
+     * @return the total number of warnings with priority LOW
      */
     @Override
     public int getNumberOfLowWarnings() {
@@ -399,9 +413,9 @@ public class FindBugsResult extends AbstractWarningsDetail {
     }
 
     /**
-     * Returns the total number of warnings with priority HIGH in this package.
+     * Returns the total number of warnings with priority HIGH.
      *
-     * @return the total number of warnings with priority HIGH in this package
+     * @return the total number of warnings with priority HIGH
      */
     @Override
     public int getNumberOfHighWarnings() {
@@ -409,9 +423,9 @@ public class FindBugsResult extends AbstractWarningsDetail {
     }
 
     /**
-     * Returns the total number of warnings with priority NORMAL in this package.
+     * Returns the total number of warnings with priority NORMAL.
      *
-     * @return the total number of warnings with priority NORMAL in this package
+     * @return the total number of warnings with priority NORMAL
      */
     @Override
     public int getNumberOfNormalWarnings() {
