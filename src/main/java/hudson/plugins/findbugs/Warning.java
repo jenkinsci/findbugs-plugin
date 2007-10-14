@@ -27,6 +27,8 @@ public class Warning implements Serializable {
     private String qualifiedName;
     /** Filename of the java source. */
     private String fileName;
+    /** Unique key of this warning. */
+    private int key;
 
     /**
      * Returns the type.
@@ -231,6 +233,20 @@ public class Warning implements Serializable {
     }
 
     /**
+     * Returns a unique key for this warning.
+     */
+    public int getKey() {
+        return key;
+    }
+
+    /**
+     * Sets a unique key for this warning.
+     */
+    public void setKey(final int key) {
+        this.key = key;
+    }
+
+    /**
      * Sets the fully qualified name of the containing class.
      *
      * @param name
@@ -246,7 +262,7 @@ public class Warning implements Serializable {
      * @param file the file name
      */
     public void setFile(final String file) {
-        fileName = file.replace('/', '!').replace('\\', '!').replace(" ", "%20");
+        fileName = file.replace('\\', '/');
     }
 
     /**

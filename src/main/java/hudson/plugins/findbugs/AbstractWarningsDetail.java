@@ -7,7 +7,9 @@ import hudson.util.ChartUtil;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.jfree.chart.JFreeChart;
@@ -26,11 +28,17 @@ public abstract class AbstractWarningsDetail implements ModelObject, Serializabl
     /** All fixed warnings in this build. */
     @SuppressWarnings("Se")
     private transient Set<Warning> warnings;
+    /** All fixed warnings in this build. */
+    @SuppressWarnings("Se")
+    private transient Map<Integer, Warning> warningsByKey = new HashMap<Integer, Warning>();
     /** The number of low priority warnings in this build. */
+    @SuppressWarnings("Se")
     private transient int low;
     /** The number of normal priority warnings in this build. */
+    @SuppressWarnings("Se")
     private transient int normal;
     /** The number of high priority warnings in this build. */
+    @SuppressWarnings("Se")
     private transient int high;
 
     /**
@@ -46,6 +54,7 @@ public abstract class AbstractWarningsDetail implements ModelObject, Serializabl
         this.warnings = warnings;
 
         computePriorities(warnings);
+        computeWarningMapping(warnings);
     }
 
     /**
@@ -116,6 +125,47 @@ public abstract class AbstractWarningsDetail implements ModelObject, Serializabl
         low = WarningDifferencer.countLowPriorityWarnings(allWarnings);
         normal = WarningDifferencer.countNormalPriorityWarnings(allWarnings);
         high = WarningDifferencer.countHighPriorityWarnings(allWarnings);
+    }
+
+    /**
+     * Computes a mapping of warnings by key.
+     *
+     * @param allWarnings
+     *            all project warnings
+     */
+    protected final void computeWarningMapping(final Set<Warning> allWarnings) {
+        if (warningsByKey == null) {
+            warningsByKey = new HashMap<Integer, Warning>();
+        }
+        else {
+            warningsByKey.clear();
+        }
+        int key = 0;
+        for (Warning warning : allWarnings) {
+            warning.setKey(key);
+            warningsByKey.put(warning.getKey(), warning);
+            key++;
+        }
+    }
+
+    /**
+     * Returns the warning with the specified key.
+     *
+     * @param key the warning key
+     * @return the warning with the specified key.
+     */
+    public final Warning getWarning(final int key) {
+        return warningsByKey.get(key);
+    }
+
+    /**
+     * Returns the warning with the specified key.
+     *
+     * @param key the warning key
+     * @return the warning with the specified key.
+     */
+    public final Warning getWarning(final String key) {
+        return getWarning(Integer.valueOf(key));
     }
 
     /**

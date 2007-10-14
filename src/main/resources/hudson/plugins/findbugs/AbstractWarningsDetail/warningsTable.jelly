@@ -10,7 +10,7 @@
 			<td class="pane-header">
 				<j:choose>
 					<j:when test="${it.isCurrent() &amp;&amp; warning.file != null}">
-						Class: <a href="${warning.file}/#${warning.lineNumber}">${warning.classname}</a>,
+						Class: <a href="${warning.key}/#${warning.lineNumber}">${warning.classname}</a>,
 					</j:when>
 					<j:otherwise>
 						Class: ${warning.classname},

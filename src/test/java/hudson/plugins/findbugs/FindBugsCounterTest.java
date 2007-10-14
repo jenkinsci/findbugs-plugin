@@ -159,7 +159,7 @@ public class FindBugsCounterTest {
         assertFalse(WRONG_FIND_BUGS_FORMAT, module.isMavenFormat());
         Warning warning = module.getWarnings().iterator().next();
 
-        assertEquals("Wrong filename guessed.", "!usr!local!tomcat!hudson!jobs!FindBugs%20Test!workspace!findBugsTest!src!org!example!SyncBug.java", warning.getFile());
+        assertEquals("Wrong filename guessed.", "/usr/local/tomcat/hudson/jobs/FindBugs Test/workspace/findBugsTest/src/org/example/SyncBug.java", warning.getFile());
     }
 }
 

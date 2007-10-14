@@ -52,7 +52,7 @@ public class PackageDetail extends AbstractWarningsDetail {
      * @return the dynamic result of the FindBugs analysis (detail page for a package).
      */
     public Object getDynamic(final String link, final StaplerRequest request, final StaplerResponse response) {
-        return new FindBugsSource(getOwner(), link);
+        return new FindBugsSource(getOwner(), getWarning(link));
     }
 }
 

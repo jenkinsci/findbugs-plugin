@@ -4,6 +4,9 @@ import hudson.model.Build;
 
 import java.util.Set;
 
+import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.StaplerResponse;
+
 /**
  * Result object to visualize the new warnings in a build.
  */
@@ -26,6 +29,20 @@ public class NewWarningsDetail extends AbstractWarningsDetail {
     /** {@inheritDoc} */
     public String getDisplayName() {
         return "New Warnings";
+    }
+
+    /**
+     * Returns the dynamic result of the FindBugs analysis (detail page for a package).
+     *
+     * @param link the package name to get the result for
+     * @param request
+     *            Stapler request
+     * @param response
+     *            Stapler response
+     * @return the dynamic result of the FindBugs analysis (detail page for a package).
+     */
+    public Object getDynamic(final String link, final StaplerRequest request, final StaplerResponse response) {
+        return new FindBugsSource(getOwner(), getWarning(link));
     }
 }
 

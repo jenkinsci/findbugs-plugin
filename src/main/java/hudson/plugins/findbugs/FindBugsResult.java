@@ -226,6 +226,7 @@ public class FindBugsResult extends AbstractWarningsDetail {
             if (isCurrent()) {
                 findBugsCounter.restoreMapping(result);
             }
+            computeWarningMapping(result.getWarnings());
 
             project = new WeakReference<JavaProject>(result);
         }
@@ -286,7 +287,7 @@ public class FindBugsResult extends AbstractWarningsDetail {
         else {
             if (isSingleModuleProject()) {
                 if (isSinglePackageProject()) {
-                    return new FindBugsSource(getOwner(), link);
+                    return new FindBugsSource(getOwner(), getWarning(link));
                 }
                 else {
                     return new PackageDetail(getOwner(), getProject().getModules().iterator().next().getPackage(link));

@@ -29,23 +29,23 @@ public class FindBugsSource implements ModelObject, Serializable {
     /** The current build as owner of this object. */
     @SuppressWarnings("Se")
     private final Build<?, ?> owner;
-    /** Link to the file containing the corresponding task. */
-    private final String linkName;
     /** Relative file name containing the corresponding task. */
     private final String fileName;
+    /** The warning to be shown. */
+    private final Warning warning;
 
     /**
      * Creates a new instance of <code>TaskDetail</code>.
      *
      * @param owner
      *            the current build as owner of this action
-     * @param link
-     *            the link to the source in the workspace
+     * @param warning
+     *            the warning to display in the source file
      */
-    public FindBugsSource(final Build<?, ?> owner, final String link) {
+    public FindBugsSource(final Build<?, ?> owner, final Warning warning) {
         this.owner = owner;
-        linkName = link.replace('!', '/');
-        fileName = StringUtils.substringAfterLast(link, "!");
+        this.warning = warning;
+        fileName = StringUtils.substringAfterLast(warning.getFile(), "/");
     }
 
     /** {@inheritDoc} */
@@ -58,26 +58,19 @@ public class FindBugsSource implements ModelObject, Serializable {
      *
      * @return content of the file in HTML
      */
-    @java.lang.SuppressWarnings("unchecked")
     public String getContent() {
         InputStream file = null;
         try {
-            if (linkName.startsWith("/") || linkName.contains(":")) {
+            String linkName = warning.getFile();
+            if (linkName .startsWith("/") || linkName.contains(":")) {
                 file = new FileInputStream(new File(linkName));
             }
             else {
                 FilePath content = owner.getProject().getWorkspace().child(linkName);
                 file = content.read();
             }
-            JavaSource source = new JavaSourceParser().parse(file);
 
-            JavaSource2HTMLConverter converter = new JavaSource2HTMLConverter();
-            StringWriter writer = new StringWriter();
-            JavaSourceConversionOptions options = JavaSourceConversionOptions.getDefault();
-            options.setShowLineNumbers(true);
-            options.setAddLineAnchors(true);
-            converter.convert(source, options, writer);
-            return writer.toString();
+            return highlightSource(file);
         }
         catch (IOException exception) {
             return "Can't read file: " + exception.getLocalizedMessage();
@@ -86,6 +79,39 @@ public class FindBugsSource implements ModelObject, Serializable {
             IOUtils.closeQuietly(file);
         }
     }
+
+
+    /**
+     * Highlights the specified source and returns the result as an HTML string.
+     *
+     * @param file the source file to highlight
+     * @return the source as an HTML string
+     * @throws IOException
+     */
+    public String highlightSource(final InputStream file) throws IOException {
+        JavaSource source = new JavaSourceParser().parse(file);
+
+        JavaSource2HTMLConverter converter = new JavaSource2HTMLConverter();
+        StringWriter writer = new StringWriter();
+        JavaSourceConversionOptions options = JavaSourceConversionOptions.getDefault();
+        options.setShowLineNumbers(true);
+        options.setAddLineAnchors(true);
+        converter.convert(source, options, writer);
+        return writer.toString();
+    }
+
+//    public String getSourceFile() {
+//        String file = getContent();
+//
+//        LineIterator lineIterator = IOUtils.lineIterator(new StringReader(file));
+//
+//        int line = 1;
+//        while (lineIterator.hasNext()) {
+//            String content = lineIterator.nextLine();
+//            line++;
+//        }
+//        return "";
+//    }
 
     /**
      * Gets the file name.
@@ -103,15 +129,6 @@ public class FindBugsSource implements ModelObject, Serializable {
      */
     public Build<?, ?> getOwner() {
         return owner;
-    }
-
-    /**
-     * Returns the linkName.
-     *
-     * @return the linkName
-     */
-    public String getLinkName() {
-        return linkName;
     }
 }
 

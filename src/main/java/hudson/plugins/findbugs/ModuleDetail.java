@@ -98,7 +98,7 @@ public class ModuleDetail extends AbstractWarningsDetail {
      */
     public Object getDynamic(final String link, final StaplerRequest request, final StaplerResponse response) {
         if (isSinglePackageModule()) {
-            return new FindBugsSource(getOwner(), link);
+            return new FindBugsSource(getOwner(), getWarning(link));
         }
         else {
             return new PackageDetail(getOwner(), module.getPackage(link));
