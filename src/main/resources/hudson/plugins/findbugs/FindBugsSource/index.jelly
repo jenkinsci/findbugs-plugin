@@ -6,10 +6,19 @@
     <l:main-panel>
       <h1>Details of file ${it.fileName}</h1>
 
-
-	  ${it.prefix}
-	  ${it.warningLine}
-	  ${it.suffix}
+	  <j:if test="${it.hasHighlightedLine()}">
+		  ${it.prefix}
+		  <div tooltip="${it.message}\n${it.toolTip}">
+		    <code><b>${it.line}</b></code>
+		  </div>
+		  ${it.suffix}
+	  </j:if>
+	  <j:if test="${!it.hasHighlightedLine()}">
+		  <div tooltip="${it.toolTip}">
+	   		<p><b>${it.message}</b></p>
+	      </div>
+		  ${it.prefix}
+	  </j:if>
 
     </l:main-panel>
   </l:layout>

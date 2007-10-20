@@ -64,7 +64,7 @@ public class FindBugsSourceTest {
 
         source.splitSourceFile(highlighted);
 
-        Assert.assertTrue("Wrong line selected as actual warning line.", source.getWarningLine().contains(LINE_6_INDICATOR));
+        Assert.assertTrue("Wrong line selected as actual warning line.", source.getLine().contains(LINE_6_INDICATOR));
     }
 }
 
