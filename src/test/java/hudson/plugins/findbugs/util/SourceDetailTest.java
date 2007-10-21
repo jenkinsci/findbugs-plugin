@@ -26,12 +26,12 @@ public class SourceDetailTest {
      */
     @Test
     public void checkCorrectOffset() throws IOException {
-        InputStream stream = SourceDetailTest.class.getResourceAsStream("AbortException.txt");
-
         Warning warning = new Warning();
         warning.setFile("file/path");
+        warning.setLineNumberExpression("6");
         SourceDetail source = new SourceDetail(null, warning);
 
+        InputStream stream = SourceDetailTest.class.getResourceAsStream("AbortException.txt");
         String highlighted = source.highlightSource(stream);
 
         LineIterator lineIterator = IOUtils.lineIterator(new StringReader(highlighted));
@@ -62,12 +62,17 @@ public class SourceDetailTest {
         warning.setLineNumberExpression("6");
         SourceDetail source = new SourceDetail(null, warning);
 
-        String highlighted = source.highlightSource(stream);
+        Assert.assertTrue("Prefix should not be empty.", source.getPrefix().isEmpty());
+        Assert.assertTrue("Suffix should not be empty.", source.getSuffix().isEmpty());
+        Assert.assertTrue(source.hasHighlightedLine());
 
+        String highlighted = source.highlightSource(stream);
         source.splitSourceFile(highlighted);
-        source.isInitialized = true;
 
         Assert.assertTrue("Wrong line selected as actual warning line.", source.getLine().contains(LINE_6_INDICATOR));
+        Assert.assertFalse("Prefix should not be empty.", source.getPrefix().isEmpty());
+        Assert.assertFalse("Suffix should not be empty.", source.getSuffix().isEmpty());
+        Assert.assertTrue(source.hasHighlightedLine());
     }
 }
 

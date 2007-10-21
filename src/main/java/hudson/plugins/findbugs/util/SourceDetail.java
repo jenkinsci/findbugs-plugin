@@ -43,10 +43,6 @@ public class SourceDetail implements ModelObject, Serializable {
     private String suffix = StringUtils.EMPTY;
     /** The source code before the warning or the whole source code if there is no specific line given. */
     private String prefix = StringUtils.EMPTY;
-    /** Determines whether the content already has been loaded from disk. */
-    protected boolean isInitialized;
-    /** Lock for initialization. */
-    private final Object initializationLock = new Object();
 
     /**
      * Creates a new instance of this source code object.
@@ -60,6 +56,32 @@ public class SourceDetail implements ModelObject, Serializable {
         this.owner = owner;
         this.annotation = annotation;
         fileName = StringUtils.substringAfterLast(annotation.getFileName(), "/");
+
+        initializeContent();
+    }
+
+    /**
+     * Initializes the content of the source file: reads the file, colors it, and
+     * splits it into three parts.
+     */
+    private void initializeContent() {
+        InputStream file = null;
+        try {
+            String linkName = annotation.getFileName();
+            if (linkName.startsWith("/") || linkName.contains(":") || owner == null) {
+                file = new FileInputStream(new File(linkName));
+            }
+            else {
+                file = owner.getProject().getWorkspace().child(linkName).read();
+            }
+            splitSourceFile(highlightSource(file));
+        }
+        catch (IOException exception) {
+            line = "Can't read file: " + exception.getLocalizedMessage();
+        }
+        finally {
+            IOUtils.closeQuietly(file);
+        }
     }
 
     /** {@inheritDoc} */
@@ -68,32 +90,21 @@ public class SourceDetail implements ModelObject, Serializable {
     }
 
     /**
-     * Initializes the content of the source file: reads the file, colors it, and
-     * splits it into three parts.
+     * Returns the tool tip to be shown if hovering over the highlighted line.
+     *
+     * @return the tool tip to be shown
      */
-    public final void initializeContent() {
-        synchronized (initializationLock) {
-            if (!isInitialized) {
-                InputStream file = null;
-                try {
-                    String linkName = annotation.getFileName();
-                    if (linkName.startsWith("/") || linkName.contains(":")) {
-                        file = new FileInputStream(new File(linkName));
-                    }
-                    else {
-                        file = owner.getProject().getWorkspace().child(linkName).read();
-                    }
-                    splitSourceFile(highlightSource(file));
-                }
-                catch (IOException exception) {
-                    line = "Can't read file: " + exception.getLocalizedMessage();
-                }
-                finally {
-                    IOUtils.closeQuietly(file);
-                }
-                isInitialized = true;
-            }
-        }
+    public String getToolTip() {
+        return annotation.getToolTip();
+    }
+
+    /**
+     * Returns the tool tip to be shown if hovering over the highlighted line.
+     *
+     * @return the tool tip to be shown
+     */
+    public String getMessage() {
+        return annotation.getMessage();
     }
 
     /**
@@ -115,24 +126,6 @@ public class SourceDetail implements ModelObject, Serializable {
         converter.convert(source, options, writer);
 
         return writer.toString();
-    }
-
-    /**
-     * Returns the tool tip to be shown if hovering over the highlighted line.
-     *
-     * @return the tool tip to be shown
-     */
-    public String getToolTip() {
-        return annotation.getToolTip();
-    }
-
-    /**
-     * Returns the tool tip to be shown if hovering over the highlighted line.
-     *
-     * @return the tool tip to be shown
-     */
-    public String getMessage() {
-        return annotation.getMessage();
     }
 
     /**
@@ -207,7 +200,6 @@ public class SourceDetail implements ModelObject, Serializable {
      * @return the line to highlight
      */
     public String getLine() {
-        initializeContent();
         return line;
     }
 
@@ -218,7 +210,6 @@ public class SourceDetail implements ModelObject, Serializable {
      *         line
      */
     public boolean hasHighlightedLine() {
-        initializeContent();
         return StringUtils.isNotEmpty(line);
     }
 
@@ -229,7 +220,6 @@ public class SourceDetail implements ModelObject, Serializable {
      * @return the suffix of the source file
      */
     public String getSuffix() {
-        initializeContent();
         return suffix;
     }
 
@@ -240,7 +230,6 @@ public class SourceDetail implements ModelObject, Serializable {
      * @return the prefix of the source file
      */
     public String getPrefix() {
-        initializeContent();
         return prefix;
     }
 }
