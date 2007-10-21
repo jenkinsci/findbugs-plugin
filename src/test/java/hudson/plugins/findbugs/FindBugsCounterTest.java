@@ -96,7 +96,7 @@ public class FindBugsCounterTest {
             assertNotNull("Message should not be empty.", warning.getMessage());
             assertNotNull("Line number should not be empty.", warning.getLineNumber());
 
-            assertNotNull(NO_FILE_NAME_FOUND, warning.getFile());
+            assertNotNull(NO_FILE_NAME_FOUND, warning.getFileName());
         }
     }
 
@@ -140,7 +140,7 @@ public class FindBugsCounterTest {
         Collection<Warning> warnings = module.getWarnings();
         for (Warning warning : warnings) {
             assertTrue("Wrong package prefix found.", warning.getPackageName().startsWith("edu.umd"));
-            assertNotNull(NO_FILE_NAME_FOUND, warning.getFile());
+            assertNotNull(NO_FILE_NAME_FOUND, warning.getFileName());
         }
 
         assertEquals("Wrong number of source paths detected", 2, module.getProjectInformation().getSourcePaths().size());
@@ -159,7 +159,7 @@ public class FindBugsCounterTest {
         assertFalse(WRONG_FIND_BUGS_FORMAT, module.isMavenFormat());
         Warning warning = module.getWarnings().iterator().next();
 
-        assertEquals("Wrong filename guessed.", "/usr/local/tomcat/hudson/jobs/FindBugs Test/workspace/findBugsTest/src/org/example/SyncBug.java", warning.getFile());
+        assertEquals("Wrong filename guessed.", "/usr/local/tomcat/hudson/jobs/FindBugs Test/workspace/findBugsTest/src/org/example/SyncBug.java", warning.getFileName());
     }
 }
 

@@ -1,6 +1,5 @@
-package hudson.plugins.findbugs;
+package hudson.plugins.findbugs.util;
 
-import hudson.FilePath;
 import hudson.model.Build;
 import hudson.model.ModelObject;
 
@@ -23,9 +22,10 @@ import de.java2html.options.JavaSourceConversionOptions;
 import edu.umd.cs.findbugs.annotations.SuppressWarnings;
 
 /**
- * Renders a source file containing a warning or task at a given line.
+ * Renders a source file containing an annotation for the whole file or a
+ * specific line number.
  */
-public class FindBugsSource implements ModelObject, Serializable {
+public class SourceDetail implements ModelObject, Serializable {
     /** Unique identifier of this class. */
     private static final long serialVersionUID = -3209724023376797741L;
     /** Offset of the source code generator. After this line the actual source file lines start. */
@@ -33,29 +33,33 @@ public class FindBugsSource implements ModelObject, Serializable {
     /** The current build as owner of this object. */
     @SuppressWarnings("Se")
     private final Build<?, ?> owner;
-    /** Relative file name containing the corresponding task. */
+    /** Stripped file name of this annotation without the path prefix. */
     private final String fileName;
-    /** The warning to be shown. */
-    private final Warning warning;
-    /** The line containing the warning. */
-    private String line;
-    /** The source code after the warning. */
-    private String suffixSource = StringUtils.EMPTY;
-    /** The source code before the warning. */
-    private String prefixSource = StringUtils.EMPTY;
+    /** The annotation to be shown. */
+    private final FileAnnotation annotation;
+    /** The line containing identified by the annotation or an empty string. */
+    private String line = StringUtils.EMPTY;
+    /** The source code after the annotation or an empty string. */
+    private String suffix = StringUtils.EMPTY;
+    /** The source code before the warning or the whole source code if there is no specific line given. */
+    private String prefix = StringUtils.EMPTY;
+    /** Determines whether the content already has been loaded from disk. */
+    protected boolean isInitialized;
+    /** Lock for initialization. */
+    private final Object initializationLock = new Object();
 
     /**
      * Creates a new instance of this source code object.
      *
      * @param owner
      *            the current build as owner of this object
-     * @param warning
+     * @param annotation
      *            the warning to display in the source file
      */
-    public FindBugsSource(final Build<?, ?> owner, final Warning warning) {
+    public SourceDetail(final Build<?, ?> owner, final FileAnnotation annotation) {
         this.owner = owner;
-        this.warning = warning;
-        fileName = StringUtils.substringAfterLast(warning.getFile(), "/");
+        this.annotation = annotation;
+        fileName = StringUtils.substringAfterLast(annotation.getFileName(), "/");
     }
 
     /** {@inheritDoc} */
@@ -68,24 +72,27 @@ public class FindBugsSource implements ModelObject, Serializable {
      * splits it into three parts.
      */
     public final void initializeContent() {
-        InputStream file = null;
-        try {
-            String linkName = warning.getFile();
-            if (linkName.startsWith("/") || linkName.contains(":")) {
-                file = new FileInputStream(new File(linkName));
+        synchronized (initializationLock) {
+            if (!isInitialized) {
+                InputStream file = null;
+                try {
+                    String linkName = annotation.getFileName();
+                    if (linkName.startsWith("/") || linkName.contains(":")) {
+                        file = new FileInputStream(new File(linkName));
+                    }
+                    else {
+                        file = owner.getProject().getWorkspace().child(linkName).read();
+                    }
+                    splitSourceFile(highlightSource(file));
+                }
+                catch (IOException exception) {
+                    line = "Can't read file: " + exception.getLocalizedMessage();
+                }
+                finally {
+                    IOUtils.closeQuietly(file);
+                }
+                isInitialized = true;
             }
-            else {
-                FilePath content = owner.getProject().getWorkspace().child(linkName);
-                file = content.read();
-            }
-
-            splitSourceFile(highlightSource(file));
-        }
-        catch (IOException exception) {
-            line = "Can't read file: " + exception.getLocalizedMessage();
-        }
-        finally {
-            IOUtils.closeQuietly(file);
         }
     }
 
@@ -106,6 +113,7 @@ public class FindBugsSource implements ModelObject, Serializable {
         options.setShowLineNumbers(true);
         options.setAddLineAnchors(true);
         converter.convert(source, options, writer);
+
         return writer.toString();
     }
 
@@ -115,7 +123,7 @@ public class FindBugsSource implements ModelObject, Serializable {
      * @return the tool tip to be shown
      */
     public String getToolTip() {
-        return warning.getDescription();
+        return annotation.getToolTip();
     }
 
     /**
@@ -124,7 +132,7 @@ public class FindBugsSource implements ModelObject, Serializable {
      * @return the tool tip to be shown
      */
     public String getMessage() {
-        return warning.getMessage();
+        return annotation.getMessage();
     }
 
     /**
@@ -137,17 +145,15 @@ public class FindBugsSource implements ModelObject, Serializable {
     public final void splitSourceFile(final String sourceFile) {
         LineIterator lineIterator = IOUtils.lineIterator(new StringReader(sourceFile));
 
-        String lineToHighlight = warning.getLineNumber();
-        int warningLine;
-        try {
-            warningLine = Integer.parseInt(lineToHighlight);
-            StringBuilder prefix = new StringBuilder(sourceFile.length());
-            StringBuilder suffix = new StringBuilder(sourceFile.length());
+        if (annotation.isLineAnnotation()) {
+            StringBuilder prefixBuilder = new StringBuilder(sourceFile.length());
+            StringBuilder suffixBuilder = new StringBuilder(sourceFile.length());
 
-            suffix.append("</td></tr>\n");
-            suffix.append("<tr><td>\n");
-            suffix.append("<code>\n");
+            suffixBuilder.append("</td></tr>\n");
+            suffixBuilder.append("<tr><td>\n");
+            suffixBuilder.append("<code>\n");
 
+            int warningLine = annotation.getLineNumber();
             int lineNumber = 1;
             while (lineIterator.hasNext()) {
                 String content = lineIterator.nextLine();
@@ -155,24 +161,24 @@ public class FindBugsSource implements ModelObject, Serializable {
                     line = content;
                 }
                 else if (lineNumber - SOURCE_GENERATOR_OFFSET < warningLine) {
-                    prefix.append(content + "\n");
+                    prefixBuilder.append(content + "\n");
                 }
                 else {
-                    suffix.append(content + "\n");
+                    suffixBuilder.append(content + "\n");
                 }
                 lineNumber++;
             }
 
-            prefix.append("</code>\n");
-            prefix.append("</td></tr>\n");
-            prefix.append("<tr><td bgcolor=\"#FFFFC0\">\n");
+            prefixBuilder.append("</code>\n");
+            prefixBuilder.append("</td></tr>\n");
+            prefixBuilder.append("<tr><td bgcolor=\"#FFFFC0\">\n");
 
-            prefixSource = prefix.toString();
-            suffixSource = suffix.toString();
+            prefix = prefixBuilder.toString();
+            suffix = suffixBuilder.toString();
         }
-        catch (NumberFormatException e) {
-            prefixSource = sourceFile;
-            suffixSource = StringUtils.EMPTY;
+        else {
+            prefix = sourceFile;
+            suffix = StringUtils.EMPTY;
             line = StringUtils.EMPTY;
         }
     }
@@ -201,9 +207,7 @@ public class FindBugsSource implements ModelObject, Serializable {
      * @return the line to highlight
      */
     public String getLine() {
-        if (line == null) {
-            initializeContent();
-        }
+        initializeContent();
         return line;
     }
 
@@ -214,9 +218,7 @@ public class FindBugsSource implements ModelObject, Serializable {
      *         line
      */
     public boolean hasHighlightedLine() {
-        if (line == null) {
-            initializeContent();
-        }
+        initializeContent();
         return StringUtils.isNotEmpty(line);
     }
 
@@ -227,10 +229,8 @@ public class FindBugsSource implements ModelObject, Serializable {
      * @return the suffix of the source file
      */
     public String getSuffix() {
-        if (line == null) {
-            initializeContent();
-        }
-        return suffixSource;
+        initializeContent();
+        return suffix;
     }
 
     /**
@@ -240,10 +240,8 @@ public class FindBugsSource implements ModelObject, Serializable {
      * @return the prefix of the source file
      */
     public String getPrefix() {
-        if (line == null) {
-            initializeContent();
-        }
-        return prefixSource;
+        initializeContent();
+        return prefix;
     }
 }
 

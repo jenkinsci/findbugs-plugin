@@ -104,7 +104,7 @@ public class FindBugsCounter {
 
         String warningXpath = "BugCollection/file/BugInstance";
         digester.addObjectCreate(warningXpath, Warning.class);
-        digester.addSetProperties(warningXpath);
+        digester.addSetProperties(warningXpath, "lineNumber", "lineNumberExpression");
         digester.addSetNext(warningXpath, "addWarning", Warning.class.getName());
 
         Module module = (Module)ObjectUtils.defaultIfNull(digester.parse(file), new Module("Unknown file format"));
@@ -158,7 +158,7 @@ public class FindBugsCounter {
         if (paths.size() == 1) {
             String prefix = paths.iterator().next();
             for (Warning warning : module.getWarnings()) {
-                warning.setFile(prefix + "/" + warning.getFile());
+                warning.setFile(prefix + "/" + warning.getFileName());
             }
         }
         return module;
@@ -251,7 +251,7 @@ public class FindBugsCounter {
             if (paths.size() > 1) {
                 for (Warning warning : module.getWarnings()) {
                     for (String path : paths) {
-                        String actualPath = path + "/" + warning.getFile();
+                        String actualPath = path + "/" + warning.getFileName();
                         File file = new File(actualPath.replace('!', '/'));
                         if (file.exists()) {
                             warning.setFile(actualPath);
@@ -277,8 +277,8 @@ public class FindBugsCounter {
     private void writeMappingFile(final JavaProject project) throws IOException, InterruptedException {
         Properties mapping = new Properties();
         for (Warning warning : project.getWarnings()) {
-            if (warning.getFile() != null) {
-                mapping.setProperty(warning.getQualifiedName(), warning.getFile());
+            if (warning.getFileName() != null) {
+                mapping.setProperty(warning.getQualifiedName(), warning.getFileName());
             }
         }
         OutputStream mappingStream = getMappingFilePath().write();

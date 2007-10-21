@@ -29,17 +29,17 @@ public class WarningDifferencerTest {
         Warning first = new Warning();
         first.setMessage(STRING);
         first.setQualifiedName(STRING);
-        first.setLineNumber(STRING);
+        first.setLineNumberExpression(STRING);
         first.setType(STRING);
 
         Warning second = new Warning();
         second.setMessage(STRING);
         second.setQualifiedName(STRING);
-        second.setLineNumber(STRING);
+        second.setLineNumberExpression(STRING);
         second.setType(STRING);
 
         assertEquals("Warnings are not equal.", first, second);
-        second.setLineNumber("");
+        second.setLineNumberExpression("5");
         assertFalse("Warnings are equal.", first.equals(second));
     }
 
@@ -53,13 +53,13 @@ public class WarningDifferencerTest {
 
         Warning warning = new Warning();
         warning.setMessage(STRING);
-        warning.setLineNumber(STRING);
+        warning.setLineNumberExpression(STRING);
         warning.setQualifiedName(FINDBUGS_CLASS);
         actual.add(warning);
 
         warning = new Warning();
         warning.setMessage(STRING);
-        warning.setLineNumber(STRING);
+        warning.setLineNumberExpression(STRING);
         warning.setQualifiedName(FINDBUGS_CLASS);
         previous.add(warning);
 
@@ -69,7 +69,7 @@ public class WarningDifferencerTest {
 
         warning = new Warning();
         warning.setMessage("type2");
-        warning.setLineNumber(STRING);
+        warning.setLineNumberExpression(STRING);
         warning.setQualifiedName(FINDBUGS_CLASS);
         previous.add(warning);
 
@@ -78,7 +78,7 @@ public class WarningDifferencerTest {
 
         warning = new Warning();
         warning.setMessage("type2");
-        warning.setLineNumber(STRING);
+        warning.setLineNumberExpression(STRING);
         warning.setQualifiedName(FINDBUGS_CLASS);
         actual.add(warning);
 
@@ -87,7 +87,7 @@ public class WarningDifferencerTest {
 
         warning = new Warning();
         warning.setMessage("type3");
-        warning.setLineNumber(STRING);
+        warning.setLineNumberExpression(STRING);
         warning.setQualifiedName(FINDBUGS_CLASS);
         actual.add(warning);
 

@@ -1,6 +1,7 @@
 package hudson.plugins.findbugs;
 
 import hudson.model.Build;
+import hudson.plugins.findbugs.util.SourceDetail;
 import hudson.util.IOException2;
 
 import java.io.IOException;
@@ -289,7 +290,7 @@ public class FindBugsResult extends AbstractWarningsDetail {
         else {
             if (isSingleModuleProject()) {
                 if (isSinglePackageProject()) {
-                    return new FindBugsSource(getOwner(), getWarning(link));
+                    return new SourceDetail(getOwner(), getWarning(link));
                 }
                 else {
                     return new PackageDetail(getOwner(), getProject().getModules().iterator().next().getPackage(link));

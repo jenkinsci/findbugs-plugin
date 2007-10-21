@@ -1,6 +1,7 @@
 package hudson.plugins.findbugs;
 
 import hudson.model.Build;
+import hudson.plugins.findbugs.util.SourceDetail;
 
 import java.util.Set;
 
@@ -42,7 +43,7 @@ public class NewWarningsDetail extends AbstractWarningsDetail {
      * @return the dynamic result of the FindBugs analysis (detail page for a package).
      */
     public Object getDynamic(final String link, final StaplerRequest request, final StaplerResponse response) {
-        return new FindBugsSource(getOwner(), getWarning(link));
+        return new SourceDetail(getOwner(), getWarning(link));
     }
 }
 

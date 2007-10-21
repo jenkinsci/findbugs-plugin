@@ -1,5 +1,7 @@
 package hudson.plugins.findbugs;
 
+import hudson.plugins.findbugs.util.FileAnnotation;
+
 import java.io.Serializable;
 
 import org.apache.commons.lang.StringUtils;
@@ -8,7 +10,9 @@ import org.apache.commons.lang.StringUtils;
  * A FindBugs warning.
  */
 @SuppressWarnings("PMD.CyclomaticComplexity")
-public class Warning implements Serializable {
+public class Warning implements Serializable, FileAnnotation {
+    /** Separator of a line number range. */
+    private static final String RANGE_SEPARATOR = "-";
     /** Unique identifier of this class. */
     private static final long serialVersionUID = -3694883222707674470L;
     /** Type of warning. */
@@ -20,7 +24,7 @@ public class Warning implements Serializable {
     /** Message of warning. */
     private String message;
     /** Line number of warning. */
-    private String lineNumber;
+    private int lineNumber;
     /** Corresponding Java class. */
     private JavaClass javaClass;
     /** Corresponding qualified class name. */
@@ -29,6 +33,14 @@ public class Warning implements Serializable {
     private String fileName;
     /** Unique key of this warning. */
     private int key;
+    /** True if this warning is for a valid line number. */
+    private boolean hasLineNumber;
+    /**
+     * An expression identifying a line number. Currently supported expressions
+     * are single integers (line numbers) or integer ranges (line number ranges,
+     * the first value is used as link).
+     */
+    private String lineNumberExpression;
 
     /**
      * Returns the type.
@@ -49,7 +61,7 @@ public class Warning implements Serializable {
         if (!owningClass.isRoleClass() && javaClass == null) {
             javaClass = owningClass;
             setQualifiedName(owningClass.getClassname());
-            setLineNumber(javaClass.getLineNumber());
+            setLineNumberExpression(javaClass.getLineNumber());
             setFile(javaClass.getFileName());
         }
     }
@@ -63,12 +75,8 @@ public class Warning implements Serializable {
         return javaClass;
     }
 
-    /**
-     * Returns the bug pattern description.
-     *
-     * @return the bug pattern description.
-     */
-    public String getDescription() {
+    /** {@inheritDoc} */
+    public String getToolTip() {
         return FindBugsMessages.getInstance().getMessage(getType());
     }
 
@@ -126,22 +134,42 @@ public class Warning implements Serializable {
         this.message = message;
     }
 
-    /**
-     * Returns the lineNumer.
-     *
-     * @return the lineNumer
-     */
-    public String getLineNumber() {
-        return StringUtils.defaultIfEmpty(lineNumber, "Not available");
+    /** {@inheritDoc} */
+    public int getLineNumber() {
+        return lineNumber;
     }
 
     /**
-     * Sets the lineNumer to the specified value.
+     * Sets the line number to the specified value.
      *
-     * @param lineNumber the value to set
+     * @param lineNumberString the string value of the line number
      */
-    public void setLineNumber(final String lineNumber) {
-        this.lineNumber = lineNumber;
+    public void setLineNumberExpression(final String lineNumberString) {
+        lineNumberExpression = lineNumberString;
+        try {
+            if (lineNumberString.contains(RANGE_SEPARATOR)) {
+                lineNumber = Integer.valueOf(StringUtils.substringBefore(lineNumberString, RANGE_SEPARATOR));
+            }
+            else {
+                lineNumber = Integer.valueOf(lineNumberString);
+            }
+            hasLineNumber = lineNumber > 0;
+        }
+        catch (NumberFormatException exception) {
+            lineNumber = 0;
+            hasLineNumber = false;
+        }
+    }
+
+    /**
+     * Returns the line number expression. Currently supported expressions are
+     * single integers (line numbers) or integer ranges (line number ranges, the
+     * first value is used as link).
+     *
+     * @return the line number expression.
+     */
+    public String getLineNumberExpression() {
+        return lineNumberExpression;
     }
 
     /**
@@ -180,60 +208,10 @@ public class Warning implements Serializable {
         return StringUtils.substringAfterLast(qualifiedName, ".");
     }
 
-    // CHECKSTYLE:OFF
-    /** {@inheritDoc} */
-    @Override
-    public int hashCode() {
-        int prime = 31;
-        int result = 1;
-        result = prime * result + ((qualifiedName == null) ? 0 : qualifiedName.hashCode());
-        result = prime * result + ((lineNumber == null) ? 0 : lineNumber.hashCode());
-        result = prime * result + ((message == null) ? 0 : message.hashCode());
-        return result;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Warning other = (Warning)obj;
-        if (qualifiedName == null) {
-            if (other.qualifiedName != null) {
-                return false;
-            }
-        }
-        else if (!qualifiedName.equals(other.qualifiedName)) {
-            return false;
-        }
-        if (lineNumber == null) {
-            if (other.lineNumber != null) {
-                return false;
-            }
-        }
-        else if (!lineNumber.equals(other.lineNumber)) {
-            return false;
-        }
-        if (message == null) {
-            if (other.message != null) {
-                return false;
-            }
-        }
-        else if (!message.equals(other.message)) {
-            return false;
-        }
-        return true;
-    }
-
     /**
      * Returns a unique key for this warning.
+     *
+     * @return a unique key for this warning
      */
     public int getKey() {
         return key;
@@ -241,6 +219,9 @@ public class Warning implements Serializable {
 
     /**
      * Sets a unique key for this warning.
+     *
+     * @param key
+     *            the unique key of this warning
      */
     public void setKey(final int key) {
         this.key = key;
@@ -265,12 +246,8 @@ public class Warning implements Serializable {
         fileName = file.replace('\\', '/');
     }
 
-    /**
-     * Gets the filename of this warning.
-     *
-     * @return the file
-     */
-    public String getFile() {
+    /** {@inheritDoc} */
+    public String getFileName() {
         return fileName;
     }
 
@@ -282,6 +259,58 @@ public class Warning implements Serializable {
      */
     public boolean hasFile() {
         return fileName != null;
+    }
+
+    /** {@inheritDoc} */
+    public boolean isLineAnnotation() {
+        return hasLineNumber;
+    }
+
+    // CHECKSTYLE:OFF
+    /** {@inheritDoc} */
+    @Override
+    public int hashCode() {
+        int prime = 31;
+        int result = 1;
+        result = prime * result + lineNumber;
+        result = prime * result + ((message == null) ? 0 : message.hashCode());
+        result = prime * result + ((qualifiedName == null) ? 0 : qualifiedName.hashCode());
+        return result;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Warning other = (Warning)obj;
+        if (lineNumber != other.lineNumber) {
+            return false;
+        }
+        if (message == null) {
+            if (other.message != null) {
+                return false;
+            }
+        }
+        else if (!message.equals(other.message)) {
+            return false;
+        }
+        if (qualifiedName == null) {
+            if (other.qualifiedName != null) {
+                return false;
+            }
+        }
+        else if (!qualifiedName.equals(other.qualifiedName)) {
+            return false;
+        }
+        return true;
     }
 }
 

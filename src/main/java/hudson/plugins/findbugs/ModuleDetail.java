@@ -1,6 +1,7 @@
 package hudson.plugins.findbugs;
 
 import hudson.model.Build;
+import hudson.plugins.findbugs.util.SourceDetail;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -98,7 +99,7 @@ public class ModuleDetail extends AbstractWarningsDetail {
      */
     public Object getDynamic(final String link, final StaplerRequest request, final StaplerResponse response) {
         if (isSinglePackageModule()) {
-            return new FindBugsSource(getOwner(), getWarning(link));
+            return new SourceDetail(getOwner(), getWarning(link));
         }
         else {
             return new PackageDetail(getOwner(), module.getPackage(link));

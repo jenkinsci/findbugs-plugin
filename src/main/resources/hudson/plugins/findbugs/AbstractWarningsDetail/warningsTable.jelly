@@ -9,7 +9,7 @@
 			<tr>
 			<td class="pane-header">
 				<j:choose>
-					<j:when test="${it.isCurrent() &amp;&amp; warning.file != null}">
+					<j:when test="${it.isCurrent() &amp;&amp; warning.fileName != null}">
 						Class: <a href="${warning.key}/#${warning.lineNumber}">${warning.classname}</a>,
 					</j:when>
 					<j:otherwise>
@@ -22,7 +22,7 @@
 			</tr>
 		</table>
 		<p><b>${warning.message}</b></p>
-		<p>${warning.description}</p>
+		<p>${warning.toolTip}</p>
 	</j:forEach>
 
 </j:jelly>

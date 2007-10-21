@@ -8,13 +8,13 @@
 
 	  <j:if test="${it.hasHighlightedLine()}">
 		  ${it.prefix}
-		  <div tooltip="${it.message}\n${it.toolTip}">
+		  <div tooltip="${it.message}${it.toolTip}" nodismiss="">
 		    <code><b>${it.line}</b></code>
 		  </div>
 		  ${it.suffix}
 	  </j:if>
 	  <j:if test="${!it.hasHighlightedLine()}">
-		  <div tooltip="${it.toolTip}">
+		  <div tooltip="${it.toolTip}" nodismiss="">
 	   		<p><b>${it.message}</b></p>
 	      </div>
 		  ${it.prefix}

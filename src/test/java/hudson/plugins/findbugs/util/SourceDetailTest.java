@@ -1,4 +1,6 @@
-package hudson.plugins.findbugs;
+package hudson.plugins.findbugs.util;
+
+import hudson.plugins.findbugs.Warning;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,9 +12,9 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
- *  Tests the class {@link FindBugsSource}.
+ *  Tests the class {@link SourceDetail}.
  */
-public class FindBugsSourceTest {
+public class SourceDetailTest {
     /** Reference to line . */
     private static final String LINE_6_INDICATOR = "<a name=\"6\">";
 
@@ -24,11 +26,11 @@ public class FindBugsSourceTest {
      */
     @Test
     public void checkCorrectOffset() throws IOException {
-        InputStream stream = FindBugsSourceTest.class.getResourceAsStream("AbortException.txt");
+        InputStream stream = SourceDetailTest.class.getResourceAsStream("AbortException.txt");
 
         Warning warning = new Warning();
         warning.setFile("file/path");
-        FindBugsSource source = new FindBugsSource(null, warning);
+        SourceDetail source = new SourceDetail(null, warning);
 
         String highlighted = source.highlightSource(stream);
 
@@ -53,16 +55,17 @@ public class FindBugsSourceTest {
      */
     @Test
     public void testSplitting() throws IOException {
-        InputStream stream = FindBugsSourceTest.class.getResourceAsStream("AbortException.txt");
+        InputStream stream = SourceDetailTest.class.getResourceAsStream("AbortException.txt");
 
         Warning warning = new Warning();
         warning.setFile("file/path");
-        warning.setLineNumber("6");
-        FindBugsSource source = new FindBugsSource(null, warning);
+        warning.setLineNumberExpression("6");
+        SourceDetail source = new SourceDetail(null, warning);
 
         String highlighted = source.highlightSource(stream);
 
         source.splitSourceFile(highlighted);
+        source.isInitialized = true;
 
         Assert.assertTrue("Wrong line selected as actual warning line.", source.getLine().contains(LINE_6_INDICATOR));
     }
