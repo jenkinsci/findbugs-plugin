@@ -7,7 +7,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Serializable;
 import java.io.StringReader;
 import java.io.StringWriter;
 
@@ -19,19 +18,15 @@ import de.java2html.converter.JavaSource2HTMLConverter;
 import de.java2html.javasource.JavaSource;
 import de.java2html.javasource.JavaSourceParser;
 import de.java2html.options.JavaSourceConversionOptions;
-import edu.umd.cs.findbugs.annotations.SuppressWarnings;
 
 /**
  * Renders a source file containing an annotation for the whole file or a
  * specific line number.
  */
-public class SourceDetail implements ModelObject, Serializable {
-    /** Unique identifier of this class. */
-    private static final long serialVersionUID = -3209724023376797741L;
+public class SourceDetail implements ModelObject {
     /** Offset of the source code generator. After this line the actual source file lines start. */
     protected static final int SOURCE_GENERATOR_OFFSET = 12;
     /** The current build as owner of this object. */
-    @SuppressWarnings("Se")
     private final Build<?, ?> owner;
     /** Stripped file name of this annotation without the path prefix. */
     private final String fileName;
