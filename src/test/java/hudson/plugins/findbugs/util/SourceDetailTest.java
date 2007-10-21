@@ -8,6 +8,7 @@ import java.io.StringReader;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.LineIterator;
+import org.apache.commons.lang.StringUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -62,16 +63,16 @@ public class SourceDetailTest {
         warning.setLineNumberExpression("6");
         SourceDetail source = new SourceDetail(null, warning);
 
-        Assert.assertTrue("Prefix should not be empty.", source.getPrefix().isEmpty());
-        Assert.assertTrue("Suffix should not be empty.", source.getSuffix().isEmpty());
+        Assert.assertTrue("Prefix should not be empty.", StringUtils.isEmpty(source.getPrefix()));
+        Assert.assertTrue("Suffix should not be empty.", StringUtils.isEmpty(source.getSuffix()));
         Assert.assertTrue(source.hasHighlightedLine());
 
         String highlighted = source.highlightSource(stream);
         source.splitSourceFile(highlighted);
 
         Assert.assertTrue("Wrong line selected as actual warning line.", source.getLine().contains(LINE_6_INDICATOR));
-        Assert.assertFalse("Prefix should not be empty.", source.getPrefix().isEmpty());
-        Assert.assertFalse("Suffix should not be empty.", source.getSuffix().isEmpty());
+        Assert.assertFalse("Prefix should not be empty.", StringUtils.isEmpty(source.getPrefix()));
+        Assert.assertFalse("Suffix should not be empty.", StringUtils.isEmpty(source.getSuffix()));
         Assert.assertTrue(source.hasHighlightedLine());
     }
 }
