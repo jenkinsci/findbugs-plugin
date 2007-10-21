@@ -15,7 +15,11 @@
 	  </j:if>
 	  <j:if test="${!it.hasHighlightedLine()}">
 		  <div tooltip="${it.toolTip}" nodismiss="">
-	   		<p><b>${it.message}</b></p>
+	   		<table>
+	   			<tr><td bgcolor="#FFFFC0">
+	   				<p><b>${it.message}</b></p>
+				</td></tr>
+	   		</table>
 	      </div>
 		  ${it.prefix}
 	  </j:if>
