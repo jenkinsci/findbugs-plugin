@@ -1,10 +1,8 @@
 package hudson.plugins.findbugs;
 
 import hudson.model.AbstractBuild;
-import hudson.model.Build;
 import hudson.plugins.findbugs.util.AbstractResultAction;
 import hudson.plugins.findbugs.util.HealthReportBuilder;
-import hudson.plugins.findbugs.util.ResultAction;
 import hudson.util.DataSetBuilder;
 import hudson.util.ChartUtil.NumberOnlyBuildLabel;
 
@@ -29,13 +27,11 @@ import org.kohsuke.stapler.StaplerResponse;
  *
  * @author Ulli Hafner
  */
-public class FindBugsResultAction extends AbstractResultAction implements ResultAction<FindBugsResult> {
+public class FindBugsResultAction extends AbstractResultAction<FindBugsResult> {
     /** Unique identifier of this class. */
     private static final long serialVersionUID = -5329651349674842873L;
     /** URL to results. */
     private static final String FINDBUGS_RESULT_URL = "findbugsResult";
-    /** The actual result of the FindBugs analysis. */
-    private FindBugsResult result;
 
     /**
      * Creates a new instance of <code>FindBugsBuildAction</code>.
@@ -47,19 +43,14 @@ public class FindBugsResultAction extends AbstractResultAction implements Result
      * @param healthReportBuilder
      *            health builder to use
      */
-    public FindBugsResultAction(final Build<?, ?> owner, final FindBugsResult result, final HealthReportBuilder healthReportBuilder) {
-        super(owner, healthReportBuilder);
-        this.result = result;
+    public FindBugsResultAction(final AbstractBuild<?, ?> owner, final FindBugsResult result, final HealthReportBuilder healthReportBuilder) {
+        super(owner, healthReportBuilder, result);
     }
 
     /** {@inheritDoc} */
-    public Object getTarget() {
-        return getResult();
-    }
-
-    /** {@inheritDoc} */
-    public FindBugsResult getResult() {
-        return result;
+    @Override
+    protected int getHealthCounter() {
+        return getResult().getNumberOfWarnings();
     }
 
     /** {@inheritDoc} */
@@ -68,13 +59,9 @@ public class FindBugsResultAction extends AbstractResultAction implements Result
     }
 
     /** {@inheritDoc} */
-    public String getIconFileName() {
-        if (result.getNumberOfWarnings() > 0) {
-            return FindBugsDescriptor.FINDBUGS_ACTION_LOGO;
-        }
-        else {
-            return null;
-        }
+    @Override
+    public String getIconUrl() {
+        return FindBugsDescriptor.FINDBUGS_ACTION_LOGO;
     }
 
     /** {@inheritDoc} */
@@ -83,15 +70,12 @@ public class FindBugsResultAction extends AbstractResultAction implements Result
     }
 
     /**
-     * Returns the URL for the results of the last build.
+     * Gets the FindBugs result of the previous build.
      *
-     * @return URL for the results of the last build
+     * @return the FindBugs result of the previous build.
+     * @throws NoSuchElementException
+     *             if there is no previous build for this action
      */
-    public static String getLatestUrl() {
-        return "../lastBuild/" + FINDBUGS_RESULT_URL;
-    }
-
-    /** {@inheritDoc} */
     public FindBugsResultAction getPreviousResultAction() {
         FindBugsResultAction previousBuild = getPreviousBuild();
         if (previousBuild == null) {
@@ -122,11 +106,6 @@ public class FindBugsResultAction extends AbstractResultAction implements Result
     /** {@inheritDoc} */
     public boolean hasPreviousResultAction() {
         return getPreviousBuild() != null;
-    }
-
-    /** {@inheritDoc} */
-    public void setResult(final FindBugsResult result) {
-        this.result = result;
     }
 
     /**
@@ -177,11 +156,5 @@ public class FindBugsResultAction extends AbstractResultAction implements Result
             }
         }
         return builder.build();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    protected int getHealthCounter() {
-        return getResult().getNumberOfWarnings();
     }
 }

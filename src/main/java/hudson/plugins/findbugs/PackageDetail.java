@@ -1,6 +1,6 @@
 package hudson.plugins.findbugs;
 
-import hudson.model.Build;
+import hudson.model.AbstractBuild;
 import hudson.plugins.findbugs.util.SourceDetail;
 
 import org.kohsuke.stapler.StaplerRequest;
@@ -23,7 +23,7 @@ public class PackageDetail extends AbstractWarningsDetail {
      * @param javaPackage
      *            the package to show the details for
      */
-    public PackageDetail(final Build<?, ?> owner, final JavaPackage javaPackage) {
+    public PackageDetail(final AbstractBuild<?, ?> owner, final JavaPackage javaPackage) {
         super(owner, javaPackage.getWarnings());
         this.javaPackage = javaPackage;
     }

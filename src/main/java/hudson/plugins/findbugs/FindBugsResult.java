@@ -1,6 +1,6 @@
 package hudson.plugins.findbugs;
 
-import hudson.model.Build;
+import hudson.model.AbstractBuild;
 import hudson.plugins.findbugs.util.SourceDetail;
 import hudson.util.IOException2;
 
@@ -66,7 +66,7 @@ public class FindBugsResult extends AbstractWarningsDetail {
      * @param project
      *            the parsed FindBugs result
      */
-    public FindBugsResult(final Build<?, ?> build, final JavaProject project) {
+    public FindBugsResult(final AbstractBuild<?,?> build, final JavaProject project) {
         this(build, project, new JavaProject());
     }
 
@@ -78,7 +78,7 @@ public class FindBugsResult extends AbstractWarningsDetail {
      *            the parsed FindBugs result
      * @param previousProject the parsed FindBugs result of the previous build
      */
-    public FindBugsResult(final Build<?, ?> build, final JavaProject project, final JavaProject previousProject) {
+    public FindBugsResult(final AbstractBuild<?, ?> build, final JavaProject project, final JavaProject previousProject) {
         super(build, project.getWarnings());
         numberOfWarnings = project.getNumberOfWarnings();
 

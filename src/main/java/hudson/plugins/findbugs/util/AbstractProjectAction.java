@@ -1,9 +1,9 @@
 package hudson.plugins.findbugs.util;
 
 import hudson.model.AbstractBuild;
+import hudson.model.AbstractProject;
 import hudson.model.Action;
 import hudson.model.Build;
-import hudson.model.Project;
 
 import java.io.IOException;
 import java.util.List;
@@ -29,7 +29,7 @@ public abstract class AbstractProjectAction<T extends ResultAction<?>> implement
     private static final int ONE_YEAR = 60 * 60 * 24 * 365;
     /** Project that owns this action. */
     @SuppressWarnings("Se")
-    private final Project<?, ?> project;
+    private final AbstractProject<?, ?> project;
     /** The type of the result action.  */
     private final Class<T> resultActionType;
     /** The icon URL of this action: it will be shown as soon as a result is available. */
@@ -50,14 +50,12 @@ public abstract class AbstractProjectAction<T extends ResultAction<?>> implement
      * @param resultsUrl
      *            URL to the results of the last build.
      */
-    public AbstractProjectAction(final Project<?, ?> project, final Class<T> resultActionType, final String iconUrl, final String resultsUrl) {
-        super();
+    public AbstractProjectAction(final AbstractProject<?, ?> project, final Class<T> resultActionType, final String iconUrl, final String resultsUrl) {
         this.project = project;
         this.resultActionType = resultActionType;
         this.iconUrl = iconUrl;
         this.resultsUrl = resultsUrl;
     }
-
 
     /**
      * Returns whether we should display the toggle graph type links.
@@ -78,7 +76,7 @@ public abstract class AbstractProjectAction<T extends ResultAction<?>> implement
      *
      * @return the project
      */
-    public final Project<?, ?> getProject() {
+    public final AbstractProject<?, ?> getProject() {
         return project;
     }
 

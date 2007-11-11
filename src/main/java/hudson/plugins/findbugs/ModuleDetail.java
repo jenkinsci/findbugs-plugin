@@ -1,6 +1,6 @@
 package hudson.plugins.findbugs;
 
-import hudson.model.Build;
+import hudson.model.AbstractBuild;
 import hudson.plugins.findbugs.util.SourceDetail;
 
 import java.io.IOException;
@@ -26,7 +26,7 @@ public class ModuleDetail extends AbstractWarningsDetail {
      * @param module
      *            the module to show the details for
      */
-    public ModuleDetail(final Build<?, ?> owner, final Module module) {
+    public ModuleDetail(final AbstractBuild<?, ?> owner, final Module module) {
         super(owner, module.getWarnings());
         this.module = module;
     }

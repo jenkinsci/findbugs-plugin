@@ -1,6 +1,6 @@
 package hudson.plugins.findbugs;
 
-import hudson.model.Build;
+import hudson.model.AbstractBuild;
 import hudson.model.ModelObject;
 import hudson.plugins.findbugs.util.ChartBuilder;
 import hudson.util.ChartUtil;
@@ -24,7 +24,7 @@ import edu.umd.cs.findbugs.annotations.SuppressWarnings;
 public abstract class AbstractWarningsDetail implements ModelObject, Serializable, WarningProvider  {
     /** Current build as owner of this action. */
     @SuppressWarnings("Se")
-    private final Build<?, ?> owner;
+    private final AbstractBuild<?, ?> owner;
     /** All fixed warnings in this build. */
     @SuppressWarnings("Se")
     private transient Set<Warning> warnings;
@@ -49,7 +49,7 @@ public abstract class AbstractWarningsDetail implements ModelObject, Serializabl
      * @param warnings
      *            the set of warnings represented by this object
      */
-    public AbstractWarningsDetail(final Build<?, ?> owner, final Set<Warning> warnings) {
+    public AbstractWarningsDetail(final AbstractBuild<?, ?> owner, final Set<Warning> warnings) {
         this.owner = owner;
         this.warnings = warnings;
 
@@ -62,7 +62,7 @@ public abstract class AbstractWarningsDetail implements ModelObject, Serializabl
      *
      * @return the owner
      */
-    public final Build<?, ?> getOwner() {
+    public final AbstractBuild<?, ?> getOwner() {
         return owner;
     }
 

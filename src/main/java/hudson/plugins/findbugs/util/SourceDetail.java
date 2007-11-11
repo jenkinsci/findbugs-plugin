@@ -1,6 +1,6 @@
 package hudson.plugins.findbugs.util;
 
-import hudson.model.Build;
+import hudson.model.AbstractBuild;
 import hudson.model.ModelObject;
 
 import java.io.File;
@@ -27,7 +27,7 @@ public class SourceDetail implements ModelObject {
     /** Offset of the source code generator. After this line the actual source file lines start. */
     protected static final int SOURCE_GENERATOR_OFFSET = 12;
     /** The current build as owner of this object. */
-    private final Build<?, ?> owner;
+    private final AbstractBuild<?, ?> owner;
     /** Stripped file name of this annotation without the path prefix. */
     private final String fileName;
     /** The annotation to be shown. */
@@ -47,7 +47,7 @@ public class SourceDetail implements ModelObject {
      * @param annotation
      *            the warning to display in the source file
      */
-    public SourceDetail(final Build<?, ?> owner, final FileAnnotation annotation) {
+    public SourceDetail(final AbstractBuild<?, ?> owner, final FileAnnotation annotation) {
         this.owner = owner;
         this.annotation = annotation;
         fileName = StringUtils.substringAfterLast(annotation.getFileName(), "/");
@@ -185,7 +185,7 @@ public class SourceDetail implements ModelObject {
      *
      * @return the build
      */
-    public Build<?, ?> getOwner() {
+    public AbstractBuild<?, ?> getOwner() {
         return owner;
     }
 

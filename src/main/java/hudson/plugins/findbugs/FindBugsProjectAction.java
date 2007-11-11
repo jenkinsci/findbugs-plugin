@@ -1,6 +1,6 @@
 package hudson.plugins.findbugs;
 
-import hudson.model.Project;
+import hudson.model.AbstractProject;
 import hudson.plugins.findbugs.util.AbstractProjectAction;
 
 /**
@@ -13,17 +13,14 @@ import hudson.plugins.findbugs.util.AbstractProjectAction;
 public class FindBugsProjectAction extends AbstractProjectAction<FindBugsResultAction> {
     /** Unique identifier of this class. */
     private static final long serialVersionUID = -654316141132780561L;
-    /** URL to the results of the last build. */
-    private static final String FINDBUGS_RESULTS_URL = "../lastBuild/findbugsResult";
-
     /**
      * Instantiates a new find bugs project action.
      *
      * @param project
      *            the project that owns this action
      */
-    public FindBugsProjectAction(final Project<?, ?> project) {
-        super(project, FindBugsResultAction.class, FindBugsDescriptor.FINDBUGS_ACTION_LOGO, FINDBUGS_RESULTS_URL);
+    public FindBugsProjectAction(final AbstractProject<?, ?> project) {
+        super(project, FindBugsResultAction.class, FindBugsDescriptor.FINDBUGS_ACTION_LOGO, "../lastBuild/findbugsResult");
     }
 
     /** {@inheritDoc} */

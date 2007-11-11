@@ -10,7 +10,7 @@ import org.kohsuke.stapler.StaplerResponse;
 
 /**
  * Defines an action that is responsible for handling results of the given type
- * T.
+ * <code>T</code>.
  *
  * @param <T>
  *            type of the result

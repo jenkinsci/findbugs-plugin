@@ -2,11 +2,12 @@ package hudson.plugins.findbugs;
 
 import hudson.FilePath;
 import hudson.Launcher;
+import hudson.model.AbstractBuild;
+import hudson.model.AbstractProject;
 import hudson.model.Action;
 import hudson.model.Build;
 import hudson.model.BuildListener;
 import hudson.model.Descriptor;
-import hudson.model.Project;
 import hudson.model.Result;
 import hudson.plugins.findbugs.util.AbortException;
 import hudson.plugins.findbugs.util.HealthReportBuilder;
@@ -97,7 +98,7 @@ public class FindBugsPublisher extends Publisher {
 
     /** {@inheritDoc} */
     @Override
-    public Action getProjectAction(final Project project) {
+    public Action getProjectAction(final AbstractProject<?, ?> project) {
         return new FindBugsProjectAction(project);
     }
 
@@ -154,7 +155,8 @@ public class FindBugsPublisher extends Publisher {
      * @throws InterruptedException
      *             if user cancels the operation
      */
-    public boolean perform(final Build<?, ?> build, final Launcher launcher, final BuildListener listener) throws InterruptedException, IOException {
+    @Override
+    public boolean perform(final AbstractBuild<?, ?> build, final Launcher launcher, final BuildListener listener) throws InterruptedException, IOException {
         listener.getLogger().println("Collecting findbugs analysis files...");
         FindBugsCounter findBugsCounter = new FindBugsCounter(build);
 
@@ -225,7 +227,7 @@ public class FindBugsPublisher extends Publisher {
      * @throws InterruptedException
      *             if the user canceled the operation
      */
-    private boolean copyFilesFromWorkspaceToBuild(final Build<?, ?> build, final BuildListener listener,
+    private boolean copyFilesFromWorkspaceToBuild(final AbstractBuild<?,?> build, final BuildListener listener,
             final FilePath buildFolder) throws IOException, InterruptedException {
         try {
             build.getProject().getWorkspace().act(

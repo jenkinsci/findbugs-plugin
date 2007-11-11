@@ -1,7 +1,7 @@
 package hudson.plugins.findbugs;
 
 import hudson.FilePath;
-import hudson.model.Build;
+import hudson.model.AbstractBuild;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,7 +25,7 @@ import org.xml.sax.SAXException;
  */
 public class FindBugsCounter {
     /** Associated build. */
-    private final Build<?, ?> build;
+    private final AbstractBuild<?, ?> build;
 
     /**
      * Creates a new instance of <code>FindBugsCounter</code>.
@@ -33,7 +33,7 @@ public class FindBugsCounter {
      * @param build
      *            the associated build
      */
-    public FindBugsCounter(final Build<?, ?> build) {
+    public FindBugsCounter(final AbstractBuild<?, ?> build) {
         this.build = build;
     }
 

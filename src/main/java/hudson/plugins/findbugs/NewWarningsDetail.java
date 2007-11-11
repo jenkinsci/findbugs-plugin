@@ -1,6 +1,6 @@
 package hudson.plugins.findbugs;
 
-import hudson.model.Build;
+import hudson.model.AbstractBuild;
 import hudson.plugins.findbugs.util.SourceDetail;
 
 import java.util.Set;
@@ -23,7 +23,7 @@ public class NewWarningsDetail extends AbstractWarningsDetail {
      * @param newWarnings
      *            all new warnings in this build
      */
-    public NewWarningsDetail(final Build<?, ?> owner, final Set<Warning> newWarnings) {
+    public NewWarningsDetail(final AbstractBuild<?, ?> owner, final Set<Warning> newWarnings) {
         super(owner, newWarnings);
     }
 
