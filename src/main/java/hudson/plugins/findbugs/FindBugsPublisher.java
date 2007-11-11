@@ -10,6 +10,7 @@ import hudson.model.BuildListener;
 import hudson.model.Descriptor;
 import hudson.model.Result;
 import hudson.plugins.findbugs.util.AbortException;
+import hudson.plugins.findbugs.util.HealthAwarePublisher;
 import hudson.plugins.findbugs.util.HealthReportBuilder;
 import hudson.tasks.Publisher;
 
@@ -23,29 +24,11 @@ import org.xml.sax.SAXException;
  *
  * @author Ulli Hafner
  */
-public class FindBugsPublisher extends Publisher {
-    /** Default findbugs pattern. */
+public class FindBugsPublisher extends HealthAwarePublisher {
+    /** Default FindBugs pattern. */
     private static final String DEFAULT_PATTERN = "**/findbugs.xml";
     /** Descriptor of this publisher. */
     public static final FindBugsDescriptor FIND_BUGS_DESCRIPTOR = new FindBugsDescriptor();
-    /** Ant file-set pattern to scan for FindBugs files. */
-    private final String pattern;
-    /** Bug threshold to be reached if a build should be considered as unstable. */
-    private final String threshold;
-    /** Determines whether to use the provided threshold to mark a build as unstable. */
-    private boolean isThresholdEnabled;
-    /** Integer bug threshold to be reached if a build should be considered as unstable. */
-    private int minimumBugs;
-    /** Report health as 100% when the number of warnings is less than this value. */
-    private final String healthy;
-    /** Report health as 0% when the number of warnings is greater than this value. */
-    private final String unHealthy;
-    /** Report health as 100% when the number of warnings is less than this value. */
-    private int healthyBugs;
-    /** Report health as 0% when the number of warnings is greater than this value. */
-    private int unHealthyBugs;
-    /** Determines whether to use the provided healthy thresholds. */
-    private boolean isHealthyReportEnabled;
 
     /**
      * Creates a new instance of <code>FindBugsPublisher</code>.
@@ -65,35 +48,7 @@ public class FindBugsPublisher extends Publisher {
      */
     public FindBugsPublisher(final String pattern, final String threshold,
             final String healthy, final String unHealthy) {
-        super();
-        this.threshold = threshold;
-        this.healthy = healthy;
-        this.unHealthy = unHealthy;
-        this.pattern = pattern;
-
-        if (!StringUtils.isEmpty(threshold)) {
-            try {
-                minimumBugs = Integer.valueOf(threshold);
-                if (minimumBugs >= 0) {
-                    isThresholdEnabled = true;
-                }
-            }
-            catch (NumberFormatException exception) {
-                // nothing to do, we use the default value
-            }
-        }
-        if (!StringUtils.isEmpty(healthy) && !StringUtils.isEmpty(unHealthy)) {
-            try {
-                healthyBugs = Integer.valueOf(healthy);
-                unHealthyBugs = Integer.valueOf(unHealthy);
-                if (healthyBugs >= 0 && unHealthyBugs > healthyBugs) {
-                    isHealthyReportEnabled = true;
-                }
-            }
-            catch (NumberFormatException exception) {
-                // nothing to do, we use the default value
-            }
-        }
+        super(pattern, threshold, healthy, unHealthy);
     }
 
     /** {@inheritDoc} */
@@ -103,45 +58,9 @@ public class FindBugsPublisher extends Publisher {
     }
 
     /**
-     * Returns the Bug threshold to be reached if a build should be considered as unstable.
-     *
-     * @return the bug threshold
-     */
-    public String getThreshold() {
-        return threshold;
-    }
-
-    /**
-     * Returns the healthy threshold.
-     *
-     * @return the healthy
-     */
-    public String getHealthy() {
-        return healthy;
-    }
-
-    /**
-     * Returns the unhealthy threshold.
-     *
-     * @return the unHealthy
-     */
-    public String getUnHealthy() {
-        return unHealthy;
-    }
-
-    /**
-     * Returns the Ant file-set pattern to FindBugs XML files.
-     *
-     * @return ant file-set pattern to FindBugs XML files.
-     */
-    public String getPattern() {
-        return pattern;
-    }
-
-    /**
      * Scans the workspace, collects all data files and copies these files to
      * the build results folder. Then counts the number of bugs and sets the
-     * result of the build accordingly ({@link #threshold}.
+     * result of the build accordingly ({@link #getThreshold()}.
      *
      * @param build
      *            the build
@@ -149,7 +68,7 @@ public class FindBugsPublisher extends Publisher {
      *            the launcher
      * @param listener
      *            the build listener
-     * @return true in case the processing has been aborted
+     * @return <code>true</code> if the build could continue
      * @throws IOException
      *             if the files could not be copied
      * @throws InterruptedException
@@ -163,9 +82,8 @@ public class FindBugsPublisher extends Publisher {
         FilePath workingDirectory = findBugsCounter.getWorkingDirectory();
         workingDirectory.mkdirs();
         if (!copyFilesFromWorkspaceToBuild(build, listener, workingDirectory)) {
-            return true;
+            return false;
         }
-
 
         try {
             JavaProject project = findBugsCounter.findBugs();
@@ -187,13 +105,13 @@ public class FindBugsPublisher extends Publisher {
                 result = new FindBugsResult(build, project);
             }
 
-            HealthReportBuilder healthReportBuilder = new HealthReportBuilder("FindBugs", "warning", isThresholdEnabled, minimumBugs, isHealthyReportEnabled, healthyBugs, unHealthyBugs);
+            HealthReportBuilder healthReportBuilder = createHealthReporter("FindBugs", "warning");
             build.getActions().add(new FindBugsResultAction(build, result, healthReportBuilder));
 
             int warnings = project.getNumberOfWarnings();
             if (warnings > 0) {
                 listener.getLogger().println("A total of " + warnings + " potential bugs have been found.");
-                if (isThresholdEnabled && warnings >= minimumBugs) {
+                if (isThresholdEnabled() && warnings >= getMinimumAnnotations()) {
                     build.setResult(Result.UNSTABLE);
                 }
             }
@@ -205,10 +123,10 @@ public class FindBugsPublisher extends Publisher {
             listener.getLogger().println();
             exception.printStackTrace(listener.fatalError("Could not parse FindBugs files. Please check if the file pattern is correct\nand the latest FindBugs scanner is used (i.e., maven-findbugs-plugin >= 1.1.1)"));
             build.setResult(Result.FAILURE);
-            return true;
+            return false;
         }
 
-        return false;
+        return true;
     }
 
     /**
@@ -232,7 +150,7 @@ public class FindBugsPublisher extends Publisher {
         try {
             build.getProject().getWorkspace().act(
                     new FindBugsCollector(listener, buildFolder, build.getTimestamp().getTimeInMillis(),
-                            StringUtils.defaultIfEmpty(pattern, DEFAULT_PATTERN)));
+                            StringUtils.defaultIfEmpty(getPattern(), DEFAULT_PATTERN)));
             return true;
         }
         catch (AbortException exception) {
