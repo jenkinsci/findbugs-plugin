@@ -86,7 +86,7 @@ public class FindBugsCounterTest {
     @Test
     public void scanNativeFile() throws IOException, SAXException {
         Module module = parseFile("findbugs-native.xml");
-        assertEquals(ERROR_MESSAGE, 128, module.getNumberOfWarnings());
+        assertEquals(ERROR_MESSAGE, 136, module.getNumberOfWarnings());
         assertEquals(WRONG_VERSION_DETECTED, "1.2.1", module.getVersion());
         assertFalse(WRONG_FIND_BUGS_FORMAT, module.isMavenFormat());
 

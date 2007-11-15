@@ -19,6 +19,8 @@ public class SourceLine implements Serializable {
     private String sourcefile;
     /** The source file name (including the path). */
     private String sourcepath;
+    /** The role of the source line class. */
+    private String role;
 
     /**
      * Returns the classname.
@@ -100,5 +102,23 @@ public class SourceLine implements Serializable {
     public void setSourcepath(final String sourcepath) {
         this.sourcepath = sourcepath;
     }
+
+    /**
+     * Returns the role.
+     * 
+     * @return the role
+     */
+    public String getRole() {
+        return role;
+    }
+
+    /**
+     * Sets the role to the specified value.
+     * 
+     * @param role the value to set
+     */
+    public void setRole(String role) {
+        this.role = role;
+    }    
 }
 

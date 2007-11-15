@@ -41,6 +41,8 @@ public class Warning implements Serializable, FileAnnotation {
      * the first value is used as link).
      */
     private String lineNumberExpression;
+    /** The field name of the field associated with this warning. */
+    private String fieldName;    
 
     /**
      * Returns the type.
@@ -75,6 +77,28 @@ public class Warning implements Serializable, FileAnnotation {
         return javaClass;
     }
 
+    /**
+     * Adds a source line associated with this warning.
+     *
+     * @param sourceLine the SourceLine object describing the source line.
+     */
+    public void addSourceLine(final SourceLine sourceLine) {
+        String role = sourceLine.getRole();
+        if (sourceLine != null && (role == null || role.length() == 0)) {
+            this.lineNumber = sourceLine.getStart();
+        }
+    }    
+    
+    /**
+     * Adds a field that is associated with this warning.
+     *
+     * @param field The Field class that describes the field that this
+     * warning is about.
+     */
+    public void addField(final Field field) {
+        this.fieldName = field.getName();
+    }    
+
     /** {@inheritDoc} */
     public String getToolTip() {
         return FindBugsMessages.getInstance().getMessage(getType());
@@ -87,6 +111,9 @@ public class Warning implements Serializable, FileAnnotation {
      */
     public void setType(final String type) {
         this.type = type;
+        if (this.message == null || this.message.length() == 0) {
+            this.message = FindBugsMessages.getInstance().getMessage(type);
+        }
     }
 
     /**
@@ -310,6 +337,14 @@ public class Warning implements Serializable, FileAnnotation {
         else if (!qualifiedName.equals(other.qualifiedName)) {
             return false;
         }
+        if (fieldName == null) {
+            if (other.fieldName != null) {
+                return false;
+            }
+        }
+        else if (!fieldName.equals(other.fieldName)) {
+            return false;
+        }        
         return true;
     }
 }
