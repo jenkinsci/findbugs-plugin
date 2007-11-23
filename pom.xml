@@ -11,6 +11,8 @@
   <packaging>hpi</packaging>
   <name>Hudson FindBugs Plug-in</name>
   <version>1.18-SNAPSHOT</version>
+  <url>http://hudson.gotdns.com/wiki/display/HUDSON/FindBugs+Plugin</url>
+  
   <licenses>
   	<license><name>MIT license</name><comments>All source code is under the MIT license.</comments></license>
   	<license><name>GNU LESSER GENERAL PUBLIC LICENSE</name><comments>FindBugs messages.xml file from the findbugs 1.2.1 release .</comments></license>
@@ -32,12 +34,6 @@
       <groupId>findbugs</groupId>
       <artifactId>annotations</artifactId>
       <version>1.0.0</version>
-    </dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.3.1</version>
-      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.easymock</groupId>
