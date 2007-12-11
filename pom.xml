@@ -10,7 +10,7 @@
   <artifactId>findbugs</artifactId>
   <packaging>hpi</packaging>
   <name>Hudson FindBugs Plug-in</name>
-  <version>1.18-SNAPSHOT</version>
+  <version>1.18</version>
   <url>http://hudson.gotdns.com/wiki/display/HUDSON/FindBugs+Plugin</url>
   
   <licenses>
@@ -62,4 +62,8 @@
       </snapshots>
     </repository>
   </repositories>
+
+  <scm>
+    <tag>findbugs-1.18</tag>
+  </scm>
 </project>
