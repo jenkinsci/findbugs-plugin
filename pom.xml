@@ -64,6 +64,6 @@
   </repositories>
 
   <scm>
-    <tag>findbugs-1.18</tag>
+    <tag>findbugs-1_18</tag>
   </scm>
 </project>
