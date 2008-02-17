@@ -1,6 +1,9 @@
 package hudson.plugins.findbugs.util;
 
-import hudson.plugins.findbugs.Warning;
+import hudson.plugins.findbugs.model.FileAnnotation;
+import hudson.plugins.findbugs.model.Priority;
+import hudson.plugins.findbugs.model.WorkspaceFile;
+import hudson.plugins.findbugs.parser.Bug;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,9 +30,11 @@ public class SourceDetailTest {
      */
     @Test
     public void checkCorrectOffset() throws IOException {
-        Warning warning = new Warning();
-        warning.setFile("file/path");
-        warning.setLineNumberExpression("6");
+        Bug warning = new Bug(Priority.HIGH, StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY, 6);
+        WorkspaceFile file = new WorkspaceFile();
+        file.setName("file/path");
+        warning.setWorkspaceFile(file);
+
         SourceDetail source = new SourceDetail(null, warning);
 
         InputStream stream = SourceDetailTest.class.getResourceAsStream("AbortException.txt");
@@ -58,9 +63,10 @@ public class SourceDetailTest {
     public void testSplitting() throws IOException {
         InputStream stream = SourceDetailTest.class.getResourceAsStream("AbortException.txt");
 
-        Warning warning = new Warning();
-        warning.setFile("file/path");
-        warning.setLineNumberExpression("6");
+        FileAnnotation warning = new Bug(Priority.HIGH, StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY, 6);
+        WorkspaceFile file = new WorkspaceFile();
+        file.setName("file/path");
+        warning.setWorkspaceFile(file);
         SourceDetail source = new SourceDetail(null, warning);
 
         Assert.assertTrue("Prefix should not be empty.", StringUtils.isEmpty(source.getPrefix()));

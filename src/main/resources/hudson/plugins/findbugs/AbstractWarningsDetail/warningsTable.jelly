@@ -4,16 +4,16 @@
 	xmlns:f="/lib/form" xmlns:i="jelly:fmt">
 
 	<h2>Warnings</h2>
-	<j:forEach var="warning" items="${it.warnings}">
+	<j:forEach var="warning" items="${it.annotations}">
 		<table class="pane" id="summary">
 			<tr>
 			<td class="pane-header">
 				<j:choose>
-					<j:when test="${it.isCurrent() &amp;&amp; warning.fileName != null}">
-						Class: <a href="${warning.key}/#${warning.lineNumber}">${warning.classname}</a>,
+					<j:when test="${it.isCurrent() &amp;&amp; warning.workspaceFile.name != null}">
+						Class: <a href="${warning.key}/#${warning.lineNumber}">${warning.workspaceFile.shortName}</a>,
 					</j:when>
 					<j:otherwise>
-						Class: ${warning.classname},
+						Class: ${warning.workspaceFile.shortName},
 					</j:otherwise>
 				</j:choose>
 				Type: ${warning.type},

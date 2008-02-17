@@ -1,6 +1,7 @@
 package hudson.plugins.findbugs;
 
 import hudson.model.AbstractBuild;
+import hudson.plugins.findbugs.model.FileAnnotation;
 
 import java.util.Set;
 
@@ -19,7 +20,7 @@ public class FixedWarningsDetail extends AbstractWarningsDetail {
      * @param fixedWarnings
      *            all fixed warnings in this build
      */
-    public FixedWarningsDetail(final AbstractBuild<?, ?> owner, final Set<Warning> fixedWarnings) {
+    public FixedWarningsDetail(final AbstractBuild<?, ?> owner, final Set<FileAnnotation> fixedWarnings) {
         super(owner, fixedWarnings);
     }
 

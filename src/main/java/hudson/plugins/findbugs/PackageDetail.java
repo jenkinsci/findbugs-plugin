@@ -1,6 +1,7 @@
 package hudson.plugins.findbugs;
 
 import hudson.model.AbstractBuild;
+import hudson.plugins.findbugs.model.JavaPackage;
 import hudson.plugins.findbugs.util.SourceDetail;
 
 import org.kohsuke.stapler.StaplerRequest;
@@ -24,7 +25,7 @@ public class PackageDetail extends AbstractWarningsDetail {
      *            the package to show the details for
      */
     public PackageDetail(final AbstractBuild<?, ?> owner, final JavaPackage javaPackage) {
-        super(owner, javaPackage.getWarnings());
+        super(owner, javaPackage.getAnnotations());
         this.javaPackage = javaPackage;
     }
 
@@ -38,7 +39,7 @@ public class PackageDetail extends AbstractWarningsDetail {
      *
      * @return the maven module
      */
-    public WarningProvider getPackage() {
+    public JavaPackage getPackage() {
         return javaPackage;
     }
 
@@ -53,7 +54,7 @@ public class PackageDetail extends AbstractWarningsDetail {
      * @return the dynamic result of the FindBugs analysis (detail page for a package).
      */
     public Object getDynamic(final String link, final StaplerRequest request, final StaplerResponse response) {
-        return new SourceDetail(getOwner(), getWarning(link));
+        return new SourceDetail(getOwner(), getAnnotation(link));
     }
 }
 

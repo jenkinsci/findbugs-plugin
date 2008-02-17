@@ -8,7 +8,13 @@ import org.jfree.data.category.CategoryDataset;
 
 /**
  * Renderer that provides direct access to the individual results of a build via
- * links.
+ * links. The renderer also displays tooltips for each selected build.
+ * <ul>
+ * <li>The tooltip is computed per column (i.e., per build) and shows the total
+ * number of annotations for this build.</li>
+ * <li>The link is also computed per column and links to the results for this
+ * build.</li>
+ * </ul>
  *
  * @author Ulli Hafner
  */

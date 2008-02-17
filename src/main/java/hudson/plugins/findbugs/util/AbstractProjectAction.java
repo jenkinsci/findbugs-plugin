@@ -38,7 +38,7 @@ public abstract class AbstractProjectAction<T extends ResultAction<?>> implement
     private final String resultsUrl;
 
     /**
-     * Creates a new instance of <code>ProjectAction</code>.
+     * Creates a new instance of <code>AbstractProjectAction</code>.
      *
      * @param project
      *            the project that owns this action

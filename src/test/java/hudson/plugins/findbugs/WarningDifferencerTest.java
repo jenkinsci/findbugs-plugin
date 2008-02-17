@@ -1,9 +1,15 @@
 package hudson.plugins.findbugs;
 
 import static org.junit.Assert.*;
+import hudson.plugins.findbugs.model.FileAnnotation;
+import hudson.plugins.findbugs.model.JavaProject;
+import hudson.plugins.findbugs.model.MavenModule;
+import hudson.plugins.findbugs.model.Priority;
+import hudson.plugins.findbugs.model.WorkspaceFile;
+import hudson.plugins.findbugs.parser.Bug;
+import hudson.plugins.findbugs.parser.maven.MavenFindBugsParser;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,6 +19,7 @@ import org.xml.sax.SAXException;
 /**
  * Tests the class {@link WarningDifferencer}.
  */
+@SuppressWarnings("PMD.SignatureDeclareThrowsException")
 public class WarningDifferencerTest {
     /** Corresponding class. */
     private static final String FINDBUGS_CLASS = "findbugs.Class";
@@ -26,20 +33,12 @@ public class WarningDifferencerTest {
      */
     @Test
     public void testWarningEquals() {
-        Warning first = new Warning();
-        first.setMessage(STRING);
-        first.setQualifiedName(STRING);
-        first.setLineNumberExpression(STRING);
-        first.setType(STRING);
+        Bug first  = new Bug(Priority.HIGH, STRING, STRING, STRING, 2);
 
-        Warning second = new Warning();
-        second.setMessage(STRING);
-        second.setQualifiedName(STRING);
-        second.setLineNumberExpression(STRING);
-        second.setType(STRING);
+        Bug second = new Bug(Priority.HIGH, STRING, STRING, STRING, 2);
 
         assertEquals("Warnings are not equal.", first, second);
-        second.setLineNumberExpression("5");
+        second.setWorkspaceFile(new WorkspaceFile());
         assertFalse("Warnings are equal.", first.equals(second));
     }
 
@@ -48,47 +47,31 @@ public class WarningDifferencerTest {
      */
     @Test
     public void testDifferencer() {
-        Set<Warning> actual = new HashSet<Warning>();
-        Set<Warning> previous = new HashSet<Warning>();
+        Set<FileAnnotation> actual = new HashSet<FileAnnotation>();
+        Set<FileAnnotation> previous = new HashSet<FileAnnotation>();
 
-        Warning warning = new Warning();
-        warning.setMessage(STRING);
-        warning.setLineNumberExpression(STRING);
-        warning.setQualifiedName(FINDBUGS_CLASS);
+        Bug warning = new Bug(Priority.HIGH, STRING, STRING, STRING, 2);
         actual.add(warning);
 
-        warning = new Warning();
-        warning.setMessage(STRING);
-        warning.setLineNumberExpression(STRING);
-        warning.setQualifiedName(FINDBUGS_CLASS);
+        warning = new Bug(Priority.HIGH, STRING, STRING, STRING, 2);
         previous.add(warning);
 
 
-        assertEquals(WARNINGS_COUNT_ERROR, 0, WarningDifferencer.getNewWarnings(actual, previous).size());
         assertEquals(WARNINGS_COUNT_ERROR, 0, WarningDifferencer.getFixedWarnings(actual, previous).size());
 
-        warning = new Warning();
-        warning.setMessage("type2");
-        warning.setLineNumberExpression(STRING);
-        warning.setQualifiedName(FINDBUGS_CLASS);
+        warning = new Bug(Priority.HIGH, "type2", STRING, STRING, 2);
         previous.add(warning);
 
         assertEquals(WARNINGS_COUNT_ERROR, 0, WarningDifferencer.getNewWarnings(actual, previous).size());
         assertEquals(WARNINGS_COUNT_ERROR, 1, WarningDifferencer.getFixedWarnings(actual, previous).size());
 
-        warning = new Warning();
-        warning.setMessage("type2");
-        warning.setLineNumberExpression(STRING);
-        warning.setQualifiedName(FINDBUGS_CLASS);
+        warning = new Bug(Priority.HIGH, "type2", STRING, STRING, 2);
         actual.add(warning);
 
         assertEquals(WARNINGS_COUNT_ERROR, 0, WarningDifferencer.getNewWarnings(actual, previous).size());
         assertEquals(WARNINGS_COUNT_ERROR, 0, WarningDifferencer.getFixedWarnings(actual, previous).size());
 
-        warning = new Warning();
-        warning.setMessage("type3");
-        warning.setLineNumberExpression(STRING);
-        warning.setQualifiedName(FINDBUGS_CLASS);
+        warning = new Bug(Priority.HIGH, "type3", STRING, STRING, 2);
         actual.add(warning);
 
         assertEquals(WARNINGS_COUNT_ERROR, 1, WarningDifferencer.getNewWarnings(actual, previous).size());
@@ -99,47 +82,50 @@ public class WarningDifferencerTest {
      * Checks whether we correctly detect all 8 bugs.
      */
     @Test
-    public void scanActualFiles() throws IOException, SAXException {
-        Module uiModule = parseFile("ui.xml");
+    public void scanActualFiles() throws Exception {
+        MavenModule uiModule = parseFile("ui.xml");
         uiModule.setName("ui");
-        Module editor = parseFile("editor.xml");
+        MavenModule editor = parseFile("editor.xml");
         editor.setName("editor");
-        Module core = parseFile("core.xml");
+        MavenModule core = parseFile("core.xml");
         core.setName("core");
 
         JavaProject project = new JavaProject();
-        project.addModule(core);
-        project.addModule(uiModule);
-        project.addModule(editor);
+        project.addAnnotations(core.getAnnotations());
+        project.addAnnotations(uiModule.getAnnotations());
+        project.addAnnotations(editor.getAnnotations());
 
-        assertEquals(WARNINGS_COUNT_ERROR, 91, project.getNumberOfWarnings());
+        assertEquals(WARNINGS_COUNT_ERROR, 9, core.getNumberOfAnnotations());
+        assertEquals(WARNINGS_COUNT_ERROR, 55, uiModule.getNumberOfAnnotations());
+        assertEquals(WARNINGS_COUNT_ERROR, 28, editor.getNumberOfAnnotations());
+        assertEquals(WARNINGS_COUNT_ERROR, 92, project.getNumberOfAnnotations());
+        assertEquals(WARNINGS_COUNT_ERROR, 92, project.getAnnotations().size());
 
-        HashSet<Warning> empty = new HashSet<Warning>();
-        assertEquals(WARNINGS_COUNT_ERROR, 91, WarningDifferencer.getNewWarnings(project.getWarnings(), empty).size());
-        assertEquals(WARNINGS_COUNT_ERROR, 0, WarningDifferencer.getNewWarnings(project.getWarnings(), project.getWarnings()).size());
-        assertEquals(WARNINGS_COUNT_ERROR, 0, WarningDifferencer.getNewWarnings(empty, project.getWarnings()).size());
+        Set<FileAnnotation> empty = new HashSet<FileAnnotation>();
+        assertEquals(WARNINGS_COUNT_ERROR, 9, WarningDifferencer.getNewWarnings(core.getAnnotations(), empty).size());
+        assertEquals(WARNINGS_COUNT_ERROR, 55, WarningDifferencer.getNewWarnings(uiModule.getAnnotations(), empty).size());
+        assertEquals(WARNINGS_COUNT_ERROR, 28, WarningDifferencer.getNewWarnings(editor.getAnnotations(), empty).size());
+        assertEquals(WARNINGS_COUNT_ERROR, 92, WarningDifferencer.getNewWarnings(project.getAnnotations(), empty).size());
+        assertEquals(WARNINGS_COUNT_ERROR, 0, WarningDifferencer.getNewWarnings(project.getAnnotations(), project.getAnnotations()).size());
+        assertEquals(WARNINGS_COUNT_ERROR, 0, WarningDifferencer.getNewWarnings(empty, project.getAnnotations()).size());
 
-        assertEquals(WARNINGS_COUNT_ERROR, 0, WarningDifferencer.getFixedWarnings(project.getWarnings(), project.getWarnings()).size());
-        assertEquals(WARNINGS_COUNT_ERROR, 0, WarningDifferencer.getFixedWarnings(project.getWarnings(), empty).size());
-        assertEquals(WARNINGS_COUNT_ERROR, 91, WarningDifferencer.getFixedWarnings(empty, project.getWarnings()).size());
+        assertEquals(WARNINGS_COUNT_ERROR, 0, WarningDifferencer.getFixedWarnings(project.getAnnotations(), project.getAnnotations()).size());
+        assertEquals(WARNINGS_COUNT_ERROR, 0, WarningDifferencer.getFixedWarnings(project.getAnnotations(), empty).size());
+        assertEquals(WARNINGS_COUNT_ERROR, 92, WarningDifferencer.getFixedWarnings(empty, project.getAnnotations()).size());
     }
 
     /**
      * Checks whether we correctly detect priorities.
      */
     @Test
-    public void scanWrongCountFile() throws IOException, SAXException {
-        Module counter = parseFile("counter.xml");
+    public void scanWrongCountFile() throws Exception {
+        MavenModule counter = parseFile("counter.xml");
         counter.setName("counter");
 
-        JavaProject project = new JavaProject();
-        project.addModule(counter);
-
-        assertEquals(WARNINGS_COUNT_ERROR, 6 + 26 + 13, counter.getNumberOfWarnings());
-
-        assertEquals(WARNINGS_COUNT_ERROR, 6, WarningDifferencer.countHighPriorityWarnings(counter.getWarnings()));
-        assertEquals(WARNINGS_COUNT_ERROR, 26, WarningDifferencer.countNormalPriorityWarnings(counter.getWarnings()));
-        assertEquals(WARNINGS_COUNT_ERROR, 13, WarningDifferencer.countLowPriorityWarnings(counter.getWarnings()));
+        assertEquals(WARNINGS_COUNT_ERROR, 6 + 26 + 13, counter.getNumberOfAnnotations());
+        assertEquals(WARNINGS_COUNT_ERROR, 6, counter.getNumberOfAnnotations(Priority.HIGH));
+        assertEquals(WARNINGS_COUNT_ERROR, 26, counter.getNumberOfAnnotations(Priority.NORMAL));
+        assertEquals(WARNINGS_COUNT_ERROR, 13, counter.getNumberOfAnnotations(Priority.LOW));
     }
 
     /**
@@ -152,9 +138,8 @@ public class WarningDifferencerTest {
      * @throws SAXException
      *             in case of an error
      */
-    private Module parseFile(final String fileName) throws IOException, SAXException {
-        URL file = WarningDifferencerTest.class.getResource(fileName);
-        return new FindBugsCounter(null).parse(file);
+    private MavenModule parseFile(final String fileName) throws IOException, SAXException {
+        return new MavenFindBugsParser().parse(WarningDifferencerTest.class.getResourceAsStream(fileName), fileName);
     }
 }
 

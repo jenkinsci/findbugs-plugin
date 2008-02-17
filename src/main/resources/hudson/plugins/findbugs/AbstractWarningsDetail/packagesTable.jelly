@@ -15,10 +15,11 @@
 					<td class="pane">
 						<a href="${package.name}/">${package.name}</a>
 					</td>
-					<td class="pane">${package.numberOfWarnings}</td>
+					<td class="pane">${package.numberOfAnnotations}</td>
 					<td class="pane">
-						<img
-							src="packageStatistics?package=${package.name}" />
+				        <div tooltip="${it.getToolTip(package.name)}">
+							<img src="packageStatistics?package=${package.name}" />
+						</div>
 					</td>
 				</tr>
 			</j:forEach>

@@ -43,6 +43,7 @@ public abstract class AbstractResultAction<T> implements StaplerProxy, HealthRep
      * Creates a new instance of <code>AbstractResultAction</code>.
      */
     public AbstractResultAction() {
+        // FIXME: remove this constructor
         // nothing to do. used to deserialize this action
     }
 
@@ -115,9 +116,7 @@ public abstract class AbstractResultAction<T> implements StaplerProxy, HealthRep
         if (getHealthCounter() > 0) {
             return getIconUrl();
         }
-        else {
-            return null;
-    }
+        return null;
     }
 
     /**
@@ -157,7 +156,6 @@ public abstract class AbstractResultAction<T> implements StaplerProxy, HealthRep
      */
     public final void doGraphMap(final StaplerRequest request, final StaplerResponse response) throws IOException {
         ChartUtil.generateClickableMap(request, response, createChart(request, response), WIDTH, HEIGHT);
-
     }
 
     /**

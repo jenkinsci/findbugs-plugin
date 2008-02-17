@@ -2,6 +2,7 @@ package hudson.plugins.findbugs.util;
 
 import hudson.model.AbstractBuild;
 import hudson.model.ModelObject;
+import hudson.plugins.findbugs.model.FileAnnotation;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -50,7 +51,7 @@ public class SourceDetail implements ModelObject {
     public SourceDetail(final AbstractBuild<?, ?> owner, final FileAnnotation annotation) {
         this.owner = owner;
         this.annotation = annotation;
-        fileName = StringUtils.substringAfterLast(annotation.getFileName(), "/");
+        fileName = StringUtils.substringAfterLast(annotation.getWorkspaceFile().getName(), "/");
 
         initializeContent();
     }
@@ -62,7 +63,7 @@ public class SourceDetail implements ModelObject {
     private void initializeContent() {
         InputStream file = null;
         try {
-            String linkName = annotation.getFileName();
+            String linkName = annotation.getWorkspaceFile().getName();
             if (linkName.startsWith("/") || linkName.contains(":") || owner == null) {
                 file = new FileInputStream(new File(linkName));
             }

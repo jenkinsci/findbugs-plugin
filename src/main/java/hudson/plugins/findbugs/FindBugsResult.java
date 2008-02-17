@@ -1,6 +1,12 @@
 package hudson.plugins.findbugs;
 
 import hudson.model.AbstractBuild;
+import hudson.plugins.findbugs.model.FileAnnotation;
+import hudson.plugins.findbugs.model.JavaPackage;
+import hudson.plugins.findbugs.model.JavaProject;
+import hudson.plugins.findbugs.model.MavenModule;
+import hudson.plugins.findbugs.model.Priority;
+import hudson.plugins.findbugs.parser.FindBugsCounter;
 import hudson.plugins.findbugs.util.SourceDetail;
 import hudson.util.IOException2;
 
@@ -8,10 +14,12 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.dom4j.DocumentException;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 import org.xml.sax.SAXException;
@@ -29,7 +37,7 @@ public class FindBugsResult extends AbstractWarningsDetail {
 // CHECKSTYLE:ON
     /** No result at all. */
     @java.lang.SuppressWarnings("unchecked")
-    private static final Set<Warning> EMPTY_SET = Collections.EMPTY_SET;
+    private static final Set<FileAnnotation> EMPTY_SET = Collections.EMPTY_SET;
     /** Unique identifier of this class. */
     private static final long serialVersionUID = 2768250056765266658L;
     /** Logger. */
@@ -41,10 +49,10 @@ public class FindBugsResult extends AbstractWarningsDetail {
     private transient WeakReference<JavaProject> project;
     /** All new warnings in the current build.*/
     @SuppressWarnings("Se")
-    private transient WeakReference<Set<Warning>> newWarnings;
+    private transient WeakReference<Set<FileAnnotation>> newWarnings;
     /** All fixed warnings in the current build.*/
     @SuppressWarnings("Se")
-    private transient WeakReference<Set<Warning>> fixedWarnings;
+    private transient WeakReference<Set<FileAnnotation>> fixedWarnings;
     /** The number of warnings in this build. */
     private final int numberOfWarnings;
     /** The number of new warnings in this build. */
@@ -52,11 +60,11 @@ public class FindBugsResult extends AbstractWarningsDetail {
     /** The number of fixed warnings in this build. */
     private final int numberOfFixedWarnings;
     /** The number of low priority warnings in this build. */
-    private int low;
+    private final int low;
     /** The number of normal priority warnings in this build. */
-    private int normal;
+    private final int normal;
     /** The number of high priority warnings in this build. */
-    private int high;
+    private final int high;
 
     /**
      * Creates a new instance of <code>FindBugsResult</code>.
@@ -66,7 +74,7 @@ public class FindBugsResult extends AbstractWarningsDetail {
      * @param project
      *            the parsed FindBugs result
      */
-    public FindBugsResult(final AbstractBuild<?,?> build, final JavaProject project) {
+    public FindBugsResult(final AbstractBuild<?, ?> build, final JavaProject project) {
         this(build, project, new JavaProject());
     }
 
@@ -79,23 +87,25 @@ public class FindBugsResult extends AbstractWarningsDetail {
      * @param previousProject the parsed FindBugs result of the previous build
      */
     public FindBugsResult(final AbstractBuild<?, ?> build, final JavaProject project, final JavaProject previousProject) {
-        super(build, project.getWarnings());
-        numberOfWarnings = project.getNumberOfWarnings();
+        super(build, project.getAnnotations());
+        numberOfWarnings = project.getNumberOfAnnotations();
 
         this.project = new WeakReference<JavaProject>(project);
-        delta = project.getNumberOfWarnings() - previousProject.getNumberOfWarnings();
+        delta = project.getNumberOfAnnotations() - previousProject.getNumberOfAnnotations();
 
-        Set<Warning> allWarnings = project.getWarnings();
+        Collection<FileAnnotation> allWarnings = project.getAnnotations();
 
-        Set<Warning> warnings = WarningDifferencer.getNewWarnings(allWarnings, previousProject.getWarnings());
+        Set<FileAnnotation> warnings = WarningDifferencer.getNewWarnings(allWarnings, previousProject.getAnnotations());
         numberOfNewWarnings = warnings.size();
-        newWarnings = new WeakReference<Set<Warning>>(warnings);
+        newWarnings = new WeakReference<Set<FileAnnotation>>(warnings);
 
-        warnings = WarningDifferencer.getFixedWarnings(allWarnings, previousProject.getWarnings());
+        warnings = WarningDifferencer.getFixedWarnings(allWarnings, previousProject.getAnnotations());
         numberOfFixedWarnings = warnings.size();
-        fixedWarnings = new WeakReference<Set<Warning>>(warnings);
+        fixedWarnings = new WeakReference<Set<FileAnnotation>>(warnings);
 
-        computePriorities(allWarnings);
+        high = project.getNumberOfAnnotations(Priority.HIGH);
+        normal = project.getNumberOfAnnotations(Priority.NORMAL);
+        low = project.getNumberOfAnnotations(Priority.LOW);
     }
 
     /** {@inheritDoc} */
@@ -109,8 +119,22 @@ public class FindBugsResult extends AbstractWarningsDetail {
      * @return the number of warnings
      */
     @Override
-    public int getNumberOfWarnings() {
+    public int getNumberOfAnnotations() {
         return numberOfWarnings;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public int getNumberOfAnnotations(final Priority priority) {
+        if (priority == Priority.HIGH) {
+            return high;
+        }
+        else if (priority == Priority.NORMAL) {
+            return normal;
+        }
+        else {
+            return low;
+        }
     }
 
     /**
@@ -170,12 +194,12 @@ public class FindBugsResult extends AbstractWarningsDetail {
      *
      * @return the new warnings of this build.
      */
-    public Set<Warning> getNewWarnings() {
+    public Set<FileAnnotation> getNewWarnings() {
         try {
             if (newWarnings == null) {
                 loadPreviousResult();
             }
-            Set<Warning> result = newWarnings.get();
+            Set<FileAnnotation> result = newWarnings.get();
             if (result == null) {
                 loadPreviousResult();
             }
@@ -195,12 +219,12 @@ public class FindBugsResult extends AbstractWarningsDetail {
      *
      * @return the fixed warnings of this build.
      */
-    public Set<Warning> getFixedWarnings() {
+    public Set<FileAnnotation> getFixedWarnings() {
         try {
             if (fixedWarnings == null) {
                 loadPreviousResult();
             }
-            Set<Warning> result = fixedWarnings.get();
+            Set<FileAnnotation> result = fixedWarnings.get();
             if (result == null) {
                 loadPreviousResult();
             }
@@ -229,11 +253,12 @@ public class FindBugsResult extends AbstractWarningsDetail {
             if (isCurrent()) {
                 findBugsCounter.restoreMapping(result);
             }
-            computeWarningMapping(result.getWarnings());
-            computePriorities(result.getWarnings());
             project = new WeakReference<JavaProject>(result);
         }
         catch (SAXException exception) {
+            throw new IOException2(exception);
+        }
+        catch (DocumentException exception) {
             throw new IOException2(exception);
         }
     }
@@ -251,18 +276,18 @@ public class FindBugsResult extends AbstractWarningsDetail {
         loadResult();
 
         if (hasPreviousResult()) {
-            newWarnings = new WeakReference<Set<Warning>>(
-                    WarningDifferencer.getNewWarnings(getProject().getWarnings(), getPreviousResult().getWarnings()));
+            newWarnings = new WeakReference<Set<FileAnnotation>>(
+                    WarningDifferencer.getNewWarnings(getProject().getAnnotations(), getPreviousResult().getAnnotations()));
         }
         else {
-            newWarnings = new WeakReference<Set<Warning>>(getProject().getWarnings());
+            newWarnings = new WeakReference<Set<FileAnnotation>>(new HashSet<FileAnnotation>(getProject().getAnnotations()));
         }
         if (hasPreviousResult()) {
-            fixedWarnings = new WeakReference<Set<Warning>>(
-                    WarningDifferencer.getFixedWarnings(getProject().getWarnings(), getPreviousResult().getWarnings()));
+            fixedWarnings = new WeakReference<Set<FileAnnotation>>(
+                    WarningDifferencer.getFixedWarnings(getProject().getAnnotations(), getPreviousResult().getAnnotations()));
         }
         else {
-            fixedWarnings = new WeakReference<Set<Warning>>(EMPTY_SET);
+            fixedWarnings = new WeakReference<Set<FileAnnotation>>(EMPTY_SET);
         }
     }
 
@@ -290,7 +315,7 @@ public class FindBugsResult extends AbstractWarningsDetail {
         else {
             if (isSingleModuleProject()) {
                 if (isSinglePackageProject()) {
-                    return new SourceDetail(getOwner(), getWarning(link));
+                    return new SourceDetail(getOwner(), getAnnotation(link));
                 }
                 else {
                     return new PackageDetail(getOwner(), getProject().getModules().iterator().next().getPackage(link));
@@ -307,7 +332,7 @@ public class FindBugsResult extends AbstractWarningsDetail {
      *
      * @return the packages of this project
      */
-    public Set<JavaPackage> getPackages() {
+    public Collection<JavaPackage> getPackages() {
         return getProject().getPackages();
     }
 
@@ -316,18 +341,8 @@ public class FindBugsResult extends AbstractWarningsDetail {
      *
      * @return the modules of this project
      */
-    public Collection<Module> getModules() {
+    public Collection<MavenModule> getModules() {
         return getProject().getModules();
-    }
-
-    /**
-     * Returns the warnings of this project.
-     *
-     * @return the warnings of this project
-     */
-    @Override
-    public Set<Warning> getWarnings() {
-        return getProject().getWarnings();
     }
 
     /**
@@ -361,7 +376,7 @@ public class FindBugsResult extends AbstractWarningsDetail {
     public int getPreviousNumberOfWarnings(final String packageName) {
         JavaProject previousResult = getPreviousResult();
         if (previousResult != null) {
-            return previousResult.getNumberOfWarnings(packageName);
+            return previousResult.getPackage(packageName).getNumberOfAnnotations();
         }
         return 0;
     }
@@ -392,48 +407,6 @@ public class FindBugsResult extends AbstractWarningsDetail {
     }
 
     /**
-     * Computes the low, normal and high priority count.
-     *
-     * @param allWarnings
-     *            all project warnings
-     */
-    private void computePriorities(final Set<Warning> allWarnings) {
-        low = WarningDifferencer.countLowPriorityWarnings(allWarnings);
-        normal = WarningDifferencer.countNormalPriorityWarnings(allWarnings);
-        high = WarningDifferencer.countHighPriorityWarnings(allWarnings);
-    }
-
-    /**
-     * Returns the total number of warnings with priority LOW.
-     *
-     * @return the total number of warnings with priority LOW
-     */
-    @Override
-    public int getNumberOfLowWarnings() {
-        return low;
-    }
-
-    /**
-     * Returns the total number of warnings with priority HIGH.
-     *
-     * @return the total number of warnings with priority HIGH
-     */
-    @Override
-    public int getNumberOfHighWarnings() {
-        return high;
-    }
-
-    /**
-     * Returns the total number of warnings with priority NORMAL.
-     *
-     * @return the total number of warnings with priority NORMAL
-     */
-    @Override
-    public int getNumberOfNormalWarnings() {
-        return normal;
-    }
-
-    /**
      * Generates a PNG image for high/normal/low distribution of a maven module.
      *
      * @param request
@@ -444,7 +417,7 @@ public class FindBugsResult extends AbstractWarningsDetail {
      *             in case of an error
      */
     public final void doModuleStatistics(final StaplerRequest request, final StaplerResponse response) throws IOException {
-        createDetailGraph(request, response, getProject().getModule(request.getParameter("module")), getProject().getWarningBound());
+        createDetailGraph(request, response, getProject().getModule(request.getParameter("module")), getProject().getAnnotationBound());
     }
 
     /**
@@ -458,7 +431,24 @@ public class FindBugsResult extends AbstractWarningsDetail {
      *             in case of an error
      */
     public final void doPackageStatistics(final StaplerRequest request, final StaplerResponse response) throws IOException {
-        Module module = getModules().iterator().next();
-        createDetailGraph(request, response, module.getPackage(request.getParameter("package")), module.getWarningBound());
+        MavenModule module = getModules().iterator().next();
+        createDetailGraph(request, response, module.getPackage(request.getParameter("package")), module.getAnnotationBound());
+    }
+
+    /**
+     * Returns a tooltip showing the distribution of priorities for the selected
+     * package.
+     *
+     * @param name
+     *            the package to show the distribution for
+     * @return a tooltip showing the distribution of priorities
+     */
+    public String getToolTip(final String name) {
+        if (isSingleModuleProject()) {
+            return getProject().getModules().iterator().next().getPackage(name).getToolTip();
+        }
+        else {
+            return getProject().getModule(name).getToolTip();
+        }
     }
 }

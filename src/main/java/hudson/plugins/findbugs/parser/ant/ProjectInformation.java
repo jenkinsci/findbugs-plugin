@@ -1,6 +1,5 @@
-package hudson.plugins.findbugs;
+package hudson.plugins.findbugs.parser.ant;
 
-import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -9,9 +8,7 @@ import java.util.Set;
  * Java Bean class to collect project information of a FindBugs run (native
  * format only).
  */
-public class ProjectInformation implements Serializable {
-    /** Unique identifier of this class. */
-    private static final long serialVersionUID = 6041243953683156038L;
+public class ProjectInformation {
     /** All source paths of this project. */
     private final Set<String> paths = new HashSet<String>();
 

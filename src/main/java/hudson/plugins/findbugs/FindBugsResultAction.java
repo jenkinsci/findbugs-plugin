@@ -1,6 +1,7 @@
 package hudson.plugins.findbugs;
 
 import hudson.model.AbstractBuild;
+import hudson.plugins.findbugs.model.Priority;
 import hudson.plugins.findbugs.util.AbstractResultAction;
 import hudson.plugins.findbugs.util.HealthReportBuilder;
 import hudson.util.DataSetBuilder;
@@ -50,7 +51,7 @@ public class FindBugsResultAction extends AbstractResultAction<FindBugsResult> {
     /** {@inheritDoc} */
     @Override
     protected int getHealthCounter() {
-        return getResult().getNumberOfWarnings();
+        return getResult().getNumberOfAnnotations();
     }
 
     /** {@inheritDoc} */
@@ -140,13 +141,13 @@ public class FindBugsResultAction extends AbstractResultAction<FindBugsResult> {
             if (current != null) {
                 List<Integer> series;
                 if (useHealthBuilder && getHealthReportBuilder().isEnabled()) {
-                    series = getHealthReportBuilder().createSeries(current.getNumberOfWarnings());
+                    series = getHealthReportBuilder().createSeries(current.getNumberOfAnnotations());
                 }
                 else {
                     series = new ArrayList<Integer>();
-                    series.add(current.getNumberOfLowWarnings());
-                    series.add(current.getNumberOfNormalWarnings());
-                    series.add(current.getNumberOfHighWarnings());
+                    series.add(current.getNumberOfAnnotations(Priority.HIGH));
+                    series.add(current.getNumberOfAnnotations(Priority.NORMAL));
+                    series.add(current.getNumberOfAnnotations(Priority.LOW));
                 }
                 int level = 0;
                 for (Integer integer : series) {

@@ -1,6 +1,8 @@
-package hudson.plugins.findbugs;
+package hudson.plugins.findbugs.parser;
 
 import hudson.FilePath.FileCallable;
+import hudson.plugins.findbugs.model.JavaProject;
+import hudson.plugins.findbugs.model.WorkspaceFile;
 import hudson.remoting.VirtualChannel;
 
 import java.io.File;
@@ -11,7 +13,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.tools.ant.types.FileSet;
 
 /**
- * Scans the workspace and maps Java files to classes.
+ * Scans the workspace module and maps Java files to classes.
  *
  * @author Ulli Hafner
  */
@@ -23,7 +25,9 @@ class WorkspaceScanner implements FileCallable<Void> {
 
     /**
      * Creates a new instance of <code>WorkspaceScanner</code>.
-     * @param project the FindBugs result
+     *
+     * @param project
+     *            the FindBugs result
      */
     public WorkspaceScanner(final JavaProject project) {
         this.project = project;
@@ -44,11 +48,11 @@ class WorkspaceScanner implements FileCallable<Void> {
                 fileMapping.put(key, files[i]);
             }
         }
-        for (Warning warning : project.getWarnings()) {
-            String key = StringUtils.substringBeforeLast(warning.getQualifiedName(), "$") + ".java";
+        for (WorkspaceFile file : project.getFiles()) {
+            String key = StringUtils.substringBeforeLast(file.getPackageName() + "." + file.getName(), "$") + ".java";
             if (fileMapping.containsKey(key)) {
-                warning.setFile(fileMapping.get(key));
-            }
+                file.setName(fileMapping.get(key));
+             }
         }
 
         return null;

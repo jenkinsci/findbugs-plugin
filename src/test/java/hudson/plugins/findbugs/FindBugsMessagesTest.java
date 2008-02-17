@@ -26,7 +26,7 @@ public class FindBugsMessagesTest {
      */
     @Test
     public void parseFindbugsMessages() throws IOException, SAXException {
-        InputStream file = FindBugsCounterTest.class.getResourceAsStream("messages.xml");
+        InputStream file = FindBugsMessages.class.getResourceAsStream("messages.xml");
         List<Pattern> patterns = FindBugsMessages.getInstance().parse(file);
 
         assertEquals("Wrong number of warnings detected.", EXPECTED_PATTERNS, patterns.size());

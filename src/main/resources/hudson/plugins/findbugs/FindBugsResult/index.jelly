@@ -18,7 +18,7 @@
 				<tbody>
 					<tr>
 						<td class="pane">
-							${it.numberOfWarnings}
+							${it.numberOfAnnotations}
 						</td>
 						<td class="pane">
 							${it.numberOfNewWarnings}
@@ -51,8 +51,12 @@
 						<j:forEach var="module" items="${it.modules}">
 							<tr>
 								<td class="pane"><a href="${module.name}/">${module.name}</a></td>
-								<td class="pane">${module.numberOfWarnings}</td>
-								<td class="pane"> <img src="moduleStatistics?module=${module.name}"/></td>
+								<td class="pane">${module.numberOfAnnotations}</td>
+								<td class="pane">
+							        <div tooltip="${it.getToolTip(module.name)}">
+										<img src="moduleStatistics?module=${module.name}"/>
+									</div>
+								</td>
 							</tr>
 						</j:forEach>
 					</tbody>

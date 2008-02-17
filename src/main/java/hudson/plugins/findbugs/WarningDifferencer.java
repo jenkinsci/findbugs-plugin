@@ -1,5 +1,8 @@
 package hudson.plugins.findbugs;
 
+import hudson.plugins.findbugs.model.FileAnnotation;
+
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,8 +20,8 @@ public final class WarningDifferencer {
      *            warnings in previous build
      * @return the new warnings
      */
-    public static Set<Warning> getNewWarnings(final Set<Warning> actual, final Set<Warning> previous) {
-        Set<Warning> warnings = new HashSet<Warning>(actual);
+    public static Set<FileAnnotation> getNewWarnings(final Collection<FileAnnotation> actual, final Collection<FileAnnotation> previous) {
+        Set<FileAnnotation> warnings = new HashSet<FileAnnotation>(actual);
         warnings.removeAll(previous);
         return warnings;
     }
@@ -33,67 +36,10 @@ public final class WarningDifferencer {
      *            warnings in previous build
      * @return the new warnings
      */
-    public static Set<Warning> getFixedWarnings(final Set<Warning> actual, final Set<Warning> previous) {
-        Set<Warning> warnings = new HashSet<Warning>(previous);
+    public static Set<FileAnnotation> getFixedWarnings(final Collection<FileAnnotation> actual, final Collection<FileAnnotation> previous) {
+        Set<FileAnnotation> warnings = new HashSet<FileAnnotation>(previous);
         warnings.removeAll(actual);
         return warnings;
-    }
-
-    /**
-     * Returns the number of warnings with HIGH priority.
-     *
-     * @param warnings
-     *            the warnings to scan
-     * @return the number warnings of the specified priority.
-     */
-    public static int countHighPriorityWarnings(final Set<Warning> warnings) {
-        return countWarnings(warnings, "high", "1");
-    }
-
-    /**
-     * Returns the number of warnings of the specified priority.
-     *
-     * @param warnings
-     *            the warnings to scan
-     * @param priority
-     *            the priority
-     * @param priorityNumber
-     *            the priority as a number
-     * @return the number warnings of the specified priority.
-     */
-    private static int countWarnings(final Set<Warning> warnings, final String priority, final String priorityNumber) {
-        int count = 0;
-        for (Warning warning : warnings) {
-            if (priority.equalsIgnoreCase(warning.getPriority())) {
-                count++;
-            }
-            else if (priorityNumber.equalsIgnoreCase(warning.getPriority())) {
-                count++;
-            }
-        }
-        return count;
-    }
-
-    /**
-     * Returns the number of warnings with NORMAL priority.
-     *
-     * @param warnings
-     *            the warnings to scan
-     * @return the number warnings of the specified priority.
-     */
-    public static int countNormalPriorityWarnings(final Set<Warning> warnings) {
-        return countWarnings(warnings, "normal", "2");
-    }
-
-    /**
-     * Returns the number of warnings with LOW priority.
-     *
-     * @param warnings
-     *            the warnings to scan
-     * @return the number warnings of the specified priority.
-     */
-    public static int countLowPriorityWarnings(final Set<Warning> warnings) {
-        return countWarnings(warnings, "low", "3");
     }
 
     /**

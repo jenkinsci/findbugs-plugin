@@ -1,6 +1,8 @@
 package hudson.plugins.findbugs;
 
 import hudson.model.AbstractBuild;
+import hudson.plugins.findbugs.model.JavaPackage;
+import hudson.plugins.findbugs.model.MavenModule;
 import hudson.plugins.findbugs.util.SourceDetail;
 
 import java.io.IOException;
@@ -16,7 +18,7 @@ public class ModuleDetail extends AbstractWarningsDetail {
     /** Unique identifier of this class. */
     private static final long serialVersionUID = -1854984151887397361L;
     /** The module to show the details for. */
-    private final Module module;
+    private final MavenModule module;
 
     /**
      * Creates a new instance of <code>ModuleDetail</code>.
@@ -26,8 +28,8 @@ public class ModuleDetail extends AbstractWarningsDetail {
      * @param module
      *            the module to show the details for
      */
-    public ModuleDetail(final AbstractBuild<?, ?> owner, final Module module) {
-        super(owner, module.getWarnings());
+    public ModuleDetail(final AbstractBuild<?, ?> owner, final MavenModule module) {
+        super(owner, module.getAnnotations());
         this.module = module;
     }
 
@@ -41,7 +43,7 @@ public class ModuleDetail extends AbstractWarningsDetail {
      *
      * @return the maven module
      */
-    public Module getModule() {
+    public MavenModule getModule() {
         return module;
     }
 
@@ -76,7 +78,7 @@ public class ModuleDetail extends AbstractWarningsDetail {
      *             in case of an error
      */
     public final void doPackageStatistics(final StaplerRequest request, final StaplerResponse response) throws IOException {
-        createDetailGraph(request, response, module.getPackage(request.getParameter("package")), module.getWarningBound());
+        createDetailGraph(request, response, module.getPackage(request.getParameter("package")), module.getAnnotationBound());
     }
 
     /**
@@ -99,11 +101,23 @@ public class ModuleDetail extends AbstractWarningsDetail {
      */
     public Object getDynamic(final String link, final StaplerRequest request, final StaplerResponse response) {
         if (isSinglePackageModule()) {
-            return new SourceDetail(getOwner(), getWarning(link));
+            return new SourceDetail(getOwner(), getAnnotation(link));
         }
         else {
             return new PackageDetail(getOwner(), module.getPackage(link));
         }
+    }
+
+    /**
+     * Returns a tooltip showing the distribution of priorities for the selected
+     * package.
+     *
+     * @param packageName
+     *            the package to show the distribution for
+     * @return a tooltip showing the distribution of priorities
+     */
+    public String getToolTip(final String packageName) {
+        return module.getPackage(packageName).getToolTip();
     }
 }
 

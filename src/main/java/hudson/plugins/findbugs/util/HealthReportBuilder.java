@@ -99,9 +99,7 @@ public class HealthReportBuilder implements Serializable {
             return new HealthReport(percentage,
                     reportName + ": " + Util.combine(counter, itemName) + " found.");
         }
-        else {
-            return null;
-        }
+        return null;
     }
 
     /**

@@ -11,10 +11,10 @@
 		</tr>
 		<tbody>
 			<tr>
-				<td class="pane">${it.numberOfWarnings}</td>
-				<td class="pane">${it.numberOfHighWarnings}</td>
-				<td class="pane">${it.numberOfNormalWarnings}</td>
-				<td class="pane">${it.numberOfLowWarnings}</td>
+				<td class="pane">${it.numberOfAnnotations}</td>
+				<td class="pane">${it.getNumberOfAnnotations("HIGH")}</td>
+				<td class="pane">${it.getNumberOfAnnotations("NORMAL")}</td>
+				<td class="pane">${it.getNumberOfAnnotations("LOW")}</td>
 			</tr>
 		</tbody>
 	</table>

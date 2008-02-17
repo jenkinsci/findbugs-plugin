@@ -9,6 +9,8 @@ import hudson.model.Build;
 import hudson.model.BuildListener;
 import hudson.model.Descriptor;
 import hudson.model.Result;
+import hudson.plugins.findbugs.model.JavaProject;
+import hudson.plugins.findbugs.parser.FindBugsCounter;
 import hudson.plugins.findbugs.util.AbortException;
 import hudson.plugins.findbugs.util.HealthAwarePublisher;
 import hudson.plugins.findbugs.util.HealthReportBuilder;
@@ -17,6 +19,7 @@ import hudson.tasks.Publisher;
 import java.io.IOException;
 
 import org.apache.commons.lang.StringUtils;
+import org.dom4j.DocumentException;
 import org.xml.sax.SAXException;
 
 /**
@@ -87,7 +90,6 @@ public class FindBugsPublisher extends HealthAwarePublisher {
 
         try {
             JavaProject project = findBugsCounter.findBugs();
-            findBugsCounter.mapWarnings2Files(project);
 
             Object previous = build.getPreviousBuild();
             FindBugsResult result;
@@ -108,7 +110,7 @@ public class FindBugsPublisher extends HealthAwarePublisher {
             HealthReportBuilder healthReportBuilder = createHealthReporter("FindBugs", "warning");
             build.getActions().add(new FindBugsResultAction(build, result, healthReportBuilder));
 
-            int warnings = project.getNumberOfWarnings();
+            int warnings = project.getNumberOfAnnotations();
             if (warnings > 0) {
                 listener.getLogger().println("A total of " + warnings + " potential bugs have been found.");
                 if (isThresholdEnabled() && warnings >= getMinimumAnnotations()) {
@@ -120,6 +122,12 @@ public class FindBugsPublisher extends HealthAwarePublisher {
             }
         }
         catch (SAXException exception) {
+            listener.getLogger().println();
+            exception.printStackTrace(listener.fatalError("Could not parse FindBugs files. Please check if the file pattern is correct\nand the latest FindBugs scanner is used (i.e., maven-findbugs-plugin >= 1.1.1)"));
+            build.setResult(Result.FAILURE);
+            return false;
+        }
+        catch (DocumentException exception) {
             listener.getLogger().println();
             exception.printStackTrace(listener.fatalError("Could not parse FindBugs files. Please check if the file pattern is correct\nand the latest FindBugs scanner is used (i.e., maven-findbugs-plugin >= 1.1.1)"));
             build.setResult(Result.FAILURE);
@@ -145,7 +153,7 @@ public class FindBugsPublisher extends HealthAwarePublisher {
      * @throws InterruptedException
      *             if the user canceled the operation
      */
-    private boolean copyFilesFromWorkspaceToBuild(final AbstractBuild<?,?> build, final BuildListener listener,
+    private boolean copyFilesFromWorkspaceToBuild(final AbstractBuild<?, ?> build, final BuildListener listener,
             final FilePath buildFolder) throws IOException, InterruptedException {
         try {
             build.getProject().getWorkspace().act(
