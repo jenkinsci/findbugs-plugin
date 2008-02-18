@@ -10,9 +10,9 @@
   <artifactId>findbugs</artifactId>
   <packaging>hpi</packaging>
   <name>Hudson FindBugs Plug-in</name>
-  <version>1.19-SNAPSHOT</version>
+  <version>2.0-SNAPSHOT</version>
   <url>http://hudson.gotdns.com/wiki/display/HUDSON/FindBugs+Plugin</url>
-  
+
   <licenses>
   	<license><name>MIT license</name><comments>All source code is under the MIT license.</comments></license>
   	<license><name>GNU LESSER GENERAL PUBLIC LICENSE</name><comments>FindBugs messages.xml file from the findbugs 1.2.1 release .</comments></license>
