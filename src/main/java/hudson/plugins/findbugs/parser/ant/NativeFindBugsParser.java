@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Set;
 
 import org.dom4j.DocumentException;
 
@@ -21,35 +20,41 @@ import edu.umd.cs.findbugs.ba.SourceFile;
 import edu.umd.cs.findbugs.ba.SourceFinder;
 
 /**
- * A parser for the native FindBugs XML files (ant task).
+ * A parser for the native FindBugs XML files (ant task, batch file or
+ * maven-findbugs-plugin >= 1.2-SNAPSHOT).
  */
 public class NativeFindBugsParser {
     /**
      * Returns the parsed FindBugs analysis file. This scanner accepts files in
      * the native FindBugs format.
-     *
      * @param file
      *            the FindBugs analysis file
+     * @param moduleRoot
+     *            the root path of the maven module
      * @param moduleName
      *            name of maven module
+     *
      * @return the parsed result (stored in the module instance)
      * @throws IOException
      *             if the file could not be parsed
      * @throws DocumentException
      */
-    public MavenModule parse(final InputStream file, final String moduleName) throws IOException, DocumentException {
+    public MavenModule parse(final InputStream file, final String moduleRoot, final String moduleName)
+            throws IOException, DocumentException {
         SortedBugCollection collection = new SortedBugCollection();
 
         Project project = new Project();
+        project.addSourceDir(moduleRoot + "/src/main/java");
+        project.addSourceDir(moduleRoot + "/src/test/java");
+        project.addSourceDir(moduleRoot + "/src");
+
         collection.readXML(file, project);
-
         Collection<BugInstance> bugs = collection.getCollection();
-
-        MavenModule module = new MavenModule(moduleName);
 
         SourceFinder sourceFinder = new SourceFinder();
         sourceFinder.setSourceBaseList(project.getSourceDirList());
 
+        MavenModule module = new MavenModule(moduleName);
         HashMap<String, WorkspaceFile> fileMapping = new HashMap<String, WorkspaceFile>();
         for (BugInstance warning : bugs) {
             Priority priority;
@@ -64,9 +69,8 @@ public class NativeFindBugsParser {
                     priority = Priority.LOW;
             }
 
-            Bug bug;
             SourceLineAnnotation sourceLine = warning.getPrimarySourceLineAnnotation();
-            bug = new Bug(priority, warning.getMessage(), warning.getMessage(), warning.getType(), sourceLine.getStartLine());
+            Bug bug = new Bug(priority, warning.getMessage(), warning.getMessage(), warning.getType(), sourceLine.getStartLine());
 
             String fileName;
             try {
@@ -74,7 +78,7 @@ public class NativeFindBugsParser {
                 fileName = sourceFile.getFullFileName();
             }
             catch (IOException exception) {
-                fileName = "";
+                fileName = sourceLine.getPackageName().replace(".", "/") + "/" + sourceLine.getSourceFile();
             }
             if (!fileMapping.containsKey(fileName)) {
                 WorkspaceFile workspaceFile = new WorkspaceFile();
@@ -87,39 +91,7 @@ public class NativeFindBugsParser {
             workspaceFile.addAnnotation(bug);
             module.addAnnotation(bug);
         }
-        //mapNativeWarnings2Files(module, collection.getProjectInformation());
         return module;
-    }
-
-    /**
-     * Creates a mapping of warnings to actual workspace files (for native
-     * format). The result is persisted in the results folder.
-     *
-     * @param module
-     *            module containing all the warnings
-     * @param projectInformation
-     *            additional project information
-     */
-    private void mapNativeWarnings2Files(final MavenModule module, final ProjectInformation projectInformation) {
-        Set<String> paths = projectInformation.getSourcePaths();
-        if (paths.size() > 1) {
-            for (WorkspaceFile workspaceFile : module.getFiles()) {
-                for (String path : paths) {
-                    String actualPath = path + "/" + workspaceFile.getName();
-                    java.io.File file = new java.io.File(actualPath.replace('!', '/'));
-                    if (file.exists()) {
-                        workspaceFile.setName(actualPath);
-                        break;
-                    }
-                }
-            }
-        }
-        else if (paths.size() == 1) {
-            String prefix = paths.iterator().next();
-            for (WorkspaceFile workspaceFile : module.getFiles()) {
-                workspaceFile.setName(prefix + "/" + workspaceFile.getName());
-            }
-        }
     }
 }
 

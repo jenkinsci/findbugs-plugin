@@ -3,23 +3,29 @@ package hudson.plugins.findbugs;
 import hudson.FilePath;
 import hudson.FilePath.FileCallable;
 import hudson.model.BuildListener;
+import hudson.plugins.findbugs.model.JavaProject;
+import hudson.plugins.findbugs.model.MavenModule;
+import hudson.plugins.findbugs.parser.WorkspaceScanner;
+import hudson.plugins.findbugs.parser.ant.NativeFindBugsParser;
+import hudson.plugins.findbugs.parser.maven.MavenFindBugsParser;
 import hudson.plugins.findbugs.util.AbortException;
 import hudson.remoting.VirtualChannel;
-import hudson.util.IOException2;
 
 import java.io.File;
 import java.io.IOException;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.tools.ant.types.FileSet;
+import org.dom4j.DocumentException;
+import org.xml.sax.SAXException;
 
 /**
- * Collects the FindBugs analysis files and copies them to the working
- * directory.
+ * Parses the FindBugs files that match the specified pattern and creates a
+ * corresponding Java project with a collection of annotations.
  *
  * @author Ulli Hafner
  */
-class FindBugsCollector implements FileCallable<Void> {
+class FindBugsCollector implements FileCallable<JavaProject> {
     /** Slash separator on UNIX. */
     private static final String SLASH = "/";
     /** Generated ID. */
@@ -28,8 +34,6 @@ class FindBugsCollector implements FileCallable<Void> {
     private static final boolean SKIP_OLD_FILES = false;
     /** Logger. */
     private final transient BuildListener listener;
-    /** Working directory to copy results to. */
-    private final FilePath workingDirectory;
     /** Build time stamp, only newer files are considered. */
     private final long buildTime;
     /** Ant file-set pattern to scan for FindBugs files. */
@@ -40,46 +44,94 @@ class FindBugsCollector implements FileCallable<Void> {
      *
      * @param listener
      *            the Logger
-     * @param workingDirectory
-     *            working directory to copy results to
      * @param buildTime
      *            build time stamp, only newer files are considered
      * @param filePattern
      *            ant file-set pattern to scan for FindBugs files
      */
-    FindBugsCollector(final BuildListener listener, final FilePath workingDirectory, final long buildTime, final String filePattern) {
+    FindBugsCollector(final BuildListener listener, final long buildTime, final String filePattern) {
         this.listener = listener;
-        this.workingDirectory = workingDirectory;
         this.buildTime = buildTime;
         this.filePattern = filePattern;
     }
 
     /** {@inheritDoc} */
-    public Void invoke(final File workspace, final VirtualChannel channel) throws IOException {
+    public JavaProject invoke(final File workspace, final VirtualChannel channel) throws IOException {
         String[] findBugsFiles = findFindBugsFiles(workspace);
         if (findBugsFiles.length == 0) {
             throw new AbortException("No findbugs report files were found. Configuration error?");
         }
 
-        int counter = 0;
-        for (String file : findBugsFiles) {
-            File originalFile = new File(workspace, file);
+        JavaProject project = new JavaProject();
 
-            if (SKIP_OLD_FILES && originalFile.lastModified() < buildTime) {
-                listener.getLogger().println("Skipping " + originalFile + " because it's not up to date");
+        // FIXME: enum
+        boolean isFormatUndefined = true;
+        boolean isOldMavenPluginFormat = true;
+        boolean isAntFormat = false;
+
+        MavenFindBugsParser mavenFindBugsParser = new MavenFindBugsParser();
+
+        for (String file : findBugsFiles) {
+            File findbugsFile = new File(workspace, file);
+            FilePath filePath = new FilePath(findbugsFile);
+
+            if (SKIP_OLD_FILES && findbugsFile.lastModified() < buildTime) {
+                listener.getLogger().println("Skipping " + findbugsFile + " because it's not up to date");
             }
             else {
                 try {
-                    String destinationName = StringUtils.defaultIfEmpty(guessModuleName(originalFile.getAbsolutePath()), "report-" + counter) + ".xml";
-                    new FilePath(originalFile).copyTo(workingDirectory.child(destinationName));
+                    String moduleName = guessModuleName(findbugsFile.getAbsolutePath());
+                    if (isFormatUndefined) {
+                        isOldMavenPluginFormat = mavenFindBugsParser.accepts(filePath.read());
+                        if (!isOldMavenPluginFormat) {
+                            isAntFormat = mavenFindBugsParser.hasSourcePaths(filePath.read());
+                            if (isAntFormat) {
+                                listener.getLogger().println(
+                                        "Activating parser for findbugs ant task or batch script.");
+                            }
+                            else {
+                                listener.getLogger().println(
+                                        "Activating parser for maven-findbugs-plugin >= 1.2-SNAPSHOT.");
+                            }
+                        }
+                        else {
+                            listener.getLogger().println("Activating parser for maven-findbugs-plugin <= 1.1.1.");
+                        }
+                        isFormatUndefined = false;
+                    }
+                    MavenModule module;
+                    if (isOldMavenPluginFormat) {
+                        module = mavenFindBugsParser.parse(filePath.read(), moduleName);
+                    }
+                    else {
+                        NativeFindBugsParser parser = new NativeFindBugsParser();
+                        module = parser.parse(filePath.read(), StringUtils.substringBefore(findbugsFile.getPath().replace('\\', '/'), "/target/"), moduleName);
+                    }
+                    listener.getLogger().println("Warnings found: " + module.getNumberOfAnnotations());
+
+                    project.addAnnotations(module.getAnnotations());
+
+                    if (isOldMavenPluginFormat) {
+                        new FilePath(workspace).act(new WorkspaceScanner(module, listener.getLogger()));
+                        listener.getLogger().println("Mapped Java classes to Java files.");
+                    }
+                    listener.getLogger().println("Successfully parsed findbugs file " + findbugsFile + ".");
+                }
+                catch (SAXException e) {
+                    listener.getLogger().println("Can't parse file " + findbugsFile + " due to an exception.");
+                    e.printStackTrace(listener.getLogger());
+                }
+                catch (DocumentException e) {
+                    listener.getLogger().println("Can't parse file " + findbugsFile + " due to an exception.");
+                    e.printStackTrace(listener.getLogger());
                 }
                 catch (InterruptedException exception) {
-                    throw new IOException2("Aborted while copying " + originalFile, exception);
+                    listener.getLogger().println("Parsing has been canceled.");
+                    return project;
                 }
             }
-            counter++;
         }
-        return null;
+        return project;
     }
 
     /**

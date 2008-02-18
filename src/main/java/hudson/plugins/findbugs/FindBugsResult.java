@@ -1,15 +1,18 @@
 package hudson.plugins.findbugs;
 
+import hudson.XmlFile;
 import hudson.model.AbstractBuild;
+import hudson.plugins.findbugs.model.AnnotationStream;
 import hudson.plugins.findbugs.model.FileAnnotation;
 import hudson.plugins.findbugs.model.JavaPackage;
 import hudson.plugins.findbugs.model.JavaProject;
 import hudson.plugins.findbugs.model.MavenModule;
 import hudson.plugins.findbugs.model.Priority;
-import hudson.plugins.findbugs.parser.FindBugsCounter;
+import hudson.plugins.findbugs.model.WorkspaceFile;
+import hudson.plugins.findbugs.parser.Bug;
 import hudson.plugins.findbugs.util.SourceDetail;
-import hudson.util.IOException2;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.Collection;
@@ -19,10 +22,10 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.dom4j.DocumentException;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
-import org.xml.sax.SAXException;
+
+import com.thoughtworks.xstream.XStream;
 
 import edu.umd.cs.findbugs.annotations.SuppressWarnings;
 
@@ -66,6 +69,13 @@ public class FindBugsResult extends AbstractWarningsDetail {
     /** The number of high priority warnings in this build. */
     private final int high;
 
+    /** Serialization provider. */
+    private static final XStream XSTREAM = new AnnotationStream();
+
+    static {
+        XSTREAM.alias("bug", Bug.class);
+    }
+
     /**
      * Creates a new instance of <code>FindBugsResult</code>.
      *
@@ -106,6 +116,23 @@ public class FindBugsResult extends AbstractWarningsDetail {
         high = project.getNumberOfAnnotations(Priority.HIGH);
         normal = project.getNumberOfAnnotations(Priority.NORMAL);
         low = project.getNumberOfAnnotations(Priority.LOW);
+
+        try {
+            Collection<WorkspaceFile> files = project.getFiles();
+            getDataFile().write(files.toArray(new WorkspaceFile[files.size()]));
+        }
+        catch (IOException exception) {
+            LOGGER.log(Level.WARNING, "Failed to serialize the findbugs result.", exception);
+        }
+    }
+
+    /**
+     * Returns the serialization file.
+     *
+     * @return the serialization file.
+     */
+    private XmlFile getDataFile() {
+        return new XmlFile(XSTREAM, new File(getOwner().getRootDir(), "findbugs-warnings.xml"));
     }
 
     /** {@inheritDoc} */
@@ -170,23 +197,14 @@ public class FindBugsResult extends AbstractWarningsDetail {
      * @return the associated project of this result.
      */
     public JavaProject getProject() {
-        try {
-            if (project == null) {
-                loadResult();
-            }
-            JavaProject result = project.get();
-            if (result == null) {
-                loadResult();
-            }
-            return project.get();
+        if (project == null) {
+            loadResult();
         }
-        catch (IOException exception) {
-            LOGGER.log(Level.WARNING, "Failed to load FindBugs files.", exception);
+        JavaProject result = project.get();
+        if (result == null) {
+            loadResult();
         }
-        catch (InterruptedException exception) {
-            LOGGER.log(Level.WARNING, "Failed to load FindBugs files: operation has been canceled.", exception);
-        }
-        return new JavaProject();
+        return project.get();
     }
 
     /**
@@ -242,25 +260,22 @@ public class FindBugsResult extends AbstractWarningsDetail {
     /**
      * Loads the FindBugs results and wraps them in a weak reference that might
      * get removed by the garbage collector.
-     *
-     * @throws IOException if the files could not be read
-     * @throws InterruptedException if the operation has been canceled
      */
-    private void loadResult() throws IOException, InterruptedException {
+    private void loadResult() {
+        JavaProject result;
         try {
-            FindBugsCounter findBugsCounter = new FindBugsCounter(getOwner());
-            JavaProject result = findBugsCounter.findBugs();
-            if (isCurrent()) {
-                findBugsCounter.restoreMapping(result);
+            JavaProject newProject = new JavaProject();
+            WorkspaceFile[] files = (WorkspaceFile[])getDataFile().read();
+            for (WorkspaceFile workspaceFile : files) {
+                newProject.addAnnotations(workspaceFile.getAnnotations());
             }
-            project = new WeakReference<JavaProject>(result);
+            result = newProject;
         }
-        catch (SAXException exception) {
-            throw new IOException2(exception);
+        catch (IOException exception) {
+            LOGGER.log(Level.WARNING, "Failed to load " + getDataFile(), exception);
+            result = new JavaProject();
         }
-        catch (DocumentException exception) {
-            throw new IOException2(exception);
-        }
+        project = new WeakReference<JavaProject>(result);
     }
 
     /**
