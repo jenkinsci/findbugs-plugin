@@ -2,10 +2,15 @@ package hudson.plugins.findbugs.parser;
 
 import hudson.plugins.findbugs.FindBugsMessages;
 import hudson.plugins.findbugs.model.FileAnnotation;
+import hudson.plugins.findbugs.model.LineRange;
 import hudson.plugins.findbugs.model.Priority;
 import hudson.plugins.findbugs.model.WorkspaceFile;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * A serializable Java Bean class representing an open task.
@@ -20,22 +25,43 @@ public class Bug implements Serializable, FileAnnotation, Comparable<Bug> {
     private String message;
     /** The priority of this task. */
     private Priority priority;
-    /** Line number of the task in the corresponding file. */
-    private int lineNumber;
     /** Unique key of this task. */
     private long key;
-    /** Determines whether this is a file annotation or a annotation at a specified line. */
-    private boolean hasLineNumber;
     /** File this annotation is part of. */
+    // FIXME: check if we could omit the serialization of this field
     @edu.umd.cs.findbugs.annotations.SuppressWarnings("Se")
     private transient WorkspaceFile workspaceFile;
     /** Bug category. */
     private String category;
     /** Bug type. */
     private String type;
+    /** The ordered list of line ranges. */
+    private List<LineRange> lineRanges;
+    private String fileName;
 
     /**
-     * Creates a new instance of <code>Warning</code>.
+     * Creates a new instance of <code>Bug</code>.
+     *
+     * @param priority
+     *            the priority
+     * @param message
+     *            the message of the warning
+     * @param category
+     *            the warning category
+     * @param type
+     *            the identifier of the warning type
+     * @param start
+     *            the first line of the line range
+     * @param end
+     *            the last line of the line range
+     */
+    public Bug(final Priority priority, final String message, final String category, final String type,
+            final int start, final int end) {
+        initialize(priority, message, category, type, start, end);
+    }
+
+    /**
+     * Creates a new instance of <code>Bug</code>.
      *
      * @param priority
      *            the priority
@@ -49,11 +75,11 @@ public class Bug implements Serializable, FileAnnotation, Comparable<Bug> {
      *            the line number of the warning in the corresponding file
      */
     public Bug(final Priority priority, final String message, final String category, final String type, final int lineNumber) {
-        initialize(priority, message, category, type, true, lineNumber);
+        initialize(priority, message, category, type, lineNumber, lineNumber);
     }
 
     /**
-     * Creates a new instance of <code>Warning</code> that has no associated line in code (file warning).
+     * Creates a new instance of <code>Bug</code> that has no associated line in code (file warning).
      *
      * @param priority
      *            the priority
@@ -65,7 +91,7 @@ public class Bug implements Serializable, FileAnnotation, Comparable<Bug> {
      *            the identifier of the warning type
      */
     public Bug(final Priority priority, final String message, final String category, final String type) {
-        initialize(priority, message, category, type, false, 0);
+        initialize(priority, message, category, type, 1, 1);
     }
 
     /**
@@ -79,18 +105,23 @@ public class Bug implements Serializable, FileAnnotation, Comparable<Bug> {
      *            the warning category
      * @param type
      *            the identifier of the warning type
+     * @param start
+     *            the first line of the line range
+     * @param end
+     *            the last line of the line range
      */
     // CHECKSTYLE:OFF
     @SuppressWarnings({"PMD", "hiding"})
     private void initialize(final Priority priority, final String message, final String category, final String type,
-            final boolean hasLineNumber, final int lineNumber) {
+            final int start, final int end) {
         this.priority = priority;
         this.message = message;
         this.category = category;
         this.type = type;
-        this.lineNumber = lineNumber;
-        this.hasLineNumber = hasLineNumber;
         key = currentKey++;
+
+        lineRanges = new ArrayList<LineRange>();
+        lineRanges.add(new LineRange(start, end));
     }
     // CHECKSTYLE:ON
 
@@ -127,16 +158,6 @@ public class Bug implements Serializable, FileAnnotation, Comparable<Bug> {
         return priority;
     }
 
-    /** {@inheritDoc} */
-    public int getLineNumber() {
-        return lineNumber;
-    }
-
-    /** {@inheritDoc} */
-    public boolean isLineAnnotation() {
-        return hasLineNumber;
-    }
-
     /**
      * Sets the unique key of this task.
      *
@@ -162,6 +183,7 @@ public class Bug implements Serializable, FileAnnotation, Comparable<Bug> {
      */
     public void setWorkspaceFile(final WorkspaceFile workspaceFile) {
         this.workspaceFile = workspaceFile;
+        fileName = workspaceFile.getName();
     }
 
     /** {@inheritDoc} */
@@ -169,7 +191,7 @@ public class Bug implements Serializable, FileAnnotation, Comparable<Bug> {
         return workspaceFile;
     }
 
-    // FIXME in synch
+    // FIXME in sync with equals?
     /** {@inheritDoc} */
     public int compareTo(final Bug otherTask) {
         if (key == otherTask.key) {
@@ -184,17 +206,17 @@ public class Bug implements Serializable, FileAnnotation, Comparable<Bug> {
     /** {@inheritDoc} */
     @Override
     public int hashCode() {
-        int prime = 31;
+        final int prime = 31;
         int result = 1;
-        result = prime * result + (hasLineNumber ? 1231 : 1237);
-        result = prime * result + lineNumber;
+        result = prime * result + ((category == null) ? 0 : category.hashCode());
+        result = prime * result + ((fileName == null) ? 0 : fileName.hashCode());
+        result = prime * result + ((lineRanges == null) ? 0 : lineRanges.hashCode());
         result = prime * result + ((message == null) ? 0 : message.hashCode());
         result = prime * result + ((priority == null) ? 0 : priority.hashCode());
-        result = prime * result + ((workspaceFile == null) ? 0 : workspaceFile.hashCode());
+        result = prime * result + ((type == null) ? 0 : type.hashCode());
         return result;
     }
 
-    // CHECKSTYLE:OFF
     /** {@inheritDoc} */
     @Override
     public boolean equals(final Object obj) {
@@ -208,10 +230,28 @@ public class Bug implements Serializable, FileAnnotation, Comparable<Bug> {
             return false;
         }
         final Bug other = (Bug)obj;
-        if (hasLineNumber != other.hasLineNumber) {
+        if (category == null) {
+            if (other.category != null) {
+                return false;
+            }
+        }
+        else if (!category.equals(other.category)) {
             return false;
         }
-        if (lineNumber != other.lineNumber) {
+        if (fileName == null) {
+            if (other.fileName != null) {
+                return false;
+            }
+        }
+        else if (!fileName.equals(other.fileName)) {
+            return false;
+        }
+        if (lineRanges == null) {
+            if (other.lineRanges != null) {
+                return false;
+            }
+        }
+        else if (!lineRanges.equals(other.lineRanges)) {
             return false;
         }
         if (message == null) {
@@ -230,15 +270,20 @@ public class Bug implements Serializable, FileAnnotation, Comparable<Bug> {
         else if (!priority.equals(other.priority)) {
             return false;
         }
-        if (workspaceFile == null) {
-            if (other.workspaceFile != null) {
+        if (type == null) {
+            if (other.type != null) {
                 return false;
             }
         }
-        else if (!workspaceFile.equals(other.workspaceFile)) {
+        else if (!type.equals(other.type)) {
             return false;
         }
         return true;
+    }
+
+    /** {@inheritDoc} */
+    public Collection<LineRange> getLineRanges() {
+        return Collections.unmodifiableCollection(lineRanges);
     }
 }
 

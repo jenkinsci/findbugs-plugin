@@ -19,7 +19,7 @@ import org.junit.Test;
  *  Tests the class {@link SourceDetail}.
  */
 public class SourceDetailTest {
-    /** Reference to line . */
+    /** Reference to line 6. */
     private static final String LINE_6_INDICATOR = "<a name=\"6\">";
 
     /**

@@ -3,6 +3,7 @@ package hudson.plugins.findbugs.util;
 import hudson.model.AbstractBuild;
 import hudson.model.ModelObject;
 import hudson.plugins.findbugs.model.FileAnnotation;
+import hudson.plugins.findbugs.model.LineRange;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -134,15 +135,15 @@ public class SourceDetail implements ModelObject {
     public final void splitSourceFile(final String sourceFile) {
         LineIterator lineIterator = IOUtils.lineIterator(new StringReader(sourceFile));
 
-        if (annotation.isLineAnnotation()) {
-            StringBuilder prefixBuilder = new StringBuilder(sourceFile.length());
-            StringBuilder suffixBuilder = new StringBuilder(sourceFile.length());
+        StringBuilder prefixBuilder = new StringBuilder(sourceFile.length());
+        StringBuilder suffixBuilder = new StringBuilder(sourceFile.length());
 
+        for (LineRange range : annotation.getLineRanges()) {
             suffixBuilder.append("</td></tr>\n");
             suffixBuilder.append("<tr><td>\n");
             suffixBuilder.append("<code>\n");
 
-            int warningLine = annotation.getLineNumber();
+            int warningLine = range.getStart();
             int lineNumber = 1;
             while (lineIterator.hasNext()) {
                 String content = lineIterator.nextLine();
@@ -157,19 +158,12 @@ public class SourceDetail implements ModelObject {
                 }
                 lineNumber++;
             }
-
             prefixBuilder.append("</code>\n");
             prefixBuilder.append("</td></tr>\n");
             prefixBuilder.append("<tr><td bgcolor=\"#FFFFC0\">\n");
-
-            prefix = prefixBuilder.toString();
-            suffix = suffixBuilder.toString();
         }
-        else {
-            prefix = sourceFile;
-            suffix = StringUtils.EMPTY;
-            line = StringUtils.EMPTY;
-        }
+        prefix = prefixBuilder.toString();
+        suffix = suffixBuilder.toString();
     }
 
     /**

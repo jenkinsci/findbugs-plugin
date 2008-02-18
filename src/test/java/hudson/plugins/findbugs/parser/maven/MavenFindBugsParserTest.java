@@ -3,6 +3,7 @@ package hudson.plugins.findbugs.parser.maven;
 import static org.junit.Assert.*;
 import hudson.plugins.findbugs.FindBugsMessages;
 import hudson.plugins.findbugs.model.FileAnnotation;
+import hudson.plugins.findbugs.model.LineRange;
 import hudson.plugins.findbugs.model.MavenModule;
 import hudson.plugins.findbugs.model.Priority;
 import hudson.plugins.findbugs.model.WorkspaceFile;
@@ -10,6 +11,7 @@ import hudson.plugins.findbugs.parser.Bug;
 import hudson.plugins.findbugs.parser.NativeFindBugsParser;
 
 import java.io.IOException;
+import java.util.Collection;
 
 import junit.framework.Assert;
 
@@ -119,8 +121,12 @@ public class MavenFindBugsParserTest {
         assertEquals(WRONG_BUG_PROPERTY_SET, "PZLA_PREFER_ZERO_LENGTH_ARRAYS", bug.getType());
         assertEquals(WRONG_BUG_PROPERTY_SET, "PZLA: Should com.avaloq.adt.internal.ui.spell.SpellingContentAssistProcessor.computeContextInformation(ITextViewer, int) return a zero length array rather than null?", bug.getMessage());
         assertEquals(WRONG_BUG_PROPERTY_SET, FindBugsMessages.getInstance().getMessage("PZLA_PREFER_ZERO_LENGTH_ARRAYS"), bug.getToolTip());
-        assertEquals(WRONG_BUG_PROPERTY_SET, 120, bug.getLineNumber());
-        assertTrue(WRONG_BUG_PROPERTY_SET, bug.isLineAnnotation());
+
+        Collection<LineRange> lineRanges = bug.getLineRanges();
+        assertEquals(WRONG_BUG_PROPERTY_SET, 1, lineRanges.size());
+        LineRange range = lineRanges.iterator().next();
+        assertEquals(WRONG_BUG_PROPERTY_SET, 120, range.getStart());
+        assertEquals(WRONG_BUG_PROPERTY_SET, 120, range.getEnd());
 
         WorkspaceFile file = bug.getWorkspaceFile();
         assertEquals(WRONG_FILE_PROPERTY, fileName, file.getModuleName());

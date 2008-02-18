@@ -38,7 +38,9 @@ public class WarningDifferencerTest {
         Bug second = new Bug(Priority.HIGH, STRING, STRING, STRING, 2);
 
         assertEquals("Warnings are not equal.", first, second);
-        second.setWorkspaceFile(new WorkspaceFile());
+        WorkspaceFile file = new WorkspaceFile();
+        file.setName(STRING);
+        second.setWorkspaceFile(file);
         assertFalse("Warnings are equal.", first.equals(second));
     }
 
@@ -97,21 +99,27 @@ public class WarningDifferencerTest {
 
         assertEquals(WARNINGS_COUNT_ERROR, 9, core.getNumberOfAnnotations());
         assertEquals(WARNINGS_COUNT_ERROR, 55, uiModule.getNumberOfAnnotations());
-        assertEquals(WARNINGS_COUNT_ERROR, 28, editor.getNumberOfAnnotations());
-        assertEquals(WARNINGS_COUNT_ERROR, 92, project.getNumberOfAnnotations());
-        assertEquals(WARNINGS_COUNT_ERROR, 92, project.getAnnotations().size());
+        assertEquals(WARNINGS_COUNT_ERROR, 27, editor.getNumberOfAnnotations());
+        assertEquals(WARNINGS_COUNT_ERROR, 91, project.getNumberOfAnnotations());
+        assertEquals(WARNINGS_COUNT_ERROR, 91, project.getAnnotations().size());
 
         Set<FileAnnotation> empty = new HashSet<FileAnnotation>();
         assertEquals(WARNINGS_COUNT_ERROR, 9, WarningDifferencer.getNewWarnings(core.getAnnotations(), empty).size());
         assertEquals(WARNINGS_COUNT_ERROR, 55, WarningDifferencer.getNewWarnings(uiModule.getAnnotations(), empty).size());
-        assertEquals(WARNINGS_COUNT_ERROR, 28, WarningDifferencer.getNewWarnings(editor.getAnnotations(), empty).size());
-        assertEquals(WARNINGS_COUNT_ERROR, 92, WarningDifferencer.getNewWarnings(project.getAnnotations(), empty).size());
+        assertEquals(WARNINGS_COUNT_ERROR, 27, WarningDifferencer.getNewWarnings(editor.getAnnotations(), empty).size());
+
+        project = new JavaProject();
+        project.addAnnotations(core.getAnnotations());
+        project.addAnnotations(uiModule.getAnnotations());
+        project.addAnnotations(editor.getAnnotations());
+
+        assertEquals(WARNINGS_COUNT_ERROR, 91, WarningDifferencer.getNewWarnings(project.getAnnotations(), empty).size());
         assertEquals(WARNINGS_COUNT_ERROR, 0, WarningDifferencer.getNewWarnings(project.getAnnotations(), project.getAnnotations()).size());
         assertEquals(WARNINGS_COUNT_ERROR, 0, WarningDifferencer.getNewWarnings(empty, project.getAnnotations()).size());
 
         assertEquals(WARNINGS_COUNT_ERROR, 0, WarningDifferencer.getFixedWarnings(project.getAnnotations(), project.getAnnotations()).size());
         assertEquals(WARNINGS_COUNT_ERROR, 0, WarningDifferencer.getFixedWarnings(project.getAnnotations(), empty).size());
-        assertEquals(WARNINGS_COUNT_ERROR, 92, WarningDifferencer.getFixedWarnings(empty, project.getAnnotations()).size());
+        assertEquals(WARNINGS_COUNT_ERROR, 91, WarningDifferencer.getFixedWarnings(empty, project.getAnnotations()).size());
     }
 
     /**

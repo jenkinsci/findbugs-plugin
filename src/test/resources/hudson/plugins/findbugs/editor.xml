@@ -36,9 +36,6 @@
 <file classname="com.avaloq.adt.internal.sourcetypes.scriptpkg.model.DOMNodeSorter" >
 <BugInstance type="SE_COMPARATOR_SHOULD_BE_SERIALIZABLE" priority="Normal" category="BAD_PRACTICE" message="Se: com.avaloq.adt.internal.sourcetypes.scriptpkg.model.DOMNodeSorter implements Comparator but not Serializable" lineNumber="Not available" />
 </file>
-<file classname="com.avaloq.adt.ui.elements.table.ColumnAction" >
-<BugInstance type="EI_EXPOSE_REP2" priority="Normal" category="MALICIOUS_CODE" message="EI2: com.avaloq.adt.ui.elements.table.ColumnAction.ColumnAction(AvaloqTable, String[]) may expose internal representation by storing an externally mutable object into ColumnAction.columnsToIgnore" lineNumber="42" />
-</file>
 <file classname="com.avaloq.adt.internal.sourcetypes.ddict.FieldComparator" >
 <BugInstance type="SE_COMPARATOR_SHOULD_BE_SERIALIZABLE" priority="Normal" category="BAD_PRACTICE" message="Se: com.avaloq.adt.internal.sourcetypes.ddict.FieldComparator implements Comparator but not Serializable" lineNumber="Not available" />
 </file>
