@@ -9,6 +9,7 @@ import hudson.model.BuildListener;
 import hudson.model.Descriptor;
 import hudson.model.Result;
 import hudson.plugins.findbugs.model.JavaProject;
+import hudson.plugins.findbugs.parser.FindBugsCollector;
 import hudson.plugins.findbugs.util.AbortException;
 import hudson.plugins.findbugs.util.HealthAwarePublisher;
 import hudson.plugins.findbugs.util.HealthReportBuilder;

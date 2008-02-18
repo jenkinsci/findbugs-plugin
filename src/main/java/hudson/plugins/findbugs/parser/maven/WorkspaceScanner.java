@@ -1,4 +1,4 @@
-package hudson.plugins.findbugs.parser;
+package hudson.plugins.findbugs.parser.maven;
 
 import hudson.FilePath.FileCallable;
 import hudson.plugins.findbugs.model.MavenModule;
@@ -7,7 +7,6 @@ import hudson.remoting.VirtualChannel;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.util.HashMap;
 
 import org.apache.commons.lang.StringUtils;
@@ -18,24 +17,20 @@ import org.apache.tools.ant.types.FileSet;
  *
  * @author Ulli Hafner
  */
-// FIXME : move to other package
 public class WorkspaceScanner implements FileCallable<Void> {
     /** Generated ID. */
     private static final long serialVersionUID = 2970029366847565970L;
     /** FindBugs result. */
     private final MavenModule project;
-    private final PrintStream logger;
 
     /**
      * Creates a new instance of <code>WorkspaceScanner</code>.
      *
      * @param project
      *            the FindBugs result
-     * @param printStream
      */
-    public WorkspaceScanner(final MavenModule project, final PrintStream printStream) {
+    public WorkspaceScanner(final MavenModule project) {
         this.project = project;
-        logger = printStream;
     }
 
     /** {@inheritDoc} */
@@ -43,8 +38,6 @@ public class WorkspaceScanner implements FileCallable<Void> {
         String[] files = findJavaFiles(workspace);
         HashMap<String, String> fileMapping = new HashMap<String, String>();
 
-        logger.println("Mapping " + project.getNumberOfAnnotations()
-                + " warning classes " + " to " + files.length + " Java files.");
         for (int i = 0; i < files.length; i++) {
             String name = files[i].replace('/', '.').replace('\\', '.');
             if (name.contains(".src.main.java.")) {

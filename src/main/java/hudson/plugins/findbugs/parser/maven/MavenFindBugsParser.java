@@ -1,10 +1,12 @@
 package hudson.plugins.findbugs.parser.maven;
 
+import hudson.FilePath;
 import hudson.plugins.findbugs.model.MavenModule;
 import hudson.plugins.findbugs.model.Priority;
 import hudson.plugins.findbugs.model.WorkspaceFile;
 import hudson.plugins.findbugs.parser.Bug;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -70,6 +72,30 @@ public class MavenFindBugsParser {
      *            the FindBugs analysis file
      * @param moduleName
      *            name of the maven module
+     * @param workspace workspace root
+     * @return the parsed result (stored in the module instance)
+     * @throws IOException
+     *             if the file could not be parsed
+     * @throws SAXException
+     *             if the file is not in valid XML format
+     * @throws InterruptedException
+     *             if the user aborts the mapping
+     */
+    public MavenModule parse(final InputStream file, final String moduleName, final File workspace) throws IOException, SAXException, InterruptedException {
+        MavenModule mavenModule = parse(file, moduleName);
+        mapClassesToFiles(workspace, mavenModule);
+
+        return mavenModule;
+    }
+
+    /**
+     * Returns the parsed FindBugs analysis file. This scanner accepts files in
+     * the Maven FindBugs plug-in format.
+     *
+     * @param file
+     *            the FindBugs analysis file
+     * @param moduleName
+     *            name of the maven module
      * @return the parsed result (stored in the module instance)
      * @throws IOException
      *             if the file could not be parsed
@@ -86,9 +112,9 @@ public class MavenFindBugsParser {
         digester.addSetProperties(rootXPath);
 
         String fileXPath = "BugCollection/file";
-        digester.addObjectCreate(fileXPath, File.class);
+        digester.addObjectCreate(fileXPath, hudson.plugins.findbugs.parser.maven.File.class);
         digester.addSetProperties(fileXPath);
-        digester.addSetNext(fileXPath, "addFile", File.class.getName());
+        digester.addSetNext(fileXPath, "addFile", hudson.plugins.findbugs.parser.maven.File.class.getName());
 
         String bugXPath = "BugCollection/file/BugInstance";
         digester.addObjectCreate(bugXPath, BugInstance.class);
@@ -104,6 +130,18 @@ public class MavenFindBugsParser {
     }
 
     /**
+     * FIXME: Document method mapClassesToFiles
+     * @param workspace
+     * @param mavenModule
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    private void mapClassesToFiles(final File workspace, final MavenModule mavenModule)
+            throws IOException, InterruptedException {
+        new FilePath(workspace).act(new WorkspaceScanner(mavenModule));
+    }
+
+    /**
      * Converts the internal structure to the annotations API.
      *
      * @param collection
@@ -115,7 +153,7 @@ public class MavenFindBugsParser {
     private MavenModule convert(final BugCollection collection, final String moduleName) {
         MavenModule module = new MavenModule(moduleName);
 
-        for (File file : collection.getFiles()) {
+        for (hudson.plugins.findbugs.parser.maven.File file : collection.getFiles()) {
             WorkspaceFile workspaceFile = new WorkspaceFile();
             for (BugInstance warning : file.getBugInstances()) {
                 Priority priority = Priority.valueOf(StringUtils.upperCase(warning.getPriority()));

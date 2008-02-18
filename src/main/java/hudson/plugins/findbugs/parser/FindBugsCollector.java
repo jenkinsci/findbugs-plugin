@@ -1,11 +1,10 @@
-package hudson.plugins.findbugs;
+package hudson.plugins.findbugs.parser;
 
 import hudson.FilePath;
 import hudson.FilePath.FileCallable;
 import hudson.model.BuildListener;
 import hudson.plugins.findbugs.model.JavaProject;
 import hudson.plugins.findbugs.model.MavenModule;
-import hudson.plugins.findbugs.parser.WorkspaceScanner;
 import hudson.plugins.findbugs.parser.ant.NativeFindBugsParser;
 import hudson.plugins.findbugs.parser.maven.MavenFindBugsParser;
 import hudson.plugins.findbugs.util.AbortException;
@@ -25,7 +24,7 @@ import org.xml.sax.SAXException;
  *
  * @author Ulli Hafner
  */
-class FindBugsCollector implements FileCallable<JavaProject> {
+public class FindBugsCollector implements FileCallable<JavaProject> {
     /** Slash separator on UNIX. */
     private static final String SLASH = "/";
     /** Generated ID. */
@@ -49,7 +48,7 @@ class FindBugsCollector implements FileCallable<JavaProject> {
      * @param filePattern
      *            ant file-set pattern to scan for FindBugs files
      */
-    FindBugsCollector(final BuildListener listener, final long buildTime, final String filePattern) {
+    public FindBugsCollector(final BuildListener listener, final long buildTime, final String filePattern) {
         this.listener = listener;
         this.buildTime = buildTime;
         this.filePattern = filePattern;
@@ -101,21 +100,14 @@ class FindBugsCollector implements FileCallable<JavaProject> {
                     }
                     MavenModule module;
                     if (isOldMavenPluginFormat) {
-                        module = mavenFindBugsParser.parse(filePath.read(), moduleName);
+                        module = mavenFindBugsParser.parse(filePath.read(), moduleName, workspace);
                     }
                     else {
                         NativeFindBugsParser parser = new NativeFindBugsParser();
                         module = parser.parse(filePath.read(), StringUtils.substringBefore(findbugsFile.getPath().replace('\\', '/'), "/target/"), moduleName);
                     }
-                    listener.getLogger().println("Warnings found: " + module.getNumberOfAnnotations());
-
                     project.addAnnotations(module.getAnnotations());
-
-                    if (isOldMavenPluginFormat) {
-                        new FilePath(workspace).act(new WorkspaceScanner(module, listener.getLogger()));
-                        listener.getLogger().println("Mapped Java classes to Java files.");
-                    }
-                    listener.getLogger().println("Successfully parsed findbugs file " + findbugsFile + ".");
+                    listener.getLogger().println("Successfully parsed findbugs file " + findbugsFile + " with " + module.getNumberOfAnnotations() + " warnings.");
                 }
                 catch (SAXException e) {
                     listener.getLogger().println("Can't parse file " + findbugsFile + " due to an exception.");
