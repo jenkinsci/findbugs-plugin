@@ -9,8 +9,6 @@ import java.util.Set;
  * Java Bean class for a bug collection of the maven FindBugs format.
  */
 public class BugCollection {
-    /** FindBugs version. */
-    private String version;
     /** All files of this bug collection. */
     private final Set<File> files = new HashSet<File>();
 
@@ -31,24 +29,6 @@ public class BugCollection {
      */
     public Collection<File> getFiles() {
         return Collections.unmodifiableCollection(files);
-    }
-
-    /**
-     * Returns the FindBugs version.
-     *
-     * @return the FindBugs version
-     */
-    public String getVersion() {
-        return version;
-    }
-
-    /**
-     * Sets the version to the specified value.
-     *
-     * @param version the value to set
-     */
-    public void setVersion(final String version) {
-        this.version = version;
     }
 }
 

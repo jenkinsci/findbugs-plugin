@@ -9,13 +9,14 @@ import hudson.plugins.findbugs.parser.Bug;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 
 import org.apache.commons.digester.Digester;
 import org.apache.commons.lang.StringUtils;
 import org.xml.sax.SAXException;
 
 /**
- * A parser for the maven-findbugs-plugin XML files.
+ * A parser for the maven-findbugs-plugin XML files (version <= 1.1.1).
  */
 public class MavenFindBugsParser {
     /**
@@ -24,44 +25,25 @@ public class MavenFindBugsParser {
      * @param file
      *            the file to parse
      * @return <code>true</code> if the provided file is in maven format.
-     * @throws IOException
-     *             if the file could not be parsed
-     * @throws SAXException
-     *             if the file is not in valid XML format
      */
-    public boolean accepts(final InputStream file) throws IOException, SAXException {
-        Digester digester = new Digester();
-        digester.setValidating(false);
-        digester.setClassLoader(MavenFindBugsParser.class.getClassLoader());
+    public boolean accepts(final InputStream file) {
+        try {
+            Digester digester = new Digester();
+            digester.setValidating(false);
+            digester.setClassLoader(MavenFindBugsParser.class.getClassLoader());
 
-        digester.addObjectCreate("BugCollection/file/BugInstance", BugCollection.class);
+            digester.addObjectCreate("BugCollection/file/BugInstance", BugCollection.class);
 
-        BugCollection module = (BugCollection)digester.parse(file);
+            BugCollection module = (BugCollection)digester.parse(file);
 
-        return module != null;
-    }
-
-    /**
-     * Returns whether the specified FindBugs file defines source paths.
-     *
-     * @param file
-     *            the file to check
-     * @return <code>true</code> if the specified FindBugs file defines source paths
-     * @throws IOException
-     *             if the file could not be parsed
-     * @throws SAXException
-     *             if the file is not in valid XML format
-     */
-    public boolean hasSourcePaths(final InputStream file) throws IOException, SAXException {
-        Digester digester = new Digester();
-        digester.setValidating(false);
-        digester.setClassLoader(MavenFindBugsParser.class.getClassLoader());
-
-        digester.addObjectCreate("BugCollection/Project/SrcDir", BugCollection.class);
-
-        BugCollection module = (BugCollection)digester.parse(file);
-
-        return module != null;
+            return module != null;
+        }
+        catch (IOException exception) {
+            return false;
+        }
+        catch (SAXException exception) {
+            return false;
+        }
     }
 
     /**
@@ -83,9 +65,46 @@ public class MavenFindBugsParser {
      */
     public MavenModule parse(final InputStream file, final String moduleName, final File workspace) throws IOException, SAXException, InterruptedException {
         MavenModule mavenModule = parse(file, moduleName);
-        mapClassesToFiles(workspace, mavenModule);
+
+        String[] files = new FilePath(workspace).act(new JavaFileFinder());
+
+        mapFiles(mavenModule, files);
 
         return mavenModule;
+    }
+
+    /**
+     * Maps each class with an warning to a workspace file.
+     *
+     * @param mavenModule
+     *            the module containing the warnings
+     * @param files
+     *            the java files in the workspace
+     */
+    public void mapFiles(final MavenModule mavenModule, final String[] files) {
+        HashMap<String, String> fileMapping = new HashMap<String, String>();
+
+        for (int i = 0; i < files.length; i++) {
+            String name = files[i].replace('/', '.').replace('\\', '.');
+            if (name.contains(".src.main.java.")) {
+                String key = StringUtils.substringAfterLast(name, "src.main.java.");
+                fileMapping.put(key, files[i]);
+            }
+            else if (name.contains(".src.test.java.")) {
+                String key = StringUtils.substringAfterLast(name, "src.test.java.");
+                fileMapping.put(key, files[i]);
+            }
+            else if (name.contains(".src.")) {
+                String key = StringUtils.substringAfterLast(name, "src.");
+                fileMapping.put(key, files[i]);
+            }
+        }
+        for (WorkspaceFile file : mavenModule.getFiles()) {
+            String key = StringUtils.substringBeforeLast(file.getPackageName() + "." + file.getName(), "$") + ".java";
+            if (fileMapping.containsKey(key)) {
+                file.setName(fileMapping.get(key));
+             }
+        }
     }
 
     /**
@@ -127,18 +146,6 @@ public class MavenFindBugsParser {
         }
 
         return convert(module, moduleName);
-    }
-
-    /**
-     * FIXME: Document method mapClassesToFiles
-     * @param workspace
-     * @param mavenModule
-     * @throws IOException
-     * @throws InterruptedException
-     */
-    private void mapClassesToFiles(final File workspace, final MavenModule mavenModule)
-            throws IOException, InterruptedException {
-        new FilePath(workspace).act(new WorkspaceScanner(mavenModule));
     }
 
     /**

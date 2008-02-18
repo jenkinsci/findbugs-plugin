@@ -5,7 +5,6 @@ import hudson.FilePath.FileCallable;
 import hudson.model.BuildListener;
 import hudson.plugins.findbugs.model.JavaProject;
 import hudson.plugins.findbugs.model.MavenModule;
-import hudson.plugins.findbugs.parser.ant.NativeFindBugsParser;
 import hudson.plugins.findbugs.parser.maven.MavenFindBugsParser;
 import hudson.plugins.findbugs.util.AbortException;
 import hudson.remoting.VirtualChannel;
@@ -63,11 +62,8 @@ public class FindBugsCollector implements FileCallable<JavaProject> {
 
         JavaProject project = new JavaProject();
 
-        // FIXME: enum
         boolean isFormatUndefined = true;
         boolean isOldMavenPluginFormat = true;
-        boolean isAntFormat = false;
-
         MavenFindBugsParser mavenFindBugsParser = new MavenFindBugsParser();
 
         for (String file : findBugsFiles) {
@@ -78,31 +74,20 @@ public class FindBugsCollector implements FileCallable<JavaProject> {
                 listener.getLogger().println("Skipping " + findbugsFile + " because it's not up to date");
             }
             else {
+                if (isFormatUndefined) {
+                    isOldMavenPluginFormat = mavenFindBugsParser.accepts(filePath.read());
+                    isFormatUndefined = false;
+                }
                 try {
                     String moduleName = guessModuleName(findbugsFile.getAbsolutePath());
-                    if (isFormatUndefined) {
-                        isOldMavenPluginFormat = mavenFindBugsParser.accepts(filePath.read());
-                        if (!isOldMavenPluginFormat) {
-                            isAntFormat = mavenFindBugsParser.hasSourcePaths(filePath.read());
-                            if (isAntFormat) {
-                                listener.getLogger().println(
-                                        "Activating parser for findbugs ant task or batch script.");
-                            }
-                            else {
-                                listener.getLogger().println(
-                                        "Activating parser for maven-findbugs-plugin >= 1.2-SNAPSHOT.");
-                            }
-                        }
-                        else {
-                            listener.getLogger().println("Activating parser for maven-findbugs-plugin <= 1.1.1.");
-                        }
-                        isFormatUndefined = false;
-                    }
                     MavenModule module;
                     if (isOldMavenPluginFormat) {
+                        listener.getLogger().println("Activating parser for maven-findbugs-plugin <= 1.1.1.");
                         module = mavenFindBugsParser.parse(filePath.read(), moduleName, workspace);
                     }
                     else {
+                        listener.getLogger().println(
+                                "Activating parser for findbugs ant task, batch script, or maven-findbugs-plugin > 1.1.1.");
                         NativeFindBugsParser parser = new NativeFindBugsParser();
                         module = parser.parse(filePath.read(), StringUtils.substringBefore(findbugsFile.getPath().replace('\\', '/'), "/target/"), moduleName);
                     }
@@ -134,7 +119,7 @@ public class FindBugsCollector implements FileCallable<JavaProject> {
      *            the filename to guess the module name from
      * @return the module name
      */
-    public String guessModuleName(final String fileName) {
+    public static String guessModuleName(final String fileName) {
         String separator;
         if (fileName.contains(SLASH)) {
             separator = SLASH;

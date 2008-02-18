@@ -1,8 +1,9 @@
-package hudson.plugins.findbugs.parser.ant;
+package hudson.plugins.findbugs.parser;
 
 import static org.junit.Assert.*;
 import hudson.plugins.findbugs.model.FileAnnotation;
 import hudson.plugins.findbugs.model.MavenModule;
+import hudson.plugins.findbugs.parser.NativeFindBugsParser;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -30,7 +31,7 @@ public class NativeFindBugsParserTest {
      *             in case of an error
      */
     private MavenModule parseFile(final String fileName) throws IOException, DocumentException {
-        return new NativeFindBugsParser().parse(NativeFindBugsParserTest.class.getResourceAsStream(fileName), fileName);
+        return new NativeFindBugsParser().parse(NativeFindBugsParserTest.class.getResourceAsStream(fileName), "", fileName);
     }
 
     /**

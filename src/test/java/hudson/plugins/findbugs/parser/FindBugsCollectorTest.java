@@ -1,6 +1,7 @@
-package hudson.plugins.findbugs;
+package hudson.plugins.findbugs.parser;
 
 import static org.junit.Assert.*;
+
 import org.junit.Test;
 
 /**
@@ -18,21 +19,20 @@ public class FindBugsCollectorTest {
      */
     @Test
     public void checkModuleGuessing() {
-        FindBugsCollector collector = new FindBugsCollector(null, null, 0, null);
         String input = "workspace/com.avaloq.adt.core.tests/target/findbugs.xml";
-        assertEquals(ERROR_MESSAGE, EXPECTED_MODULE, collector.guessModuleName(input));
+        assertEquals(ERROR_MESSAGE, EXPECTED_MODULE, FindBugsCollector.guessModuleName(input));
 
         input = "com.avaloq.adt.core.tests/target/findbugs.xml";
-        assertEquals(ERROR_MESSAGE, EXPECTED_MODULE, collector.guessModuleName(input));
+        assertEquals(ERROR_MESSAGE, EXPECTED_MODULE, FindBugsCollector.guessModuleName(input));
 
         input = "C:\\work\\workspace\\com.avaloq.adt.core.tests\\target\\findbugs.xml";
-        assertEquals(ERROR_MESSAGE, EXPECTED_MODULE, collector.guessModuleName(input));
+        assertEquals(ERROR_MESSAGE, EXPECTED_MODULE, FindBugsCollector.guessModuleName(input));
 
         input = "com.avaloq.adt.core.tests\\target\\findbugs.xml";
-        assertEquals(ERROR_MESSAGE, EXPECTED_MODULE, collector.guessModuleName(input));
+        assertEquals(ERROR_MESSAGE, EXPECTED_MODULE, FindBugsCollector.guessModuleName(input));
 
         input = "com.avaloq.adt.core.tests\\findbugs.xml";
-        assertEquals(ERROR_MESSAGE, "", collector.guessModuleName(input));
+        assertEquals(ERROR_MESSAGE, "", FindBugsCollector.guessModuleName(input));
     }
 }
 

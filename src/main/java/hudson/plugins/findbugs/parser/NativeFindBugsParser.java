@@ -1,16 +1,19 @@
-package hudson.plugins.findbugs.parser.ant;
+package hudson.plugins.findbugs.parser;
 
 import hudson.plugins.findbugs.model.MavenModule;
 import hudson.plugins.findbugs.model.Priority;
 import hudson.plugins.findbugs.model.WorkspaceFile;
-import hudson.plugins.findbugs.parser.Bug;
+import hudson.plugins.findbugs.parser.maven.BugCollection;
+import hudson.plugins.findbugs.parser.maven.MavenFindBugsParser;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.HashMap;
 
+import org.apache.commons.digester.Digester;
 import org.dom4j.DocumentException;
+import org.xml.sax.SAXException;
 
 import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.Project;
@@ -92,6 +95,29 @@ public class NativeFindBugsParser {
             module.addAnnotation(bug);
         }
         return module;
+    }
+
+    /**
+     * Returns whether the specified FindBugs file defines source paths.
+     *
+     * @param file
+     *            the file to check
+     * @return <code>true</code> if the specified FindBugs file defines source paths
+     * @throws IOException
+     *             if the file could not be parsed
+     * @throws SAXException
+     *             if the file is not in valid XML format
+     */
+    public boolean hasSourcePaths(final InputStream file) throws IOException, SAXException {
+        Digester digester = new Digester();
+        digester.setValidating(false);
+        digester.setClassLoader(MavenFindBugsParser.class.getClassLoader());
+
+        digester.addObjectCreate("BugCollection/Project/SrcDir", Bug.class);
+
+        BugCollection module = (BugCollection)digester.parse(file);
+
+        return module != null;
     }
 }
 
