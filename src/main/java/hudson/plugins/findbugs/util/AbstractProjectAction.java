@@ -3,7 +3,6 @@ package hudson.plugins.findbugs.util;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.Action;
-import hudson.model.Build;
 
 import java.io.IOException;
 import java.util.List;
@@ -89,7 +88,7 @@ public abstract class AbstractProjectAction<T extends ResultAction<?>> implement
      * @return <code>true</code> if the results are valid in order to draw a
      *         graph
      */
-    public final boolean hasValidResults(final Build<?, ?> build) {
+    public final boolean hasValidResults(final AbstractBuild<?, ?> build) {
         if (build != null) {
             ResultAction<?> resultAction = build.getAction(resultActionType);
             if (resultAction != null) {
