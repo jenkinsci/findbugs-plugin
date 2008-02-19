@@ -15,7 +15,7 @@
     <SrcDir>/export/homes/submit/.hudson/jobs/FindBugs/workspace/findbugs/findbugs/src/java</SrcDir>
     <SrcDir>/export/homes/submit/.hudson/jobs/FindBugs/workspace/findbugs/findbugs/src/java5</SrcDir>
   </Project>
-  <BugInstance type="DP_CREATE_CLASSLOADER_INSIDE_DO_PRIVILEGED" priority="2" abbrev="DP" category="BAD_PRACTICE" instanceHash="3476db762c48bad5a05a2dc5d701892d" instanceOccurrenceNum="0" instanceOccurrenceMax="0">
+  <BugInstance type="DP_CREATE_CLASSLOADER_INSIDE_DO_PRIVILEGED" priority="1" abbrev="DP" category="BAD_PRACTICE" instanceHash="3476db762c48bad5a05a2dc5d701892d" instanceOccurrenceNum="0" instanceOccurrenceMax="0">
     <ShortMessage>Classloaders should only be created inside doPrivileged block</ShortMessage>
     <LongMessage>new edu.umd.cs.findbugs.PluginLoader(URL) creates a java.net.URLClassLoader classloader, which should be performed within a doPrivileged block</LongMessage>
     <Class classname="edu.umd.cs.findbugs.PluginLoader">
@@ -34,11 +34,11 @@
       </SourceLine>
       <Message>In class java.net.URLClassLoader</Message>
     </Class>
-    <SourceLine classname="edu.umd.cs.findbugs.PluginLoader" start="82" end="82" startBytecode="5" endBytecode="5" sourcefile="PluginLoader.java" sourcepath="edu/umd/cs/findbugs/PluginLoader.java">
+    <SourceLine classname="umd.cs.findbugs.PluginLoader" start="82" end="82" startBytecode="5" endBytecode="5" sourcefile="PluginLoader.java" sourcepath="umd/cs/findbugs/PluginLoader.java">
       <Message>At PluginLoader.java:[line 82]</Message>
     </SourceLine>
   </BugInstance>
-  <BugInstance type="DP_CREATE_CLASSLOADER_INSIDE_DO_PRIVILEGED" priority="2" abbrev="DP" category="BAD_PRACTICE" instanceHash="12aa4654e3f775e27fd2d523c2c1ec19" instanceOccurrenceNum="0" instanceOccurrenceMax="0">
+  <BugInstance type="DP_CREATE_CLASSLOADER_INSIDE_DO_PRIVILEGED" priority="1" abbrev="DP" category="BAD_PRACTICE" instanceHash="12aa4654e3f775e27fd2d523c2c1ec19" instanceOccurrenceNum="0" instanceOccurrenceMax="0">
     <ShortMessage>Classloaders should only be created inside doPrivileged block</ShortMessage>
     <LongMessage>new edu.umd.cs.findbugs.PluginLoader(URL, ClassLoader) creates a java.net.URLClassLoader classloader, which should be performed within a doPrivileged block</LongMessage>
     <Class classname="edu.umd.cs.findbugs.PluginLoader">
@@ -121,7 +121,7 @@ object is stored in this field.</p>
     <Details><![CDATA[
 
   <p> This class has a simple name that is identical to that of its superclass, except
-that its superclass is in a different package (e.g., <code>alpha.Foo</code> extends <code>beta.Foo</code>). 
+that its superclass is in a different package (e.g., <code>alpha.Foo</code> extends <code>beta.Foo</code>).
 This can be exceptionally confusing, create lots of situations in which you have to look at import statements
 to resolve references and creates many
 opportunities to accidently define methods that do not override methods in their superclasses.
@@ -132,12 +132,12 @@ opportunities to accidently define methods that do not override methods in their
   <BugPattern type="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE" abbrev="NP" category="STYLE">
     <ShortDescription>Possible null pointer dereference due to return value of called method</ShortDescription>
     <Details><![CDATA[
-      
+
 <p> A reference value which is null on some exception control path is
 dereferenced here.&nbsp; This may lead to a <code>NullPointerException</code>
 when the code is executed.&nbsp; The value may be null because it
 was return from a method which is known to return possibly-null values.</p>
-      
+
    ]]></Details>
   </BugPattern>
   <BugPattern type="NM_SAME_SIMPLE_NAME_AS_INTERFACE" abbrev="Nm" category="BAD_PRACTICE">
@@ -145,7 +145,7 @@ was return from a method which is known to return possibly-null values.</p>
     <Details><![CDATA[
 
   <p> This class/interface has a simple name that is identical to that of an implemented/extended  interface, except
-that the interface is in a different package (e.g., <code>alpha.Foo</code> extends <code>beta.Foo</code>). 
+that the interface is in a different package (e.g., <code>alpha.Foo</code> extends <code>beta.Foo</code>).
 This can be exceptionally confusing, create lots of situations in which you have to look at import statements
 to resolve references and creates many
 opportunities to accidently define methods that do not override methods in their superclasses.
@@ -157,7 +157,7 @@ opportunities to accidently define methods that do not override methods in their
     <ShortDescription>Static DateFormat</ShortDescription>
     <Details><![CDATA[
 
-<p>As the JavaDoc states, DateFormats are inherently unsafe for multithreaded use. 
+<p>As the JavaDoc states, DateFormats are inherently unsafe for multithreaded use.
 Sharing a single instance across thread boundaries without proper synchronization will result in erratic behavior of the
 application.</p>
 <p>You may also experience serialization problems.</p>
@@ -207,7 +207,7 @@ For more information, see the
     <Details><![CDATA[
 
   <p>This code compares a <code>java.lang.String</code> parameter for reference
-equality using the == or != operators. Requiring callers to 
+equality using the == or != operators. Requiring callers to
 pass only String constants or interned strings to a method is unnecessarily
 fragile, and rarely leads to measurable performance gains. Consider
 using the <code>equals(Object)</code> method instead.</p>
@@ -288,7 +288,7 @@ removed.
     <Details><![CDATA[
 
 <p> The method creates an IO stream object, does not assign it to any
-fields, pass it to other methods that might close it, 
+fields, pass it to other methods that might close it,
 or return it, and does not appear to close
 the stream on all paths out of the method.&nbsp; This may result in
 a file descriptor leak.&nbsp; It is generally a good
@@ -300,13 +300,13 @@ closed.</p>
   <BugPattern type="GC_UNRELATED_TYPES" abbrev="GC" category="CORRECTNESS">
     <ShortDescription>No relationship between generic parameter and method argument</ShortDescription>
     <Details><![CDATA[
-     
+
      <p> This call to a generic container's method contains an argument
-     with a different class type from that of the container's parameter. 
-     Therefore, it is unlikely that the container contains any objects 
+     with a different class type from that of the container's parameter.
+     Therefore, it is unlikely that the container contains any objects
      with the same type as the method argument used here.
      </p>
-     
+
     ]]></Details>
   </BugPattern>
   <BugPattern type="DP_CREATE_CLASSLOADER_INSIDE_DO_PRIVILEGED" abbrev="DP" category="BAD_PRACTICE">

@@ -1,13 +1,13 @@
 package hudson.plugins.findbugs.util;
 
+import static org.easymock.EasyMock.*;
 import hudson.plugins.findbugs.model.FileAnnotation;
-import hudson.plugins.findbugs.model.Priority;
-import hudson.plugins.findbugs.model.WorkspaceFile;
-import hudson.plugins.findbugs.parser.Bug;
+import hudson.plugins.findbugs.model.LineRange;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
+import java.util.ArrayList;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.LineIterator;
@@ -19,8 +19,10 @@ import org.junit.Test;
  *  Tests the class {@link SourceDetail}.
  */
 public class SourceDetailTest {
+    /** Start of the range. */
+    private static final int START = 6;
     /** Reference to line 6. */
-    private static final String LINE_6_INDICATOR = "<a name=\"6\">";
+    private static final String LINE_6_INDICATOR = "<a name=\"" + START + "\">";
 
     /**
      * Checks whether we correctly find a specific line in the generated source
@@ -30,12 +32,13 @@ public class SourceDetailTest {
      */
     @Test
     public void checkCorrectOffset() throws IOException {
-        Bug warning = new Bug(Priority.HIGH, StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY, 6);
-        WorkspaceFile file = new WorkspaceFile();
-        file.setName("file/path");
-        warning.setWorkspaceFile(file);
+        FileAnnotation annotation = createMock(FileAnnotation.class);
 
-        SourceDetail source = new SourceDetail(null, warning);
+        expect(annotation.getWorkspaceFileName()).andReturn("").anyTimes();
+
+        replay(annotation);
+
+        SourceDetail source = new SourceDetail(null, annotation);
 
         InputStream stream = SourceDetailTest.class.getResourceAsStream("AbortException.txt");
         String highlighted = source.highlightSource(stream);
@@ -52,25 +55,57 @@ public class SourceDetailTest {
             line++;
         }
         Assert.assertEquals("Wrong offset during source highlighting.", 12, offset);
+
+        verify(annotation);
     }
 
     /**
-     * Checks whether we correctly split the source into prefix, warning and suffix.
+     * Checks whether we correctly split the source into prefix, warning and suffix for a single line.
      *
      * @throws IOException in case of an IO error
      */
     @Test
-    public void testSplitting() throws IOException {
+    public void splitSingleLine() throws IOException {
+        split(START);
+    }
+
+    /**
+     * Checks whether we correctly split the source into prefix, warning and suffix for a range of 4 lines.
+     *
+     * @throws IOException in case of an IO error
+     */
+    @Test
+    public void splitLineRange() throws IOException {
+        split(10);
+    }
+
+    /**
+     * Checks whether we correctly split the source into prefix, warning and
+     * suffix.
+     *
+     * @param end
+     *            last line of the range
+     * @throws IOException
+     *             in case of an IO error
+     */
+    private void split(final int end) throws IOException {
         InputStream stream = SourceDetailTest.class.getResourceAsStream("AbortException.txt");
 
-        FileAnnotation warning = new Bug(Priority.HIGH, StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY, 6);
-        WorkspaceFile file = new WorkspaceFile();
-        file.setName("file/path");
-        warning.setWorkspaceFile(file);
-        SourceDetail source = new SourceDetail(null, warning);
+        FileAnnotation annotation = createMock(FileAnnotation.class);
+        LineRange lineRange = new LineRange(6, end);
 
-        Assert.assertTrue("Prefix should not be empty.", StringUtils.isEmpty(source.getPrefix()));
-        Assert.assertTrue("Suffix should not be empty.", StringUtils.isEmpty(source.getSuffix()));
+        ArrayList<LineRange> lineRanges = new ArrayList<LineRange>();
+        lineRanges.add(lineRange);
+
+        expect(annotation.getLineRanges()).andReturn(lineRanges);
+        expect(annotation.getWorkspaceFileName()).andReturn("").anyTimes();
+
+        replay(annotation);
+
+        SourceDetail source = new SourceDetail(null, annotation);
+
+        Assert.assertTrue("Prefix should be empty.", StringUtils.isEmpty(source.getPrefix()));
+        Assert.assertTrue("Suffix should be empty.", StringUtils.isEmpty(source.getSuffix()));
         Assert.assertTrue(source.hasHighlightedLine());
 
         String highlighted = source.highlightSource(stream);
@@ -80,6 +115,10 @@ public class SourceDetailTest {
         Assert.assertFalse("Prefix should not be empty.", StringUtils.isEmpty(source.getPrefix()));
         Assert.assertFalse("Suffix should not be empty.", StringUtils.isEmpty(source.getSuffix()));
         Assert.assertTrue(source.hasHighlightedLine());
+
+        Assert.assertEquals(end - 6 + 1, IOUtils.readLines(new StringReader(source.getLine())).size());
+
+        verify(annotation);
     }
 }
 

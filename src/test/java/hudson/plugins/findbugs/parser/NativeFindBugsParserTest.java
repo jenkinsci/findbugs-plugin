@@ -2,11 +2,13 @@ package hudson.plugins.findbugs.parser;
 
 import static org.junit.Assert.*;
 import hudson.plugins.findbugs.model.FileAnnotation;
+import hudson.plugins.findbugs.model.LineRange;
 import hudson.plugins.findbugs.model.MavenModule;
-import hudson.plugins.findbugs.parser.NativeFindBugsParser;
+import hudson.plugins.findbugs.model.Priority;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Iterator;
 
 import org.dom4j.DocumentException;
 import org.junit.Test;
@@ -15,8 +17,8 @@ import org.junit.Test;
  *  Tests the extraction of FindBugs analysis results.
  */
 public class NativeFindBugsParserTest {
-    /** Error message. */
-    private static final String NO_FILE_NAME_FOUND = "No file name found.";
+    /** Number of warnings contained in files. */
+    private static final int NUMBER_OF_WARNINGS = 2;
     /** Error message. */
     private static final String ERROR_MESSAGE = "Wrong number of bugs parsed.";
 
@@ -39,18 +41,10 @@ public class NativeFindBugsParserTest {
      * @throws DocumentException
      */
     @Test
-    public void scanNativeFile() throws IOException, DocumentException {
-        MavenModule module = parseFile("findbugs-native.xml");
-
-        assertEquals(ERROR_MESSAGE, 136, module.getNumberOfAnnotations());
-
-        // FIXME: check this
-//        for (FileAnnotation warning : module.getPackage("org.apache.hadoop.ipc").getAnnotations()) {
-//            assertNotNull("Message should not be empty.", warning.getMessage());
-//            assertNotNull("Line number should not be empty.", warning.getLineNumber());
-//
-//            assertNotNull(NO_FILE_NAME_FOUND, warning.getWorkspaceFile().getName());
-//        }
+    public void scanFileWithMultipleLinesAndRanges() throws IOException, DocumentException {
+        scanNativeFile("findbugs-native.xml", Priority.NORMAL,
+                "org/apache/hadoop/dfs/BlockCrcUpgrade.java", "org.apache.hadoop.dfs", 1309, 1309,
+                "org/apache/hadoop/streaming/StreamJob.java", "org.apache.hadoop.streaming", 935, 980);
     }
 
     /**
@@ -60,29 +54,94 @@ public class NativeFindBugsParserTest {
      */
     @Test
     public void scanFileWarningsHaveMultipleClasses() throws IOException, DocumentException {
-        MavenModule module = parseFile("findbugs-multclass.xml");
-
-        assertEquals(ERROR_MESSAGE, 2, module.getNumberOfAnnotations());
-        Collection<FileAnnotation> warnings = module.getAnnotations();
-        for (FileAnnotation warning : warnings) {
-            assertTrue("Wrong package prefix found.", warning.getWorkspaceFile().getPackageName().startsWith("edu.umd"));
-            assertNotNull(NO_FILE_NAME_FOUND, warning.getWorkspaceFile().getName());
-        }
+        scanNativeFile("findbugs-multclass.xml", Priority.HIGH,
+                "umd/cs/findbugs/PluginLoader.java", "edu.umd.cs.findbugs", 82, 82,
+                "edu/umd/cs/findbugs/PluginLoader.java", "edu.umd.cs.findbugs", 93, 93);
     }
 
     /**
-     * Checks whether we correctly assign source paths when the source directory
-     * folder is specified in the FindBugs native file format. element, we
-     * correctly take the first one as referring to the buggy class.
+     * Checks whether we correctly detect a file in FindBugs native format.
+     *
+     * @param findbugsFile
+     *            name of the file to read
+     * @param priority
+     *            priority
+     * @param fileName1
+     *            first class filename
+     * @param packageName1
+     *            first class package name
+     * @param start1
+     *            start line of first class
+     * @param end1
+     *            end line of first class
+     * @param fileName2
+     *            second class filename
+     * @param packageName2
+     *            second class package name
+     * @param start2
+     *            start line of second class
+     * @param end2
+     *            end line of second class
+     * @throws DocumentException
+     *             on a parse error
      */
-    @Test
-    public void checkSourcePathComposition() throws IOException, DocumentException {
-        MavenModule module = parseFile("srcpath.xml");
+    // CHECKSTYLE:OFF
+    public void scanNativeFile(final String findbugsFile, final Priority priority,
+            final String fileName1, final String packageName1, final int start1, final int end1,
+            final String fileName2, final String packageName2, final int start2, final int end2) throws IOException, DocumentException {
+   // CHECKSTYLE:ON
+        MavenModule module = parseFile(findbugsFile);
 
-        assertEquals(ERROR_MESSAGE, 1, module.getNumberOfAnnotations());
-        FileAnnotation warning = module.getAnnotations().iterator().next();
+        assertEquals(ERROR_MESSAGE, NUMBER_OF_WARNINGS, module.getNumberOfAnnotations());
+        Collection<FileAnnotation> warnings = module.getAnnotations();
+        assertEquals(ERROR_MESSAGE, NUMBER_OF_WARNINGS, warnings.size());
 
-        // FIXME: check this
-//        assertEquals("Wrong filename guessed.", "/usr/local/tomcat/hudson/jobs/FindBugs Test/workspace/findBugsTest/src/org/example/SyncBug.java", warning.getWorkspaceFile().getName());
+        Iterator<FileAnnotation> annotations = warnings.iterator();
+        FileAnnotation annotation1 = annotations.next();
+        FileAnnotation annotation2 = annotations.next();
+
+        FileAnnotation firstAnnotation;
+        FileAnnotation secondAnnotation;
+        if (fileName1.equals(annotation1.getWorkspaceFileName())) {
+            firstAnnotation = annotation1;
+            secondAnnotation = annotation2;
+        }
+        else {
+            firstAnnotation = annotation2;
+            secondAnnotation = annotation1;
+        }
+
+        checkAnnotation(firstAnnotation, priority, fileName1, packageName1, start1, end1);
+        checkAnnotation(secondAnnotation, priority, fileName2, packageName2, start2, end2);
+    }
+
+    /**
+     * Checks an individual annotation.
+     *
+     * @param annotation
+     *            the annotation to check
+     * @param priority
+     *            priority
+     * @param fileName
+     *            filename
+     * @param packageName
+     *            package name
+     * @param start
+     *            start line
+     * @param end
+     *            end line
+     */
+    private void checkAnnotation(final FileAnnotation annotation, final Priority priority, final String fileName, final String packageName, final int start, final int end) {
+        assertEquals("Wrong file name parsed.", fileName, annotation.getWorkspaceFileName());
+        assertEquals("Wrong package name parsed.", packageName, annotation.getWorkspaceFile().getPackageName());
+
+        Collection<LineRange> lineRanges = annotation.getLineRanges();
+        assertEquals("Wrong number of line ranges parsed.", 1, lineRanges.size());
+
+        LineRange range = lineRanges.iterator().next();
+        assertEquals("Wrong start of line range", start, range.getStart());
+        assertEquals("Wrong end of line range", end, range.getEnd());
+
+        assertEquals(priority, annotation.getPriority());
     }
 }

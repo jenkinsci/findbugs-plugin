@@ -46,10 +46,7 @@ public class NativeFindBugsParser {
             throws IOException, DocumentException {
         SortedBugCollection collection = new SortedBugCollection();
 
-        Project project = new Project();
-        project.addSourceDir(moduleRoot + "/src/main/java");
-        project.addSourceDir(moduleRoot + "/src/test/java");
-        project.addSourceDir(moduleRoot + "/src");
+        Project project = createMavenProject(moduleRoot);
 
         collection.readXML(file, project);
         Collection<BugInstance> bugs = collection.getCollection();
@@ -73,7 +70,8 @@ public class NativeFindBugsParser {
             }
 
             SourceLineAnnotation sourceLine = warning.getPrimarySourceLineAnnotation();
-            Bug bug = new Bug(priority, warning.getMessage(), warning.getMessage(), warning.getType(), sourceLine.getStartLine());
+            Bug bug = new Bug(priority, warning.getMessage(), warning.getMessage(), warning.getType(),
+                    sourceLine.getStartLine(), sourceLine.getEndLine());
 
             String fileName;
             try {
@@ -95,6 +93,21 @@ public class NativeFindBugsParser {
             module.addAnnotation(bug);
         }
         return module;
+    }
+
+    /**
+     * Creates a maven project with some predefined source paths.
+     *
+     * @param moduleRoot
+     *            the root path of the maven module
+     * @return the new project
+     */
+    private Project createMavenProject(final String moduleRoot) {
+        Project project = new Project();
+        project.addSourceDir(moduleRoot + "/src/main/java");
+        project.addSourceDir(moduleRoot + "/src/test/java");
+        project.addSourceDir(moduleRoot + "/src");
+        return project;
     }
 
     /**

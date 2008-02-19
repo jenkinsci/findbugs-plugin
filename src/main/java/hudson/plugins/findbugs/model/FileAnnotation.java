@@ -52,6 +52,13 @@ public interface FileAnnotation {
     WorkspaceFile getWorkspaceFile();
 
     /**
+     * Returns the name of the workspace file that contains this annotation.
+     *
+     * @return the workspace file that contains this annotation
+     */
+    String getWorkspaceFileName();
+
+    /**
      * Sets the workspace file that contains this annotation.
      *
      * @param workspaceFile

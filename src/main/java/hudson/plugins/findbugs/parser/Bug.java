@@ -37,6 +37,7 @@ public class Bug implements Serializable, FileAnnotation, Comparable<Bug> {
     private String type;
     /** The ordered list of line ranges. */
     private List<LineRange> lineRanges;
+    /** The filename of the class that contains this bug. */
     private String fileName;
 
     /**
@@ -189,6 +190,11 @@ public class Bug implements Serializable, FileAnnotation, Comparable<Bug> {
     /** {@inheritDoc} */
     public WorkspaceFile getWorkspaceFile() {
         return workspaceFile;
+    }
+
+    /** {@inheritDoc} */
+    public String getWorkspaceFileName() {
+        return fileName;
     }
 
     // FIXME in sync with equals?

@@ -52,7 +52,7 @@ public class SourceDetail implements ModelObject {
     public SourceDetail(final AbstractBuild<?, ?> owner, final FileAnnotation annotation) {
         this.owner = owner;
         this.annotation = annotation;
-        fileName = StringUtils.substringAfterLast(annotation.getWorkspaceFile().getName(), "/");
+        fileName = StringUtils.substringAfterLast(annotation.getWorkspaceFileName(), "/");
 
         initializeContent();
     }
@@ -64,7 +64,7 @@ public class SourceDetail implements ModelObject {
     private void initializeContent() {
         InputStream file = null;
         try {
-            String linkName = annotation.getWorkspaceFile().getName();
+            String linkName = annotation.getWorkspaceFileName();
             if (linkName.startsWith("/") || linkName.contains(":") || owner == null) {
                 file = new FileInputStream(new File(linkName));
             }
@@ -133,28 +133,30 @@ public class SourceDetail implements ModelObject {
      *            the source code of the whole file as rendered HTML string
      */
     public final void splitSourceFile(final String sourceFile) {
-        LineIterator lineIterator = IOUtils.lineIterator(new StringReader(sourceFile));
-
         StringBuilder prefixBuilder = new StringBuilder(sourceFile.length());
+        StringBuilder lineBuilder = new StringBuilder(sourceFile.length());
         StringBuilder suffixBuilder = new StringBuilder(sourceFile.length());
+
+        LineIterator lineIterator = IOUtils.lineIterator(new StringReader(sourceFile));
+        int lineNumber = 1;
 
         for (LineRange range : annotation.getLineRanges()) {
             suffixBuilder.append("</td></tr>\n");
             suffixBuilder.append("<tr><td>\n");
             suffixBuilder.append("<code>\n");
 
-            int warningLine = range.getStart();
-            int lineNumber = 1;
+            int start = range.getStart();
+            int end = range.getEnd();
             while (lineIterator.hasNext()) {
                 String content = lineIterator.nextLine();
-                if (lineNumber - SOURCE_GENERATOR_OFFSET == warningLine) {
-                    line = content;
-                }
-                else if (lineNumber - SOURCE_GENERATOR_OFFSET < warningLine) {
+                if (lineNumber - SOURCE_GENERATOR_OFFSET < start) {
                     prefixBuilder.append(content + "\n");
                 }
-                else {
+                else if (lineNumber - SOURCE_GENERATOR_OFFSET > end){
                     suffixBuilder.append(content + "\n");
+                }
+                else  {
+                    lineBuilder.append(content + "\n");
                 }
                 lineNumber++;
             }
@@ -163,6 +165,7 @@ public class SourceDetail implements ModelObject {
             prefixBuilder.append("<tr><td bgcolor=\"#FFFFC0\">\n");
         }
         prefix = prefixBuilder.toString();
+        line = lineBuilder.toString();
         suffix = suffixBuilder.toString();
     }
 
