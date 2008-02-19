@@ -39,6 +39,8 @@ public class Bug implements Serializable, FileAnnotation, Comparable<Bug> {
     private List<LineRange> lineRanges;
     /** The filename of the class that contains this bug. */
     private String fileName;
+    /** Primary line number of this warning, i.e., the start line of the first line range. */
+    private int primaryLineNumber;
 
     /**
      * Creates a new instance of <code>Bug</code>.
@@ -123,6 +125,7 @@ public class Bug implements Serializable, FileAnnotation, Comparable<Bug> {
 
         lineRanges = new ArrayList<LineRange>();
         lineRanges.add(new LineRange(start, end));
+        primaryLineNumber = start;
     }
     // CHECKSTYLE:ON
 
@@ -290,6 +293,11 @@ public class Bug implements Serializable, FileAnnotation, Comparable<Bug> {
     /** {@inheritDoc} */
     public Collection<LineRange> getLineRanges() {
         return Collections.unmodifiableCollection(lineRanges);
+    }
+
+    /** {@inheritDoc} */
+    public int getPrimaryLineNumber() {
+        return primaryLineNumber;
     }
 }
 

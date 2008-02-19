@@ -24,6 +24,14 @@ public interface FileAnnotation {
     String getToolTip();
 
     /**
+     * Returns the primary line number of this annotation that defines the
+     * anchor of this annotation.
+     *
+     * @return the primary line number of this annotation
+     */
+    int getPrimaryLineNumber();
+
+    /**
      * Returns a collection of line ranges for this annotation.
      *
      * @return the collection of line ranges for this annotation.

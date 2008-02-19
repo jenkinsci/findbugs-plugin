@@ -143,5 +143,7 @@ public class NativeFindBugsParserTest {
         assertEquals("Wrong end of line range", end, range.getEnd());
 
         assertEquals(priority, annotation.getPriority());
+
+        assertEquals(start, annotation.getPrimaryLineNumber());
     }
 }
