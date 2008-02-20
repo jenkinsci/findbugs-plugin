@@ -4,7 +4,6 @@ import hudson.Launcher;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.Action;
-import hudson.model.Build;
 import hudson.model.BuildListener;
 import hudson.model.Descriptor;
 import hudson.model.Result;
@@ -16,6 +15,7 @@ import hudson.plugins.findbugs.util.HealthReportBuilder;
 import hudson.tasks.Publisher;
 
 import java.io.IOException;
+import java.io.PrintStream;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -58,9 +58,10 @@ public class FindBugsPublisher extends HealthAwarePublisher {
     }
 
     /**
-     * Scans the workspace, collects all data files and copies these files to
-     * the build results folder. Then counts the number of bugs and sets the
-     * result of the build accordingly ({@link #getThreshold()}.
+     * Scans the workspace and parses all found FindBugs XML files. Then, the
+     * annotations of all files are merged and persisted for a build. Finally,
+     * the number of bugs are counted and the result of the build is set
+     * accordingly ({@link #getThreshold()}.
      *
      * @param build
      *            the build
@@ -75,25 +76,92 @@ public class FindBugsPublisher extends HealthAwarePublisher {
      *             if user cancels the operation
      */
     @Override
-    public boolean perform(final AbstractBuild<?, ?> build, final Launcher launcher, final BuildListener listener) throws InterruptedException, IOException {
-        listener.getLogger().println("Collecting findbugs analysis files...");
-
-        JavaProject project;
+    public boolean perform(final AbstractBuild<?, ?> build, final Launcher launcher,
+            final BuildListener listener) throws InterruptedException, IOException {
+        PrintStream logger = listener.getLogger();
         try {
-            project = build.getProject().getWorkspace().act(
-                    new FindBugsCollector(listener, build.getTimestamp().getTimeInMillis(),
-                            StringUtils.defaultIfEmpty(getPattern(), DEFAULT_PATTERN)));
+            logger.println("Collecting findbugs analysis files...");
+
+            JavaProject project = parseAllWorkspaceFiles(build, logger);
+            FindBugsResult result = createResult(build, project);
+
+            HealthReportBuilder healthReportBuilder = createHealthReporter("FindBugs", "warning");
+            build.getActions().add(new FindBugsResultAction(build, result, healthReportBuilder));
+
+            evaluateBuildResult(build, logger, project);
+
+            return true;
         }
         catch (AbortException exception) {
-            listener.getLogger().println(exception.getMessage());
+            logger.println(exception.getMessage());
             build.setResult(Result.FAILURE);
             return false;
         }
+    }
 
+    /**
+     * Evaluates the build result. The build is marked as unstable if the
+     * threshold has been exceeded.
+     *
+     * @param build
+     *            the build to create the action for
+     * @param logger
+     *            the logger
+     * @param project
+     *            the project with the annotations
+     */
+    private void evaluateBuildResult(final AbstractBuild<?, ?> build, final PrintStream logger,
+            final JavaProject project) {
+        int warnings = project.getNumberOfAnnotations();
+        if (warnings > 0) {
+            logger.println(
+                    "A total of " + warnings + " potential bugs have been found.");
+            if (isThresholdEnabled() && warnings >= getMinimumAnnotations()) {
+                build.setResult(Result.UNSTABLE);
+            }
+        }
+        else {
+            logger.println("No potential bugs have been found.");
+        }
+    }
+
+    /**
+     * Scans the workspace for FindBugs files matching the specified pattern and
+     * returns all found annotations merged in a project.
+     *
+     * @param build
+     *            the build to create the action for
+     * @param logger
+     *            the logger
+     * @return the project with the annotations
+     * @throws IOException
+     *             if the files could not be read
+     * @throws InterruptedException
+     *             if user cancels the operation
+     */
+    private JavaProject parseAllWorkspaceFiles(final AbstractBuild<?, ?> build,
+            final PrintStream logger) throws IOException, InterruptedException {
+        FindBugsCollector findBugsCollector = new FindBugsCollector(logger, build.getTimestamp().getTimeInMillis(),
+                        StringUtils.defaultIfEmpty(getPattern(), DEFAULT_PATTERN));
+
+        return build.getProject().getWorkspace().act(findBugsCollector);
+    }
+
+    /**
+     * Creates a result that persists the FindBugs information for the
+     * specified build.
+     *
+     * @param build
+     *            the build to create the action for
+     * @param project
+     *            the project containing the annotations
+     * @return the result action
+     */
+    private FindBugsResult createResult(final AbstractBuild<?, ?> build, final JavaProject project) {
         Object previous = build.getPreviousBuild();
         FindBugsResult result;
-        if (previous instanceof Build<?, ?>) {
-            Build<?, ?> previousBuild = (Build<?, ?>)previous;
+        if (previous instanceof AbstractBuild<?, ?>) {
+            AbstractBuild<?, ?> previousBuild = (AbstractBuild<?, ?>)previous;
             FindBugsResultAction previousAction = previousBuild.getAction(FindBugsResultAction.class);
             if (previousAction == null) {
                 result = new FindBugsResult(build, project);
@@ -105,22 +173,7 @@ public class FindBugsPublisher extends HealthAwarePublisher {
         else {
             result = new FindBugsResult(build, project);
         }
-
-        HealthReportBuilder healthReportBuilder = createHealthReporter("FindBugs", "warning");
-        build.getActions().add(new FindBugsResultAction(build, result, healthReportBuilder));
-
-        int warnings = project.getNumberOfAnnotations();
-        if (warnings > 0) {
-            listener.getLogger().println("A total of " + warnings + " potential bugs have been found.");
-            if (isThresholdEnabled() && warnings >= getMinimumAnnotations()) {
-                build.setResult(Result.UNSTABLE);
-            }
-        }
-        else {
-            listener.getLogger().println("No potential bugs have been found.");
-        }
-
-        return true;
+        return result;
     }
 
     /** {@inheritDoc} */

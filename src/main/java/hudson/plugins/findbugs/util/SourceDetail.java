@@ -30,6 +30,10 @@ import de.java2html.options.JavaSourceConversionOptions;
 public class SourceDetail implements ModelObject {
     /** Offset of the source code generator. After this line the actual source file lines start. */
     protected static final int SOURCE_GENERATOR_OFFSET = 13;
+    /** Color for the first (primary) annotation range. */
+    private static final String FIRST_COLOR = "#FCAF3E";
+    /** Color for all other annotation ranges. */
+    private static final String OTHER_COLOR = "#FCE94F";
     /** The current build as owner of this object. */
     private final AbstractBuild<?, ?> owner;
     /** Stripped file name of this annotation without the path prefix. */
@@ -125,6 +129,7 @@ public class SourceDetail implements ModelObject {
                 lineNumber++;
             }
             lineNumber = 1;
+            int ranges = 1;
             for (LineRange range : annotation.getLineRanges()) {
                 while (lineNumber < range.getStart()) {
                     output.append(lineIterator.nextLine());
@@ -133,7 +138,14 @@ public class SourceDetail implements ModelObject {
                 }
                 output.append("</code>\n");
                 output.append("</td></tr>\n");
-                output.append("<tr><td bgcolor=\"#FFFFC0\">\n");
+                output.append("<tr><td bgcolor=\"");
+                if (ranges == 1) {
+                    output.append(FIRST_COLOR);
+                }
+                else {
+                    output.append(OTHER_COLOR);
+                }
+                output.append("\">\n");
                 output.append("<div tooltip=\"");
                 if (range.getStart() > 0) {
                     output.append(StringEscapeUtils.escapeHtml(annotation.getMessage()));
@@ -156,6 +168,7 @@ public class SourceDetail implements ModelObject {
                 output.append("</td></tr>\n");
                 output.append("<tr><td>\n");
                 output.append("<code>\n");
+                ranges++;
             }
             while (lineIterator.hasNext()) {
                 output.append(lineIterator.nextLine());

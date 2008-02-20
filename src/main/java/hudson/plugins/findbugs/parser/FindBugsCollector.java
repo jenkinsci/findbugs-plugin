@@ -2,7 +2,6 @@ package hudson.plugins.findbugs.parser;
 
 import hudson.FilePath;
 import hudson.FilePath.FileCallable;
-import hudson.model.BuildListener;
 import hudson.plugins.findbugs.model.JavaProject;
 import hudson.plugins.findbugs.model.MavenModule;
 import hudson.plugins.findbugs.parser.maven.MavenFindBugsParser;
@@ -11,6 +10,7 @@ import hudson.remoting.VirtualChannel;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.tools.ant.types.FileSet;
@@ -31,7 +31,7 @@ public class FindBugsCollector implements FileCallable<JavaProject> {
     /** Determines whether to skip old files. */
     private static final boolean SKIP_OLD_FILES = false;
     /** Logger. */
-    private final transient BuildListener listener;
+    private final transient PrintStream logger;
     /** Build time stamp, only newer files are considered. */
     private final long buildTime;
     /** Ant file-set pattern to scan for FindBugs files. */
@@ -47,8 +47,8 @@ public class FindBugsCollector implements FileCallable<JavaProject> {
      * @param filePattern
      *            ant file-set pattern to scan for FindBugs files
      */
-    public FindBugsCollector(final BuildListener listener, final long buildTime, final String filePattern) {
-        this.listener = listener;
+    public FindBugsCollector(final PrintStream listener, final long buildTime, final String filePattern) {
+        logger = listener;
         this.buildTime = buildTime;
         this.filePattern = filePattern;
     }
@@ -71,7 +71,7 @@ public class FindBugsCollector implements FileCallable<JavaProject> {
             FilePath filePath = new FilePath(findbugsFile);
 
             if (SKIP_OLD_FILES && findbugsFile.lastModified() < buildTime) {
-                listener.getLogger().println("Skipping " + findbugsFile + " because it's not up to date");
+                logger.println("Skipping " + findbugsFile + " because it's not up to date");
             }
             else {
                 if (isFormatUndefined) {
@@ -82,28 +82,28 @@ public class FindBugsCollector implements FileCallable<JavaProject> {
                     String moduleName = guessModuleName(findbugsFile.getAbsolutePath());
                     MavenModule module;
                     if (isOldMavenPluginFormat) {
-                        listener.getLogger().println("Activating parser for maven-findbugs-plugin <= 1.1.1.");
+                        logger.println("Activating parser for maven-findbugs-plugin <= 1.1.1.");
                         module = mavenFindBugsParser.parse(filePath.read(), moduleName, workspace);
                     }
                     else {
-                        listener.getLogger().println(
+                        logger.println(
                                 "Activating parser for findbugs ant task, batch script, or maven-findbugs-plugin > 1.1.1.");
                         NativeFindBugsParser parser = new NativeFindBugsParser();
                         module = parser.parse(filePath.read(), StringUtils.substringBefore(findbugsFile.getPath().replace('\\', '/'), "/target/"), moduleName);
                     }
                     project.addAnnotations(module.getAnnotations());
-                    listener.getLogger().println("Successfully parsed findbugs file " + findbugsFile + " with " + module.getNumberOfAnnotations() + " warnings.");
+                    logger.println("Successfully parsed findbugs file " + findbugsFile + " with " + module.getNumberOfAnnotations() + " warnings.");
                 }
                 catch (SAXException e) {
-                    listener.getLogger().println("Can't parse file " + findbugsFile + " due to an exception.");
-                    e.printStackTrace(listener.getLogger());
+                    logger.println("Can't parse file " + findbugsFile + " due to an exception.");
+                    e.printStackTrace(logger);
                 }
                 catch (DocumentException e) {
-                    listener.getLogger().println("Can't parse file " + findbugsFile + " due to an exception.");
-                    e.printStackTrace(listener.getLogger());
+                    logger.println("Can't parse file " + findbugsFile + " due to an exception.");
+                    e.printStackTrace(logger);
                 }
                 catch (InterruptedException exception) {
-                    listener.getLogger().println("Parsing has been canceled.");
+                    logger.println("Parsing has been canceled.");
                     return project;
                 }
             }
