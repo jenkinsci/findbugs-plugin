@@ -8,10 +8,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.LineIterator;
-import org.apache.commons.lang.StringUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -60,63 +61,79 @@ public class SourceDetailTest {
     }
 
     /**
-     * Checks whether we correctly split the source into prefix, warning and suffix for a single line.
+     * Checks whether we correctly highlight the source for a single line.
      *
      * @throws IOException in case of an IO error
      */
     @Test
     public void splitSingleLine() throws IOException {
-        split(START);
+        ArrayList<LineRange> lineRanges = new ArrayList<LineRange>();
+        lineRanges.add(new LineRange(6));
+        split("ExpectedRendering-Line6.html", lineRanges);
     }
 
     /**
-     * Checks whether we correctly split the source into prefix, warning and suffix for a range of 4 lines.
+     * Checks whether we correctly highlight the source for range of 7 lines.
      *
      * @throws IOException in case of an IO error
      */
     @Test
     public void splitLineRange() throws IOException {
-        split(10);
+        ArrayList<LineRange> lineRanges = new ArrayList<LineRange>();
+        lineRanges.add(new LineRange(6, 12));
+        split("ExpectedRendering-Line6-12.html", lineRanges);
+    }
+
+    /**
+     * Checks whether we correctly highlight the source for 2 ranges.
+     *
+     * @throws IOException in case of an IO error
+     */
+    @Test
+    public void splitTwoRanges() throws IOException {
+        ArrayList<LineRange> lineRanges = new ArrayList<LineRange>();
+        lineRanges.add(new LineRange(1, 4));
+        lineRanges.add(new LineRange(14, 20));
+        split("ExpectedRendering-2-Ranges.html", lineRanges);
     }
 
     /**
      * Checks whether we correctly split the source into prefix, warning and
      * suffix.
      *
-     * @param end
-     *            last line of the range
+     * @param fileName
+     *            the filename of the expected result
+     * @param lineRanges
+     *            the ranges to test
      * @throws IOException
      *             in case of an IO error
      */
-    private void split(final int end) throws IOException {
+    private void split(final String fileName, final List<LineRange> lineRanges) throws IOException {
         InputStream stream = SourceDetailTest.class.getResourceAsStream("AbortException.txt");
 
         FileAnnotation annotation = createMock(FileAnnotation.class);
-        LineRange lineRange = new LineRange(6, end);
-
-        ArrayList<LineRange> lineRanges = new ArrayList<LineRange>();
-        lineRanges.add(lineRange);
 
         expect(annotation.getLineRanges()).andReturn(lineRanges);
         expect(annotation.getWorkspaceFileName()).andReturn("").anyTimes();
+        expect(annotation.getMessage()).andReturn("Message ").anyTimes();
+        expect(annotation.getToolTip()).andReturn("Tooltip").anyTimes();
 
         replay(annotation);
 
         SourceDetail source = new SourceDetail(null, annotation);
 
-        Assert.assertTrue("Prefix should be empty.", StringUtils.isEmpty(source.getPrefix()));
-        Assert.assertTrue("Suffix should be empty.", StringUtils.isEmpty(source.getSuffix()));
-        Assert.assertTrue(source.hasHighlightedLine());
-
         String highlighted = source.highlightSource(stream);
         source.splitSourceFile(highlighted);
 
-        Assert.assertTrue("Wrong line selected as actual warning line.", source.getLine().contains(LINE_6_INDICATOR));
-        Assert.assertFalse("Prefix should not be empty.", StringUtils.isEmpty(source.getPrefix()));
-        Assert.assertFalse("Suffix should not be empty.", StringUtils.isEmpty(source.getSuffix()));
-        Assert.assertTrue(source.hasHighlightedLine());
+        List<String> expected = IOUtils.readLines(SourceDetailTest.class.getResourceAsStream(fileName));
+        List<String> actual = IOUtils.readLines(new StringReader(source.getSourceCode()));
 
-        Assert.assertEquals(end - 6 + 1, IOUtils.readLines(new StringReader(source.getLine())).size());
+        for (Iterator<String> expectedIterator = expected.iterator(), actualIterator = actual.iterator(); actualIterator.hasNext();) {
+            String expectedLine = expectedIterator.next().trim();
+            String actualLine = actualIterator.next().trim();
+
+            Assert.assertEquals(expectedLine, actualLine);
+        }
 
         verify(annotation);
     }

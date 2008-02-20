@@ -299,5 +299,17 @@ public class Bug implements Serializable, FileAnnotation, Comparable<Bug> {
     public int getPrimaryLineNumber() {
         return primaryLineNumber;
     }
+
+    /**
+     * Adds another line range to this bug.
+     *
+     * @param lineRange
+     *            the line range to add
+     */
+    public void addLineRange(final LineRange lineRange) {
+        if (!lineRanges.contains(lineRange)) {
+            lineRanges.add(lineRange);
+        }
+    }
 }
 

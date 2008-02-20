@@ -43,8 +43,8 @@ public class NativeFindBugsParserTest {
     @Test
     public void scanFileWithMultipleLinesAndRanges() throws IOException, DocumentException {
         scanNativeFile("findbugs-native.xml", Priority.NORMAL,
-                "org/apache/hadoop/dfs/BlockCrcUpgrade.java", "org.apache.hadoop.dfs", 1309, 1309,
-                "org/apache/hadoop/streaming/StreamJob.java", "org.apache.hadoop.streaming", 935, 980);
+                "org/apache/hadoop/dfs/BlockCrcUpgrade.java", "org.apache.hadoop.dfs", 1309, 1309, 5,
+                "org/apache/hadoop/streaming/StreamJob.java", "org.apache.hadoop.streaming", 935, 980, 1);
     }
 
     /**
@@ -55,8 +55,8 @@ public class NativeFindBugsParserTest {
     @Test
     public void scanFileWarningsHaveMultipleClasses() throws IOException, DocumentException {
         scanNativeFile("findbugs-multclass.xml", Priority.HIGH,
-                "umd/cs/findbugs/PluginLoader.java", "edu.umd.cs.findbugs", 82, 82,
-                "edu/umd/cs/findbugs/PluginLoader.java", "edu.umd.cs.findbugs", 93, 93);
+                "umd/cs/findbugs/PluginLoader.java", "edu.umd.cs.findbugs", 82, 82, 1,
+                "edu/umd/cs/findbugs/PluginLoader.java", "edu.umd.cs.findbugs", 93, 93, 1);
     }
 
     /**
@@ -74,6 +74,8 @@ public class NativeFindBugsParserTest {
      *            start line of first class
      * @param end1
      *            end line of first class
+     * @param ranges1
+     *            number of line ranges for first class
      * @param fileName2
      *            second class filename
      * @param packageName2
@@ -82,13 +84,16 @@ public class NativeFindBugsParserTest {
      *            start line of second class
      * @param end2
      *            end line of second class
+     * @param ranges2
+     *            number of line ranges for second class
      * @throws DocumentException
      *             on a parse error
      */
     // CHECKSTYLE:OFF
+    @SuppressWarnings("PMD.ExcessiveParameterList")
     public void scanNativeFile(final String findbugsFile, final Priority priority,
-            final String fileName1, final String packageName1, final int start1, final int end1,
-            final String fileName2, final String packageName2, final int start2, final int end2) throws IOException, DocumentException {
+            final String fileName1, final String packageName1, final int start1, final int end1, final int ranges1,
+            final String fileName2, final String packageName2, final int start2, final int end2, final int ranges2) throws IOException, DocumentException {
    // CHECKSTYLE:ON
         MavenModule module = parseFile(findbugsFile);
 
@@ -111,8 +116,8 @@ public class NativeFindBugsParserTest {
             secondAnnotation = annotation1;
         }
 
-        checkAnnotation(firstAnnotation, priority, fileName1, packageName1, start1, end1);
-        checkAnnotation(secondAnnotation, priority, fileName2, packageName2, start2, end2);
+        checkAnnotation(firstAnnotation, priority, fileName1, packageName1, start1, end1, ranges1);
+        checkAnnotation(secondAnnotation, priority, fileName2, packageName2, start2, end2, ranges2);
     }
 
     /**
@@ -130,20 +135,22 @@ public class NativeFindBugsParserTest {
      *            start line
      * @param end
      *            end line
+     * @param ranges
+     *            number of line ranges for first class
      */
-    private void checkAnnotation(final FileAnnotation annotation, final Priority priority, final String fileName, final String packageName, final int start, final int end) {
+    private void checkAnnotation(final FileAnnotation annotation, final Priority priority, final String fileName,
+            final String packageName, final int start, final int end, final int ranges) {
         assertEquals("Wrong file name parsed.", fileName, annotation.getWorkspaceFileName());
         assertEquals("Wrong package name parsed.", packageName, annotation.getWorkspaceFile().getPackageName());
 
         Collection<LineRange> lineRanges = annotation.getLineRanges();
-        assertEquals("Wrong number of line ranges parsed.", 1, lineRanges.size());
+        assertEquals("Wrong number of line ranges parsed.", ranges, lineRanges.size());
 
         LineRange range = lineRanges.iterator().next();
-        assertEquals("Wrong start of line range", start, range.getStart());
-        assertEquals("Wrong end of line range", end, range.getEnd());
+        assertEquals("Wrong start of line range.", start, range.getStart());
+        assertEquals("Wrong end of line range.", end, range.getEnd());
 
-        assertEquals(priority, annotation.getPriority());
-
-        assertEquals(start, annotation.getPrimaryLineNumber());
+        assertEquals("Wrong priority parsed.", priority, annotation.getPriority());
+        assertEquals("Wrong start of line range", start, annotation.getPrimaryLineNumber());
     }
 }

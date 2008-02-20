@@ -1,5 +1,6 @@
 package hudson.plugins.findbugs.parser;
 
+import hudson.plugins.findbugs.model.LineRange;
 import hudson.plugins.findbugs.model.MavenModule;
 import hudson.plugins.findbugs.model.Priority;
 import hudson.plugins.findbugs.model.WorkspaceFile;
@@ -10,11 +11,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import org.apache.commons.digester.Digester;
 import org.dom4j.DocumentException;
 import org.xml.sax.SAXException;
 
+import edu.umd.cs.findbugs.BugAnnotation;
 import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.Project;
 import edu.umd.cs.findbugs.SortedBugCollection;
@@ -70,9 +73,16 @@ public class NativeFindBugsParser {
             }
 
             SourceLineAnnotation sourceLine = warning.getPrimarySourceLineAnnotation();
-            Bug bug = new Bug(priority, warning.getMessage(), warning.getMessage(), warning.getType(),
+            Bug bug = new Bug(priority, "", "", warning.getType(),
                     sourceLine.getStartLine(), sourceLine.getEndLine());
-
+            Iterator<BugAnnotation> annotationIterator = warning.annotationIterator();
+            while (annotationIterator.hasNext()) {
+                BugAnnotation bugAnnotation = annotationIterator.next();
+                if (bugAnnotation instanceof SourceLineAnnotation) {
+                    SourceLineAnnotation annotation = (SourceLineAnnotation)bugAnnotation;
+                    bug.addLineRange(new LineRange(annotation.getStartLine(), annotation.getEndLine()));
+                }
+            }
             String fileName;
             try {
                 SourceFile sourceFile = sourceFinder.findSourceFile(sourceLine);

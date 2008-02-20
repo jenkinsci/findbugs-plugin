@@ -29,7 +29,11 @@ public class LineRange {
      *            end of the range
      */
     public LineRange(final int start, final int end) {
-        if (start < end) {
+        if (start <= 0) {
+            this.start = 0;
+            this.end = 0;
+        }
+        else if (start < end) {
             this.start = start;
             this.end = end;
         }
