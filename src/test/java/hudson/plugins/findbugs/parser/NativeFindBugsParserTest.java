@@ -42,9 +42,9 @@ public class NativeFindBugsParserTest {
      */
     @Test
     public void scanFileWithMultipleLinesAndRanges() throws IOException, DocumentException {
-        scanNativeFile("findbugs-native.xml", Priority.NORMAL,
-                "org/apache/hadoop/dfs/BlockCrcUpgrade.java", "org.apache.hadoop.dfs", 1309, 1309, 5,
-                "org/apache/hadoop/streaming/StreamJob.java", "org.apache.hadoop.streaming", 935, 980, 1);
+        scanNativeFile("findbugs-native.xml", "TestCase",
+                Priority.NORMAL, "org/apache/hadoop/dfs/BlockCrcUpgrade.java", "org.apache.hadoop.dfs", 1309, 1309,
+                5, "org/apache/hadoop/streaming/StreamJob.java", "org.apache.hadoop.streaming", 935, 980, 1);
     }
 
     /**
@@ -54,9 +54,9 @@ public class NativeFindBugsParserTest {
      */
     @Test
     public void scanFileWarningsHaveMultipleClasses() throws IOException, DocumentException {
-        scanNativeFile("findbugs-multclass.xml", Priority.HIGH,
-                "umd/cs/findbugs/PluginLoader.java", "edu.umd.cs.findbugs", 82, 82, 1,
-                "edu/umd/cs/findbugs/PluginLoader.java", "edu.umd.cs.findbugs", 93, 93, 1);
+        scanNativeFile("findbugs-multclass.xml", "FindBugs",
+                Priority.HIGH, "umd/cs/findbugs/PluginLoader.java", "edu.umd.cs.findbugs", 82, 82,
+                1, "edu/umd/cs/findbugs/PluginLoader.java", "edu.umd.cs.findbugs", 93, 93, 1);
     }
 
     /**
@@ -64,6 +64,8 @@ public class NativeFindBugsParserTest {
      *
      * @param findbugsFile
      *            name of the file to read
+     * @param projectName
+     *            name of the project
      * @param priority
      *            priority
      * @param fileName1
@@ -91,11 +93,12 @@ public class NativeFindBugsParserTest {
      */
     // CHECKSTYLE:OFF
     @SuppressWarnings("PMD.ExcessiveParameterList")
-    public void scanNativeFile(final String findbugsFile, final Priority priority,
-            final String fileName1, final String packageName1, final int start1, final int end1, final int ranges1,
-            final String fileName2, final String packageName2, final int start2, final int end2, final int ranges2) throws IOException, DocumentException {
+    public void scanNativeFile(final String findbugsFile, final String projectName,
+            final Priority priority, final String fileName1, final String packageName1, final int start1, final int end1,
+            final int ranges1, final String fileName2, final String packageName2, final int start2, final int end2, final int ranges2) throws IOException, DocumentException {
    // CHECKSTYLE:ON
         MavenModule module = parseFile(findbugsFile);
+        assertEquals(projectName, module.getName());
 
         assertEquals(ERROR_MESSAGE, NUMBER_OF_WARNINGS, module.getNumberOfAnnotations());
         Collection<FileAnnotation> warnings = module.getAnnotations();

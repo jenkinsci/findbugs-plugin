@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import org.apache.commons.digester.Digester;
+import org.apache.commons.lang.StringUtils;
 import org.dom4j.DocumentException;
 import org.xml.sax.SAXException;
 
@@ -57,7 +58,14 @@ public class NativeFindBugsParser {
         SourceFinder sourceFinder = new SourceFinder();
         sourceFinder.setSourceBaseList(project.getSourceDirList());
 
-        MavenModule module = new MavenModule(moduleName);
+        String actualName;
+        if (StringUtils.isBlank(project.getProjectName())) {
+            actualName = moduleName;
+        }
+        else {
+            actualName = project.getProjectName();
+        }
+        MavenModule module = new MavenModule(actualName);
         HashMap<String, WorkspaceFile> fileMapping = new HashMap<String, WorkspaceFile>();
         for (BugInstance warning : bugs) {
             Priority priority;
