@@ -154,7 +154,7 @@ public class SourceDetail implements ModelObject {
                 output.append("\" nodismiss=\"\">\n");
                 output.append("<code><b>\n");
                 if (range.getStart() <= 0) {
-                    output.append(StringEscapeUtils.escapeHtml(annotation.getToolTip()));
+                    output.append(annotation.getToolTip());
                 }
                 else {
                     while (lineNumber <= range.getEnd()) {
