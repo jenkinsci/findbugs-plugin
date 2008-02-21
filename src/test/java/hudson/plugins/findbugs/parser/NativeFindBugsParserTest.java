@@ -42,7 +42,7 @@ public class NativeFindBugsParserTest {
      */
     @Test
     public void scanFileWithMultipleLinesAndRanges() throws IOException, DocumentException {
-        scanNativeFile("findbugs-native.xml", "TestCase",
+        scanNativeFile("findbugs-native.xml", "findbugs-native.xml",
                 Priority.NORMAL, "org/apache/hadoop/dfs/BlockCrcUpgrade.java", "org.apache.hadoop.dfs", 1309, 1309,
                 5, "org/apache/hadoop/streaming/StreamJob.java", "org.apache.hadoop.streaming", 935, 980, 1);
     }
@@ -119,8 +119,8 @@ public class NativeFindBugsParserTest {
             secondAnnotation = annotation1;
         }
 
-        checkAnnotation(firstAnnotation, priority, fileName1, packageName1, start1, end1, ranges1);
-        checkAnnotation(secondAnnotation, priority, fileName2, packageName2, start2, end2, ranges2);
+        checkAnnotation(firstAnnotation, projectName, priority, fileName1, packageName1, start1, end1, ranges1);
+        checkAnnotation(secondAnnotation, projectName, priority, fileName2, packageName2, start2, end2, ranges2);
     }
 
     /**
@@ -128,6 +128,8 @@ public class NativeFindBugsParserTest {
      *
      * @param annotation
      *            the annotation to check
+     * @param projectName
+     *            name of the project
      * @param priority
      *            priority
      * @param fileName
@@ -141,10 +143,13 @@ public class NativeFindBugsParserTest {
      * @param ranges
      *            number of line ranges for first class
      */
-    private void checkAnnotation(final FileAnnotation annotation, final Priority priority, final String fileName,
+    // CHECKSTYLE:OFF
+    private void checkAnnotation(final FileAnnotation annotation, final String projectName, final Priority priority, final String fileName,
             final String packageName, final int start, final int end, final int ranges) {
+    // CHECKSTYLE:ON
         assertEquals("Wrong file name parsed.", fileName, annotation.getWorkspaceFileName());
         assertEquals("Wrong package name parsed.", packageName, annotation.getWorkspaceFile().getPackageName());
+        assertEquals("Wrong module name parsed.", projectName, annotation.getWorkspaceFile().getModuleName());
 
         Collection<LineRange> lineRanges = annotation.getLineRanges();
         assertEquals("Wrong number of line ranges parsed.", ranges, lineRanges.size());

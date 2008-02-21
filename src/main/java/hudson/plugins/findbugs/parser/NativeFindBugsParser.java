@@ -102,7 +102,7 @@ public class NativeFindBugsParser {
             if (!fileMapping.containsKey(fileName)) {
                 WorkspaceFile workspaceFile = new WorkspaceFile();
                 workspaceFile.setPackageName(warning.getPrimaryClass().getPackageName());
-                workspaceFile.setModuleName(moduleName);
+                workspaceFile.setModuleName(actualName);
                 workspaceFile.setName(fileName);
                 fileMapping.put(fileName, workspaceFile);
             }

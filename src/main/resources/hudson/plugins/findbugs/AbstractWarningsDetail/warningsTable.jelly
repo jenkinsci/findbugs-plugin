@@ -10,15 +10,14 @@
 			<td class="pane-header">
 				<j:choose>
 					<j:when test="${it.isCurrent() &amp;&amp; warning.workspaceFile.name != null}">
-						Class: <a href="${warning.key}/#${warning.primaryLineNumber}">${warning.workspaceFile.shortName}</a>,
+						File: <a href="${warning.key}/#${warning.primaryLineNumber}">${warning.workspaceFile.shortName}</a>,
 					</j:when>
 					<j:otherwise>
-						Class: ${warning.workspaceFile.shortName},
+						File: ${warning.workspaceFile.shortName},
 					</j:otherwise>
 				</j:choose>
 				Type: ${warning.type},
-				Priority: ${warning.priority},
-				Category: ${warning.category}</td>
+				Priority: ${warning.priority}</td>
 			</tr>
 		</table>
 		<p><b>${warning.message}</b></p>

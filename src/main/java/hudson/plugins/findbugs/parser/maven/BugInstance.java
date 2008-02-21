@@ -17,10 +17,10 @@ public class BugInstance {
     private String priority;
     /** Message of warning. */
     private String message;
-    /** Line number of warning. */
-    private int lineNumber;
-    /** True if this warning is for a valid line number. */
-    private boolean hasLineNumber;
+    /** The first line of the warning range. */
+    private int start;
+    /** The last line of the warning range. */
+    private int end;
     /**
      * An expression identifying a line number. Currently supported expressions
      * are single integers (line numbers) or integer ranges (line number ranges,
@@ -106,7 +106,7 @@ public class BugInstance {
      * @return the line number of the warning
      */
     public int getLineNumber() {
-        return lineNumber;
+        return start;
     }
 
     /**
@@ -118,16 +118,17 @@ public class BugInstance {
         lineNumberExpression = lineNumberString;
         try {
             if (lineNumberString.contains(RANGE_SEPARATOR)) {
-                lineNumber = Integer.valueOf(StringUtils.substringBefore(lineNumberString, RANGE_SEPARATOR));
+                start = Integer.valueOf(StringUtils.substringBefore(lineNumberString, RANGE_SEPARATOR));
+                end = Integer.valueOf(StringUtils.substringAfter(lineNumberString, RANGE_SEPARATOR));
             }
             else {
-                lineNumber = Integer.valueOf(lineNumberString);
+                start = Integer.valueOf(lineNumberString);
+                end = Integer.valueOf(lineNumberString);
             }
-            hasLineNumber = lineNumber > 0;
         }
         catch (NumberFormatException exception) {
-            lineNumber = 0;
-            hasLineNumber = false;
+            start = 0;
+            end = 0;
         }
     }
 
@@ -143,33 +144,41 @@ public class BugInstance {
     }
 
     /**
-     * Checks if this warning represents a line annotation.
+     * Returns the first line of the warning range.
      *
-     * @return <code>true</code>, if is line annotation, <code>false</code>
-     *         if the annotation is for the whole file
+     * @return the first line of the warning range
      */
-    public boolean isLineAnnotation() {
-        return hasLineNumber;
+    public int getStart() {
+        return start;
     }
 
-    // CHECKSTYLE:OFF
+    /**
+     * Returns the last line of the warning range.
+     *
+     * @return the last line of the warning range
+     */
+    public int getEnd() {
+        return end;
+    }
+
     /** {@inheritDoc} */
     @Override
     public int hashCode() {
-        int prime = 31;
+        final int prime = 31;
         int result = 1;
         result = prime * result + ((category == null) ? 0 : category.hashCode());
-        result = prime * result + (hasLineNumber ? 1231 : 1237);
-        result = prime * result + lineNumber;
+        result = prime * result + end;
+        result = prime * result
+                + ((lineNumberExpression == null) ? 0 : lineNumberExpression.hashCode());
         result = prime * result + ((message == null) ? 0 : message.hashCode());
         result = prime * result + ((priority == null) ? 0 : priority.hashCode());
+        result = prime * result + start;
         result = prime * result + ((type == null) ? 0 : type.hashCode());
         return result;
     }
 
     /** {@inheritDoc} */
     @Override
-    @SuppressWarnings("PMD")
     public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
@@ -189,10 +198,15 @@ public class BugInstance {
         else if (!category.equals(other.category)) {
             return false;
         }
-        if (hasLineNumber != other.hasLineNumber) {
+        if (end != other.end) {
             return false;
         }
-        if (lineNumber != other.lineNumber) {
+        if (lineNumberExpression == null) {
+            if (other.lineNumberExpression != null) {
+                return false;
+            }
+        }
+        else if (!lineNumberExpression.equals(other.lineNumberExpression)) {
             return false;
         }
         if (message == null) {
@@ -211,6 +225,9 @@ public class BugInstance {
         else if (!priority.equals(other.priority)) {
             return false;
         }
+        if (start != other.start) {
+            return false;
+        }
         if (type == null) {
             if (other.type != null) {
                 return false;
@@ -221,5 +238,7 @@ public class BugInstance {
         }
         return true;
     }
+
+    // CHECKSTYLE:OFF
 }
 

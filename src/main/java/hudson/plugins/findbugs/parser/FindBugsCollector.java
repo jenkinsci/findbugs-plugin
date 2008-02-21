@@ -72,40 +72,47 @@ public class FindBugsCollector implements FileCallable<JavaProject> {
 
             if (SKIP_OLD_FILES && findbugsFile.lastModified() < buildTime) {
                 logger.println("Skipping " + findbugsFile + " because it's not up to date");
+                continue;
             }
-            else {
-                if (isFormatUndefined) {
-                    isOldMavenPluginFormat = mavenFindBugsParser.accepts(filePath.read());
-                    isFormatUndefined = false;
+            if (!findbugsFile.canRead()) {
+                logger.println("Skipping " + findbugsFile + " because we have no permission to read the file.");
+                continue;
+            }
+            if (isFormatUndefined) {
+                isOldMavenPluginFormat = mavenFindBugsParser.accepts(filePath.read());
+                isFormatUndefined = false;
+            }
+            try {
+                String moduleName = guessModuleName(findbugsFile.getAbsolutePath());
+                MavenModule module;
+                if (isOldMavenPluginFormat) {
+                    logger.println("Activating parser for maven-findbugs-plugin <= 1.1.1.");
+                    module = mavenFindBugsParser.parse(filePath.read(), moduleName, workspace);
                 }
-                try {
-                    String moduleName = guessModuleName(findbugsFile.getAbsolutePath());
-                    MavenModule module;
-                    if (isOldMavenPluginFormat) {
-                        logger.println("Activating parser for maven-findbugs-plugin <= 1.1.1.");
-                        module = mavenFindBugsParser.parse(filePath.read(), moduleName, workspace);
-                    }
-                    else {
-                        logger.println(
-                                "Activating parser for findbugs ant task, batch script, or maven-findbugs-plugin > 1.1.1.");
-                        NativeFindBugsParser parser = new NativeFindBugsParser();
-                        module = parser.parse(filePath.read(), StringUtils.substringBefore(findbugsFile.getPath().replace('\\', '/'), "/target/"), moduleName);
-                    }
-                    project.addAnnotations(module.getAnnotations());
-                    logger.println("Successfully parsed findbugs file " + findbugsFile + " with " + module.getNumberOfAnnotations() + " warnings.");
+                else {
+                    logger.println(
+                            "Activating parser for findbugs ant task, batch script, or maven-findbugs-plugin > 1.1.1.");
+                    NativeFindBugsParser parser = new NativeFindBugsParser();
+                    module = parser.parse(filePath.read(), StringUtils.substringBefore(findbugsFile.getPath().replace('\\', '/'), "/target/"), moduleName);
                 }
-                catch (SAXException e) {
-                    logger.println("Can't parse file " + findbugsFile + " due to an exception.");
-                    e.printStackTrace(logger);
-                }
-                catch (DocumentException e) {
-                    logger.println("Can't parse file " + findbugsFile + " due to an exception.");
-                    e.printStackTrace(logger);
-                }
-                catch (InterruptedException exception) {
-                    logger.println("Parsing has been canceled.");
-                    return project;
-                }
+                project.addAnnotations(module.getAnnotations());
+                logger.println("Successfully parsed findbugs file " + findbugsFile + " of module " + module.getName() + " with " + module.getNumberOfAnnotations() + " warnings.");
+            }
+            catch (IOException e) {
+                logger.println("Can't read file " + findbugsFile + " due to an exception.");
+                e.printStackTrace(logger);
+            }
+            catch (SAXException e) {
+                logger.println("Can't parse file " + findbugsFile + " due to an exception.");
+                e.printStackTrace(logger);
+            }
+            catch (DocumentException e) {
+                logger.println("Can't parse file " + findbugsFile + " due to an exception.");
+                e.printStackTrace(logger);
+            }
+            catch (InterruptedException exception) {
+                logger.println("Parsing has been canceled.");
+                return project;
             }
         }
         return project;

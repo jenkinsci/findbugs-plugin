@@ -8,25 +8,29 @@
 	    	<j:choose>
 	    		<j:when test="${it.result.numberOfNewWarnings > 0 &amp;&amp; it.result.numberOfFixedWarnings > 0}">
 	    			(<a href="findbugsResult/new">${it.result.numberOfNewWarnings} new</a>
-	    			and <a href="findbugsResult/fixed">${it.result.numberOfFixedWarnings} fixed</a>).
+	    			and <a href="findbugsResult/fixed">${it.result.numberOfFixedWarnings} fixed</a>)
 	    		</j:when>
 	    		<j:when test="${it.result.numberOfFixedWarnings > 0}">
-	    			(<a href="findbugsResult/fixed">${it.result.numberOfFixedWarnings} fixed</a>).
+	    			(<a href="findbugsResult/fixed">${it.result.numberOfFixedWarnings} fixed</a>)
 	    		</j:when>
 	    		<j:when test="${it.result.numberOfNewWarnings > 0}">
-	    			(<a href="findbugsResult/new">${it.result.numberOfNewWarnings} new</a>).
+	    			(<a href="findbugsResult/new">${it.result.numberOfNewWarnings} new</a>)
 	    		</j:when>
-	    		<j:otherwise>(±0).</j:otherwise>
+	    		<j:otherwise>(±0)</j:otherwise>
 	    	</j:choose>
 	    </j:if>
 	    <j:if test="${it.result.numberOfAnnotations == 0}">
-	    	no warnings have been
-	    	<j:choose>
-	    		<j:when test="${it.result.numberOfFixedWarnings > 0}">
-	    			 (<a href="findbugsResult/fixed">${it.result.numberOfFixedWarnings} fixed)</a>.
-	    		</j:when>
-	    		<j:otherwise>found.</j:otherwise>
-	    	</j:choose>
+	    	no warnings have been found
+    		<j:if test="${it.result.numberOfFixedWarnings > 0}">
+    			 (<a href="findbugsResult/fixed">${it.result.numberOfFixedWarnings} fixed)</a>
+	    	</j:if>
+	    </j:if>
+	    in ${it.result.numberOfModules} FindBugs
+	    <j:if test="${it.result.numberOfAnnotations > 0}">
+		    files.
+	    </j:if>
+	    <j:if test="${it.result.numberOfAnnotations == 0}">
+	    	files (since build #${it.result.zeroWarningsSinceBuild}).
 	    </j:if>
 	</t:summary>
 </j:jelly>

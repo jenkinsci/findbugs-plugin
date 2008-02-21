@@ -164,13 +164,8 @@ public class MavenFindBugsParser {
             WorkspaceFile workspaceFile = new WorkspaceFile();
             for (BugInstance warning : file.getBugInstances()) {
                 Priority priority = Priority.valueOf(StringUtils.upperCase(warning.getPriority()));
-                Bug bug;
-                if (warning.isLineAnnotation()) {
-                    bug = new Bug(priority, warning.getMessage(), warning.getCategory(), warning.getType(), warning.getLineNumber());
-                }
-                else {
-                    bug = new Bug(priority, warning.getMessage(), warning.getCategory(), warning.getType());
-                }
+                Bug bug = new Bug(priority, warning.getMessage(), warning.getCategory(), warning.getType(),
+                            warning.getStart(), warning.getEnd());
                 workspaceFile.addAnnotation(bug);
             }
             workspaceFile.setPackageName(StringUtils.substringBeforeLast(file.getClassname(), "."));

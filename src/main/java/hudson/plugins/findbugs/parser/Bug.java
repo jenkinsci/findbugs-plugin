@@ -94,7 +94,7 @@ public class Bug implements Serializable, FileAnnotation, Comparable<Bug> {
      *            the identifier of the warning type
      */
     public Bug(final Priority priority, final String message, final String category, final String type) {
-        initialize(priority, message, category, type, 1, 1);
+        initialize(priority, message, category, type, 0, 0);
     }
 
     /**

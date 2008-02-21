@@ -16,8 +16,8 @@ public class BugInstanceTest {
         BugInstance warning = new BugInstance();
 
         warning.setLineNumberExpression("6");
-        Assert.assertTrue(warning.isLineAnnotation());
-        Assert.assertEquals("Wrong line number", 6, warning.getLineNumber());
+        Assert.assertEquals("Wrong line number", 6, warning.getStart());
+        Assert.assertEquals("Wrong line number", 6, warning.getEnd());
     }
 
     /**
@@ -28,8 +28,8 @@ public class BugInstanceTest {
         BugInstance warning = new BugInstance();
 
         warning.setLineNumberExpression("600-800");
-        Assert.assertTrue(warning.isLineAnnotation());
-        Assert.assertEquals("Wrong line number", 600, warning.getLineNumber());
+        Assert.assertEquals("Wrong line number", 600, warning.getStart());
+        Assert.assertEquals("Wrong line number", 800, warning.getEnd());
     }
 
 
@@ -41,7 +41,8 @@ public class BugInstanceTest {
         BugInstance warning = new BugInstance();
 
         warning.setLineNumberExpression("Not available");
-        Assert.assertFalse(warning.isLineAnnotation());
+        Assert.assertEquals("Wrong line number", 0, warning.getStart());
+        Assert.assertEquals("Wrong line number", 0, warning.getEnd());
     }
 }
 

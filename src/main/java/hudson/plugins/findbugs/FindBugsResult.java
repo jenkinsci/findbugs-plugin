@@ -68,6 +68,10 @@ public class FindBugsResult extends AbstractWarningsDetail {
     private final int normal;
     /** The number of high priority warnings in this build. */
     private final int high;
+    /** Determines since which build we have zero warnings. */
+    private int zeroWarningsSinceBuild;
+    /** Determines since which time we have zero warnings. */
+    private long zeroWarningsSinceDate;
 
     /** Serialization provider. */
     private static final XStream XSTREAM = new AnnotationStream();
@@ -117,6 +121,10 @@ public class FindBugsResult extends AbstractWarningsDetail {
         normal = project.getNumberOfAnnotations(Priority.NORMAL);
         low = project.getNumberOfAnnotations(Priority.LOW);
 
+        if (numberOfWarnings == 0 && previousProject.getNumberOfAnnotations() != 0) {
+            zeroWarningsSinceBuild = build.getNumber();
+            zeroWarningsSinceDate = build.getTimestamp().getTimeInMillis();
+        }
         try {
             Collection<WorkspaceFile> files = project.getFiles();
             getDataFile().write(files.toArray(new WorkspaceFile[files.size()]));
@@ -133,6 +141,33 @@ public class FindBugsResult extends AbstractWarningsDetail {
      */
     private XmlFile getDataFile() {
         return new XmlFile(XSTREAM, new File(getOwner().getRootDir(), "findbugs-warnings.xml"));
+    }
+
+    /**
+     * Returns the number of modules in this project.
+     *
+     * @return the number of modules
+     */
+    public int getNumberOfModules() {
+        return getProject().getModules().size();
+    }
+
+    /**
+     * Returns the build since we have zero warnings
+     *
+     * @return the build since we have zero warnings
+     */
+    public int getZeroWarningsSinceBuild() {
+        return zeroWarningsSinceBuild;
+    }
+
+    /**
+     * Returns the time since we have zero warnings
+     *
+     * @return the time since we have zero warnings
+     */
+    public long getZeroWarningsSinceDate() {
+        return zeroWarningsSinceDate;
     }
 
     /** {@inheritDoc} */
@@ -213,23 +248,14 @@ public class FindBugsResult extends AbstractWarningsDetail {
      * @return the new warnings of this build.
      */
     public Set<FileAnnotation> getNewWarnings() {
-        try {
-            if (newWarnings == null) {
-                loadPreviousResult();
-            }
-            Set<FileAnnotation> result = newWarnings.get();
-            if (result == null) {
-                loadPreviousResult();
-            }
-            return newWarnings.get();
+        if (newWarnings == null) {
+            loadPreviousResult();
         }
-        catch (IOException exception) {
-            LOGGER.log(Level.WARNING, "Failed to load FindBugs files.", exception);
+        Set<FileAnnotation> result = newWarnings.get();
+        if (result == null) {
+            loadPreviousResult();
         }
-        catch (InterruptedException exception) {
-            LOGGER.log(Level.WARNING, "Failed to load FindBugs files: operation has been canceled.", exception);
-        }
-        return EMPTY_SET;
+        return newWarnings.get();
     }
 
     /**
@@ -238,23 +264,14 @@ public class FindBugsResult extends AbstractWarningsDetail {
      * @return the fixed warnings of this build.
      */
     public Set<FileAnnotation> getFixedWarnings() {
-        try {
-            if (fixedWarnings == null) {
-                loadPreviousResult();
-            }
-            Set<FileAnnotation> result = fixedWarnings.get();
-            if (result == null) {
-                loadPreviousResult();
-            }
-            return fixedWarnings.get();
+        if (fixedWarnings == null) {
+            loadPreviousResult();
         }
-        catch (IOException exception) {
-            LOGGER.log(Level.WARNING, "Failed to load FindBugs files.", exception);
+        Set<FileAnnotation> result = fixedWarnings.get();
+        if (result == null) {
+            loadPreviousResult();
         }
-        catch (InterruptedException exception) {
-            LOGGER.log(Level.WARNING, "Failed to load FindBugs files: operation has been canceled.", exception);
-        }
-        return EMPTY_SET;
+        return fixedWarnings.get();
     }
 
     /**
@@ -270,6 +287,7 @@ public class FindBugsResult extends AbstractWarningsDetail {
                 newProject.addAnnotations(workspaceFile.getAnnotations());
             }
             result = newProject;
+            LOGGER.log(Level.INFO, "Loaded findbugs data file " + getDataFile() + " for build " + getOwner().getNumber());
         }
         catch (IOException exception) {
             LOGGER.log(Level.WARNING, "Failed to load " + getDataFile(), exception);
@@ -281,13 +299,8 @@ public class FindBugsResult extends AbstractWarningsDetail {
     /**
      * Loads the FindBugs results and the result of the previous build and wraps
      * them in a weak reference that might get removed by the garbage collector.
-     *
-     * @throws IOException
-     *             if the files could not be read
-     * @throws InterruptedException
-     *             if the operation has been canceled
      */
-    private void loadPreviousResult() throws IOException, InterruptedException {
+    private void loadPreviousResult() {
         loadResult();
 
         if (hasPreviousResult()) {
@@ -368,7 +381,7 @@ public class FindBugsResult extends AbstractWarningsDetail {
      *         module
      */
     public boolean isSingleModuleProject() {
-        return getProject().getModules().size() == 1;
+        return getNumberOfModules() == 1;
     }
 
     /**
