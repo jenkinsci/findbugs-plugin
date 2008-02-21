@@ -14,6 +14,9 @@ import java.util.List;
 
 /**
  * A serializable Java Bean class representing an open task.
+ * <p>
+ * Note: this class has a natural ordering that is inconsistent with equals.
+ * </p>
  */
 @SuppressWarnings("PMD.CyclomaticComplexity")
 public class Bug implements Serializable, FileAnnotation, Comparable<Bug> {
@@ -198,7 +201,6 @@ public class Bug implements Serializable, FileAnnotation, Comparable<Bug> {
         return fileName;
     }
 
-    // FIXME in sync with equals?
     /** {@inheritDoc} */
     public int compareTo(final Bug otherTask) {
         if (key == otherTask.key) {
@@ -210,10 +212,11 @@ public class Bug implements Serializable, FileAnnotation, Comparable<Bug> {
         return -1;
     }
 
+    // CHECKSTYLE:OFF
     /** {@inheritDoc} */
     @Override
     public int hashCode() {
-        final int prime = 31;
+        int prime = 31;
         int result = 1;
         result = prime * result + ((category == null) ? 0 : category.hashCode());
         result = prime * result + ((fileName == null) ? 0 : fileName.hashCode());
@@ -225,6 +228,7 @@ public class Bug implements Serializable, FileAnnotation, Comparable<Bug> {
     }
 
     /** {@inheritDoc} */
+    @SuppressWarnings("PMD.CyclomaticComplexity")
     @Override
     public boolean equals(final Object obj) {
         if (this == obj) {

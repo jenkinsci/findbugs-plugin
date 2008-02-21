@@ -161,10 +161,12 @@ public class BugInstance {
         return end;
     }
 
+    // CHECKSTYLE:OFF
+
     /** {@inheritDoc} */
     @Override
     public int hashCode() {
-        final int prime = 31;
+        int prime = 31;
         int result = 1;
         result = prime * result + ((category == null) ? 0 : category.hashCode());
         result = prime * result + end;
@@ -178,6 +180,7 @@ public class BugInstance {
     }
 
     /** {@inheritDoc} */
+    @SuppressWarnings("PMD.CyclomaticComplexity")
     @Override
     public boolean equals(final Object obj) {
         if (this == obj) {
@@ -238,7 +241,5 @@ public class BugInstance {
         }
         return true;
     }
-
-    // CHECKSTYLE:OFF
 }
 

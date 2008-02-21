@@ -33,19 +33,11 @@ public abstract class AbstractResultAction<T> implements StaplerProxy, HealthRep
     private static final int WIDTH = 500;
     /** The associated build of this action. */
     @SuppressWarnings("Se")
-    private AbstractBuild<?, ?> owner;
+    private final AbstractBuild<?, ?> owner;
     /** Builds a health report. */
     private HealthReportBuilder healthReportBuilder;
     /** The actual result of this action. */
     private T result;
-
-    /**
-     * Creates a new instance of <code>AbstractResultAction</code>.
-     */
-    public AbstractResultAction() {
-        // FIXME: remove this constructor
-        // nothing to do. used to deserialize this action
-    }
 
     /**
      * Creates a new instance of <code>AbstractResultAction</code>.

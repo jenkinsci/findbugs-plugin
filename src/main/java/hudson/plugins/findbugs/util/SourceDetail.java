@@ -27,6 +27,7 @@ import de.java2html.options.JavaSourceConversionOptions;
  * Renders a source file containing an annotation for the whole file or a
  * specific line number.
  */
+@SuppressWarnings("PMD.CyclomaticComplexity")
 public class SourceDetail implements ModelObject {
     /** Offset of the source code generator. After this line the actual source file lines start. */
     protected static final int SOURCE_GENERATOR_OFFSET = 13;
@@ -116,6 +117,7 @@ public class SourceDetail implements ModelObject {
      * @param sourceFile
      *            the source code of the whole file as rendered HTML string
      */
+    @SuppressWarnings("PMD.CyclomaticComplexity")
     public final void splitSourceFile(final String sourceFile) {
         StringBuilder output = new StringBuilder(sourceFile.length());
 
