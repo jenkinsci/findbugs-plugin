@@ -17,6 +17,8 @@ import org.junit.Test;
  *  Tests the extraction of FindBugs analysis results.
  */
 public class NativeFindBugsParserTest {
+    /** File in native format. */
+    private static final String FINDBUGS_NATIVE_XML = "findbugs-native.xml";
     /** Number of warnings contained in files. */
     private static final int NUMBER_OF_WARNINGS = 2;
     /** Error message. */
@@ -42,7 +44,7 @@ public class NativeFindBugsParserTest {
      */
     @Test
     public void scanFileWithMultipleLinesAndRanges() throws IOException, DocumentException {
-        scanNativeFile("findbugs-native.xml", "findbugs-native.xml",
+        scanNativeFile(FINDBUGS_NATIVE_XML, FINDBUGS_NATIVE_XML,
                 Priority.NORMAL, "org/apache/hadoop/dfs/BlockCrcUpgrade.java", "org.apache.hadoop.dfs", 1309, 1309,
                 5, "org/apache/hadoop/streaming/StreamJob.java", "org.apache.hadoop.streaming", 935, 980, 1);
     }
@@ -98,7 +100,7 @@ public class NativeFindBugsParserTest {
             final int ranges1, final String fileName2, final String packageName2, final int start2, final int end2, final int ranges2) throws IOException, DocumentException {
    // CHECKSTYLE:ON
         MavenModule module = parseFile(findbugsFile);
-        assertEquals(projectName, module.getName());
+        assertEquals("Wrong project name guessed", projectName, module.getName());
 
         assertEquals(ERROR_MESSAGE, NUMBER_OF_WARNINGS, module.getNumberOfAnnotations());
         Collection<FileAnnotation> warnings = module.getAnnotations();

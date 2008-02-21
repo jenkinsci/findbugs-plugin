@@ -134,6 +134,28 @@ public class MavenFindBugsParserTest {
         assertEquals(WRONG_FILE_PROPERTY, "SpellingContentAssistProcessor", file.getName());
     }
 
+
+    /**
+     * Checks whether we correctly detect a maven FindBugs file.
+     *
+     * @throws Exception
+     *             in case of an error
+     */
+    @Test
+    public void hallo() throws Exception {
+        String fileName = "findbugs-classname.xml";
+        MavenModule module = parseFile(fileName);
+
+        Collection<WorkspaceFile> files = module.getFiles();
+        Assert.assertEquals("Wrong number of files.", 1, files.size());
+        Assert.assertEquals("Wrong number of bugs.", 7, module.getNumberOfAnnotations());
+
+        for (FileAnnotation annotation : module.getAnnotations()) {
+            Assert.assertEquals("Wrong file name in annotation.", "ChangeDBCore", annotation.getWorkspaceFileName());
+            Assert.assertEquals("Wrong file name.", "ChangeDBCore", annotation.getWorkspaceFile().getName());
+        }
+    }
+
     /**
      * Checks whether we correctly detect a maven FindBugs file.
      */

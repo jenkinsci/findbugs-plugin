@@ -162,16 +162,16 @@ public class MavenFindBugsParser {
 
         for (hudson.plugins.findbugs.parser.maven.File file : collection.getFiles()) {
             WorkspaceFile workspaceFile = new WorkspaceFile();
+            workspaceFile.setPackageName(StringUtils.substringBeforeLast(file.getClassname(), "."));
+            workspaceFile.setModuleName(moduleName);
+            workspaceFile.setName(StringUtils.substringAfterLast(file.getClassname(), "."));
             for (BugInstance warning : file.getBugInstances()) {
                 Priority priority = Priority.valueOf(StringUtils.upperCase(warning.getPriority()));
                 Bug bug = new Bug(priority, warning.getMessage(), warning.getCategory(), warning.getType(),
                             warning.getStart(), warning.getEnd());
                 workspaceFile.addAnnotation(bug);
+                module.addAnnotation(bug);
             }
-            workspaceFile.setPackageName(StringUtils.substringBeforeLast(file.getClassname(), "."));
-            workspaceFile.setModuleName(moduleName);
-            workspaceFile.setName(StringUtils.substringAfterLast(file.getClassname(), "."));
-            module.addAnnotations(workspaceFile.getAnnotations());
         }
         return module;
     }
