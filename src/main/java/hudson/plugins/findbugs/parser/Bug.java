@@ -99,7 +99,7 @@ public class Bug implements Serializable, FileAnnotation, Comparable<Bug> {
     }
 
     /**
-     * Initializes this instance
+     * Initializes this instance.
      *
      * @param priority
      *            the priority
