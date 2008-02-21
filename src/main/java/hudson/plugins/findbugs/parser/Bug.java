@@ -28,9 +28,7 @@ public class Bug implements Serializable, FileAnnotation, Comparable<Bug> {
     /** Unique key of this task. */
     private long key;
     /** File this annotation is part of. */
-    // FIXME: check if we could omit the serialization of this field
-    @edu.umd.cs.findbugs.annotations.SuppressWarnings("Se")
-    private transient WorkspaceFile workspaceFile;
+    private WorkspaceFile workspaceFile;
     /** Bug category. */
     private String category;
     /** Bug type. */

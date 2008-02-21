@@ -72,7 +72,8 @@ public class FindBugsResult extends AbstractWarningsDetail {
     private int zeroWarningsSinceBuild;
     /** Determines since which time we have zero warnings. */
     private long zeroWarningsSinceDate;
-
+    /** Error messages. */
+    private final String errors;
     /** Serialization provider. */
     private static final XStream XSTREAM = new AnnotationStream();
 
@@ -121,6 +122,16 @@ public class FindBugsResult extends AbstractWarningsDetail {
         normal = project.getNumberOfAnnotations(Priority.NORMAL);
         low = project.getNumberOfAnnotations(Priority.LOW);
 
+        StringBuilder messages = new StringBuilder();
+        if (project.hasError()) {
+            for (MavenModule module : project.getModules()) {
+                if (module.hasError()) {
+                    messages.append(module.getError());
+                }
+            }
+        }
+        errors = messages.toString();
+
         if (numberOfWarnings == 0 && previousProject.getNumberOfAnnotations() != 0) {
             zeroWarningsSinceBuild = build.getNumber();
             zeroWarningsSinceDate = build.getTimestamp().getTimeInMillis();
@@ -132,6 +143,15 @@ public class FindBugsResult extends AbstractWarningsDetail {
         catch (IOException exception) {
             LOGGER.log(Level.WARNING, "Failed to serialize the findbugs result.", exception);
         }
+    }
+
+    /**
+     * Returns whether a module with an error is part of this project.
+     *
+     * @return <code>true</code> if at least one module has an error.
+     */
+    public boolean hasError() {
+        return errors.length() > 0;
     }
 
     /**
@@ -153,7 +173,7 @@ public class FindBugsResult extends AbstractWarningsDetail {
     }
 
     /**
-     * Returns the build since we have zero warnings
+     * Returns the build since we have zero warnings.
      *
      * @return the build since we have zero warnings
      */
@@ -162,7 +182,7 @@ public class FindBugsResult extends AbstractWarningsDetail {
     }
 
     /**
-     * Returns the time since we have zero warnings
+     * Returns the time since we have zero warnings.
      *
      * @return the time since we have zero warnings
      */
@@ -339,6 +359,9 @@ public class FindBugsResult extends AbstractWarningsDetail {
         }
         else if ("new".equals(link)) {
             return new NewWarningsDetail(getOwner(), getNewWarnings());
+        }
+        else if ("error".equals(link)) {
+            return new ErrorDetail(getOwner(), errors);
         }
         else {
             if (isSingleModuleProject()) {

@@ -22,6 +22,8 @@ public class MavenModule extends AnnotationContainer {
     private String name;
     /** All Java packages in this maven module (mapped by their name). */
     private final Map<String, JavaPackage> packageMapping = new HashMap<String, JavaPackage>();
+    /** The error message that denotes that the creation of the module has been failed. */
+    private String error;
 
     /**
      * Creates a new instance of <code>MavenModule</code>.
@@ -149,6 +151,35 @@ public class MavenModule extends AnnotationContainer {
             tasks = Math.max(tasks, javaPackage.getNumberOfAnnotations());
         }
         return tasks;
+    }
+
+    /**
+     * Sets an error message that denotes that the creation of the module has
+     * been failed.
+     *
+     * @param error
+     *            the error message
+     */
+    public void setError(final String error) {
+        this.error = error;
+    }
+
+    /**
+     * Return whether this module has an error message stored.
+     *
+     * @return <code>true</code> if this module has an error message stored.
+     */
+    public boolean hasError() {
+        return error != null;
+    }
+
+    /**
+     * Returns the error message for this module.
+     *
+     * @return the error message for this module
+     */
+    public String getError() {
+        return error;
     }
 }
 

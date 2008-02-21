@@ -32,5 +32,8 @@
 	    <j:if test="${it.result.numberOfAnnotations == 0}">
 	    	files (since build #${it.result.zeroWarningsSinceBuild}).
 	    </j:if>
+	    <j:if test="${it.result.hasError()}">
+	    	During parsing an <a href="findbugsResult/error">error</a> has been reported.
+	    </j:if>
 	</t:summary>
 </j:jelly>

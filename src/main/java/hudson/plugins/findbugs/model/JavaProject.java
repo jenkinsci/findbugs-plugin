@@ -24,6 +24,8 @@ public class JavaProject extends AnnotationContainer {
     private final Map<String, MavenModule> moduleMapping = new HashMap<String, MavenModule>();
     /** Path of the workspace. */
     private String workspacePath;
+    /** Determines whether a module with an error is part of this project. */
+    private boolean hasModuleError;
 
     /**
      * Rebuilds the priorities mapping.
@@ -178,6 +180,28 @@ public class JavaProject extends AnnotationContainer {
             tasks = Math.max(tasks, module.getNumberOfAnnotations());
         }
         return tasks;
+    }
+
+    /**
+     * Adds the specified module with its annotations to this project.
+     *
+     * @param module the module to add
+     */
+    public void addModule(final MavenModule module) {
+        moduleMapping.put(module.getName(), module);
+        addAnnotations(module.getAnnotations());
+        if (module.hasError()) {
+            hasModuleError = true;
+        }
+    }
+
+    /**
+     * Returns whether a module with an error is part of this project.
+     *
+     * @return <code>true</code> if at least one module has an error.
+     */
+    public boolean hasError() {
+        return hasModuleError;
     }
 }
 
