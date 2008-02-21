@@ -1,6 +1,7 @@
 package hudson.plugins.findbugs;
 
 import static org.junit.Assert.*;
+import hudson.plugins.findbugs.model.AbstractAnnotation;
 import hudson.plugins.findbugs.model.FileAnnotation;
 import hudson.plugins.findbugs.model.JavaProject;
 import hudson.plugins.findbugs.model.MavenModule;
@@ -21,8 +22,6 @@ import org.xml.sax.SAXException;
  */
 @SuppressWarnings("PMD.SignatureDeclareThrowsException")
 public class WarningDifferencerTest {
-    /** Corresponding class. */
-    private static final String FINDBUGS_CLASS = "findbugs.Class";
     /** String for comparison. */
     private static final String STRING = "type1";
     /** Indicates a wrong calculation of warnings. */
@@ -33,9 +32,8 @@ public class WarningDifferencerTest {
      */
     @Test
     public void testWarningEquals() {
-        Bug first  = new Bug(Priority.HIGH, STRING, STRING, STRING, 2);
-
-        Bug second = new Bug(Priority.HIGH, STRING, STRING, STRING, 2);
+        AbstractAnnotation first  = new Bug(Priority.HIGH, STRING, STRING, STRING, 2);
+        AbstractAnnotation second = new Bug(Priority.HIGH, STRING, STRING, STRING, 2);
 
         assertEquals("Warnings are not equal.", first, second);
         WorkspaceFile file = new WorkspaceFile();

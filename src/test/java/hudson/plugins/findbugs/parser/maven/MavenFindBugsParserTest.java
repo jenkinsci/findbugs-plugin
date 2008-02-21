@@ -2,6 +2,7 @@ package hudson.plugins.findbugs.parser.maven;
 
 import static org.junit.Assert.*;
 import hudson.plugins.findbugs.FindBugsMessages;
+import hudson.plugins.findbugs.model.AbstractAnnotation;
 import hudson.plugins.findbugs.model.FileAnnotation;
 import hudson.plugins.findbugs.model.LineRange;
 import hudson.plugins.findbugs.model.MavenModule;
@@ -138,11 +139,13 @@ public class MavenFindBugsParserTest {
     /**
      * Checks whether we correctly detect a maven FindBugs file.
      *
-     * @throws Exception
+     * @throws SAXException
+     *             in case of an error
+     * @throws IOException
      *             in case of an error
      */
     @Test
-    public void hallo() throws Exception {
+    public void testWorkspaceFileNames() throws IOException, SAXException {
         String fileName = "findbugs-classname.xml";
         MavenModule module = parseFile(fileName);
 
@@ -187,7 +190,7 @@ public class MavenFindBugsParserTest {
     public void checkSourceFileMappingWindowsFile() {
         String[] javaFiles = new String[] {INTEGER_FILE, STRING_FILE};
 
-        Bug bug = runClassMapper(STRING_CLASS, javaFiles);
+        AbstractAnnotation bug = runClassMapper(STRING_CLASS, javaFiles);
 
         Assert.assertEquals(STRING_FILE_UNIX, bug.getWorkspaceFile().getName());
     }
@@ -199,7 +202,7 @@ public class MavenFindBugsParserTest {
     public void checkSourceFileMappingWindowsFileInTestsFolder() {
         String[] javaFiles = new String[] {INTEGER_FILE, STRING_TEST_FILE};
 
-        Bug bug = runClassMapper(STRING_CLASS, javaFiles);
+        AbstractAnnotation bug = runClassMapper(STRING_CLASS, javaFiles);
 
         Assert.assertEquals(STRING_TEST_FILE.replace("\\", "/"), bug.getWorkspaceFile().getName());
     }
@@ -211,7 +214,7 @@ public class MavenFindBugsParserTest {
     public void checkSourceFileMappingWindowsFileInPlainSrcFolder() {
         String[] javaFiles = new String[] {INTEGER_FILE, STRING_SRC_FILE};
 
-        Bug bug = runClassMapper(STRING_CLASS, javaFiles);
+        AbstractAnnotation bug = runClassMapper(STRING_CLASS, javaFiles);
 
         Assert.assertEquals(STRING_SRC_FILE.replace("\\", "/"), bug.getWorkspaceFile().getName());
     }
@@ -223,7 +226,7 @@ public class MavenFindBugsParserTest {
     public void checkInnerClassMapping() {
         String[] javaFiles = new String[] {INTEGER_FILE, STRING_FILE};
 
-        Bug bug = runClassMapper(STRING_INNER_CLASS, javaFiles);
+        AbstractAnnotation bug = runClassMapper(STRING_INNER_CLASS, javaFiles);
 
         Assert.assertEquals(STRING_FILE_UNIX, bug.getWorkspaceFile().getName());
     }
@@ -235,7 +238,7 @@ public class MavenFindBugsParserTest {
     public void checkSourceFileMappingUnixFile() {
         String[] javaFiles = new String[] {INTEGER_FILE, STRING_FILE_UNIX};
 
-        Bug bug = runClassMapper(STRING_CLASS, javaFiles);
+        AbstractAnnotation bug = runClassMapper(STRING_CLASS, javaFiles);
 
         Assert.assertEquals(WRONG_FILENAME_GUESSED, STRING_FILE_UNIX, bug.getWorkspaceFile().getName());
     }
@@ -249,7 +252,7 @@ public class MavenFindBugsParserTest {
      *            the filenames
      * @return the simple bug
      */
-    private Bug runClassMapper(final String className, final String[] javaFiles) {
+    private AbstractAnnotation runClassMapper(final String className, final String[] javaFiles) {
         WorkspaceFile file = new WorkspaceFile();
         file.setPackageName("java.lang");
         file.setName(className);

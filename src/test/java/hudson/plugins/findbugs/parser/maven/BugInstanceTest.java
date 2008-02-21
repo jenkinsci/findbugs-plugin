@@ -8,6 +8,9 @@ import org.junit.Test;
  *  Tests the class {@link BugInstance}.
  */
 public class BugInstanceTest {
+    /** Error message. */
+    private static final String ERROR_MESSAGE = "Wrong line number";
+
     /**
      * Checks whether we correctly parse line number expressions "X".
      */
@@ -16,8 +19,8 @@ public class BugInstanceTest {
         BugInstance warning = new BugInstance();
 
         warning.setLineNumberExpression("6");
-        Assert.assertEquals("Wrong line number", 6, warning.getStart());
-        Assert.assertEquals("Wrong line number", 6, warning.getEnd());
+        Assert.assertEquals(ERROR_MESSAGE, 6, warning.getStart());
+        Assert.assertEquals(ERROR_MESSAGE, 6, warning.getEnd());
     }
 
     /**
@@ -28,8 +31,8 @@ public class BugInstanceTest {
         BugInstance warning = new BugInstance();
 
         warning.setLineNumberExpression("600-800");
-        Assert.assertEquals("Wrong line number", 600, warning.getStart());
-        Assert.assertEquals("Wrong line number", 800, warning.getEnd());
+        Assert.assertEquals(ERROR_MESSAGE, 600, warning.getStart());
+        Assert.assertEquals(ERROR_MESSAGE, 800, warning.getEnd());
     }
 
 
@@ -41,8 +44,8 @@ public class BugInstanceTest {
         BugInstance warning = new BugInstance();
 
         warning.setLineNumberExpression("Not available");
-        Assert.assertEquals("Wrong line number", 0, warning.getStart());
-        Assert.assertEquals("Wrong line number", 0, warning.getEnd());
+        Assert.assertEquals(ERROR_MESSAGE, 0, warning.getStart());
+        Assert.assertEquals(ERROR_MESSAGE, 0, warning.getEnd());
     }
 }
 

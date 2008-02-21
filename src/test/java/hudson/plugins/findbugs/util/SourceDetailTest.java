@@ -108,6 +108,7 @@ public class SourceDetailTest {
      * @throws IOException
      *             in case of an IO error
      */
+    @SuppressWarnings("unchecked")
     private void split(final String fileName, final List<LineRange> lineRanges) throws IOException {
         InputStream stream = SourceDetailTest.class.getResourceAsStream("AbortException.txt");
 
@@ -128,7 +129,9 @@ public class SourceDetailTest {
         List<String> expected = IOUtils.readLines(SourceDetailTest.class.getResourceAsStream(fileName));
         List<String> actual = IOUtils.readLines(new StringReader(source.getSourceCode()));
 
-        for (Iterator<String> expectedIterator = expected.iterator(), actualIterator = actual.iterator(); actualIterator.hasNext();) {
+        Iterator<String> expectedIterator = expected.iterator();
+        Iterator<String> actualIterator = actual.iterator();
+        while (actualIterator.hasNext()) {
             String expectedLine = expectedIterator.next().trim();
             String actualLine = actualIterator.next().trim();
 
