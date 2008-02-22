@@ -1,12 +1,16 @@
 package hudson.plugins.findbugs.parser;
 
+import hudson.model.Hudson;
 import hudson.plugins.findbugs.model.LineRange;
 import hudson.plugins.findbugs.model.MavenModule;
 import hudson.plugins.findbugs.model.Priority;
 import hudson.plugins.findbugs.model.WorkspaceFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -16,6 +20,7 @@ import org.dom4j.DocumentException;
 
 import edu.umd.cs.findbugs.BugAnnotation;
 import edu.umd.cs.findbugs.BugInstance;
+import edu.umd.cs.findbugs.DetectorFactoryCollection;
 import edu.umd.cs.findbugs.Project;
 import edu.umd.cs.findbugs.SortedBugCollection;
 import edu.umd.cs.findbugs.SourceLineAnnotation;
@@ -27,6 +32,18 @@ import edu.umd.cs.findbugs.ba.SourceFinder;
  * maven-findbugs-plugin >= 1.2-SNAPSHOT).
  */
 public class NativeFindBugsParser {
+    // FIXME: check whether this way is portable
+    static {
+        File core = new File(Hudson.getInstance().getRootDir(), "plugins/findbugs/WEB-INF/lib/coreplugin-1.2.0.jar");
+
+        try {
+            DetectorFactoryCollection.rawInstance().setPluginList(new URL[] {core.toURL()});
+        }
+        catch (MalformedURLException exception) {
+            // ignore
+        }
+    }
+
     /**
      * Returns the parsed FindBugs analysis file. This scanner accepts files in
      * the native FindBugs format.
@@ -45,6 +62,7 @@ public class NativeFindBugsParser {
     public MavenModule parse(final InputStream file, final String moduleRoot, final String moduleName)
             throws IOException, DocumentException {
         SortedBugCollection collection = new SortedBugCollection();
+
 
         Project project = createMavenProject(moduleRoot);
 
@@ -77,7 +95,7 @@ public class NativeFindBugsParser {
             }
 
             SourceLineAnnotation sourceLine = warning.getPrimarySourceLineAnnotation();
-            Bug bug = new Bug(priority, "", "", warning.getType(),
+            Bug bug = new Bug(priority, warning.getMessage(), warning.getBugPattern().getCategory(), warning.getType(),
                     sourceLine.getStartLine(), sourceLine.getEndLine());
             Iterator<BugAnnotation> annotationIterator = warning.annotationIterator();
             while (annotationIterator.hasNext()) {

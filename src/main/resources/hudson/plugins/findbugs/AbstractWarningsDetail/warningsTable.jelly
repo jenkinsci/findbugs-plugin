@@ -17,7 +17,8 @@
 					</j:otherwise>
 				</j:choose>
 				Type: ${warning.type},
-				Priority: ${warning.priority}</td>
+				Priority: ${warning.priority},
+				Category: ${warning.category}</td>
 			</tr>
 		</table>
 		<p><b>${warning.message}</b></p>
