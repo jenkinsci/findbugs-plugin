@@ -26,6 +26,8 @@ public class JavaProject extends AnnotationContainer {
     private String workspacePath;
     /** Determines whether a module with an error is part of this project. */
     private boolean hasModuleError;
+    /** The error message that denotes that why project creation has been failed. */
+    private String error;
 
     /**
      * Rebuilds the priorities mapping.
@@ -201,7 +203,29 @@ public class JavaProject extends AnnotationContainer {
      * @return <code>true</code> if at least one module has an error.
      */
     public boolean hasError() {
-        return hasModuleError;
+        return hasModuleError || error != null;
+    }
+
+    /**
+     * Sets the error message that denotes that why project creation has been
+     * failed.
+     *
+     * @param error
+     *            the new error message
+     */
+    public void setError(String error) {
+        this.error = error;
+    }
+
+    /**
+     * Returns the error message that denotes that why project creation has been
+     * failed.
+     *
+     * @return the error message that denotes that why project creation has been
+     *         failed.
+     */
+    public String getError() {
+        return error;
     }
 }
 
