@@ -20,6 +20,7 @@ import org.dom4j.DocumentException;
 
 import edu.umd.cs.findbugs.BugAnnotation;
 import edu.umd.cs.findbugs.BugInstance;
+import edu.umd.cs.findbugs.BugPattern;
 import edu.umd.cs.findbugs.DetectorFactoryCollection;
 import edu.umd.cs.findbugs.Project;
 import edu.umd.cs.findbugs.SortedBugCollection;
@@ -95,7 +96,15 @@ public class NativeFindBugsParser {
             }
 
             SourceLineAnnotation sourceLine = warning.getPrimarySourceLineAnnotation();
-            Bug bug = new Bug(priority, warning.getMessage(), warning.getBugPattern().getCategory(), warning.getType(),
+            BugPattern bugPattern = warning.getBugPattern();
+            String category;
+            if (bugPattern == null) {
+                category = "Unknown";
+            }
+            else {
+                category = bugPattern.getCategory();
+            }
+            Bug bug = new Bug(priority, warning.getMessage(), category, warning.getType(),
                     sourceLine.getStartLine(), sourceLine.getEndLine());
             Iterator<BugAnnotation> annotationIterator = warning.annotationIterator();
             while (annotationIterator.hasNext()) {
