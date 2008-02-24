@@ -72,6 +72,8 @@ public class FindBugsResult extends AbstractWarningsDetail {
     private int zeroWarningsSinceBuild;
     /** Determines since which time we have zero warnings. */
     private long zeroWarningsSinceDate;
+    /** Determines since which time we have zero warnings. */
+    private long zeroWarningsHighScore;
     /** Error messages. */
     private final String errors;
     /** Serialization provider. */
@@ -90,18 +92,22 @@ public class FindBugsResult extends AbstractWarningsDetail {
      *            the parsed FindBugs result
      */
     public FindBugsResult(final AbstractBuild<?, ?> build, final JavaProject project) {
-        this(build, project, new JavaProject());
+        this(build, project, new JavaProject(), 0);
     }
 
     /**
      * Creates a new instance of <code>FindBugsResult</code>.
+     *
      * @param build
      *            the current build as owner of this action
      * @param project
      *            the parsed FindBugs result
-     * @param previousProject the parsed FindBugs result of the previous build
+     * @param previousProject
+     *            the parsed FindBugs result of the previous build
+     * @param highScore
+     *            the maximum period with zero warnings in a build
      */
-    public FindBugsResult(final AbstractBuild<?, ?> build, final JavaProject project, final JavaProject previousProject) {
+    public FindBugsResult(final AbstractBuild<?, ?> build, final JavaProject project, final JavaProject previousProject, final long highScore) {
         super(build, project.getAnnotations());
         numberOfWarnings = project.getNumberOfAnnotations();
 
@@ -124,17 +130,25 @@ public class FindBugsResult extends AbstractWarningsDetail {
 
         StringBuilder messages = new StringBuilder();
         if (project.hasError()) {
+            if (project.getError() != null) {
+                messages.append(project.getError());
+                messages.append("\n");
+            }
             for (MavenModule module : project.getModules()) {
                 if (module.hasError()) {
                     messages.append(module.getError());
+                    messages.append("\n");
                 }
             }
         }
         errors = messages.toString();
 
-        if (numberOfWarnings == 0 && previousProject.getNumberOfAnnotations() != 0) {
-            zeroWarningsSinceBuild = build.getNumber();
-            zeroWarningsSinceDate = build.getTimestamp().getTimeInMillis();
+        if (numberOfWarnings == 0) {
+            if (previousProject.getNumberOfAnnotations() != 0) {
+                zeroWarningsSinceBuild = build.getNumber();
+                zeroWarningsSinceDate = build.getTimestamp().getTimeInMillis();
+            }
+            zeroWarningsHighScore = Math.max(highScore, build.getTimestamp().getTimeInMillis() - zeroWarningsSinceDate);
         }
         try {
             Collection<WorkspaceFile> files = project.getFiles();
@@ -188,6 +202,15 @@ public class FindBugsResult extends AbstractWarningsDetail {
      */
     public long getZeroWarningsSinceDate() {
         return zeroWarningsSinceDate;
+    }
+
+    /**
+     * Returns the maximum period with zero warnings in a build.
+     *
+     * @return the time since we have zero warnings
+     */
+    public long getZeroWarningsHighScore() {
+        return zeroWarningsHighScore;
     }
 
     /** {@inheritDoc} */

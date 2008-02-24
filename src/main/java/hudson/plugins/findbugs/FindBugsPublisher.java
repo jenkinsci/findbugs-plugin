@@ -167,7 +167,8 @@ public class FindBugsPublisher extends HealthAwarePublisher {
                 result = new FindBugsResult(build, project);
             }
             else {
-                result = new FindBugsResult(build, project, previousAction.getResult().getProject());
+                result = new FindBugsResult(build, project, previousAction.getResult().getProject(),
+                        previousAction.getResult().getZeroWarningsHighScore());
             }
         }
         else {
