@@ -116,8 +116,9 @@ public class FindBugsCollector implements FileCallable<JavaProject> {
             if (mavenFindBugsParser.accepts(filePath.read())) {
                 logger.println("Activating parser for maven-findbugs-plugin <= 1.1.1.");
                 module = mavenFindBugsParser.parse(filePath.read(), emptyModule.getName(), workspace);
-                module.setError("FindBugs file " + findbugsFile + " was created with the outdated version 1.1.1 of the maven-findbugs-plugin." +
-                        " Please upgrade to the 1.2 version.");
+                module.setError("FindBugs file " + findbugsFile
+                        + " was created with the outdated version 1.1.1 of the maven-findbugs-plugin."
+                        + " Please upgrade to the 1.2 version.");
             }
             else {
                 logger.println("Activating parser for findbugs ant task, batch script, or maven-findbugs-plugin > 1.1.1.");
