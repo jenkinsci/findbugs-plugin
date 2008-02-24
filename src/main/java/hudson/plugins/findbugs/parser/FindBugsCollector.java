@@ -5,7 +5,6 @@ import hudson.FilePath.FileCallable;
 import hudson.plugins.findbugs.model.JavaProject;
 import hudson.plugins.findbugs.model.MavenModule;
 import hudson.plugins.findbugs.parser.maven.MavenFindBugsParser;
-import hudson.plugins.findbugs.util.AbortException;
 import hudson.remoting.VirtualChannel;
 
 import java.io.File;
@@ -57,11 +56,13 @@ public class FindBugsCollector implements FileCallable<JavaProject> {
     /** {@inheritDoc} */
     public JavaProject invoke(final File workspace, final VirtualChannel channel) throws IOException {
         String[] findBugsFiles = findFindBugsFiles(workspace);
+        JavaProject project = new JavaProject();
+
         if (findBugsFiles.length == 0) {
-            throw new AbortException("No findbugs report files were found. Configuration error?");
+            project.setError("No findbugs report files were found. Configuration error?");
+            return project;
         }
 
-        JavaProject project = new JavaProject();
         try {
             for (String file : findBugsFiles) {
                 File findbugsFile = new File(workspace, file);
@@ -115,6 +116,8 @@ public class FindBugsCollector implements FileCallable<JavaProject> {
             if (mavenFindBugsParser.accepts(filePath.read())) {
                 logger.println("Activating parser for maven-findbugs-plugin <= 1.1.1.");
                 module = mavenFindBugsParser.parse(filePath.read(), emptyModule.getName(), workspace);
+                module.setError("FindBugs file " + findbugsFile + " was created with the outdated version 1.1.1 of the maven-findbugs-plugin." +
+                        " Please upgrade to the 1.2 version.");
             }
             else {
                 logger.println("Activating parser for findbugs ant task, batch script, or maven-findbugs-plugin > 1.1.1.");
