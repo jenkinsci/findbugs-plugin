@@ -35,19 +35,17 @@ public class NativeFindBugsParserTest {
      *             in case of an error
      */
     private MavenModule parseFile(final String fileName) throws IOException, DocumentException {
-        return new NativeFindBugsParser().parse(NativeFindBugsParserTest.class.getResourceAsStream(fileName), "", fileName);
+        return new NativeFindBugsParser(false).parse(NativeFindBugsParserTest.class.getResourceAsStream(fileName), "", fileName);
     }
 
     /**
      * Checks whether we correctly detect a file in FindBugs native format.
-     * @throws DocumentException
      */
     @Test
     public void scanFileWithMultipleLinesAndRanges() throws IOException, DocumentException {
-        // FIXME: we should find a portable way to reference the findbugs JARs from both webserver and unit tests
-//        scanNativeFile(FINDBUGS_NATIVE_XML, FINDBUGS_NATIVE_XML,
-//                Priority.NORMAL, "org/apache/hadoop/dfs/BlockCrcUpgrade.java", "org.apache.hadoop.dfs", 1309, 1309,
-//                5, "org/apache/hadoop/streaming/StreamJob.java", "org.apache.hadoop.streaming", 935, 980, 1);
+        scanNativeFile(FINDBUGS_NATIVE_XML, FINDBUGS_NATIVE_XML,
+                Priority.NORMAL, "org/apache/hadoop/dfs/BlockCrcUpgrade.java", "org.apache.hadoop.dfs", 1309, 1309,
+                5, "org/apache/hadoop/streaming/StreamJob.java", "org.apache.hadoop.streaming", 935, 980, 1);
     }
 
     /**
@@ -57,10 +55,9 @@ public class NativeFindBugsParserTest {
      */
     @Test
     public void scanFileWarningsHaveMultipleClasses() throws IOException, DocumentException {
-        // FIXME: we should find a portable way to reference the findbugs JARs from both webserver and unit tests
-//        scanNativeFile("findbugs-multclass.xml", "FindBugs",
-//                Priority.HIGH, "umd/cs/findbugs/PluginLoader.java", "edu.umd.cs.findbugs", 82, 82,
-//                1, "edu/umd/cs/findbugs/PluginLoader.java", "edu.umd.cs.findbugs", 93, 93, 1);
+        scanNativeFile("findbugs-multclass.xml", "FindBugs",
+                Priority.HIGH, "umd/cs/findbugs/PluginLoader.java", "edu.umd.cs.findbugs", 82, 82,
+                1, "edu/umd/cs/findbugs/PluginLoader.java", "edu.umd.cs.findbugs", 93, 93, 1);
     }
 
     /**
