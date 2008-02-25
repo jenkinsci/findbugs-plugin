@@ -15,13 +15,17 @@ import hudson.plugins.findbugs.util.SourceDetail;
 import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
@@ -37,11 +41,7 @@ import edu.umd.cs.findbugs.annotations.SuppressWarnings;
  */
 // CHECKSTYLE:OFF
 public class FindBugsResult extends AbstractWarningsDetail {
-// CHECKSTYLE:ON
-    /** No result at all. */
-    @java.lang.SuppressWarnings("unchecked")
-    private static final Set<FileAnnotation> EMPTY_SET = Collections.EMPTY_SET;
-    /** Unique identifier of this class. */
+/** Unique identifier of this class. */
     private static final long serialVersionUID = 2768250056765266658L;
     /** Logger. */
     private static final Logger LOGGER = Logger.getLogger(FindBugsResult.class.getName());
@@ -75,9 +75,13 @@ public class FindBugsResult extends AbstractWarningsDetail {
     /** Determines since which time we have zero warnings. */
     private long zeroWarningsHighScore;
     /** Error messages. */
-    private final String errors;
+    private String errors;
     /** Serialization provider. */
     private static final XStream XSTREAM = new AnnotationStream();
+    /** The modules with no warnings. */
+    private final HashMap<String, MavenModule> emptyModules;
+    /** The total number of modules with or without warnings. */
+    private final int numberOfModules;
 
     static {
         XSTREAM.alias("bug", Bug.class);
@@ -128,20 +132,15 @@ public class FindBugsResult extends AbstractWarningsDetail {
         normal = project.getNumberOfAnnotations(Priority.NORMAL);
         low = project.getNumberOfAnnotations(Priority.LOW);
 
-        StringBuilder messages = new StringBuilder();
-        if (project.hasError()) {
-            if (project.getError() != null) {
-                messages.append(project.getError());
-                messages.append("\n");
-            }
-            for (MavenModule module : project.getModules()) {
-                if (module.hasError()) {
-                    messages.append(module.getError());
-                    messages.append("\n");
-                }
+        emptyModules = new HashMap<String, MavenModule>();
+        for (MavenModule module : project.getModules()) {
+            if (module.getNumberOfAnnotations() == 0) {
+                emptyModules.put(module.getName(), module);
             }
         }
-        errors = messages.toString();
+        numberOfModules = project.getModules().size();
+
+        composeErrorMessage(project);
 
         if (numberOfWarnings == 0) {
             if (previousProject.getNumberOfAnnotations() != 0) {
@@ -160,12 +159,37 @@ public class FindBugsResult extends AbstractWarningsDetail {
     }
 
     /**
+     * Composes the error message for the specified project. The message
+     * consists of the project error and the errors of the individual modules.
+     *
+     * @param javaProject the project
+     */
+    private void composeErrorMessage(final JavaProject javaProject) {
+        StringBuilder messages = new StringBuilder();
+        if (javaProject.hasError()) {
+            if (javaProject.getError() != null) {
+                messages.append(javaProject.getError());
+                messages.append("\n");
+                messages.append("\n");
+            }
+            for (MavenModule module : javaProject.getModules()) {
+                if (module.hasError()) {
+                    messages.append(module.getError());
+                    messages.append("\n");
+                    messages.append("\n");
+                }
+            }
+        }
+        errors = messages.toString();
+    }
+
+    /**
      * Returns whether a module with an error is part of this project.
      *
      * @return <code>true</code> if at least one module has an error.
      */
     public boolean hasError() {
-        return errors.length() > 0;
+        return StringUtils.isNotBlank(errors);
     }
 
     /**
@@ -183,7 +207,7 @@ public class FindBugsResult extends AbstractWarningsDetail {
      * @return the number of modules
      */
     public int getNumberOfModules() {
-        return getProject().getModules().size();
+        return numberOfModules;
     }
 
     /**
@@ -343,6 +367,7 @@ public class FindBugsResult extends AbstractWarningsDetail {
      * Loads the FindBugs results and the result of the previous build and wraps
      * them in a weak reference that might get removed by the garbage collector.
      */
+    @java.lang.SuppressWarnings("unchecked")
     private void loadPreviousResult() {
         loadResult();
 
@@ -358,7 +383,7 @@ public class FindBugsResult extends AbstractWarningsDetail {
                     WarningDifferencer.getFixedWarnings(getProject().getAnnotations(), getPreviousResult().getAnnotations()));
         }
         else {
-            fixedWarnings = new WeakReference<Set<FileAnnotation>>(EMPTY_SET);
+            fixedWarnings = new WeakReference<Set<FileAnnotation>>(Collections.EMPTY_SET);
         }
     }
 
@@ -396,9 +421,27 @@ public class FindBugsResult extends AbstractWarningsDetail {
                 }
             }
             else {
-                return new ModuleDetail(getOwner(), getProject().getModule(link));
+                return new ModuleDetail(getOwner(), getModule(link));
             }
         }
+    }
+
+    /**
+     * Returns the module with the specified name.
+     *
+     * @param name
+     *            the module to get
+     * @return the module
+     */
+    private MavenModule getModule(final String name) {
+        MavenModule module;
+        if (emptyModules.containsKey(name)) {
+            module = emptyModules.get(name);
+        }
+        else {
+            module = getProject().getModule(name);
+        }
+        return module;
     }
 
     /**
@@ -416,7 +459,14 @@ public class FindBugsResult extends AbstractWarningsDetail {
      * @return the modules of this project
      */
     public Collection<MavenModule> getModules() {
-        return getProject().getModules();
+        List<MavenModule> modules = new ArrayList<MavenModule>();
+        modules.addAll(emptyModules.values());
+        for (MavenModule module : getProject().getModules()) {
+            if (!emptyModules.containsKey(module.getName())) {
+                modules.add(module);
+            }
+        }
+        return modules;
     }
 
     /**
@@ -491,7 +541,7 @@ public class FindBugsResult extends AbstractWarningsDetail {
      *             in case of an error
      */
     public final void doModuleStatistics(final StaplerRequest request, final StaplerResponse response) throws IOException {
-        createDetailGraph(request, response, getProject().getModule(request.getParameter("module")), getProject().getAnnotationBound());
+        createDetailGraph(request, response, getModule(request.getParameter("module")), getProject().getAnnotationBound());
     }
 
     /**
