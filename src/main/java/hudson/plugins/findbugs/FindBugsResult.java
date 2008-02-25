@@ -572,7 +572,7 @@ public class FindBugsResult extends AbstractWarningsDetail {
             return getProject().getModules().iterator().next().getPackage(name).getToolTip();
         }
         else {
-            return getProject().getModule(name).getToolTip();
+            return getModule(name).getToolTip();
         }
     }
 }
