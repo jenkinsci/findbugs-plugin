@@ -82,6 +82,12 @@ public class FindBugsCollector implements FileCallable<JavaProject> {
                     module.setError(message);
                     continue;
                 }
+                if (new FilePath(findbugsFile).length() <= 0) {
+                    String message = "Skipping " + findbugsFile + " because its empty.";
+                    logger.println(message);
+                    module.setError(message);
+                    continue;
+                }
 
                 module = parseFile(workspace, findbugsFile, module);
                 project.addModule(module);
