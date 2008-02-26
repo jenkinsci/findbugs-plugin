@@ -19,7 +19,7 @@
 						items="${it.annotations}">
 						<tr>
 							<td class="pane">
-								${warning.workspaceFile.qualifiedName}
+								${warning.workspaceFile.shortName}
 							</td>
 							<td class="pane">${warning.type}</td>
 						</tr>
