@@ -1,13 +1,20 @@
 package hudson.plugins.findbugs;
 
 import hudson.FilePath;
+import hudson.maven.MavenBuild;
 import hudson.maven.MavenBuildProxy;
 import hudson.maven.MavenModule;
 import hudson.maven.MavenReporter;
 import hudson.maven.MavenReporterDescriptor;
 import hudson.maven.MojoInfo;
+import hudson.maven.MavenBuildProxy.BuildCallable;
+import hudson.model.AbstractBuild;
 import hudson.model.Action;
 import hudson.model.BuildListener;
+import hudson.model.Result;
+import hudson.plugins.findbugs.model.JavaProject;
+import hudson.plugins.findbugs.parser.FindBugsCollector;
+import hudson.plugins.findbugs.util.HealthReportBuilder;
 
 import java.io.IOException;
 
@@ -132,47 +139,50 @@ public class FindBugsReporter extends MavenReporter {
         }
 
         FilePath pomPath = new FilePath(pom.getBasedir());
-//        FindBugsCollector findBugsCollector = new FindBugsCollector(listener.getLogger(), build.getTimestamp().getTimeInMillis(),
-//                StringUtils.defaultIfEmpty(getPattern(), DEFAULT_PATTERN));
-//        JavaProject project = pomPath.act(findBugsCollector);
+        FindBugsCollector findBugsCollector = new FindBugsCollector(listener.getLogger(),
+                build.getTimestamp().getTimeInMillis(),
+                StringUtils.defaultIfEmpty(getPattern(), DEFAULT_PATTERN));
+        final JavaProject project = pomPath.act(findBugsCollector);
 
-//        build.execute(new BuildCallable<Void, IOException>() {
-//            public Void call(final MavenBuild build) throws IOException, InterruptedException {
-//                FindBugsResult result = createResult(build, project);
-//                Object previous = build.getPreviousBuild();
-//                TasksResult result;
-//                if (previous instanceof AbstractBuild<?, ?>) {
-//                    AbstractBuild<?, ?> previousBuild = (AbstractBuild<?, ?>)previous;
-//                    TasksResultAction previousAction = previousBuild.getAction(TasksResultAction.class);
-//                    if (previousAction == null) {
-//                        result = new TasksResult(build, project, high, normal, low);
-//                    }
-//                    else {
-//                        result = new TasksResult(build, project, previousAction.getResult().getNumberOfAnnotations(), high, normal, low);
-//                    }
-//                }
-//                else {
-//                    result = new TasksResult(build, project, high, normal, low);
-//                }
-//
-//                HealthReportBuilder healthReportBuilder = new HealthReportBuilder("Task Scanner", "open task", isThresholdEnabled, minimumTasks, isHealthyReportEnabled, healthyTasks, unHealthyTasks);
-//                build.getActions().add(new TasksResultAction(build, result, healthReportBuilder));
-//                build.registerAsProjectAction(FindBugsReporter.this);
-//
-//                return null;
-//            }
-//        });
-//
-//        int warnings = project.getNumberOfAnnotations();
-//        if (warnings > 0) {
-//            listener.getLogger().println("A total of " + warnings + " open tasks have been found.");
-//            if (isThresholdEnabled && warnings >= minimumTasks) {
-//                build.setResult(Result.UNSTABLE);
-//            }
-//        }
-//        else {
-//            listener.getLogger().println("No open tasks have been found.");
-//        }
+        build.execute(new BuildCallable<Void, IOException>() {
+            public Void call(final MavenBuild build) throws IOException, InterruptedException {
+                Object previous = build.getPreviousBuild();
+                FindBugsResult result;
+                if (previous instanceof AbstractBuild<?, ?>) {
+                    AbstractBuild<?, ?> previousBuild = (AbstractBuild<?, ?>)previous;
+                    FindBugsResultAction previousAction = previousBuild.getAction(FindBugsResultAction.class);
+                    if (previousAction == null) {
+                        result = new FindBugsResult(build, project);
+                    }
+                    else {
+                        result = new FindBugsResult(build, project, previousAction.getResult().getProject(),
+                                previousAction.getResult().getZeroWarningsHighScore());
+                    }
+                }
+                else {
+                    result = new FindBugsResult(build, project);
+                }
+
+                HealthReportBuilder healthReportBuilder = new HealthReportBuilder("FindBugs", "warning",
+                        thresholdEnabled, minimumAnnotations, healthyReportEnabled, healthyAnnotations, unHealthyAnnotations);
+                build.getActions().add(new FindBugsResultAction(build, result, healthReportBuilder));
+                build.registerAsProjectAction(FindBugsReporter.this);
+
+                return null;
+            }
+        });
+
+        int warnings = project.getNumberOfAnnotations();
+        if (warnings > 0) {
+            listener.getLogger().println(
+                    "A total of " + warnings + " potential bugs have been found.");
+            if (thresholdEnabled && warnings >= minimumAnnotations) {
+                build.setResult(Result.UNSTABLE);
+            }
+        }
+        else {
+            listener.getLogger().println("No potential bugs have been found.");
+        }
 
         return true;
     }

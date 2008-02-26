@@ -1,7 +1,9 @@
 package hudson.plugins.findbugs;
 
-import hudson.model.Descriptor;
+import hudson.maven.AbstractMavenProject;
+import hudson.model.AbstractProject;
 import hudson.plugins.findbugs.util.ThresholdValidator;
+import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Publisher;
 import hudson.util.FormFieldValidator;
 
@@ -18,7 +20,7 @@ import org.kohsuke.stapler.StaplerResponse;
  *
  * @author Ulli Hafner
  */
-public final class FindBugsDescriptor extends Descriptor<Publisher> {
+public final class FindBugsDescriptor extends BuildStepDescriptor<Publisher> {
     /** Icon to use for the result and project action. */
     public static final String FINDBUGS_ACTION_LOGO = "/plugin/findbugs/icons/findbugs-32x32.gif";
 
@@ -71,5 +73,11 @@ public final class FindBugsDescriptor extends Descriptor<Publisher> {
     @Override
     public FindBugsPublisher newInstance(final StaplerRequest request) throws FormException {
         return request.bindParameters(FindBugsPublisher.class, "findbugs_");
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean isApplicable(final Class<? extends AbstractProject> jobType) {
+        return !AbstractMavenProject.class.isAssignableFrom(jobType);
     }
 }

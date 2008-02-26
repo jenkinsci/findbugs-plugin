@@ -22,7 +22,7 @@ public class FindBugsReporterDescriptor extends MavenReporterDescriptor {
     /** {@inheritDoc} */
     @Override
     public String getDisplayName() {
-        return "Scan workspace for open tasks";
+        return "Publish FindBugs Analysis Results";
     }
 
     /** {@inheritDoc} */

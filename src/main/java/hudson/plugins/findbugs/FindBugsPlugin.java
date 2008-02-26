@@ -1,6 +1,7 @@
 package hudson.plugins.findbugs;
 
 import hudson.Plugin;
+import hudson.maven.MavenReporters;
 import hudson.tasks.BuildStep;
 
 /**
@@ -15,5 +16,7 @@ public class FindBugsPlugin extends Plugin {
     public void start() throws Exception {
         BuildStep.PUBLISHERS.addRecorder(FindBugsPublisher.FIND_BUGS_DESCRIPTOR);
         FindBugsMessages.getInstance().initialize();
+
+        MavenReporters.LIST.add(FindBugsReporter.FINDBUGS_SCANNER_DESCRIPTOR);
     }
 }
