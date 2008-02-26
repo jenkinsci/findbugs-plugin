@@ -110,7 +110,7 @@ public class AnnotationContainer implements AnnotationProvider, Serializable {
      * @return enumeration value.
      */
     private Priority getPriority(final String priority) {
-        return Priority.valueOf(StringUtils.upperCase(priority));
+        return Priority.fromString(priority);
     }
 
     /** {@inheritDoc} */

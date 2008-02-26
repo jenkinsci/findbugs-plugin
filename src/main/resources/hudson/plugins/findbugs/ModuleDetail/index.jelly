@@ -7,14 +7,14 @@
 
       <h1>FindBugs Warnings of Module ${it.displayName}</h1>
 
-      <st:include page="summaryTable.jelly" />
+      <st:include page="/summaryTable.jelly" />
 
       <j:if test="${!it.isSinglePackageModule()}">
-		<st:include page="packagesTable.jelly" />
+		<st:include page="/packagesTable.jelly" />
       </j:if>
 
       <j:if test="${it.isSinglePackageModule()}">
-		<st:include page="warningsTable.jelly" />
+		<st:include page="/warningsTable.jelly" />
       </j:if>
 
     </l:main-panel>

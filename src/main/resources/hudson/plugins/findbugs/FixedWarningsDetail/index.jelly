@@ -6,7 +6,7 @@
 		<l:main-panel>
 			<h1>FindBugs Fixed Warnings</h1>
 
-	        <st:include page="summaryTable.jelly" />
+	        <st:include page="/summaryTable.jelly" />
 
 			<h2>Fixed Warnings</h2>
 			<table class="pane sortable" id="fixed">

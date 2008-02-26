@@ -1,27 +1,32 @@
-package hudson.plugins.findbugs;
+package hudson.plugins.findbugs.util;
 
 import hudson.model.AbstractBuild;
 import hudson.model.ModelObject;
 
 /**
- * Result object to visualize the errors during parsing.
+ * Result object to visualize the errors during execution of the plug-in.
  */
 public class ErrorDetail implements ModelObject  {
     /** Current build as owner of this action. */
     private final AbstractBuild<?, ?> owner;
     /** All errors of the project. */
     private final String errors;
+    /** The name of the associated plug-in. */
+    private final String name;
 
     /**
      * Creates a new instance of <code>ErrorDetail</code>.
      *
      * @param owner
      *            current build as owner of this action.
+     * @param name
+     *            the name of the plug-in
      * @param errors
      *            all modules of the project
      */
-    public ErrorDetail(final AbstractBuild<?, ?> owner, final String errors) {
+    public ErrorDetail(final AbstractBuild<?, ?> owner, final String name, final String errors) {
         this.owner = owner;
+        this.name = name;
         this.errors = errors;
     }
 
@@ -46,6 +51,15 @@ public class ErrorDetail implements ModelObject  {
      */
     public String getErrors() {
         return errors;
+    }
+
+    /**
+     * Returns the name of the associated plug-in.
+     *
+     * @return the name of the associated plug-in
+     */
+    public String getName() {
+        return name;
     }
 }
 

@@ -2,6 +2,7 @@ package hudson.plugins.findbugs;
 
 import hudson.XmlFile;
 import hudson.model.AbstractBuild;
+import hudson.model.ModelObject;
 import hudson.plugins.findbugs.model.AnnotationStream;
 import hudson.plugins.findbugs.model.FileAnnotation;
 import hudson.plugins.findbugs.model.JavaPackage;
@@ -10,10 +11,13 @@ import hudson.plugins.findbugs.model.MavenModule;
 import hudson.plugins.findbugs.model.Priority;
 import hudson.plugins.findbugs.model.WorkspaceFile;
 import hudson.plugins.findbugs.parser.Bug;
+import hudson.plugins.findbugs.util.ChartRenderer;
+import hudson.plugins.findbugs.util.ErrorDetail;
 import hudson.plugins.findbugs.util.SourceDetail;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -40,13 +44,17 @@ import edu.umd.cs.findbugs.annotations.SuppressWarnings;
  * @author Ulli Hafner
  */
 // CHECKSTYLE:OFF
-public class FindBugsResult extends AbstractWarningsDetail {
+public class FindBugsResult implements ModelObject, Serializable {
 /** Unique identifier of this class. */
     private static final long serialVersionUID = 2768250056765266658L;
     /** Logger. */
     private static final Logger LOGGER = Logger.getLogger(FindBugsResult.class.getName());
-    /** Difference between this and the previous build. */
-    private final int delta;
+    /** Serialization provider. */
+    private static final XStream XSTREAM = new AnnotationStream();
+    static {
+        XSTREAM.alias("bug", Bug.class);
+    }
+
     /** The parsed FindBugs result. */
     @SuppressWarnings("Se")
     private transient WeakReference<JavaProject> project;
@@ -56,36 +64,40 @@ public class FindBugsResult extends AbstractWarningsDetail {
     /** All fixed warnings in the current build.*/
     @SuppressWarnings("Se")
     private transient WeakReference<Set<FileAnnotation>> fixedWarnings;
+
     /** The number of warnings in this build. */
     private final int numberOfWarnings;
     /** The number of new warnings in this build. */
     private final int numberOfNewWarnings;
     /** The number of fixed warnings in this build. */
     private final int numberOfFixedWarnings;
+    /** Difference between this and the previous build. */
+    private final int delta;
     /** The number of low priority warnings in this build. */
     private final int low;
     /** The number of normal priority warnings in this build. */
     private final int normal;
     /** The number of high priority warnings in this build. */
     private final int high;
+
     /** Determines since which build we have zero warnings. */
     private int zeroWarningsSinceBuild;
     /** Determines since which time we have zero warnings. */
     private long zeroWarningsSinceDate;
     /** Determines since which time we have zero warnings. */
     private long zeroWarningsHighScore;
+
     /** Error messages. */
-    private String errors;
-    /** Serialization provider. */
-    private static final XStream XSTREAM = new AnnotationStream();
+    private final String errors;
+
+    /** Current build as owner of this action. */
+    @SuppressWarnings("Se")
+    private final AbstractBuild<?, ?> owner;
+
     /** The modules with no warnings. */
     private final HashMap<String, MavenModule> emptyModules;
     /** The total number of modules with or without warnings. */
     private final int numberOfModules;
-
-    static {
-        XSTREAM.alias("bug", Bug.class);
-    }
 
     /**
      * Creates a new instance of <code>FindBugsResult</code>.
@@ -112,7 +124,8 @@ public class FindBugsResult extends AbstractWarningsDetail {
      *            the maximum period with zero warnings in a build
      */
     public FindBugsResult(final AbstractBuild<?, ?> build, final JavaProject project, final JavaProject previousProject, final long highScore) {
-        super(build, project.getAnnotations());
+        owner = build;
+
         numberOfWarnings = project.getNumberOfAnnotations();
 
         this.project = new WeakReference<JavaProject>(project);
@@ -140,7 +153,7 @@ public class FindBugsResult extends AbstractWarningsDetail {
         }
         numberOfModules = project.getModules().size();
 
-        composeErrorMessage(project);
+        errors = composeErrorMessage(project);
 
         if (numberOfWarnings == 0) {
             if (previousProject.getNumberOfAnnotations() != 0) {
@@ -164,7 +177,7 @@ public class FindBugsResult extends AbstractWarningsDetail {
      *
      * @param javaProject the project
      */
-    private void composeErrorMessage(final JavaProject javaProject) {
+    private String composeErrorMessage(final JavaProject javaProject) {
         StringBuilder messages = new StringBuilder();
         if (javaProject.hasError()) {
             if (javaProject.getError() != null) {
@@ -180,7 +193,25 @@ public class FindBugsResult extends AbstractWarningsDetail {
                 }
             }
         }
-        errors = messages.toString();
+        return messages.toString();
+    }
+
+    /**
+     * Returns whether this result belongs to the last build.
+     *
+     * @return <code>true</code> if this result belongs to the last build
+     */
+    public final boolean isCurrent() {
+        return owner.getProject().getLastBuild().number == owner.number;
+    }
+
+    /**
+     * Returns the build as owner of this action.
+     *
+     * @return the owner
+     */
+    public final AbstractBuild<?, ?> getOwner() {
+        return owner;
     }
 
     /**
@@ -247,13 +278,19 @@ public class FindBugsResult extends AbstractWarningsDetail {
      *
      * @return the number of warnings
      */
-    @Override
     public int getNumberOfAnnotations() {
         return numberOfWarnings;
     }
 
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * Returns the total number of warnings of the specified priority for
+     * this object.
+     *
+     * @param priority
+     *            the priority
+     * @return total number of annotations of the specified priority for this
+     *         object
+     */
     public int getNumberOfAnnotations(final Priority priority) {
         if (priority == Priority.HIGH) {
             return high;
@@ -264,6 +301,17 @@ public class FindBugsResult extends AbstractWarningsDetail {
         else {
             return low;
         }
+    }
+
+    /**
+     * Returns the annotations of the specified priority for this object.
+     *
+     * @param priority
+     *            the priority as a string object
+     * @return annotations of the specified priority for this object
+     */
+    public int getNumberOfAnnotations(final String priority) {
+        return getNumberOfAnnotations(Priority.fromString(priority));
     }
 
     /**
@@ -409,15 +457,15 @@ public class FindBugsResult extends AbstractWarningsDetail {
             return new NewWarningsDetail(getOwner(), getNewWarnings());
         }
         else if ("error".equals(link)) {
-            return new ErrorDetail(getOwner(), errors);
+            return new ErrorDetail(getOwner(), "FindBugs", errors);
         }
         else {
             if (isSingleModuleProject()) {
                 if (isSinglePackageProject()) {
-                    return new SourceDetail(getOwner(), getAnnotation(link));
+                    return new SourceDetail(getOwner(), getProject().getAnnotation(link));
                 }
                 else {
-                    return new PackageDetail(getOwner(), getProject().getModules().iterator().next().getPackage(link));
+                    return new PackageDetail(getOwner(), getModules().iterator().next().getPackage(link));
                 }
             }
             else {
@@ -541,7 +589,7 @@ public class FindBugsResult extends AbstractWarningsDetail {
      *             in case of an error
      */
     public final void doModuleStatistics(final StaplerRequest request, final StaplerResponse response) throws IOException {
-        createDetailGraph(request, response, getModule(request.getParameter("module")), getProject().getAnnotationBound());
+        ChartRenderer.renderPriorititesChart(request, response, getModule(request.getParameter("module")), getProject().getAnnotationBound());
     }
 
     /**
@@ -556,7 +604,7 @@ public class FindBugsResult extends AbstractWarningsDetail {
      */
     public final void doPackageStatistics(final StaplerRequest request, final StaplerResponse response) throws IOException {
         MavenModule module = getModules().iterator().next();
-        createDetailGraph(request, response, module.getPackage(request.getParameter("package")), module.getAnnotationBound());
+        ChartRenderer.renderPriorititesChart(request, response, module.getPackage(request.getParameter("package")), module.getAnnotationBound());
     }
 
     /**
@@ -569,7 +617,7 @@ public class FindBugsResult extends AbstractWarningsDetail {
      */
     public String getToolTip(final String name) {
         if (isSingleModuleProject()) {
-            return getProject().getModules().iterator().next().getPackage(name).getToolTip();
+            return getModules().iterator().next().getPackage(name).getToolTip();
         }
         else {
             return getModule(name).getToolTip();

@@ -1,6 +1,8 @@
 // CHECKSTYLE:OFF
 package hudson.plugins.findbugs.model;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
 
@@ -11,6 +13,17 @@ import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
  */
 public enum Priority {
     HIGH, NORMAL, LOW;
+
+    /**
+     * Converts a String priority to an actual enumeration value.
+     *
+     * @param priority
+     *            priority as a String
+     * @return enumeration value.
+     */
+    public static Priority fromString(final String priority) {
+        return Priority.valueOf(StringUtils.upperCase(priority));
+    }
 
     /**
      * Converts priorities for {@link XStream} deserialization.

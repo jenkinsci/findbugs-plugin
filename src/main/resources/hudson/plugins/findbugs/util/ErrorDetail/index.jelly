@@ -4,7 +4,7 @@
 	<l:layout>
 		<st:include it="${it.owner}" page="sidepanel.jelly" />
 		<l:main-panel>
-			<h1>FindBugs Parsing Errors</h1>
+			<h1>${it.name} Plug-in Errors</h1>
 
 			<j:forEach var="error" items="${it.errors}">
 				<p>${error}</p>

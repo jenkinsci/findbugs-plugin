@@ -22,29 +22,11 @@ import org.jfree.data.general.DatasetUtilities;
 import org.jfree.ui.RectangleInsets;
 
 /**
- * Creates charts in two or three colors.
+ * Creates various charts.
  *
  * @author Ulli Hafner
  */
-public class ChartBuilder {
-    /**
-     * Annotates the specified graph with a failure threshold line.
-     *
-     * @param chart the chart to annotate
-     * @param dataset the data set with the values
-     * @param threshold the threshold to draw the line at
-     */
-    public void annotateThreshold(final JFreeChart chart, final CategoryDataset dataset, final int threshold) {
-        if (threshold > 0) {
-            CategoryPlot plot = chart.getCategoryPlot();
-            plot.addAnnotation(new CategoryLineAnnotation(dataset.getColumnKey(0), threshold,
-                    dataset.getColumnKey(dataset.getColumnCount() - 1), threshold, Color.BLACK, new BasicStroke()));
-            Range range = DatasetUtilities.findRangeBounds(dataset);
-            plot.addAnnotation(new CategoryTextAnnotation("unstable threshold",
-                    dataset.getColumnKey(dataset.getColumnCount() / 2), threshold + range.getLength() * .1));
-        }
-    }
-
+public final class ChartBuilder {
     /**
      * Creates a colored graph displaying the specified data set.
      *
@@ -58,7 +40,7 @@ public class ChartBuilder {
      *            determines whether to use three colors.
      * @return colored graph displaying the specified data set.
      */
-    public JFreeChart createChart(final CategoryDataset dataset, final StackedAreaRenderer renderer, final int threshold, final boolean isThreeColor) {
+    public static JFreeChart createChart(final CategoryDataset dataset, final StackedAreaRenderer renderer, final int threshold, final boolean isThreeColor) {
         JFreeChart chart = createChart(dataset);
         CategoryPlot plot = chart.getCategoryPlot();
 
@@ -83,7 +65,7 @@ public class ChartBuilder {
      *            the values to display
      * @return a standard graph from the specified data set.
      */
-    public JFreeChart createChart(final CategoryDataset dataset) {
+    public static JFreeChart createChart(final CategoryDataset dataset) {
         JFreeChart chart = ChartFactory.createStackedAreaChart(
             null,                     // chart title
             null,                     // unused
@@ -133,7 +115,7 @@ public class ChartBuilder {
      *            upper bound of the graph
      * @return a standard graph from the specified data set.
      */
-    public JFreeChart createHighNormalLowChart(final int high, final int normal, final int low, final int max) {
+    public static JFreeChart createHighNormalLowChart(final int high, final int normal, final int low, final int max) {
         CategoryDataset dataset = DatasetUtilities.createCategoryDataset("row", "column",
                 new double[][] {{high}, {normal}, {low}});
 
@@ -178,6 +160,31 @@ public class ChartBuilder {
         rangeAxis.setUpperMargin(0);
         rangeAxis.setUpperBound(max);
         return chart;
+    }
+
+    /**
+     * Annotates the specified graph with a failure threshold line.
+     *
+     * @param chart the chart to annotate
+     * @param dataset the data set with the values
+     * @param threshold the threshold to draw the line at
+     */
+    private static void annotateThreshold(final JFreeChart chart, final CategoryDataset dataset, final int threshold) {
+        if (threshold > 0) {
+            CategoryPlot plot = chart.getCategoryPlot();
+            plot.addAnnotation(new CategoryLineAnnotation(dataset.getColumnKey(0), threshold,
+                    dataset.getColumnKey(dataset.getColumnCount() - 1), threshold, Color.BLACK, new BasicStroke()));
+            Range range = DatasetUtilities.findRangeBounds(dataset);
+            plot.addAnnotation(new CategoryTextAnnotation("unstable threshold",
+                    dataset.getColumnKey(dataset.getColumnCount() / 2), threshold + range.getLength() * .1));
+        }
+    }
+
+    /**
+     * Creates a new instance of <code>ChartBuilder</code>.
+     */
+    private ChartBuilder() {
+        // prevents instantiation
     }
 }
 

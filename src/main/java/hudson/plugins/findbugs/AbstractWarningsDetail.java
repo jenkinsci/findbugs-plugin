@@ -76,8 +76,7 @@ public abstract class AbstractWarningsDetail extends AnnotationContainer impleme
             response.sendRedirect2(request.getContextPath() + "/images/headless.png");
             return;
         }
-        ChartBuilder chartBuilder = new ChartBuilder();
-        JFreeChart chart = chartBuilder.createHighNormalLowChart(
+        JFreeChart chart = ChartBuilder.createHighNormalLowChart(
                 detailObject.getNumberOfAnnotations(Priority.HIGH),
                 detailObject.getNumberOfAnnotations(Priority.NORMAL),
                 detailObject.getNumberOfAnnotations(Priority.LOW), upperBound);

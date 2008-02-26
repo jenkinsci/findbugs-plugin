@@ -46,8 +46,7 @@ public class FindBugsPublisher extends HealthAwarePublisher {
      *            than this value
      * @stapler-constructor
      */
-    public FindBugsPublisher(final String pattern, final String threshold,
-            final String healthy, final String unHealthy) {
+    public FindBugsPublisher(final String pattern, final String threshold, final String healthy, final String unHealthy) {
         super(pattern, threshold, healthy, unHealthy);
     }
 
@@ -110,8 +109,7 @@ public class FindBugsPublisher extends HealthAwarePublisher {
      * @param project
      *            the project with the annotations
      */
-    private void evaluateBuildResult(final AbstractBuild<?, ?> build, final PrintStream logger,
-            final JavaProject project) {
+    private void evaluateBuildResult(final AbstractBuild<?, ?> build, final PrintStream logger, final JavaProject project) {
         int warnings = project.getNumberOfAnnotations();
         if (warnings > 0) {
             logger.println(

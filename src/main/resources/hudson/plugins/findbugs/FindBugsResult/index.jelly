@@ -36,7 +36,7 @@
 				</tbody>
 			</table>
 
-	        <st:include page="summaryTable.jelly" />
+	        <st:include page="/summaryTable.jelly" />
 
 			<j:if test="${!it.isSingleModuleProject()}">
 				<h2>Module Statistics</h2>
@@ -65,12 +65,12 @@
 
 			<j:if test="${it.isSingleModuleProject()}">
 				<j:if test="${!it.isSinglePackageProject()}">
-					<st:include page="packagesTable.jelly" />
+					<st:include page="/packagesTable.jelly" />
 				</j:if>
 
 				<j:if test="${it.isSinglePackageProject()}">
 					<h2>Warnings</h2>
-					<st:include page="warningsTable.jelly" />
+					<st:include page="/warningsTable.jelly" />
 				</j:if>
 			</j:if>
 		</l:main-panel>

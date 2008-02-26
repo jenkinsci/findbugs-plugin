@@ -1,5 +1,6 @@
 package hudson.plugins.findbugs;
 
+import hudson.FilePath;
 import hudson.maven.MavenBuildProxy;
 import hudson.maven.MavenModule;
 import hudson.maven.MavenReporter;
@@ -130,21 +131,14 @@ public class FindBugsReporter extends MavenReporter {
             return true;
         }
 
-//        FilePath filePath = new FilePath(pom.getBasedir());
-//        final JavaProject project;
-//        try {
-//            listener.getLogger().println("Scanning workspace files for tasks...");
-//            project = filePath.act(new WorkspaceScanner(StringUtils.defaultIfEmpty(pattern, DEFAULT_PATTERN),
-//                            high, normal, low));
-//        }
-//        catch (AbortException exception) {
-//            listener.getLogger().println(exception.getMessage());
-//            build.setResult(Result.FAILURE);
-//            return true;
-//        }
-//
+        FilePath pomPath = new FilePath(pom.getBasedir());
+//        FindBugsCollector findBugsCollector = new FindBugsCollector(listener.getLogger(), build.getTimestamp().getTimeInMillis(),
+//                StringUtils.defaultIfEmpty(getPattern(), DEFAULT_PATTERN));
+//        JavaProject project = pomPath.act(findBugsCollector);
+
 //        build.execute(new BuildCallable<Void, IOException>() {
 //            public Void call(final MavenBuild build) throws IOException, InterruptedException {
+//                FindBugsResult result = createResult(build, project);
 //                Object previous = build.getPreviousBuild();
 //                TasksResult result;
 //                if (previous instanceof AbstractBuild<?, ?>) {

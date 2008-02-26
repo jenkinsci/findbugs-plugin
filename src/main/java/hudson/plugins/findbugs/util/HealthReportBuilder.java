@@ -306,8 +306,7 @@ public class HealthReportBuilder implements Serializable {
             renderer = new PrioritiesAreaRenderer(url, itemName);
         }
 
-        ChartBuilder chartBuilder = new ChartBuilder();
-        return chartBuilder.createChart(dataset, renderer, getThreshold(),
+        return ChartBuilder.createChart(dataset, renderer, getThreshold(),
                 isHealthyReportEnabled() || !isFailureThresholdEnabled() || !useHealthBuilder);
     }
 }
