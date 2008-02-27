@@ -1,4 +1,4 @@
-package hudson.plugins.findbugs.model;
+package hudson.plugins.findbugs.util.model;
 
 import hudson.util.StringConverter2;
 import hudson.util.XStream2;

@@ -1,8 +1,8 @@
 package hudson.plugins.findbugs;
 
 import hudson.model.AbstractBuild;
-import hudson.plugins.findbugs.model.JavaPackage;
 import hudson.plugins.findbugs.util.SourceDetail;
+import hudson.plugins.findbugs.util.model.JavaPackage;
 
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;

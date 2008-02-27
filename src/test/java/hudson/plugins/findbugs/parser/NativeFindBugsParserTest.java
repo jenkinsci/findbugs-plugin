@@ -1,10 +1,10 @@
 package hudson.plugins.findbugs.parser;
 
 import static org.junit.Assert.*;
-import hudson.plugins.findbugs.model.FileAnnotation;
-import hudson.plugins.findbugs.model.LineRange;
-import hudson.plugins.findbugs.model.MavenModule;
-import hudson.plugins.findbugs.model.Priority;
+import hudson.plugins.findbugs.util.model.FileAnnotation;
+import hudson.plugins.findbugs.util.model.LineRange;
+import hudson.plugins.findbugs.util.model.MavenModule;
+import hudson.plugins.findbugs.util.model.Priority;
 
 import java.io.IOException;
 import java.util.Collection;

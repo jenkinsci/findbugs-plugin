@@ -1,14 +1,14 @@
 package hudson.plugins.findbugs;
 
 import static org.junit.Assert.*;
-import hudson.plugins.findbugs.model.AbstractAnnotation;
-import hudson.plugins.findbugs.model.FileAnnotation;
-import hudson.plugins.findbugs.model.JavaProject;
-import hudson.plugins.findbugs.model.MavenModule;
-import hudson.plugins.findbugs.model.Priority;
-import hudson.plugins.findbugs.model.WorkspaceFile;
 import hudson.plugins.findbugs.parser.Bug;
 import hudson.plugins.findbugs.parser.maven.MavenFindBugsParser;
+import hudson.plugins.findbugs.util.model.AbstractAnnotation;
+import hudson.plugins.findbugs.util.model.FileAnnotation;
+import hudson.plugins.findbugs.util.model.JavaProject;
+import hudson.plugins.findbugs.util.model.MavenModule;
+import hudson.plugins.findbugs.util.model.Priority;
+import hudson.plugins.findbugs.util.model.WorkspaceFile;
 
 import java.io.IOException;
 import java.util.HashSet;

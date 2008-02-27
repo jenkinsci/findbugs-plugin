@@ -1,7 +1,7 @@
 package hudson.plugins.findbugs.util;
 
-import hudson.plugins.findbugs.model.AnnotationProvider;
-import hudson.plugins.findbugs.model.Priority;
+import hudson.plugins.findbugs.util.model.AnnotationProvider;
+import hudson.plugins.findbugs.util.model.Priority;
 import hudson.util.ChartUtil;
 
 import java.io.IOException;

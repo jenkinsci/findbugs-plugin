@@ -1,9 +1,9 @@
 package hudson.plugins.findbugs;
 
 import hudson.model.AbstractBuild;
-import hudson.plugins.findbugs.model.JavaPackage;
-import hudson.plugins.findbugs.model.MavenModule;
 import hudson.plugins.findbugs.util.SourceDetail;
+import hudson.plugins.findbugs.util.model.JavaPackage;
+import hudson.plugins.findbugs.util.model.MavenModule;
 
 import java.io.IOException;
 import java.util.Collection;

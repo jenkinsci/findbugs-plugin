@@ -1,9 +1,9 @@
 package hudson.plugins.findbugs;
 
 import hudson.model.AbstractBuild;
-import hudson.plugins.findbugs.model.Priority;
 import hudson.plugins.findbugs.util.AbstractResultAction;
 import hudson.plugins.findbugs.util.HealthReportBuilder;
+import hudson.plugins.findbugs.util.model.Priority;
 import hudson.util.DataSetBuilder;
 import hudson.util.ChartUtil.NumberOnlyBuildLabel;
 

@@ -1,8 +1,8 @@
 package hudson.plugins.findbugs.parser;
 
 import hudson.plugins.findbugs.FindBugsMessages;
-import hudson.plugins.findbugs.model.AbstractAnnotation;
-import hudson.plugins.findbugs.model.Priority;
+import hudson.plugins.findbugs.util.model.AbstractAnnotation;
+import hudson.plugins.findbugs.util.model.Priority;
 
 /**
  * A serializable Java Bean class representing an open task.

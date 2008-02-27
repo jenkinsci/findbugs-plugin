@@ -1,7 +1,7 @@
 package hudson.plugins.findbugs;
 
 import hudson.model.AbstractBuild;
-import hudson.plugins.findbugs.model.FileAnnotation;
+import hudson.plugins.findbugs.util.model.FileAnnotation;
 
 import java.util.Set;
 

@@ -1,6 +1,6 @@
 package hudson.plugins.findbugs;
 
-import hudson.plugins.findbugs.model.FileAnnotation;
+import hudson.plugins.findbugs.util.model.FileAnnotation;
 
 import java.util.Collection;
 import java.util.HashSet;

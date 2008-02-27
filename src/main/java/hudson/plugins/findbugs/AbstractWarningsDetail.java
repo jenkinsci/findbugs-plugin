@@ -2,11 +2,11 @@ package hudson.plugins.findbugs;
 
 import hudson.model.AbstractBuild;
 import hudson.model.ModelObject;
-import hudson.plugins.findbugs.model.AnnotationContainer;
-import hudson.plugins.findbugs.model.AnnotationProvider;
-import hudson.plugins.findbugs.model.FileAnnotation;
-import hudson.plugins.findbugs.model.Priority;
 import hudson.plugins.findbugs.util.ChartBuilder;
+import hudson.plugins.findbugs.util.model.AnnotationContainer;
+import hudson.plugins.findbugs.util.model.AnnotationProvider;
+import hudson.plugins.findbugs.util.model.FileAnnotation;
+import hudson.plugins.findbugs.util.model.Priority;
 import hudson.util.ChartUtil;
 
 import java.io.IOException;

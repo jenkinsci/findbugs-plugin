@@ -2,8 +2,8 @@ package hudson.plugins.findbugs.util;
 
 import hudson.model.AbstractBuild;
 import hudson.model.ModelObject;
-import hudson.plugins.findbugs.model.FileAnnotation;
-import hudson.plugins.findbugs.model.LineRange;
+import hudson.plugins.findbugs.util.model.FileAnnotation;
+import hudson.plugins.findbugs.util.model.LineRange;
 
 import java.io.File;
 import java.io.FileInputStream;

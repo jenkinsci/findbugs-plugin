@@ -1,8 +1,9 @@
-package hudson.plugins.findbugs.model;
+package hudson.plugins.findbugs.util.model;
 
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -19,10 +20,10 @@ import org.apache.commons.lang.StringUtils;
 public class AnnotationContainer implements AnnotationProvider, Serializable {
     /** Unique identifier of this class. */
     private static final long serialVersionUID = 855696821788264261L;
+
     /** The annotations mapped by their key. */
     private final Map<Long, FileAnnotation> annotations = new HashMap<Long, FileAnnotation>();
     /** The annotations mapped by priority. */
-    @edu.umd.cs.findbugs.annotations.SuppressWarnings("Se")
     private transient Map<Priority, Set<FileAnnotation>> annotationsByPriority;
 
     /**
@@ -36,10 +37,20 @@ public class AnnotationContainer implements AnnotationProvider, Serializable {
      * Initializes the priorities maps.
      */
     private void initializePrioritiesMap() {
-        annotationsByPriority = new HashMap<Priority, Set<FileAnnotation>>();
+        annotationsByPriority = new EnumMap<Priority, Set<FileAnnotation>>(Priority.class);
         for (Priority priority : Priority.values()) {
             annotationsByPriority.put(priority, new HashSet<FileAnnotation>());
         }
+    }
+
+    /**
+     * Rebuilds the priorities mapping.
+     *
+     * @return the created object
+     */
+    private Object readResolve() {
+        rebuildPriorities();
+        return this;
     }
 
     /**

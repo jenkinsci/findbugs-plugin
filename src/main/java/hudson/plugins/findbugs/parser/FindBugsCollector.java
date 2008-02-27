@@ -2,9 +2,9 @@ package hudson.plugins.findbugs.parser;
 
 import hudson.FilePath;
 import hudson.FilePath.FileCallable;
-import hudson.plugins.findbugs.model.JavaProject;
-import hudson.plugins.findbugs.model.MavenModule;
 import hudson.plugins.findbugs.parser.maven.MavenFindBugsParser;
+import hudson.plugins.findbugs.util.model.JavaProject;
+import hudson.plugins.findbugs.util.model.MavenModule;
 import hudson.remoting.VirtualChannel;
 
 import java.io.File;

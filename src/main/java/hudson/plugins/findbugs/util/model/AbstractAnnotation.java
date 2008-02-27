@@ -1,4 +1,4 @@
-package hudson.plugins.findbugs.model;
+package hudson.plugins.findbugs.util.model;
 
 
 import java.io.Serializable;
@@ -12,6 +12,8 @@ import java.util.List;
  */
 @SuppressWarnings("PMD.CyclomaticComplexity")
 public abstract class AbstractAnnotation implements FileAnnotation, Serializable, Comparable<AbstractAnnotation> {
+    /** Unique identifier of this class. */
+    private static final long serialVersionUID = -1092014926477547148L;
     /** Current task key.  */
     private static long currentKey;
     /** The message of this task. */

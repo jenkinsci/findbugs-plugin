@@ -1,9 +1,14 @@
-package hudson.plugins.findbugs.model;
+package hudson.plugins.findbugs.util.model;
+
+import java.io.Serializable;
 
 /**
  * A line range in a source file is defined by its first and last line.
  */
-public class LineRange {
+public class LineRange implements Serializable {
+    /** Unique identifier of this class. */
+    private static final long serialVersionUID = -4124143085672930110L;
+
     /** Start of the range. */
     private final int start;
     /** End of the range. */

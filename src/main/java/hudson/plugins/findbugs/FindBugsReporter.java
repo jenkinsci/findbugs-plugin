@@ -12,9 +12,9 @@ import hudson.model.AbstractBuild;
 import hudson.model.Action;
 import hudson.model.BuildListener;
 import hudson.model.Result;
-import hudson.plugins.findbugs.model.JavaProject;
 import hudson.plugins.findbugs.parser.FindBugsCollector;
 import hudson.plugins.findbugs.util.HealthReportBuilder;
+import hudson.plugins.findbugs.util.model.JavaProject;
 
 import java.io.IOException;
 

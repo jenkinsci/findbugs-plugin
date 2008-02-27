@@ -1,10 +1,10 @@
 package hudson.plugins.findbugs.parser;
 
 import hudson.model.Hudson;
-import hudson.plugins.findbugs.model.LineRange;
-import hudson.plugins.findbugs.model.MavenModule;
-import hudson.plugins.findbugs.model.Priority;
-import hudson.plugins.findbugs.model.WorkspaceFile;
+import hudson.plugins.findbugs.util.model.LineRange;
+import hudson.plugins.findbugs.util.model.MavenModule;
+import hudson.plugins.findbugs.util.model.Priority;
+import hudson.plugins.findbugs.util.model.WorkspaceFile;
 
 import java.io.File;
 import java.io.IOException;
