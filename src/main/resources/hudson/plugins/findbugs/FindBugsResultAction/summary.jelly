@@ -2,7 +2,7 @@
 	xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson"
 	xmlns:f="/lib/form" xmlns:i="jelly:fmt">
 	<t:summary icon="/plugin/findbugs/icons/findbugs-48x48.gif">
-		FindBugs:
+		${it.result.summary}
 	    <j:if test="${it.result.numberOfAnnotations > 0}">
 	    	a total of <a href="findbugsResult">${it.result.numberOfAnnotations} warnings</a> have been found
 	    	<j:choose>

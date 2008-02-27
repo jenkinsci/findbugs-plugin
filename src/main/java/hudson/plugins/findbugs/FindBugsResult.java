@@ -196,6 +196,10 @@ public class FindBugsResult implements ModelObject, Serializable {
         return messages.toString();
     }
 
+    public String getSummary() {
+        return ResultSummary.createSummary(this);
+    }
+
     /**
      * Returns whether this result belongs to the last build.
      *
