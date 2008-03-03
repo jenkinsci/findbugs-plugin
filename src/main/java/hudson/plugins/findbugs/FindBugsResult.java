@@ -13,7 +13,6 @@ import hudson.plugins.findbugs.util.model.JavaPackage;
 import hudson.plugins.findbugs.util.model.JavaProject;
 import hudson.plugins.findbugs.util.model.MavenModule;
 import hudson.plugins.findbugs.util.model.Priority;
-import hudson.plugins.findbugs.util.model.WorkspaceFile;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,7 +28,6 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
@@ -88,7 +86,7 @@ public class FindBugsResult implements ModelObject, Serializable {
     private long zeroWarningsHighScore;
 
     /** Error messages. */
-    private final String errors;
+    private final List<String> errors;
 
     /** Current build as owner of this action. */
     @SuppressWarnings("Se")
@@ -163,8 +161,8 @@ public class FindBugsResult implements ModelObject, Serializable {
             zeroWarningsHighScore = Math.max(highScore, build.getTimestamp().getTimeInMillis() - zeroWarningsSinceDate);
         }
         try {
-            Collection<WorkspaceFile> files = project.getFiles();
-            getDataFile().write(files.toArray(new WorkspaceFile[files.size()]));
+            Collection<FileAnnotation> files = project.getAnnotations();
+            getDataFile().write(files.toArray(new FileAnnotation[files.size()]));
         }
         catch (IOException exception) {
             LOGGER.log(Level.WARNING, "Failed to serialize the findbugs result.", exception);
@@ -177,27 +175,41 @@ public class FindBugsResult implements ModelObject, Serializable {
      *
      * @param javaProject the project
      */
-    private String composeErrorMessage(final JavaProject javaProject) {
-        StringBuilder messages = new StringBuilder();
+    private List<String> composeErrorMessage(final JavaProject javaProject) {
+        List<String> messages = new ArrayList<String>();
         if (javaProject.hasError()) {
             if (javaProject.getError() != null) {
-                messages.append(javaProject.getError());
-                messages.append("\n");
-                messages.append("\n");
+                messages.add(javaProject.getError());
             }
             for (MavenModule module : javaProject.getModules()) {
                 if (module.hasError()) {
-                    messages.append(module.getError());
-                    messages.append("\n");
-                    messages.append("\n");
+                    messages.add(module.getError());
                 }
             }
         }
-        return messages.toString();
+        return messages;
     }
 
+    /**
+     * Returns a summary message for the summary.jelly file.
+     *
+     * @return the summary message
+     */
     public String getSummary() {
         return ResultSummary.createSummary(this);
+    }
+
+    /**
+     * Returns the detail messages for the summary.jelly file.
+     *
+     * @return the summary message
+     */
+    public String getDetails() {
+        String message = ResultSummary.createDeltaMessage(this);
+        if (numberOfWarnings == 0 && delta == 0) {
+            return message + "<li>" + "No warnings since build " + zeroWarningsSinceBuild +"</li>";
+        }
+        return message;
     }
 
     /**
@@ -224,7 +236,7 @@ public class FindBugsResult implements ModelObject, Serializable {
      * @return <code>true</code> if at least one module has an error.
      */
     public boolean hasError() {
-        return StringUtils.isNotBlank(errors);
+        return !errors.isEmpty();
     }
 
     /**
@@ -401,12 +413,11 @@ public class FindBugsResult implements ModelObject, Serializable {
         JavaProject result;
         try {
             JavaProject newProject = new JavaProject();
-            WorkspaceFile[] files = (WorkspaceFile[])getDataFile().read();
-            for (WorkspaceFile workspaceFile : files) {
-                newProject.addAnnotations(workspaceFile.getAnnotations());
-            }
-            result = newProject;
+            FileAnnotation[] annotations = (FileAnnotation[])getDataFile().read();
+            newProject.addAnnotations(annotations);
+
             LOGGER.log(Level.INFO, "Loaded findbugs data file " + getDataFile() + " for build " + getOwner().getNumber());
+            result = newProject;
         }
         catch (IOException exception) {
             LOGGER.log(Level.WARNING, "Failed to load " + getDataFile(), exception);

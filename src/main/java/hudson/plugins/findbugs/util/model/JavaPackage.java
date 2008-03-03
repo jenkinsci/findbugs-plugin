@@ -58,9 +58,11 @@ public class JavaPackage extends AnnotationContainer {
      */
     @Override
     protected void annotationAdded(final FileAnnotation annotation) {
-        WorkspaceFile file = annotation.getWorkspaceFile();
-
-        fileMapping.put(file.getShortName(), file);
+        String fileName = annotation.getFileName();
+        if (!fileMapping.containsKey(fileName)) {
+            fileMapping.put(fileName, new WorkspaceFile(fileName));
+        }
+        fileMapping.get(fileName).addAnnotation(annotation);
     }
 
     /**

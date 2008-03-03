@@ -7,29 +7,35 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  *  A base class for annotations.
  */
 @SuppressWarnings("PMD.CyclomaticComplexity")
+// FIXME: make members final
 public abstract class AbstractAnnotation implements FileAnnotation, Serializable, Comparable<AbstractAnnotation> {
     /** Unique identifier of this class. */
     private static final long serialVersionUID = -1092014926477547148L;
-    /** Current task key.  */
+    /** Current key of this annotation. */
     private static long currentKey;
-    /** The message of this task. */
+
+    /** The message of this annotation. */
     private final String message;
-    /** The priority of this task. */
+    /** The priority of this annotation. */
     private final Priority priority;
-    /** Unique key of this task. */
+    /** Unique key of this annotation. */
     private long key;
-    /** File this annotation is part of. */
-    private WorkspaceFile workspaceFile;
-    /** The ordered list of line ranges. */
+    /** The ordered list of line ranges that show the origin of the annotation in the associated file. */
     private final List<LineRange> lineRanges;
-    /** The filename of the class that contains this bug. */
-    private String fileName;
     /** Primary line number of this warning, i.e., the start line of the first line range. */
     private final int primaryLineNumber;
+    /** The filename of the class that contains this annotation. */
+    private String fileName;
+    /** The name of the maven or ant module that contains this annotation. */
+    private String moduleName;
+    /** The name of package (or namespace) that contains this annotation. */
+    private String packageName;
 
     /**
      * Creates a new instance of <code>AbstractAnnotation</code>.
@@ -55,11 +61,6 @@ public abstract class AbstractAnnotation implements FileAnnotation, Serializable
     }
 
     /** {@inheritDoc} */
-    public String getMessage() {
-        return message;
-    }
-
-    /** {@inheritDoc} */
     public int compareTo(final AbstractAnnotation otherTask) {
         if (getKey() == otherTask.getKey()) {
             return 0;
@@ -68,6 +69,11 @@ public abstract class AbstractAnnotation implements FileAnnotation, Serializable
             return 1;
         }
         return -1;
+    }
+
+    /** {@inheritDoc} */
+    public String getMessage() {
+        return message;
     }
 
     /** {@inheritDoc} */
@@ -80,51 +86,70 @@ public abstract class AbstractAnnotation implements FileAnnotation, Serializable
      *
      * @param key the key
      */
+    // FIXME: required?
     public void setKey(final long key) {
         this.key = key;
     }
 
-    /**
-     * Returns the key of this task.
-     *
-     * @return the key
-     */
-    public long getKey() {
+    /** {@inheritDoc} */
+    public final long getKey() {
         return key;
     }
 
-    /**
-     * Connects this annotation with the specified workspace file.
-     *
-     * @param workspaceFile the workspace file that contains this annotation
-     */
-    public void setWorkspaceFile(final WorkspaceFile workspaceFile) {
-        this.workspaceFile = workspaceFile;
-        fileName = workspaceFile.getName();
-    }
-
     /** {@inheritDoc} */
-    public WorkspaceFile getWorkspaceFile() {
-        return workspaceFile;
-    }
-
-    /** {@inheritDoc} */
-    public String getWorkspaceFileName() {
+    public final String getFileName() {
         return fileName;
     }
 
+    /**
+     * Sets the file name to the specified value.
+     *
+     * @param fileName the value to set
+     */
+    public final void setFileName(final String fileName) {
+        this.fileName = fileName.replace('\\', '/');
+    }
+
     /** {@inheritDoc} */
-    public Collection<LineRange> getLineRanges() {
+    public final String getModuleName() {
+        return StringUtils.defaultIfEmpty(moduleName, "Default Module");
+    }
+
+    /**
+     * Sets the module name to the specified value.
+     *
+     * @param moduleName the value to set
+     */
+    public final void setModuleName(final String moduleName) {
+        this.moduleName = moduleName;
+    }
+
+    /** {@inheritDoc} */
+    public final String getPackageName() {
+        return StringUtils.defaultIfEmpty(packageName, "Default Package");
+    }
+
+    /**
+     * Sets the package name to the specified value.
+     *
+     * @param packageName the value to set
+     */
+    public final void setPackageName(final String packageName) {
+        this.packageName = packageName;
+    }
+
+    /** {@inheritDoc} */
+    public final Collection<LineRange> getLineRanges() {
         return Collections.unmodifiableCollection(lineRanges);
     }
 
     /** {@inheritDoc} */
-    public int getPrimaryLineNumber() {
+    public final int getPrimaryLineNumber() {
         return primaryLineNumber;
     }
 
     /**
-     * Adds another line range to this bug.
+     * Adds another line range to this annotation.
      *
      * @param lineRange
      *            the line range to add
@@ -145,14 +170,14 @@ public abstract class AbstractAnnotation implements FileAnnotation, Serializable
         result = prime * result + ((fileName == null) ? 0 : fileName.hashCode());
         result = prime * result + ((lineRanges == null) ? 0 : lineRanges.hashCode());
         result = prime * result + ((message == null) ? 0 : message.hashCode());
+        result = prime * result + ((moduleName == null) ? 0 : moduleName.hashCode());
+        result = prime * result + ((packageName == null) ? 0 : packageName.hashCode());
         result = prime * result + primaryLineNumber;
         result = prime * result + ((priority == null) ? 0 : priority.hashCode());
-        result = prime * result + ((workspaceFile == null) ? 0 : workspaceFile.hashCode());
         return result;
     }
 
     /** {@inheritDoc} */
-    @SuppressWarnings("PMD.CyclomaticComplexity")
     @Override
     public boolean equals(final Object obj) {
         if (this == obj) {
@@ -189,6 +214,22 @@ public abstract class AbstractAnnotation implements FileAnnotation, Serializable
         else if (!message.equals(other.message)) {
             return false;
         }
+        if (moduleName == null) {
+            if (other.moduleName != null) {
+                return false;
+            }
+        }
+        else if (!moduleName.equals(other.moduleName)) {
+            return false;
+        }
+        if (packageName == null) {
+            if (other.packageName != null) {
+                return false;
+            }
+        }
+        else if (!packageName.equals(other.packageName)) {
+            return false;
+        }
         if (primaryLineNumber != other.primaryLineNumber) {
             return false;
         }
@@ -200,16 +241,6 @@ public abstract class AbstractAnnotation implements FileAnnotation, Serializable
         else if (!priority.equals(other.priority)) {
             return false;
         }
-        if (workspaceFile == null) {
-            if (other.workspaceFile != null) {
-                return false;
-            }
-        }
-        else if (!workspaceFile.equals(other.workspaceFile)) {
-            return false;
-        }
         return true;
     }
-
-
 }

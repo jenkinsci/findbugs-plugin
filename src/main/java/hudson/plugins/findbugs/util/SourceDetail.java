@@ -55,7 +55,7 @@ public class SourceDetail implements ModelObject {
     public SourceDetail(final AbstractBuild<?, ?> owner, final FileAnnotation annotation) {
         this.owner = owner;
         this.annotation = annotation;
-        fileName = StringUtils.substringAfterLast(annotation.getWorkspaceFileName(), "/");
+        fileName = StringUtils.substringAfterLast(annotation.getFileName(), "/");
 
         initializeContent();
     }
@@ -67,7 +67,7 @@ public class SourceDetail implements ModelObject {
     private void initializeContent() {
         InputStream file = null;
         try {
-            String linkName = annotation.getWorkspaceFileName();
+            String linkName = annotation.getFileName();
             if (linkName.startsWith("/") || linkName.contains(":") || owner == null) {
                 file = new FileInputStream(new File(linkName));
             }

@@ -4,7 +4,7 @@ import hudson.model.Hudson;
 import hudson.plugins.findbugs.util.model.LineRange;
 import hudson.plugins.findbugs.util.model.MavenModule;
 import hudson.plugins.findbugs.util.model.Priority;
-import hudson.plugins.findbugs.util.model.WorkspaceFile;
+import hudson.remoting.Which;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,7 +12,6 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 
 import org.apache.commons.lang.StringUtils;
@@ -33,31 +32,12 @@ import edu.umd.cs.findbugs.ba.SourceFinder;
  * maven-findbugs-plugin >= 1.2-SNAPSHOT).
  */
 public class NativeFindBugsParser {
-    /** Determines whether the FindBugs library already has been initialized. */
-    private static boolean isInitialized;
-    /** Determines whether we should use the FindBugs library to create messages. */
+    /** Determines whether we have access to the FindBugs library messages. */
     private static boolean useLibraryMessages;
 
-    /**
-     * Creates a new instance of <code>NativeFindBugsParser</code>.
-     */
-    public NativeFindBugsParser() {
-        initializeFindBugs();
+    static {
+       initializeFindBugs();
     }
-
-    /**
-     * Creates a new instance of <code>NativeFindBugsParser</code>.
-     */
-    public NativeFindBugsParser(final boolean useLibraryMessages) {
-        if (useLibraryMessages) {
-            initializeFindBugs();
-        }
-        else {
-            isInitialized = true;
-            NativeFindBugsParser.useLibraryMessages = false;
-        }
-    }
-
 
     /**
      * Returns the parsed FindBugs analysis file. This scanner accepts files in
@@ -87,7 +67,6 @@ public class NativeFindBugsParser {
         String actualName = extractModuleName(moduleName, project);
         MavenModule module = new MavenModule(actualName);
 
-        HashMap<String, WorkspaceFile> fileMapping = new HashMap<String, WorkspaceFile>();
         Collection<BugInstance> bugs = collection.getCollection();
         for (BugInstance warning : bugs) {
             SourceLineAnnotation sourceLine = warning.getPrimarySourceLineAnnotation();
@@ -111,15 +90,10 @@ public class NativeFindBugsParser {
             catch (IOException exception) {
                 fileName = sourceLine.getPackageName().replace(".", "/") + "/" + sourceLine.getSourceFile();
             }
-            if (!fileMapping.containsKey(fileName)) {
-                WorkspaceFile workspaceFile = new WorkspaceFile();
-                workspaceFile.setPackageName(warning.getPrimaryClass().getPackageName());
-                workspaceFile.setModuleName(actualName);
-                workspaceFile.setName(fileName);
-                fileMapping.put(fileName, workspaceFile);
-            }
-            WorkspaceFile workspaceFile = fileMapping.get(fileName);
-            workspaceFile.addAnnotation(bug);
+            bug.setFileName(fileName);
+            bug.setPackageName(warning.getPrimaryClass().getPackageName());
+            bug.setModuleName(actualName);
+
             module.addAnnotation(bug);
         }
         return module;
@@ -203,19 +177,31 @@ public class NativeFindBugsParser {
     /**
      * Initializes the FindBugs library.
      */
-    private static synchronized void initializeFindBugs() {
-        if (!isInitialized) {
-            File core = new File(Hudson.getInstance().getRootDir(),
-                    "plugins/findbugs/WEB-INF/lib/coreplugin-1.2.0.jar");
+    private static void initializeFindBugs() {
+        File findBugsJar;
+        try {
+            findBugsJar = Which.jarFile(DetectorFactoryCollection.class);
+        }
+        catch (IOException exception1) {
+            findBugsJar = new File(Hudson.getInstance().getRootDir(),
+                "plugins/findbugs/WEB-INF/lib/findbugs-1.2.0.jar");
+        }
 
-            try {
-                DetectorFactoryCollection.rawInstance().setPluginList(new URL[] {core.toURL()});
-                useLibraryMessages = true;
-            }
-            catch (MalformedURLException exception) {
-                useLibraryMessages = false;
-            }
-            isInitialized = true;
+        try {
+            String path = findBugsJar.getCanonicalPath();
+            File core = new File(path
+                    .replace("findbugs-", "coreplugin-")
+                    .replace("findbugs/findbugs", "findbugs/coreplugin")
+                    .replace("findbugs\\findbugs", "findbugs\\coreplugin"));
+
+            DetectorFactoryCollection.rawInstance().setPluginList(new URL[] {core.toURL()});
+            useLibraryMessages = true;
+        }
+        catch (MalformedURLException exception) {
+            useLibraryMessages = false;
+        }
+        catch (IOException exception) {
+            useLibraryMessages = false;
         }
     }
 

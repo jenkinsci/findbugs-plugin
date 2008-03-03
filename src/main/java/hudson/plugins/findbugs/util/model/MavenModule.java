@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-import org.apache.commons.lang.StringUtils;
-
 /**
  * A serializable Java Bean class representing a maven module.
  *
@@ -80,9 +78,7 @@ public class MavenModule extends AnnotationContainer {
      */
     @Override
     protected void annotationAdded(final FileAnnotation annotation) {
-        WorkspaceFile file = annotation.getWorkspaceFile();
-
-        String packageName = StringUtils.defaultIfEmpty(file.getPackageName(), "No Package");
+        String packageName = annotation.getPackageName();
         if (!packageMapping.containsKey(packageName)) {
             packageMapping.put(packageName, new JavaPackage(packageName));
         }

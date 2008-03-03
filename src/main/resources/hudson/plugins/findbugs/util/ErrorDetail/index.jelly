@@ -4,11 +4,13 @@
 	<l:layout>
 		<st:include it="${it.owner}" page="sidepanel.jelly" />
 		<l:main-panel>
-			<h1>${it.name} Plug-in Errors</h1>
+			<h1 class="result-regression">${it.name} Errors</h1>
 
-			<j:forEach var="error" items="${it.errors}">
-				<p>${error}</p>
-			</j:forEach>
+			<ol>
+				<j:forEach var="error" items="${it.errors}">
+					<li>${error}</li>
+				</j:forEach>
+			</ol>
 
 		</l:main-panel>
 	</l:layout>

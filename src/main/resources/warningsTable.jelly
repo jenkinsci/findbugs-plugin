@@ -9,11 +9,11 @@
 			<tr>
 			<td class="pane-header">
 				<j:choose>
-					<j:when test="${it.isCurrent() &amp;&amp; warning.workspaceFile.name != null}">
-						File: <a href="${warning.key}/#${warning.primaryLineNumber}">${warning.workspaceFile.shortName}</a>,
+					<j:when test="${it.isCurrent() &amp;&amp; warning.fileName != null}">
+						File: <a href="${warning.key}/#${warning.primaryLineNumber}">${warning.shortFileName}</a>,
 					</j:when>
 					<j:otherwise>
-						File: ${warning.workspaceFile.shortName},
+						File: ${warning.shortFileName},
 					</j:otherwise>
 				</j:choose>
 				Type: ${warning.type},

@@ -35,7 +35,7 @@ public class NativeFindBugsParserTest {
      *             in case of an error
      */
     private MavenModule parseFile(final String fileName) throws IOException, DocumentException {
-        return new NativeFindBugsParser(false).parse(NativeFindBugsParserTest.class.getResourceAsStream(fileName), "", fileName);
+        return new NativeFindBugsParser().parse(NativeFindBugsParserTest.class.getResourceAsStream(fileName), "", fileName);
     }
 
     /**
@@ -111,7 +111,7 @@ public class NativeFindBugsParserTest {
 
         FileAnnotation firstAnnotation;
         FileAnnotation secondAnnotation;
-        if (fileName1.equals(annotation1.getWorkspaceFileName())) {
+        if (fileName1.equals(annotation1.getFileName())) {
             firstAnnotation = annotation1;
             secondAnnotation = annotation2;
         }
@@ -148,9 +148,9 @@ public class NativeFindBugsParserTest {
     private void checkAnnotation(final FileAnnotation annotation, final String projectName, final Priority priority, final String fileName,
             final String packageName, final int start, final int end, final int ranges) {
     // CHECKSTYLE:ON
-        assertEquals("Wrong file name parsed.", fileName, annotation.getWorkspaceFileName());
-        assertEquals("Wrong package name parsed.", packageName, annotation.getWorkspaceFile().getPackageName());
-        assertEquals("Wrong module name parsed.", projectName, annotation.getWorkspaceFile().getModuleName());
+        assertEquals("Wrong file name parsed.", fileName, annotation.getFileName());
+        assertEquals("Wrong package name parsed.", packageName, annotation.getPackageName());
+        assertEquals("Wrong module name parsed.", projectName, annotation.getModuleName());
 
         Collection<LineRange> lineRanges = annotation.getLineRanges();
         assertEquals("Wrong number of line ranges parsed.", ranges, lineRanges.size());

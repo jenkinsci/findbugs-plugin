@@ -1,6 +1,7 @@
 package hudson.plugins.findbugs.util.model;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumMap;
@@ -85,6 +86,16 @@ public class AnnotationContainer implements AnnotationProvider, Serializable {
         for (FileAnnotation annotation : newAnnotations) {
             addAnnotation(annotation);
         }
+    }
+
+    /**
+     * Adds the specified annotations to this container.
+     *
+     * @param newAnnotations
+     *            the annotations to add
+     */
+    public final void addAnnotations(final FileAnnotation[] newAnnotations) {
+        addAnnotations(Arrays.asList(newAnnotations));
     }
 
     /**

@@ -13,8 +13,7 @@ public class AnnotationStream extends XStream2 {
     public AnnotationStream() {
         super();
 
-        alias("file", WorkspaceFile.class);
-        alias("priority", Priority.class);
+        alias("annotation", FileAnnotation.class);
         registerConverter(new StringConverter2(), 100);
         registerConverter(new Priority.PriorityConverter(), 100);
         addImmutableType(Priority.class);

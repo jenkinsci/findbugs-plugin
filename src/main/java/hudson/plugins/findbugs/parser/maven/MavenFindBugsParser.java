@@ -2,9 +2,9 @@ package hudson.plugins.findbugs.parser.maven;
 
 import hudson.FilePath;
 import hudson.plugins.findbugs.parser.Bug;
+import hudson.plugins.findbugs.util.model.FileAnnotation;
 import hudson.plugins.findbugs.util.model.MavenModule;
 import hudson.plugins.findbugs.util.model.Priority;
-import hudson.plugins.findbugs.util.model.WorkspaceFile;
 
 import java.io.File;
 import java.io.IOException;
@@ -99,10 +99,10 @@ public class MavenFindBugsParser {
                 fileMapping.put(key, files[i]);
             }
         }
-        for (WorkspaceFile file : mavenModule.getFiles()) {
-            String key = StringUtils.substringBeforeLast(file.getPackageName() + "." + file.getName(), "$") + ".java";
-            if (fileMapping.containsKey(key)) {
-                file.setName(fileMapping.get(key));
+        for (FileAnnotation annotation : mavenModule.getAnnotations()) {
+            String key = StringUtils.substringBeforeLast(annotation.getPackageName() + "." + annotation.getFileName(), "$") + ".java";
+            if (fileMapping.containsKey(key) && annotation instanceof Bug) {
+                ((Bug)annotation).setFileName(fileMapping.get(key));
              }
         }
     }
@@ -161,15 +161,14 @@ public class MavenFindBugsParser {
         MavenModule module = new MavenModule(moduleName);
 
         for (hudson.plugins.findbugs.parser.maven.File file : collection.getFiles()) {
-            WorkspaceFile workspaceFile = new WorkspaceFile();
-            workspaceFile.setPackageName(StringUtils.substringBeforeLast(file.getClassname(), "."));
-            workspaceFile.setModuleName(moduleName);
-            workspaceFile.setName(StringUtils.substringAfterLast(file.getClassname(), "."));
             for (BugInstance warning : file.getBugInstances()) {
                 Priority priority = Priority.valueOf(StringUtils.upperCase(warning.getPriority()));
                 Bug bug = new Bug(priority, warning.getMessage(), warning.getCategory(), warning.getType(),
                             warning.getStart(), warning.getEnd());
-                workspaceFile.addAnnotation(bug);
+                bug.setPackageName(StringUtils.substringBeforeLast(file.getClassname(), "."));
+                bug.setModuleName(moduleName);
+                bug.setFileName(StringUtils.substringAfterLast(file.getClassname(), "."));
+
                 module.addAnnotation(bug);
             }
         }

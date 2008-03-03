@@ -3,12 +3,10 @@ package hudson.plugins.findbugs;
 import static org.junit.Assert.*;
 import hudson.plugins.findbugs.parser.Bug;
 import hudson.plugins.findbugs.parser.maven.MavenFindBugsParser;
-import hudson.plugins.findbugs.util.model.AbstractAnnotation;
 import hudson.plugins.findbugs.util.model.FileAnnotation;
 import hudson.plugins.findbugs.util.model.JavaProject;
 import hudson.plugins.findbugs.util.model.MavenModule;
 import hudson.plugins.findbugs.util.model.Priority;
-import hudson.plugins.findbugs.util.model.WorkspaceFile;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -32,13 +30,13 @@ public class WarningDifferencerTest {
      */
     @Test
     public void testWarningEquals() {
-        AbstractAnnotation first  = new Bug(Priority.HIGH, STRING, STRING, STRING, 2);
-        AbstractAnnotation second = new Bug(Priority.HIGH, STRING, STRING, STRING, 2);
+        Bug first  = new Bug(Priority.HIGH, STRING, STRING, STRING, 2);
+        Bug second = new Bug(Priority.HIGH, STRING, STRING, STRING, 2);
 
         assertEquals("Warnings are not equal.", first, second);
-        WorkspaceFile file = new WorkspaceFile();
-        file.setName(STRING);
-        second.setWorkspaceFile(file);
+
+        first.setFileName(STRING);
+
         assertFalse("Warnings are equal.", first.equals(second));
     }
 

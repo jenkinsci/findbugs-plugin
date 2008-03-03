@@ -128,11 +128,9 @@ public class MavenFindBugsParserTest {
         LineRange range = lineRanges.iterator().next();
         assertEquals(WRONG_BUG_PROPERTY_SET, 120, range.getStart());
         assertEquals(WRONG_BUG_PROPERTY_SET, 120, range.getEnd());
-
-        WorkspaceFile file = bug.getWorkspaceFile();
-        assertEquals(WRONG_FILE_PROPERTY, fileName, file.getModuleName());
-        assertEquals(WRONG_FILE_PROPERTY, SPELL_PACKAGE, file.getPackageName());
-        assertEquals(WRONG_FILE_PROPERTY, "SpellingContentAssistProcessor", file.getName());
+        assertEquals(WRONG_FILE_PROPERTY, fileName, bug.getModuleName());
+        assertEquals(WRONG_FILE_PROPERTY, SPELL_PACKAGE, bug.getPackageName());
+        assertEquals(WRONG_FILE_PROPERTY, "SpellingContentAssistProcessor", bug.getFileName());
     }
 
 
@@ -154,8 +152,7 @@ public class MavenFindBugsParserTest {
         Assert.assertEquals("Wrong number of bugs.", 7, module.getNumberOfAnnotations());
 
         for (FileAnnotation annotation : module.getAnnotations()) {
-            Assert.assertEquals("Wrong file name in annotation.", "ChangeDBCore", annotation.getWorkspaceFileName());
-            Assert.assertEquals("Wrong file name.", "ChangeDBCore", annotation.getWorkspaceFile().getName());
+            Assert.assertEquals("Wrong file name in annotation.", "ChangeDBCore", annotation.getFileName());
         }
     }
 
@@ -192,7 +189,7 @@ public class MavenFindBugsParserTest {
 
         AbstractAnnotation bug = runClassMapper(STRING_CLASS, javaFiles);
 
-        Assert.assertEquals(STRING_FILE_UNIX, bug.getWorkspaceFile().getName());
+        Assert.assertEquals(STRING_FILE_UNIX, bug.getFileName());
     }
 
     /**
@@ -204,7 +201,7 @@ public class MavenFindBugsParserTest {
 
         AbstractAnnotation bug = runClassMapper(STRING_CLASS, javaFiles);
 
-        Assert.assertEquals(STRING_TEST_FILE.replace("\\", "/"), bug.getWorkspaceFile().getName());
+        Assert.assertEquals(STRING_TEST_FILE.replace("\\", "/"), bug.getFileName());
     }
 
     /**
@@ -216,7 +213,7 @@ public class MavenFindBugsParserTest {
 
         AbstractAnnotation bug = runClassMapper(STRING_CLASS, javaFiles);
 
-        Assert.assertEquals(STRING_SRC_FILE.replace("\\", "/"), bug.getWorkspaceFile().getName());
+        Assert.assertEquals(STRING_SRC_FILE.replace("\\", "/"), bug.getFileName());
     }
 
     /**
@@ -228,7 +225,7 @@ public class MavenFindBugsParserTest {
 
         AbstractAnnotation bug = runClassMapper(STRING_INNER_CLASS, javaFiles);
 
-        Assert.assertEquals(STRING_FILE_UNIX, bug.getWorkspaceFile().getName());
+        Assert.assertEquals(STRING_FILE_UNIX, bug.getFileName());
     }
 
     /**
@@ -240,7 +237,7 @@ public class MavenFindBugsParserTest {
 
         AbstractAnnotation bug = runClassMapper(STRING_CLASS, javaFiles);
 
-        Assert.assertEquals(WRONG_FILENAME_GUESSED, STRING_FILE_UNIX, bug.getWorkspaceFile().getName());
+        Assert.assertEquals(WRONG_FILENAME_GUESSED, STRING_FILE_UNIX, bug.getFileName());
     }
 
     /**
@@ -253,12 +250,9 @@ public class MavenFindBugsParserTest {
      * @return the simple bug
      */
     private AbstractAnnotation runClassMapper(final String className, final String[] javaFiles) {
-        WorkspaceFile file = new WorkspaceFile();
-        file.setPackageName("java.lang");
-        file.setName(className);
-
         Bug bug = new Bug(Priority.HIGH, "", "", "");
-        bug.setWorkspaceFile(file);
+        bug.setPackageName("java.lang");
+        bug.setFileName(className);
 
         MavenModule module = new MavenModule();
         module.addAnnotation(bug);

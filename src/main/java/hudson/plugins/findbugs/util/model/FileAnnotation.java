@@ -53,24 +53,23 @@ public interface FileAnnotation {
     Priority getPriority();
 
     /**
-     * Returns the workspace file that contains this annotation.
+     * Returns the absolute path of the workspace file that contains this annotation.
      *
-     * @return the workspace file that contains this annotation
+     * @return the name of the workspace file that contains this annotation
      */
-    WorkspaceFile getWorkspaceFile();
+    String getFileName();
 
     /**
-     * Returns the name of the workspace file that contains this annotation.
+     * Returns the name of the maven or ant module that contains this annotation.
      *
-     * @return the workspace file that contains this annotation
+     * @return the name of the module that contains this annotation
      */
-    String getWorkspaceFileName();
+    String getModuleName();
 
     /**
-     * Sets the workspace file that contains this annotation.
+     * Returns the name of package (or namespace) that contains this annotation.
      *
-     * @param workspaceFile
-     *            the workspace file that contains this annotation
+     * @return the name of the package that contains this annotation
      */
-    void setWorkspaceFile(WorkspaceFile workspaceFile);
+    String getPackageName();
 }

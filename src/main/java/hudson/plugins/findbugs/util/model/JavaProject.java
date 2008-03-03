@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-import org.apache.commons.lang.StringUtils;
-
 /**
  * A serializable Java Bean class representing a project that has been built by
  * Hudson.
@@ -59,9 +57,7 @@ public class JavaProject extends AnnotationContainer {
      */
     @Override
     protected void annotationAdded(final FileAnnotation annotation) {
-        WorkspaceFile file = annotation.getWorkspaceFile();
-
-        String moduleName = StringUtils.defaultIfEmpty(file.getModuleName(), "Default Module");
+        String moduleName = annotation.getModuleName();
         if (!moduleMapping.containsKey(moduleName)) {
             moduleMapping.put(moduleName, new MavenModule(moduleName));
         }
@@ -213,7 +209,7 @@ public class JavaProject extends AnnotationContainer {
      * @param error
      *            the new error message
      */
-    public void setError(String error) {
+    public void setError(final String error) {
         this.error = error;
     }
 

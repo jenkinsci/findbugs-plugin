@@ -3,6 +3,8 @@ package hudson.plugins.findbugs.util;
 import hudson.model.AbstractBuild;
 import hudson.model.ModelObject;
 
+import java.util.List;
+
 /**
  * Result object to visualize the errors during execution of the plug-in.
  */
@@ -10,7 +12,7 @@ public class ErrorDetail implements ModelObject  {
     /** Current build as owner of this action. */
     private final AbstractBuild<?, ?> owner;
     /** All errors of the project. */
-    private final String errors;
+    private final List<String> errors;
     /** The name of the associated plug-in. */
     private final String name;
 
@@ -24,7 +26,7 @@ public class ErrorDetail implements ModelObject  {
      * @param errors
      *            all modules of the project
      */
-    public ErrorDetail(final AbstractBuild<?, ?> owner, final String name, final String errors) {
+    public ErrorDetail(final AbstractBuild<?, ?> owner, final String name, final List<String> errors) {
         this.owner = owner;
         this.name = name;
         this.errors = errors;
@@ -49,7 +51,7 @@ public class ErrorDetail implements ModelObject  {
      *
      * @return the errors in the project
      */
-    public String getErrors() {
+    public List<String> getErrors() {
         return errors;
     }
 

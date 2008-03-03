@@ -35,7 +35,7 @@ public class SourceDetailTest {
     public void checkCorrectOffset() throws IOException {
         FileAnnotation annotation = createMock(FileAnnotation.class);
 
-        expect(annotation.getWorkspaceFileName()).andReturn("").anyTimes();
+        expect(annotation.getFileName()).andReturn("").anyTimes();
 
         replay(annotation);
 
@@ -115,7 +115,7 @@ public class SourceDetailTest {
         FileAnnotation annotation = createMock(FileAnnotation.class);
 
         expect(annotation.getLineRanges()).andReturn(lineRanges);
-        expect(annotation.getWorkspaceFileName()).andReturn("").anyTimes();
+        expect(annotation.getFileName()).andReturn("").anyTimes();
         expect(annotation.getMessage()).andReturn("Message ").anyTimes();
         expect(annotation.getToolTip()).andReturn("Tooltip").anyTimes();
 

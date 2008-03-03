@@ -4,6 +4,8 @@ import hudson.plugins.findbugs.FindBugsMessages;
 import hudson.plugins.findbugs.util.model.AbstractAnnotation;
 import hudson.plugins.findbugs.util.model.Priority;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * A serializable Java Bean class representing an open task.
  * <p>
@@ -84,6 +86,15 @@ public class Bug extends AbstractAnnotation {
      */
     public String getCategory() {
         return category;
+    }
+
+    /**
+     * Gets the associated file name of this bug (without path).
+     *
+     * @return the short file name
+     */
+    public String getShortFileName() {
+        return StringUtils.substringAfterLast(getFileName(), "/");
     }
 
     /**
