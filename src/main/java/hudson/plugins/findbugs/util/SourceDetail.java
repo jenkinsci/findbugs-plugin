@@ -157,6 +157,9 @@ public class SourceDetail implements ModelObject {
                 output.append("<code><b>\n");
                 if (range.getStart() <= 0) {
                     output.append(annotation.getMessage());
+                    if (StringUtils.isBlank(annotation.getMessage())) {
+                        output.append(annotation.getToolTip());
+                    }
                 }
                 else {
                     while (lineNumber <= range.getEnd()) {

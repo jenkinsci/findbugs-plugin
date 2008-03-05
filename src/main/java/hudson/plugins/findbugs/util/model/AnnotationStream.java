@@ -14,6 +14,7 @@ public class AnnotationStream extends XStream2 {
         super();
 
         alias("annotation", FileAnnotation.class);
+        alias("range", LineRange.class);
         registerConverter(new StringConverter2(), 100);
         registerConverter(new Priority.PriorityConverter(), 100);
         addImmutableType(Priority.class);

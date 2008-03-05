@@ -320,6 +320,24 @@ public class FindBugsResult implements ModelObject, Serializable {
     }
 
     /**
+     * Returns whether we have annotations in this project.
+     *
+     * @return <code>true</code> if we have annotations in this project
+     */
+    public final boolean hasAnnotations() {
+        return getProject().hasAnnotations();
+    }
+
+    /**
+     * Returns the annotations of this project.
+     *
+     * @return the annotations for this project.
+     */
+    public Collection<FileAnnotation> getAnnotations() {
+        return getProject().getAnnotations();
+    }
+
+    /**
      * Returns the annotations of the specified priority for this object.
      *
      * @param priority
