@@ -59,7 +59,7 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-    <groupId>org.jvnet.localizer</groupId>
+      <groupId>org.jvnet.localizer</groupId>
       <artifactId>localizer</artifactId>
       <version>1.0</version>
     </dependency>
