@@ -2,6 +2,7 @@ package hudson.plugins.findbugs.parser;
 
 import hudson.FilePath;
 import hudson.FilePath.FileCallable;
+import hudson.plugins.findbugs.Messages;
 import hudson.plugins.findbugs.parser.maven.MavenFindBugsParser;
 import hudson.plugins.findbugs.util.model.JavaProject;
 import hudson.plugins.findbugs.util.model.MavenModule;
@@ -71,19 +72,19 @@ public class FindBugsCollector implements FileCallable<JavaProject> {
                 MavenModule module = new MavenModule(moduleName);
 
                 if (SKIP_OLD_FILES && findbugsFile.lastModified() < buildTime) {
-                    String message = "Skipping " + findbugsFile + " because it's not up to date";
+                    String message = Messages.FindBugs_FindBugsCollector_Error_FileNotUpToDate(findbugsFile);
                     logger.println(message);
                     module.setError(message);
                     continue;
                 }
                 if (!findbugsFile.canRead()) {
-                    String message = "Skipping " + findbugsFile + " because we have no permission to read the file.";
+                    String message = Messages.FindBugs_FindBugsCollector_Error_NoPermission(findbugsFile);
                     logger.println(message);
                     module.setError(message);
                     continue;
                 }
                 if (new FilePath(findbugsFile).length() <= 0) {
-                    String message = "Skipping " + findbugsFile + " because its empty.";
+                    String message = Messages.FindBugs_FindBugsCollector_Error_EmptyFile(findbugsFile);
                     logger.println(message);
                     module.setError(message);
                     continue;
@@ -122,9 +123,7 @@ public class FindBugsCollector implements FileCallable<JavaProject> {
             if (mavenFindBugsParser.accepts(filePath.read())) {
                 logger.println("Activating parser for maven-findbugs-plugin <= 1.1.1.");
                 module = mavenFindBugsParser.parse(filePath.read(), emptyModule.getName(), workspace);
-                module.setError("FindBugs file " + findbugsFile
-                        + " was created with the outdated version 1.1.1 of the maven-findbugs-plugin."
-                        + " Please upgrade to the 1.2 version.");
+                module.setError(Messages.FindBugs_FindBugsCollector_Error_OldMavenPlugin(findbugsFile));
             }
             else {
                 logger.println("Activating parser for findbugs ant task, batch script, or maven-findbugs-plugin > 1.1.1.");
@@ -145,8 +144,8 @@ public class FindBugsCollector implements FileCallable<JavaProject> {
             exception = e;
         }
         if (exception != null) {
-            String errorMessage = "Parsing of file " + findbugsFile + " failed due to an exception:\n\n"
-                    + ExceptionUtils.getStackTrace(exception);
+            String errorMessage = Messages.FindBugs_FindBugsCollector_Error_Exception(findbugsFile)
+                    + "\n\n" + ExceptionUtils.getStackTrace(exception);
             logger.println(errorMessage);
             module.setError(errorMessage);
         }

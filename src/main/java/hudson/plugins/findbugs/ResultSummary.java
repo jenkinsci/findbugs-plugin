@@ -1,6 +1,5 @@
 package hudson.plugins.findbugs;
 
-
 /**
  * Represents the result summary of the FindBugs parser. This summary will be
  * shown in the summary.jelly script of the FindBugs result action.
@@ -22,20 +21,20 @@ public final class ResultSummary {
             summary.append("<a href=\"findbugsResult\">");
         }
         if (bugs == 1) {
-            summary.append("1 warning");
+            summary.append(Messages._FindBugs_ResultAction_OneWarning());
         }
         else {
-            summary.append(bugs + " warnings");
+            summary.append(Messages._FindBugs_ResultAction_MultipleWarnings(bugs));
         }
         if (bugs > 0) {
             summary.append("</a>");
         }
         summary.append(" ");
         if (result.getNumberOfModules() > 1) {
-            summary.append("in " + result.getNumberOfModules() + " FindBugs files.");
+            summary.append(Messages._FindBugs_ResultAction_MultipleFiles(result.getNumberOfModules()));
         }
         else {
-            summary.append("in 1 FindBugs file.");
+            summary.append(Messages._FindBugs_ResultAction_OneFile());
         }
         return summary.toString();
     }
@@ -52,20 +51,20 @@ public final class ResultSummary {
         if (result.getNumberOfNewWarnings() > 0) {
             summary.append("<li><a href=\"findbugsResult/new\">");
             if (result.getNumberOfNewWarnings() == 1) {
-                summary.append("1 new warning");
+                summary.append(Messages._FindBugs_ResultAction_OneNewWarning());
             }
             else {
-                summary.append(result.getNumberOfNewWarnings() + " new warnings");
+                summary.append(Messages._FindBugs_ResultAction_MultipleNewWarnings(result.getNumberOfNewWarnings()));
             }
             summary.append("</a></li>");
         }
         if (result.getNumberOfFixedWarnings() > 0) {
             summary.append("<li><a href=\"findbugsResult/fixed\">");
             if (result.getNumberOfFixedWarnings() == 1) {
-                summary.append("1 fixed warning");
+                summary.append(Messages._FindBugs_ResultAction_OneFixedWarning());
             }
             else {
-                summary.append(result.getNumberOfFixedWarnings() + " fixed warnings");
+                summary.append(Messages._FindBugs_ResultAction_MultipleFixedWarnings(result.getNumberOfFixedWarnings()));
             }
             summary.append("</a></li>");
         }

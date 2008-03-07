@@ -26,7 +26,7 @@ public class FixedWarningsDetail extends AbstractWarningsDetail {
 
     /** {@inheritDoc} */
     public String getDisplayName() {
-        return "Fixed Warnings";
+        return Messages.FindBugs_FixedWarningsDetail_Name();
     }
 }
 

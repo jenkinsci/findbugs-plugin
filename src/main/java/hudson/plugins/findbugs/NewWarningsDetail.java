@@ -30,7 +30,7 @@ public class NewWarningsDetail extends AbstractWarningsDetail {
 
     /** {@inheritDoc} */
     public String getDisplayName() {
-        return "New Warnings";
+        return Messages.FindBugs_NewWarningsDetail_Name();
     }
 
     /**

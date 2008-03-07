@@ -207,7 +207,7 @@ public class FindBugsResult implements ModelObject, Serializable {
     public String getDetails() {
         String message = ResultSummary.createDeltaMessage(this);
         if (numberOfWarnings == 0 && delta == 0) {
-            return message + "<li>" + "No warnings since build " + zeroWarningsSinceBuild +"</li>";
+            return message + "<li>" + Messages.FindBugs_ResultAction_NoWarningsSince(zeroWarningsSinceBuild) +"</li>";
         }
         return message;
     }

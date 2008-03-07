@@ -22,7 +22,7 @@ public class FindBugsReporterDescriptor extends MavenReporterDescriptor {
     /** {@inheritDoc} */
     @Override
     public String getDisplayName() {
-        return "Publish FindBugs Analysis Results";
+        return Messages.FindBugs_Publisher_Name();
     }
 
     /** {@inheritDoc} */

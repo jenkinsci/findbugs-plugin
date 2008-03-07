@@ -81,7 +81,7 @@ public final class FindBugsMessages {
      * @return a HTML description for the specified bug.
      */
     public String getMessage(final String name)  {
-        return StringUtils.defaultIfEmpty(messages.get(name), "No description available.");
+        return StringUtils.defaultIfEmpty(messages.get(name), Messages.FindBugs_Publisher_NoMessageFoundText());
     }
 
     /**

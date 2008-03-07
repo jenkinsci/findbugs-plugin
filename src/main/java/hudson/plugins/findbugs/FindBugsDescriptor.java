@@ -34,7 +34,7 @@ public final class FindBugsDescriptor extends BuildStepDescriptor<Publisher> {
     /** {@inheritDoc} */
     @Override
     public String getDisplayName() {
-        return "Publish FindBugs Analysis Results";
+        return Messages.FindBugs_Publisher_Name();
     }
 
     /** {@inheritDoc} */

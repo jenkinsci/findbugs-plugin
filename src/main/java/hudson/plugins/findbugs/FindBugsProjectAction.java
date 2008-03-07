@@ -25,7 +25,7 @@ public class FindBugsProjectAction extends AbstractProjectAction<FindBugsResultA
 
     /** {@inheritDoc} */
     public String getDisplayName() {
-        return "FindBugs Result";
+        return Messages.FindBugs_ProjectAction_Name();
     }
 
     /** {@inheritDoc} */
