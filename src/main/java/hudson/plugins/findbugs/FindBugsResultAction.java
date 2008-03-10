@@ -145,9 +145,9 @@ public class FindBugsResultAction extends AbstractResultAction<FindBugsResult> {
                 }
                 else {
                     series = new ArrayList<Integer>();
-                    series.add(current.getNumberOfAnnotations(Priority.HIGH));
-                    series.add(current.getNumberOfAnnotations(Priority.NORMAL));
                     series.add(current.getNumberOfAnnotations(Priority.LOW));
+                    series.add(current.getNumberOfAnnotations(Priority.NORMAL));
+                    series.add(current.getNumberOfAnnotations(Priority.HIGH));
                 }
                 int level = 0;
                 for (Integer integer : series) {
