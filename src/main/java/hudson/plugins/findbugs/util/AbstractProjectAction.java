@@ -117,7 +117,7 @@ public abstract class AbstractProjectAction<T extends ResultAction<?>> implement
      * @return the last valid result action, or <code>null</code> if no such action is found
      */
     public ResultAction<?> getLastAction() {
-        AbstractBuild<?, ?> lastBuild = project.getLastSuccessfulBuild();
+        AbstractBuild<?, ?> lastBuild = project.getLastBuild();
         if (lastBuild != null) {
             return lastBuild.getAction(resultActionType);
         }
