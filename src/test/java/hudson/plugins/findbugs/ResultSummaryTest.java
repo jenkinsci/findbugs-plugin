@@ -2,6 +2,9 @@ package hudson.plugins.findbugs;
 
 import static org.easymock.EasyMock.*;
 import static org.easymock.classextension.EasyMock.*;
+
+import java.util.Locale;
+
 import junit.framework.Assert;
 
 import org.junit.Test;
@@ -60,6 +63,7 @@ public class ResultSummaryTest {
 
         replay(result);
 
+        Locale.setDefault(Locale.ENGLISH);
         Assert.assertEquals("Wrong summary message created.", expectedMessage, ResultSummary.createSummary(result));
 
         verify(result);

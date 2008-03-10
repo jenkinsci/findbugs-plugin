@@ -24,9 +24,9 @@
   <classpathentry kind="var" path="M2_REPO/org/easymock/easymock/2.3/easymock-2.3.jar" sourcepath="M2_REPO/org/easymock/easymock/2.3/easymock-2.3-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/easymock/easymockclassextension/2.2.2/easymockclassextension-2.2.2.jar" sourcepath="M2_REPO/org/easymock/easymockclassextension/2.2.2/easymockclassextension-2.2.2-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/cglib/cglib-nodep/2.1_3/cglib-nodep-2.1_3.jar" sourcepath="M2_REPO/cglib/cglib-nodep/2.1_3/cglib-nodep-2.1_3-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/jvnet/hudson/main/hudson-core/1.189/hudson-core-1.189.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/jvnet/hudson/main/maven-agent/1.189/maven-agent-1.189.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/jvnet/hudson/main/maven-interceptor/1.189/maven-interceptor-1.189.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/jvnet/hudson/main/hudson-core/1.190/hudson-core-1.190.jar" sourcepath="M2_REPO/org/jvnet/hudson/main/hudson-core/1.190/hudson-core-1.190-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/jvnet/hudson/main/maven-agent/1.190/maven-agent-1.190.jar" sourcepath="M2_REPO/org/jvnet/hudson/main/maven-agent/1.190/maven-agent-1.190-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/jvnet/hudson/main/maven-interceptor/1.190/maven-interceptor-1.190.jar" sourcepath="M2_REPO/org/jvnet/hudson/main/maven-interceptor/1.190/maven-interceptor-1.190-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/apache/maven/maven-core/2.0.4/maven-core-2.0.4.jar" sourcepath="M2_REPO/org/apache/maven/maven-core/2.0.4/maven-core-2.0.4-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/apache/maven/maven-settings/2.0.4/maven-settings-2.0.4.jar" sourcepath="M2_REPO/org/apache/maven/maven-settings/2.0.4/maven-settings-2.0.4-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/apache/maven/maven-model/2.0.4/maven-model-2.0.4.jar" sourcepath="M2_REPO/org/apache/maven/maven-model/2.0.4/maven-model-2.0.4-sources.jar"/>
@@ -61,7 +61,7 @@
   <classpathentry kind="var" path="M2_REPO/org/jvnet/hudson/commons-jelly/1.1-hudson-20071224/commons-jelly-1.1-hudson-20071224.jar" sourcepath="M2_REPO/org/jvnet/hudson/commons-jelly/1.1-hudson-20071224/commons-jelly-1.1-hudson-20071224-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/commons-beanutils/commons-beanutils/1.7.0/commons-beanutils-1.7.0.jar" sourcepath="M2_REPO/commons-beanutils/commons-beanutils/1.7.0/commons-beanutils-1.7.0-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/commons-collections/commons-collections/3.2/commons-collections-3.2.jar" sourcepath="M2_REPO/commons-collections/commons-collections/3.2/commons-collections-3.2-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/jvnet/hudson/main/remoting/1.189/remoting-1.189.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/jvnet/hudson/main/remoting/1.190/remoting-1.190.jar" sourcepath="M2_REPO/org/jvnet/hudson/main/remoting/1.190/remoting-1.190-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/sun/xml/txw2/txw2/20070624/txw2-20070624.jar" sourcepath="M2_REPO/com/sun/xml/txw2/txw2/20070624/txw2-20070624-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/javax/mail/mail/1.4/mail-1.4.jar" sourcepath="M2_REPO/javax/mail/mail/1.4/mail-1.4-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/javax/activation/activation/1.1/activation-1.1.jar" sourcepath="M2_REPO/javax/activation/activation/1.1/activation-1.1-sources.jar"/>
@@ -105,7 +105,7 @@
   <classpathentry kind="var" path="M2_REPO/org/apache/ant/ant/1.7.0/ant-1.7.0.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/apache/ant/ant-launcher/1.7.0/ant-launcher-1.7.0.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/kohsuke/stapler/stapler/1.61/stapler-1.61.jar" sourcepath="M2_REPO/org/kohsuke/stapler/stapler/1.61/stapler-1.61-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/jvnet/localizer/localizer/1.0/localizer-1.0.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/jvnet/localizer/localizer/1.0/localizer-1.0.jar" sourcepath="M2_REPO/org/jvnet/localizer/localizer/1.0/localizer-1.0-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/jvnet/tiger-types/1.0/tiger-types-1.0.jar" sourcepath="M2_REPO/org/jvnet/tiger-types/1.0/tiger-types-1.0-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/codehaus/groovy/groovy/1.1-rc-2/groovy-1.1-rc-2.jar" sourcepath="M2_REPO/org/codehaus/groovy/groovy/1.1-rc-2/groovy-1.1-rc-2-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/jline/jline/0.9.91/jline-0.9.91.jar" sourcepath="M2_REPO/jline/jline/0.9.91/jline-0.9.91-sources.jar"/>
