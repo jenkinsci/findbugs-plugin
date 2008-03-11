@@ -122,7 +122,9 @@ public class FindBugsResultAction extends AbstractResultAction<FindBugsResult> {
     protected JFreeChart createChart(final StaplerRequest request, final StaplerResponse response) {
         String parameter = request.getParameter("useHealthBuilder");
         boolean useHealthBuilder = Boolean.valueOf(StringUtils.defaultIfEmpty(parameter, "true"));
-        return getHealthReportBuilder().createGraph(useHealthBuilder, FINDBUGS_RESULT_URL, buildDataSet(useHealthBuilder));
+        return getHealthReportBuilder().createGraph(useHealthBuilder, FINDBUGS_RESULT_URL, buildDataSet(useHealthBuilder),
+                Messages.FindBugs_ResultAction_OneWarning(),
+                Messages.FindBugs_ResultAction_MultipleWarnings("%d"));
     }
 
     /**

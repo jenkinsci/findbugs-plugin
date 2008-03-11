@@ -5,15 +5,15 @@
 		<st:include it="${it.owner}" page="sidepanel.jelly" />
 		<l:main-panel>
 
-			<h1>FindBugs Result</h1>
+			<h1>${%FindBugs Result}</h1>
 
-			<h2>Warnings Trend</h2>
+			<h2>${%Warnings Trend}</h2>
 
 			<table class="pane" id="summary">
 				<tr>
-					<td class="pane-header">All Warnings</td>
-					<td class="pane-header">New Warnings</td>
-					<td class="pane-header">Fixed Warnings</td>
+					<td class="pane-header">${%All Warnings}</td>
+					<td class="pane-header">${%New Warnings}</td>
+					<td class="pane-header">${%Fixed Warnings}</td>
 				</tr>
 				<tbody>
 					<tr>
@@ -23,13 +23,13 @@
 						<td class="pane">
 							${it.numberOfNewWarnings}
 							<j:if test="${it.numberOfNewWarnings != 0}">
-								(<a href="new">Details</a>)
+								(<a href="new">${%Details}</a>)
 							</j:if>
 						</td>
 						<td class="pane">
 							${it.numberOfFixedWarnings}
 							<j:if test="${it.numberOfFixedWarnings != 0}">
-								(<a href="fixed">Details</a>)
+								(<a href="fixed">${%Details}</a>)
 							</j:if>
 						</td>
 					</tr>
@@ -41,13 +41,13 @@
 	        <j:if test="${it.hasAnnotations()}">
 	        
 				<j:if test="${!it.isSingleModuleProject()}">
-					<h2>Module Statistics</h2>
+					<h2>${%Module Statistics}</h2>
 	
 					<table class="pane sortable" id="tasks">
 						<tr>
-							<td class="pane-header">Module</td>
-							<td class="pane-header" style="width:2em">Total</td>
-							<td class="pane-header">Distribution</td>
+							<td class="pane-header">${%Module}</td>
+							<td class="pane-header" style="width:2em">${%Total}</td>
+							<td class="pane-header">${%Distribution}</td>
 						</tr>
 						<tbody>
 							<j:forEach var="module" items="${it.modules}">

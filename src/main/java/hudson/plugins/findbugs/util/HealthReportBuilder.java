@@ -35,14 +35,14 @@ public class HealthReportBuilder implements Serializable {
     private boolean isThresholdEnabled;
     /** Bug threshold to be reached if a build should be considered as unstable. */
     private int threshold;
+    /** Message to be shown for a single item count. */
+    private final String reportSingleCount;
+    /** Message to be shown for a multiple item count. */
+    private final String reportMultipleCount;
 
     /**
      * Creates a new instance of <code>HealthReportBuilder</code>.
      *
-     * @param reportName
-     *            the report name
-     * @param itemName
-     *            the item name
      * @param isFailureThresholdEnabled
      *            determines whether to use the provided unstable threshold
      * @param threshold
@@ -56,10 +56,16 @@ public class HealthReportBuilder implements Serializable {
      * @param unHealthy
      *            report health as 0% when the number of warnings is greater
      *            than this value
+     * @param reportSingleCount
+     *            message to be shown if there is exactly one item found
+     * @param reportMultipleCount
+     *            message to be shown if there are zero or more than one items
+     *            found
      */
-    public HealthReportBuilder(final String reportName, final String itemName, final boolean isFailureThresholdEnabled, final int threshold, final boolean isHealthyReportEnabled, final int healthy, final int unHealthy) {
-        this.reportName = reportName;
-        this.itemName = itemName;
+    public HealthReportBuilder(final boolean isFailureThresholdEnabled, final int threshold, final boolean isHealthyReportEnabled, final int healthy, final int unHealthy,
+            final String reportSingleCount, final String reportMultipleCount) {
+        this.reportSingleCount = reportSingleCount;
+        this.reportMultipleCount = reportMultipleCount;
         this.threshold = threshold;
         this.healthy = healthy;
         this.unHealthy = unHealthy;
@@ -71,7 +77,7 @@ public class HealthReportBuilder implements Serializable {
      * Creates a new dummy instance of <code>HealthReportBuilder</code>.
      */
     public HealthReportBuilder() {
-        this("Items", "item", false, 0, false, 0, 0);
+        this(false, 0, false, 0, 0, "1 item", "%d items");
     }
 
     /**
@@ -96,10 +102,32 @@ public class HealthReportBuilder implements Serializable {
             else {
                 percentage = 100 - ((counter - healthy) * 100 / (unHealthy - healthy));
             }
-            return new HealthReport(percentage,
-                    reportName + ": " + Util.combine(counter, itemName) + " found.");
+            String description;
+            if (isLocalizedRelease()) {
+                if (counter == 1) {
+                    description = reportSingleCount;
+                }
+                else {
+                    description = String.format(reportMultipleCount, counter);
+                }
+            }
+            else {
+                description = reportName + ": " + Util.combine(counter, itemName) + " found.";
+            }
+            return new HealthReport(percentage, description);
         }
         return null;
+    }
+
+    /**
+     * Returns whether the result is recorded in a localized release (i.e.,
+     * release 2.2 and newer).
+     *
+     * @return <code>true</code> if the result is recorded in a localized
+     *         release (i.e., release 2.2 and newer)
+     */
+    private boolean isLocalizedRelease() {
+        return itemName == null;
     }
 
     /**
@@ -295,15 +323,20 @@ public class HealthReportBuilder implements Serializable {
      *            the URL shown in the tool tips
      * @param dataset
      *            the data set of the values to render
+     * @param singleTooltip
+     *            tooltip if there is one item
+     * @param multipleTooltip
+     *            tooltip if there are multiple items
      * @return the created graph
      */
-    public JFreeChart createGraph(final boolean useHealthBuilder, final String url, final CategoryDataset dataset) {
+    public JFreeChart createGraph(final boolean useHealthBuilder, final String url, final CategoryDataset dataset,
+            final String singleTooltip, final String multipleTooltip) {
         StackedAreaRenderer renderer;
         if (useHealthBuilder && isEnabled()) {
-            renderer = new ResultAreaRenderer(url, itemName);
+            renderer = new ResultAreaRenderer(url, singleTooltip, multipleTooltip);
         }
         else {
-            renderer = new PrioritiesAreaRenderer(url, itemName);
+            renderer = new PrioritiesAreaRenderer(url, singleTooltip, multipleTooltip);
         }
 
         return ChartBuilder.createChart(dataset, renderer, getThreshold(),

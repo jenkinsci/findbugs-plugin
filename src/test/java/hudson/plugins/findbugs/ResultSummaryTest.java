@@ -8,6 +8,7 @@ import java.util.Locale;
 import junit.framework.Assert;
 
 import org.junit.Test;
+import org.jvnet.localizer.LocaleProvider;
 
 /**
  * Tests the class {@link ResultSummary}.
@@ -63,7 +64,14 @@ public class ResultSummaryTest {
 
         replay(result);
 
-        Locale.setDefault(Locale.ENGLISH);
+        LocaleProvider.setProvider(new LocaleProvider() {
+            @Override
+            public Locale get() {
+                return Locale.ENGLISH;
+            }
+        });
+
+        //Locale.setDefault(Locale.ENGLISH);
         Assert.assertEquals("Wrong summary message created.", expectedMessage, ResultSummary.createSummary(result));
 
         verify(result);

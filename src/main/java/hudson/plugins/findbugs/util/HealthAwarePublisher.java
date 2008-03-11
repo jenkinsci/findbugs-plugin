@@ -89,15 +89,16 @@ public abstract class HealthAwarePublisher extends Publisher {
     /**
      * Creates a new instance of <code>HealthReportBuilder</code>.
      *
-     * @param reportName
-     *            the report name
-     * @param itemName
-     *            the item name
+     * @param reportSingleCount
+     *            message to be shown if there is exactly one item found
+     * @param reportMultipleCount
+     *            message to be shown if there are zero or more than one items
+     *            found
      * @return the new health report builder
      */
-    protected HealthReportBuilder createHealthReporter(final String reportName, final String itemName) {
-        return new HealthReportBuilder(reportName, itemName,
-                thresholdEnabled, minimumAnnotations, healthyReportEnabled, healthyAnnotations, unHealthyAnnotations);
+    protected HealthReportBuilder createHealthReporter(final String reportSingleCount, final String reportMultipleCount) {
+        return new HealthReportBuilder(thresholdEnabled, minimumAnnotations, healthyReportEnabled, healthyAnnotations, unHealthyAnnotations,
+                reportSingleCount, reportMultipleCount);
     }
 
 

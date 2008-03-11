@@ -1,8 +1,5 @@
 package hudson.plugins.findbugs.util;
 
-import hudson.Util;
-import hudson.util.StackedAreaRenderer2;
-import hudson.util.ChartUtil.NumberOnlyBuildLabel;
 
 import org.jfree.data.category.CategoryDataset;
 
@@ -18,30 +15,22 @@ import org.jfree.data.category.CategoryDataset;
  *
  * @author Ulli Hafner
  */
-public final class ResultAreaRenderer extends StackedAreaRenderer2 {
+public final class ResultAreaRenderer extends AbstractAreaRenderer {
     /** Unique identifier of this class. */
     private static final long serialVersionUID = -4683951507836348304L;
-    /** Base URL of the graph links. */
-    private final String url;
-    /** Name of the shown items. */
-    private final String name;
 
     /**
-     * Creates a new instance of <code>AreaRenderer</code>.
+     * Creates a new instance of <code>ResultAreaRenderer</code>.
      *
-     * @param url base URL of the graph links
-     * @param name name of the shown items
+     * @param url
+     *            base URL of the graph links
+     * @param singleTooltip
+     *            tooltip if there is one item
+     * @param multipleTooltip
+     *            tooltip if there are multiple items
      */
-    public ResultAreaRenderer(final String url, final String name) {
-        super();
-        this.url = "/" + url + "/";
-        this.name = name;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String generateURL(final CategoryDataset dataset, final int row, final int column) {
-        return getLabel(dataset, column).build.getNumber() + url;
+    public ResultAreaRenderer(final String url, final String singleTooltip, final String multipleTooltip) {
+        super(url, singleTooltip, multipleTooltip);
     }
 
     /** {@inheritDoc} */
@@ -54,17 +43,11 @@ public final class ResultAreaRenderer extends StackedAreaRenderer2 {
                 number += value.intValue();
             }
         }
-        return String.valueOf(Util.combine(number, name));
-    }
-
-    /**
-     * Returns the Hudson build label at the specified column.
-     *
-     * @param dataset dataset of values
-     * @param column the column
-     * @return the label of the column
-     */
-    private NumberOnlyBuildLabel getLabel(final CategoryDataset dataset, final int column) {
-        return (NumberOnlyBuildLabel)dataset.getColumnKey(column);
+        if (number == 1) {
+            return getSingleTooltip();
+        }
+        else {
+            return getMultipleTooltip(number);
+        }
     }
 }

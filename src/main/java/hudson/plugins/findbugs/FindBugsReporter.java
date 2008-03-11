@@ -163,8 +163,10 @@ public class FindBugsReporter extends MavenReporter {
                     result = new FindBugsResult(build, project);
                 }
 
-                HealthReportBuilder healthReportBuilder = new HealthReportBuilder("FindBugs", "warning",
-                        thresholdEnabled, minimumAnnotations, healthyReportEnabled, healthyAnnotations, unHealthyAnnotations);
+                HealthReportBuilder healthReportBuilder = new HealthReportBuilder(thresholdEnabled, minimumAnnotations,
+                        healthyReportEnabled, healthyAnnotations, unHealthyAnnotations,
+                        Messages.FindBugs_ResultAction_HealthReportSingleItem(),
+                        Messages.FindBugs_ResultAction_HealthReportMultipleItem("%d"));
                 build.getActions().add(new FindBugsResultAction(build, result, healthReportBuilder));
                 build.registerAsProjectAction(FindBugsReporter.this);
 

@@ -1,6 +1,7 @@
 package hudson.plugins.findbugs.util;
 
 import hudson.model.HealthReport;
+import hudson.plugins.findbugs.Messages;
 
 import java.util.List;
 
@@ -105,7 +106,9 @@ public class HealthReportBuilderTest extends TestCase {
      */
     @Test
     public void testHealthySeriesCalculator() {
-        HealthReportBuilder builder = new HealthReportBuilder(FIND_BUGS, WARNING, true, 0, true, 10, 30);
+        HealthReportBuilder builder = new HealthReportBuilder(true, 0, true, 10, 30,
+                Messages.FindBugs_ResultAction_HealthReportSingleItem(),
+                Messages.FindBugs_ResultAction_HealthReportMultipleItem("%d"));
 
         List<Integer> series = builder.createSeries(5);
         assertEquals(WRONG_NUMBER, HEALTHY_SERIES_SIZE, series.size());
@@ -143,7 +146,9 @@ public class HealthReportBuilderTest extends TestCase {
      */
     @Test
     public void testThresholdSeriesCalculator() {
-        HealthReportBuilder builder = new HealthReportBuilder(FIND_BUGS, WARNING, true, 10, false, 20, 50);
+        HealthReportBuilder builder = new HealthReportBuilder(true, 10, false, 20, 50,
+                Messages.FindBugs_ResultAction_HealthReportSingleItem(),
+                Messages.FindBugs_ResultAction_HealthReportMultipleItem("%d"));
 
         List<Integer> series = builder.createSeries(5);
         assertEquals(WRONG_NUMBER, THRESHOLD_SERIES_SIZE, series.size());
@@ -166,7 +171,9 @@ public class HealthReportBuilderTest extends TestCase {
      */
     @Test
     public void testIssue796() {
-        HealthReportBuilder builder = new HealthReportBuilder(FIND_BUGS, WARNING, false, 0, true, 1, 10);
+        HealthReportBuilder builder = new HealthReportBuilder(false, 0, true, 1, 10,
+                Messages.FindBugs_ResultAction_HealthReportSingleItem(),
+                Messages.FindBugs_ResultAction_HealthReportMultipleItem("%d"));
 
         List<Integer> series = builder.createSeries(1);
         assertEquals(WRONG_NUMBER, HEALTHY_SERIES_SIZE, series.size());
@@ -195,7 +202,9 @@ public class HealthReportBuilderTest extends TestCase {
      * @return the actual healthiness
      */
     private HealthReport createHealthReport(final boolean isEnabled, final int min, final int max, final int actual) {
-        HealthReportBuilder builder = new HealthReportBuilder(FIND_BUGS, WARNING, false, 0, isEnabled, min, max);
+        HealthReportBuilder builder = new HealthReportBuilder(false, 0, isEnabled, min, max,
+                Messages.FindBugs_ResultAction_HealthReportSingleItem(),
+                Messages.FindBugs_ResultAction_HealthReportMultipleItem("%d"));
         return builder.computeHealth(actual);
     }
 }

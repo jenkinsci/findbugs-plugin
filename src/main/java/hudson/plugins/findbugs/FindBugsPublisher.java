@@ -84,7 +84,9 @@ public class FindBugsPublisher extends HealthAwarePublisher {
             JavaProject project = parseAllWorkspaceFiles(build, logger);
             FindBugsResult result = createResult(build, project);
 
-            HealthReportBuilder healthReportBuilder = createHealthReporter("FindBugs", "warning");
+            HealthReportBuilder healthReportBuilder = createHealthReporter(
+                    Messages.FindBugs_ResultAction_HealthReportSingleItem(),
+                    Messages.FindBugs_ResultAction_HealthReportMultipleItem("%d"));
             build.getActions().add(new FindBugsResultAction(build, result, healthReportBuilder));
 
             evaluateBuildResult(build, logger, project);

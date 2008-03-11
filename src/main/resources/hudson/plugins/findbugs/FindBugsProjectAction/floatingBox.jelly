@@ -10,7 +10,7 @@
 	      </j:if>
 	      <p/>
 		  <div class="test-trend-caption">
-		    FindBugs Trend
+		    ${%FindBugs Trend}
 		  </div>
 		  <div>
 		    <img src="findbugs/trend${trendQueryParameter}" lazymap="findbugs/trendMap${trendQueryParameter}"/>
@@ -20,10 +20,10 @@
 		        <a href="findbugs/flipTrend">
 		          <j:choose>
 		            <j:when test="${mode}">
-		              (show priorities)
+		              (${%show priorities})
 		            </j:when>
 		            <j:otherwise>
-		              (show healthiness)
+		              (${%show healthiness})
 		            </j:otherwise>
 		          </j:choose>
 		        </a>

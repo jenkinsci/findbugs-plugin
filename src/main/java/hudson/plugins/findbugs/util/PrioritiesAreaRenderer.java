@@ -1,9 +1,5 @@
 package hudson.plugins.findbugs.util;
 
-import hudson.Util;
-import hudson.util.StackedAreaRenderer2;
-import hudson.util.ChartUtil.NumberOnlyBuildLabel;
-
 import org.jfree.data.category.CategoryDataset;
 
 /**
@@ -19,56 +15,45 @@ import org.jfree.data.category.CategoryDataset;
  * @author Ulli Hafner
  */
 // TODO: the link should be aware of the priorities and filter the selected priority
-public final class PrioritiesAreaRenderer extends StackedAreaRenderer2 {
+public final class PrioritiesAreaRenderer extends AbstractAreaRenderer {
     /** Unique identifier of this class. */
     private static final long serialVersionUID = -4683951507836348304L;
-    /** Base URL of the graph links. */
-    private final String url;
-    /** Name of the shown items. */
-    private final String name;
 
     /**
-     * Creates a new instance of <code>AreaRenderer</code>.
+     * Creates a new instance of <code>PrioritiesAreaRenderer</code>.
      *
-     * @param url base URL of the graph links
-     * @param name name of the shown items
+     * @param url
+     *            base URL of the graph links
+     * @param singleTooltip
+     *            tooltip if there is one item
+     * @param multipleTooltip
+     *            tooltip if there are multiple items
      */
-    public PrioritiesAreaRenderer(final String url, final String name) {
-        super();
-        this.url = "/" + url + "/";
-        this.name = name;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String generateURL(final CategoryDataset dataset, final int row, final int column) {
-        return getLabel(dataset, column).build.getNumber() + url;
+    public PrioritiesAreaRenderer(final String url, final String singleTooltip, final String multipleTooltip) {
+        super(url, singleTooltip, multipleTooltip);
     }
 
     /** {@inheritDoc} */
     @Override
     public String generateToolTip(final CategoryDataset dataset, final int row, final int column) {
-        String prefix;
-        if (row == 2) {
-            prefix = "high priority ";
-        }
-        else if (row == 1) {
-            prefix = "normal ";
+        StringBuilder tooltip = new StringBuilder();
+        int number = dataset.getValue(row, column).intValue();
+        if (number == 1) {
+            tooltip.append(getSingleTooltip());
         }
         else {
-            prefix = "low priority ";
+            tooltip.append(getMultipleTooltip(number));
         }
-        return String.valueOf(Util.combine(dataset.getValue(row, column).intValue(), prefix + name));
-    }
-
-    /**
-     * Returns the Hudson build label at the specified column.
-     *
-     * @param dataset dataset of values
-     * @param column the column
-     * @return the label of the column
-     */
-    private NumberOnlyBuildLabel getLabel(final CategoryDataset dataset, final int column) {
-        return (NumberOnlyBuildLabel)dataset.getColumnKey(column);
+        tooltip.append(" ");
+        if (row == 2) {
+            tooltip.append(Messages.Trend_PriorityHigh());
+        }
+        else if (row == 1) {
+            tooltip.append(Messages.Trend_PriorityNormal());
+        }
+        else {
+            tooltip.append(Messages.Trend_PriorityLow());
+        }
+        return tooltip.toString();
     }
 }

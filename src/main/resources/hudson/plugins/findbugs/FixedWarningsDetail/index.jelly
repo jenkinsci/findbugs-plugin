@@ -4,15 +4,15 @@
 	<l:layout>
 		<st:include it="${it.owner}" page="sidepanel.jelly" />
 		<l:main-panel>
-			<h1>FindBugs Fixed Warnings</h1>
+			<h1>${%FindBugs Fixed Warnings}</h1>
 
 	        <st:include page="/summaryTable.jelly" />
 
-			<h2>Fixed Warnings</h2>
+			<h2>${%Fixed Warnings}</h2>
 			<table class="pane sortable" id="fixed">
 				<tr>
-					<td class="pane-header">Class</td>
-					<td class="pane-header">Warning Type</td>
+					<td class="pane-header">${%Class}</td>
+					<td class="pane-header">${%Warning Type}</td>
 				</tr>
 				<tbody>
 					<j:forEach var="warning"
