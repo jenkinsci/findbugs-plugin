@@ -4,10 +4,10 @@
 	<h2>Summary</h2>
 	<table class="pane" id="findbugs.summary">
 		<tr>
-			<td class="pane-header">Total</td>
-			<td class="pane-header">High Priority</td>
-			<td class="pane-header">Normal Priority</td>
-			<td class="pane-header">Low Priority</td>
+			<td class="pane-header">${%Total}</td>
+			<td class="pane-header">${%High Priority}</td>
+			<td class="pane-header">${%Normal Priority}</td>
+			<td class="pane-header">${%Low Priority}</td>
 		</tr>
 		<tbody>
 			<tr>

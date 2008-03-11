@@ -4,10 +4,12 @@ import hudson.model.HealthReport;
 import hudson.plugins.findbugs.Messages;
 
 import java.util.List;
+import java.util.Locale;
 
 import junit.framework.TestCase;
 
 import org.junit.Test;
+import org.jvnet.localizer.LocaleProvider;
 
 /**
  * Tests the class {@link HealthReportBuilder}.
@@ -42,6 +44,13 @@ public class HealthReportBuilderTest extends TestCase {
      */
     @Test
     public void testDisplay() {
+        LocaleProvider.setProvider(new LocaleProvider() {
+            /** {@inheritDoc} */
+            @Override
+            public Locale get() {
+                return Locale.ENGLISH;
+            }
+        });
         assertEquals(ERROR_MESSAGE, "FindBugs: 0 warnings found.", createHealthReport(true, 50, 150, 0).getDescription());
         assertEquals(ERROR_MESSAGE, "FindBugs: 1 warning found.", createHealthReport(true, 50, 150, 1).getDescription());
         assertEquals(ERROR_MESSAGE, "FindBugs: 2 warnings found.", createHealthReport(true, 50, 150, 2).getDescription());
