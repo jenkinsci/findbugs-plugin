@@ -5,7 +5,7 @@
     <st:include it="${it.owner}" page="sidepanel.jelly" />
     <l:main-panel>
 
-      <h1>FindBugs Warnings of Module ${it.displayName}</h1>
+      <h1>${%module.header(it.displayName)}</h1>
 
       <st:include page="/summaryTable.jelly" />
 

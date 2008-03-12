@@ -10,7 +10,6 @@ import hudson.tasks.BuildStep;
  * @author Ulli Hafner
  */
 public class FindBugsPlugin extends Plugin {
-
     /** {@inheritDoc} */
     @Override
     @SuppressWarnings("PMD")

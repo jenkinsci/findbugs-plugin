@@ -286,7 +286,7 @@ public class FindBugsResult implements ModelObject, Serializable {
 
     /** {@inheritDoc} */
     public String getDisplayName() {
-        return "FindBugs Result";
+        return Messages.FindBugs_ProjectAction_Name();
     }
 
     /**

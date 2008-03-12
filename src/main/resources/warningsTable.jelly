@@ -3,7 +3,7 @@
 	xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson"
 	xmlns:f="/lib/form" xmlns:i="jelly:fmt">
 
-	<h2>Warnings</h2>
+	<h2>${%Warnings}</h2>
 	<j:forEach var="warning" items="${it.annotations}">
 		<table class="pane" id="summary">
 			<tr>

@@ -188,7 +188,7 @@ public class AnnotationContainer implements AnnotationProvider, Serializable {
         StringBuilder message = new StringBuilder();
         for (Priority priority : Priority.values()) {
             if (hasAnnotations(priority)) {
-                message.append(priority);
+                message.append(priority.getLocalizedString());
                 message.append(":");
                 message.append(getNumberOfAnnotations(priority));
                 message.append(" - ");

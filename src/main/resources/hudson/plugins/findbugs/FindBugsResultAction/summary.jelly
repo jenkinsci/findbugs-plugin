@@ -7,7 +7,7 @@
 		${it.result.details}
 	    <j:if test="${it.result.hasError()}">
 	    	<li>
-	    		During parsing an <a href="findbugsResult/error">error</a> has been reported.
+	    		${%error.message}
 	    	</li>
 	    </j:if>
 		</ul>
