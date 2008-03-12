@@ -69,8 +69,16 @@ public class NativeFindBugsParser {
         for (BugInstance warning : bugs) {
             SourceLineAnnotation sourceLine = warning.getPrimarySourceLineAnnotation();
 
-            Bug bug = new Bug(getPriority(warning), getMessage(warning), getCategory(warning), warning.getType(),
-                    sourceLine.getStartLine(), sourceLine.getEndLine());
+            Bug bug;
+            if (isLibraryInitialized) {
+                bug = new Bug(getPriority(warning), getMessage(warning), getCategory(warning),
+                        warning.getType(), sourceLine.getStartLine(), sourceLine.getEndLine(),
+                        warning.getBugPattern().getDetailHTML());
+            }
+            else {
+                bug = new Bug(getPriority(warning), getMessage(warning), getCategory(warning),
+                        warning.getType(), sourceLine.getStartLine(), sourceLine.getEndLine());
+            }
 
             Iterator<BugAnnotation> annotationIterator = warning.annotationIterator();
             while (annotationIterator.hasNext()) {

@@ -20,6 +20,8 @@ public class Bug extends AbstractAnnotation {
     private final String category;
     /** Bug type. */
     private final String type;
+    /** Bug HTML description. */
+    private String tooltip = StringUtils.EMPTY;
 
     /**
      * Creates a new instance of <code>Bug</code>.
@@ -80,6 +82,31 @@ public class Bug extends AbstractAnnotation {
     }
 
     /**
+     * Creates a new instance of <code>Bug</code>.
+     *
+     * @param priority
+     *            the priority
+     * @param message
+     *            the message of the warning
+     * @param category
+     *            the warning category
+     * @param type
+     *            the identifier of the warning type
+     * @param start
+     *            the first line of the line range
+     * @param end
+     *            the last line of the line range
+     * @param tooltip
+     *            the tooltip to show
+     */
+    public Bug(final Priority priority, final String message, final String category, final String type,
+            final int start, final int end, final String tooltip) {
+        this(priority, message, category, type, start, end);
+
+        this.tooltip = tooltip;
+    }
+
+    /**
      * Returns the category of the bug.
      *
      * @return the bug category
@@ -108,7 +135,7 @@ public class Bug extends AbstractAnnotation {
 
     /** {@inheritDoc} */
     public String getToolTip() {
-        return FindBugsMessages.getInstance().getMessage(getType());
+        return StringUtils.defaultIfEmpty(tooltip, FindBugsMessages.getInstance().getMessage(getType()));
     }
 
     /** {@inheritDoc} */
