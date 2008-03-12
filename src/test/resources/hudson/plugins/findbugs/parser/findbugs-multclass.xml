@@ -15,7 +15,7 @@
     <SrcDir>/export/homes/submit/.hudson/jobs/FindBugs/workspace/findbugs/findbugs/src/java</SrcDir>
     <SrcDir>/export/homes/submit/.hudson/jobs/FindBugs/workspace/findbugs/findbugs/src/java5</SrcDir>
   </Project>
-  <BugInstance type="DP_CREATE_CLASSLOADER_INSIDE_DO_PRIVILEGED" priority="1" abbrev="DP" category="BAD_PRACTICE" instanceHash="3476db762c48bad5a05a2dc5d701892d" instanceOccurrenceNum="0" instanceOccurrenceMax="0">
+  <BugInstance type="NP_NULL_ON_SOME_PATH_MIGHT_BE_INFEASIBLE" priority="1" abbrev="DP" category="BAD_PRACTICE" instanceHash="3476db762c48bad5a05a2dc5d701892d" instanceOccurrenceNum="0" instanceOccurrenceMax="0">
     <ShortMessage>Classloaders should only be created inside doPrivileged block</ShortMessage>
     <LongMessage>new edu.umd.cs.findbugs.PluginLoader(URL) creates a java.net.URLClassLoader classloader, which should be performed within a doPrivileged block</LongMessage>
     <Class classname="edu.umd.cs.findbugs.PluginLoader">
