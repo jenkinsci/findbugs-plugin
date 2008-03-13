@@ -17,7 +17,7 @@
 					</j:otherwise>
 				</j:choose>
 				${%Type}: ${warning.type},
-				${%Priority}: ${warning.priority},
+				${%Priority}: ${warning.priority.localizedString},
 				${%Category}: ${warning.category}</td>
 			</tr>
 		</table>

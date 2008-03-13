@@ -59,4 +59,19 @@ public enum Priority {
         }
         return Messages.Priority_Normal();
     }
+
+    /**
+     * Returns a long localized description of this priority.
+     *
+     * @return long localized description of this priority
+     */
+    public String getLongLocalizedString() {
+        if (this == Priority.HIGH) {
+            return Messages.HighPriority();
+        }
+        if (this == Priority.LOW) {
+            return Messages.LowPriority();
+        }
+        return Messages.NormalPriority();
+    }
 }
