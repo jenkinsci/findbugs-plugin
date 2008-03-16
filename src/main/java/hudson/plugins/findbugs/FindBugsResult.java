@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -41,9 +42,8 @@ import edu.umd.cs.findbugs.annotations.SuppressWarnings;
  *
  * @author Ulli Hafner
  */
-// CHECKSTYLE:OFF
 public class FindBugsResult implements ModelObject, Serializable {
-/** Unique identifier of this class. */
+    /** Unique identifier of this class. */
     private static final long serialVersionUID = 2768250056765266658L;
     /** Logger. */
     private static final Logger LOGGER = Logger.getLogger(FindBugsResult.class.getName());
@@ -93,7 +93,7 @@ public class FindBugsResult implements ModelObject, Serializable {
     private final AbstractBuild<?, ?> owner;
 
     /** The modules with no warnings. */
-    private final HashMap<String, MavenModule> emptyModules;
+    private final Map<String, MavenModule> emptyModules;
     /** The total number of modules with or without warnings. */
     private final int numberOfModules;
 
@@ -174,6 +174,7 @@ public class FindBugsResult implements ModelObject, Serializable {
      * consists of the project error and the errors of the individual modules.
      *
      * @param javaProject the project
+     * @return the list of error messages
      */
     private List<String> composeErrorMessage(final JavaProject javaProject) {
         List<String> messages = new ArrayList<String>();
@@ -207,7 +208,7 @@ public class FindBugsResult implements ModelObject, Serializable {
     public String getDetails() {
         String message = ResultSummary.createDeltaMessage(this);
         if (numberOfWarnings == 0 && delta == 0) {
-            return message + "<li>" + Messages.FindBugs_ResultAction_NoWarningsSince(zeroWarningsSinceBuild) +"</li>";
+            return message + "<li>" + Messages.FindBugs_ResultAction_NoWarningsSince(zeroWarningsSinceBuild) + "</li>";
         }
         return message;
     }
