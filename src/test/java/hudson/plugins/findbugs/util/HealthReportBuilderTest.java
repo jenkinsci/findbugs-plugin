@@ -14,15 +14,12 @@ import org.jvnet.localizer.LocaleProvider;
 /**
  * Tests the class {@link HealthReportBuilder}.
  */
+@edu.umd.cs.findbugs.annotations.SuppressWarnings("SIC")
 public class HealthReportBuilderTest extends TestCase {
     /** Number of elements in a series with failure threshold. */
     private static final int THRESHOLD_SERIES_SIZE = 2;
     /** Number of elements in a series with healthy threshold. */
     private static final int HEALTHY_SERIES_SIZE = 3;
-    /** Item name. */
-    private static final String WARNING = "warning";
-    /** Header. */
-    private static final String FIND_BUGS = "FindBugs";
     /** Error message. */
     private static final String WRONG_SERIES_VALUE = "Wrong series value.";
     /** Error message. */
