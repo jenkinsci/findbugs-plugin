@@ -2,18 +2,15 @@ package hudson.plugins.findbugs;
 
 import static org.easymock.EasyMock.*;
 import static org.easymock.classextension.EasyMock.*;
-
-import java.util.Locale;
-
+import hudson.plugins.findbugs.util.AbstractEnglishLocaleTest;
 import junit.framework.Assert;
 
 import org.junit.Test;
-import org.jvnet.localizer.LocaleProvider;
 
 /**
  * Tests the class {@link ResultSummary}.
  */
-public class ResultSummaryTest {
+public class ResultSummaryTest extends AbstractEnglishLocaleTest {
     /**
      * Checks the text for no warnings in 1 file.
      */
@@ -64,14 +61,6 @@ public class ResultSummaryTest {
 
         replay(result);
 
-        LocaleProvider.setProvider(new LocaleProvider() {
-            @Override
-            public Locale get() {
-                return Locale.ENGLISH;
-            }
-        });
-
-        //Locale.setDefault(Locale.ENGLISH);
         Assert.assertEquals("Wrong summary message created.", expectedMessage, ResultSummary.createSummary(result));
 
         verify(result);

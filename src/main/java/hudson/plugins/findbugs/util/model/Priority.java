@@ -1,4 +1,3 @@
-// CHECKSTYLE:OFF
 package hudson.plugins.findbugs.util.model;
 
 import hudson.plugins.findbugs.util.Messages;
@@ -14,7 +13,12 @@ import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
  * @author Ulli Hafner
  */
 public enum Priority {
-    HIGH, NORMAL, LOW;
+    /** High priority. */
+    HIGH,
+    /** Normal priority. */
+    NORMAL,
+    /** Low priority. */
+    LOW;
 
     /**
      * Converts a String priority to an actual enumeration value.

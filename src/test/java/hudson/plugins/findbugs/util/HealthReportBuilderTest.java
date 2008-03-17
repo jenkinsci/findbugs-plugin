@@ -1,21 +1,21 @@
 package hudson.plugins.findbugs.util;
 
+import static org.junit.Assert.*;
 import hudson.model.HealthReport;
-import hudson.plugins.findbugs.Messages;
 
 import java.util.List;
-import java.util.Locale;
-
-import junit.framework.TestCase;
 
 import org.junit.Test;
-import org.jvnet.localizer.LocaleProvider;
 
 /**
  * Tests the class {@link HealthReportBuilder}.
  */
 @edu.umd.cs.findbugs.annotations.SuppressWarnings("SIC")
-public class HealthReportBuilderTest extends TestCase {
+public class HealthReportBuilderTest extends AbstractEnglishLocaleTest {
+    /** Multiple items text. */
+    private static final String MULTIPLE_ITEMS = "%d items";
+    /** Single item text. */
+    private static final String ONE_ITEM = "One item";
     /** Number of elements in a series with failure threshold. */
     private static final int THRESHOLD_SERIES_SIZE = 2;
     /** Number of elements in a series with healthy threshold. */
@@ -41,16 +41,9 @@ public class HealthReportBuilderTest extends TestCase {
      */
     @Test
     public void testDisplay() {
-        LocaleProvider.setProvider(new LocaleProvider() {
-            /** {@inheritDoc} */
-            @Override
-            public Locale get() {
-                return Locale.ENGLISH;
-            }
-        });
-        assertEquals(ERROR_MESSAGE, "FindBugs: 0 warnings found.", createHealthReport(true, 50, 150, 0).getDescription());
-        assertEquals(ERROR_MESSAGE, "FindBugs: 1 warning found.", createHealthReport(true, 50, 150, 1).getDescription());
-        assertEquals(ERROR_MESSAGE, "FindBugs: 2 warnings found.", createHealthReport(true, 50, 150, 2).getDescription());
+        assertEquals(ERROR_MESSAGE, "0 items", createHealthReport(true, 50, 150, 0).getDescription());
+        assertEquals(ERROR_MESSAGE, "One item", createHealthReport(true, 50, 150, 1).getDescription());
+        assertEquals(ERROR_MESSAGE, "2 items", createHealthReport(true, 50, 150, 2).getDescription());
     }
 
     /**
@@ -112,9 +105,7 @@ public class HealthReportBuilderTest extends TestCase {
      */
     @Test
     public void testHealthySeriesCalculator() {
-        HealthReportBuilder builder = new HealthReportBuilder(true, 0, true, 10, 30,
-                Messages.FindBugs_ResultAction_HealthReportSingleItem(),
-                Messages.FindBugs_ResultAction_HealthReportMultipleItem("%d"));
+        HealthReportBuilder builder = new HealthReportBuilder(true, 0, true, 10, 30, ONE_ITEM, MULTIPLE_ITEMS);
 
         List<Integer> series = builder.createSeries(5);
         assertEquals(WRONG_NUMBER, HEALTHY_SERIES_SIZE, series.size());
@@ -152,9 +143,7 @@ public class HealthReportBuilderTest extends TestCase {
      */
     @Test
     public void testThresholdSeriesCalculator() {
-        HealthReportBuilder builder = new HealthReportBuilder(true, 10, false, 20, 50,
-                Messages.FindBugs_ResultAction_HealthReportSingleItem(),
-                Messages.FindBugs_ResultAction_HealthReportMultipleItem("%d"));
+        HealthReportBuilder builder = new HealthReportBuilder(true, 10, false, 20, 50, ONE_ITEM, MULTIPLE_ITEMS);
 
         List<Integer> series = builder.createSeries(5);
         assertEquals(WRONG_NUMBER, THRESHOLD_SERIES_SIZE, series.size());
@@ -177,9 +166,7 @@ public class HealthReportBuilderTest extends TestCase {
      */
     @Test
     public void testIssue796() {
-        HealthReportBuilder builder = new HealthReportBuilder(false, 0, true, 1, 10,
-                Messages.FindBugs_ResultAction_HealthReportSingleItem(),
-                Messages.FindBugs_ResultAction_HealthReportMultipleItem("%d"));
+        HealthReportBuilder builder = new HealthReportBuilder(false, 0, true, 1, 10, ONE_ITEM, MULTIPLE_ITEMS);
 
         List<Integer> series = builder.createSeries(1);
         assertEquals(WRONG_NUMBER, HEALTHY_SERIES_SIZE, series.size());
@@ -208,9 +195,7 @@ public class HealthReportBuilderTest extends TestCase {
      * @return the actual healthiness
      */
     private HealthReport createHealthReport(final boolean isEnabled, final int min, final int max, final int actual) {
-        HealthReportBuilder builder = new HealthReportBuilder(false, 0, isEnabled, min, max,
-                Messages.FindBugs_ResultAction_HealthReportSingleItem(),
-                Messages.FindBugs_ResultAction_HealthReportMultipleItem("%d"));
+        HealthReportBuilder builder = new HealthReportBuilder(false, 0, isEnabled, min, max, ONE_ITEM, MULTIPLE_ITEMS);
         return builder.computeHealth(actual);
     }
 }

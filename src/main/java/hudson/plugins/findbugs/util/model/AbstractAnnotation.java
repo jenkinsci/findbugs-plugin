@@ -13,8 +13,7 @@ import org.apache.commons.lang.StringUtils;
  *  A base class for annotations.
  */
 @SuppressWarnings("PMD.CyclomaticComplexity")
-// FIXME: make members final
-public abstract class AbstractAnnotation implements FileAnnotation, Serializable, Comparable<AbstractAnnotation> {
+public abstract class AbstractAnnotation implements FileAnnotation, Serializable {
     /** Unique identifier of this class. */
     private static final long serialVersionUID = -1092014926477547148L;
     /** Current key of this annotation. */
@@ -25,7 +24,7 @@ public abstract class AbstractAnnotation implements FileAnnotation, Serializable
     /** The priority of this annotation. */
     private final Priority priority;
     /** Unique key of this annotation. */
-    private long key;
+    private final long key;
     /** The ordered list of line ranges that show the origin of the annotation in the associated file. */
     private final List<LineRange> lineRanges;
     /** Primary line number of this warning, i.e., the start line of the first line range. */
@@ -34,7 +33,7 @@ public abstract class AbstractAnnotation implements FileAnnotation, Serializable
     private String fileName;
     /** The name of the maven or ant module that contains this annotation. */
     private String moduleName;
-    /** The name of package (or namespace) that contains this annotation. */
+    /** The name of the package (or name space) that contains this annotation. */
     private String packageName;
 
     /**
@@ -61,17 +60,6 @@ public abstract class AbstractAnnotation implements FileAnnotation, Serializable
     }
 
     /** {@inheritDoc} */
-    public int compareTo(final AbstractAnnotation otherTask) {
-        if (getKey() == otherTask.getKey()) {
-            return 0;
-        }
-        else if (getKey() > otherTask.getKey()) {
-            return 1;
-        }
-        return -1;
-    }
-
-    /** {@inheritDoc} */
     public String getMessage() {
         return message;
     }
@@ -79,16 +67,6 @@ public abstract class AbstractAnnotation implements FileAnnotation, Serializable
     /** {@inheritDoc} */
     public Priority getPriority() {
         return priority;
-    }
-
-    /**
-     * Sets the unique key of this task.
-     *
-     * @param key the key
-     */
-    // FIXME: required?
-    public void setKey(final long key) {
-        this.key = key;
     }
 
     /** {@inheritDoc} */

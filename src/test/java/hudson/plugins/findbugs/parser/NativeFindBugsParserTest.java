@@ -2,6 +2,7 @@ package hudson.plugins.findbugs.parser;
 
 import static org.junit.Assert.*;
 import hudson.plugins.findbugs.FindBugsMessages;
+import hudson.plugins.findbugs.util.AbstractEnglishLocaleTest;
 import hudson.plugins.findbugs.util.model.FileAnnotation;
 import hudson.plugins.findbugs.util.model.LineRange;
 import hudson.plugins.findbugs.util.model.MavenModule;
@@ -10,7 +11,6 @@ import hudson.plugins.findbugs.util.model.Priority;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Locale;
 
 import org.dom4j.DocumentException;
 import org.junit.Test;
@@ -20,7 +20,7 @@ import org.xml.sax.SAXException;
  *  Tests the extraction of FindBugs analysis results.
  */
 @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-public class NativeFindBugsParserTest {
+public class NativeFindBugsParserTest extends AbstractEnglishLocaleTest {
     /** File in native format. */
     private static final String FINDBUGS_NATIVE_XML = "findbugs-native.xml";
     /** Number of warnings contained in files. */
@@ -112,7 +112,6 @@ public class NativeFindBugsParserTest {
             final int ranges1, final String fileName2, final String packageName2, final int start2, final int end2, final int ranges2)
             throws IOException, DocumentException, SAXException {
    // CHECKSTYLE:ON
-        Locale.setDefault(Locale.ENGLISH);
         FindBugsMessages.getInstance().initialize();
 
         MavenModule module = parseFile(findbugsFile);
