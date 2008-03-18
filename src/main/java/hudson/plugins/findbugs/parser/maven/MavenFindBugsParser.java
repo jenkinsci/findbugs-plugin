@@ -142,7 +142,7 @@ public class MavenFindBugsParser {
 
         BugCollection module = (BugCollection)digester.parse(file);
         if (module == null) {
-            throw new IllegalArgumentException("Input stream is not in maven-findbugs-plugin format.");
+            throw new SAXException("Input stream is not in maven-findbugs-plugin format.");
         }
 
         return convert(module, moduleName);

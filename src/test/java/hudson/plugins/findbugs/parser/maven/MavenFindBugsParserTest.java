@@ -85,7 +85,7 @@ public class MavenFindBugsParserTest {
     /**
      * Checks whether we correctly detect an other file.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = SAXException.class)
     public void scanOtherFile() throws IOException, SAXException {
         parseFile("otherfile.xml");
     }

@@ -11,7 +11,7 @@ import java.util.Set;
 public class File {
     /** Name of this class. */
     private String classname;
-    /** All files of this bug collection. */
+    /** All bugs in this file. */
     private final Set<BugInstance> bugInstances = new HashSet<BugInstance>();
 
     /**

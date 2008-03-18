@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
+import java.net.URISyntaxException;
 
 import junit.framework.Assert;
 
@@ -79,10 +80,11 @@ public class BugSerializeModelTest extends AbstractSerializeModelTest {
      * Test whether a serialized project is the same object after deserialization of the file format of release 2.2.
      *
      * @throws IOException Signals that an I/O exception has occurred.
+     * @throws URISyntaxException if URI is wrong
      */
     @Test
-    public void ensureSameXmlSerialization() throws IOException {
-        XmlFile xmlFile = new XmlFile(XSTREAM, new File(BugSerializeModelTest.class.getResource("project.ser.xml").getFile()));
+    public void ensureSameXmlSerialization() throws IOException, URISyntaxException {
+        XmlFile xmlFile = new XmlFile(XSTREAM, new File(BugSerializeModelTest.class.getResource("project.ser.xml").toURI()));
         Object deserialized = xmlFile.read();
 
         FileAnnotation[] files = (FileAnnotation[]) deserialized;
