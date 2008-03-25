@@ -3,6 +3,4 @@ release.properties
 target
 release-it.bat
 release.bat
-.project
-.settings
 project.ser
