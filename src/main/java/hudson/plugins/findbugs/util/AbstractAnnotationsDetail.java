@@ -1,8 +1,7 @@
-package hudson.plugins.findbugs;
+package hudson.plugins.findbugs.util;
 
 import hudson.model.AbstractBuild;
 import hudson.model.ModelObject;
-import hudson.plugins.findbugs.util.ChartBuilder;
 import hudson.plugins.findbugs.util.model.AnnotationContainer;
 import hudson.plugins.findbugs.util.model.AnnotationProvider;
 import hudson.plugins.findbugs.util.model.FileAnnotation;
@@ -17,21 +16,22 @@ import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
 /**
- * Base class for warning detail objects.
+ * Base class for annotation detail objects. Instances of this class could be used for
+ * Hudson Stapler objects that contain a subset of annotations.
  */
-public abstract class AbstractWarningsDetail extends AnnotationContainer implements ModelObject {
-    /** Current build as owner of this action. */
+public abstract class AbstractAnnotationsDetail extends AnnotationContainer implements ModelObject {
+    /** Current build as owner of this object. */
     private final AbstractBuild<?, ?> owner;
 
     /**
      * Creates a new instance of <code>AbstractWarningsDetail</code>.
      *
      * @param owner
-     *            current build as owner of this action.
+     *            current build as owner of this object.
      * @param annotations
      *            the set of warnings represented by this object
      */
-    public AbstractWarningsDetail(final AbstractBuild<?, ?> owner, final Collection<FileAnnotation> annotations) {
+    public AbstractAnnotationsDetail(final AbstractBuild<?, ?> owner, final Collection<FileAnnotation> annotations) {
         super();
         this.owner = owner;
 
@@ -39,7 +39,7 @@ public abstract class AbstractWarningsDetail extends AnnotationContainer impleme
     }
 
     /**
-     * Returns the build as owner of this action.
+     * Returns the build as owner of this object.
      *
      * @return the owner
      */
@@ -48,9 +48,9 @@ public abstract class AbstractWarningsDetail extends AnnotationContainer impleme
     }
 
     /**
-     * Returns whether this result belongs to the last build.
+     * Returns whether this build is the last available build.
      *
-     * @return <code>true</code> if this result belongs to the last build
+     * @return <code>true</code> if this build is the last available build
      */
     public final boolean isCurrent() {
         return owner.getProject().getLastBuild().number == owner.number;

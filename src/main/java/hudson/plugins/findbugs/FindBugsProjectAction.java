@@ -21,7 +21,7 @@ public class FindBugsProjectAction extends AbstractProjectAction<FindBugsResultA
      *            the project that owns this action
      */
     public FindBugsProjectAction(final AbstractProject<?, ?> project) {
-        super(project, FindBugsResultAction.class, FindBugsDescriptor.FINDBUGS_ACTION_LOGO, "../lastBuild/findbugsResult");
+        super(project, FindBugsResultAction.class, FindBugsDescriptor.ACTION_ICON, FindBugsDescriptor.PLUGIN_NAME);
     }
 
     /** {@inheritDoc} */
@@ -31,7 +31,7 @@ public class FindBugsProjectAction extends AbstractProjectAction<FindBugsResultA
 
     /** {@inheritDoc} */
     public String getUrlName() {
-        return "findbugs";
+        return FindBugsDescriptor.PLUGIN_NAME;
     }
 
     /** {@inheritDoc} */

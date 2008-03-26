@@ -1,6 +1,7 @@
 package hudson.plugins.findbugs;
 
 import hudson.model.AbstractBuild;
+import hudson.plugins.findbugs.util.AbstractAnnotationsDetail;
 import hudson.plugins.findbugs.util.SourceDetail;
 import hudson.plugins.findbugs.util.model.FileAnnotation;
 
@@ -12,7 +13,7 @@ import org.kohsuke.stapler.StaplerResponse;
 /**
  * Result object to visualize the new warnings in a build.
  */
-public class NewWarningsDetail extends AbstractWarningsDetail {
+public class NewWarningsDetail extends AbstractAnnotationsDetail {
     /** Unique identifier of this class. */
     private static final long serialVersionUID = 5093487322493056475L;
 

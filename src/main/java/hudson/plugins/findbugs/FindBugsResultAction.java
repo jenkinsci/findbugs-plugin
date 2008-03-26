@@ -62,7 +62,7 @@ public class FindBugsResultAction extends AbstractResultAction<FindBugsResult> {
     /** {@inheritDoc} */
     @Override
     public String getIconUrl() {
-        return FindBugsDescriptor.FINDBUGS_ACTION_LOGO;
+        return FindBugsDescriptor.ACTION_ICON;
     }
 
     /** {@inheritDoc} */

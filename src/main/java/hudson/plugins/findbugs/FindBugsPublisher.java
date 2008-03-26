@@ -11,6 +11,7 @@ import hudson.plugins.findbugs.parser.FindBugsCollector;
 import hudson.plugins.findbugs.util.AbortException;
 import hudson.plugins.findbugs.util.HealthAwarePublisher;
 import hudson.plugins.findbugs.util.HealthReportBuilder;
+import hudson.plugins.findbugs.util.PluginDescriptor;
 import hudson.plugins.findbugs.util.model.JavaProject;
 import hudson.tasks.Publisher;
 
@@ -28,7 +29,7 @@ public class FindBugsPublisher extends HealthAwarePublisher {
     /** Default FindBugs pattern. */
     private static final String DEFAULT_PATTERN = "**/findbugs.xml";
     /** Descriptor of this publisher. */
-    public static final FindBugsDescriptor FIND_BUGS_DESCRIPTOR = new FindBugsDescriptor();
+    public static final PluginDescriptor FIND_BUGS_DESCRIPTOR = new FindBugsDescriptor();
 
     /**
      * Creates a new instance of <code>FindBugsPublisher</code>.

@@ -1,6 +1,7 @@
 package hudson.plugins.findbugs;
 
 import hudson.model.AbstractBuild;
+import hudson.plugins.findbugs.util.AbstractAnnotationsDetail;
 import hudson.plugins.findbugs.util.model.FileAnnotation;
 
 import java.util.Set;
@@ -8,7 +9,7 @@ import java.util.Set;
 /**
  * Result object to visualize the fixed warnings in a build.
  */
-public class FixedWarningsDetail extends AbstractWarningsDetail {
+public class FixedWarningsDetail extends AbstractAnnotationsDetail {
     /** Unique identifier of this class. */
     private static final long serialVersionUID = -8601095040123486522L;
 

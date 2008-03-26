@@ -46,14 +46,14 @@ public abstract class AbstractProjectAction<T extends ResultAction<?>> implement
      * @param iconUrl
      *            the icon URL of this action: it will be shown as soon as a
      *            result is available.
-     * @param resultsUrl
-     *            URL to the results of the last build.
+     * @param pluginName
+     *            the plug-in name
      */
-    public AbstractProjectAction(final AbstractProject<?, ?> project, final Class<T> resultActionType, final String iconUrl, final String resultsUrl) {
+    public AbstractProjectAction(final AbstractProject<?, ?> project, final Class<T> resultActionType, final String iconUrl, final String pluginName) {
         this.project = project;
         this.resultActionType = resultActionType;
         this.iconUrl = iconUrl;
-        this.resultsUrl = resultsUrl;
+        this.resultsUrl = "../lastBuild/" + pluginName + "Result";
     }
 
     /**

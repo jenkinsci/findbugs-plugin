@@ -7,7 +7,7 @@ import hudson.plugins.findbugs.util.model.Priority;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * A serializable Java Bean class representing an open task.
+ * A serializable Java Bean class representing a warning.
  * <p>
  * Note: this class has a natural ordering that is inconsistent with equals.
  * </p>

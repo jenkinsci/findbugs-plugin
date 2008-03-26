@@ -1,18 +1,8 @@
 package hudson.plugins.findbugs;
 
-import hudson.maven.AbstractMavenProject;
-import hudson.model.AbstractProject;
-import hudson.plugins.findbugs.util.ThresholdValidator;
-import hudson.tasks.BuildStepDescriptor;
-import hudson.tasks.Publisher;
-import hudson.util.FormFieldValidator;
-
-import java.io.IOException;
-
-import javax.servlet.ServletException;
+import hudson.plugins.findbugs.util.PluginDescriptor;
 
 import org.kohsuke.stapler.StaplerRequest;
-import org.kohsuke.stapler.StaplerResponse;
 
 /**
  * Descriptor for the class {@link FindBugsPublisher}. Used as a singleton. The
@@ -20,9 +10,11 @@ import org.kohsuke.stapler.StaplerResponse;
  *
  * @author Ulli Hafner
  */
-public final class FindBugsDescriptor extends BuildStepDescriptor<Publisher> {
+public final class FindBugsDescriptor extends PluginDescriptor {
+    /** Plug-in name. */
+    static final String PLUGIN_NAME = "findbugs";
     /** Icon to use for the result and project action. */
-    public static final String FINDBUGS_ACTION_LOGO = "/plugin/findbugs/icons/findbugs-32x32.gif";
+    static final String ACTION_ICON = "/plugin/findbugs/icons/findbugs-32x32.gif";
 
     /**
      * Instantiates a new find bugs descriptor.
@@ -39,45 +31,14 @@ public final class FindBugsDescriptor extends BuildStepDescriptor<Publisher> {
 
     /** {@inheritDoc} */
     @Override
-    public String getHelpFile() {
-        return "/plugin/findbugs/help.html";
+    protected String getPluginName() {
+        return PLUGIN_NAME;
     }
 
-    /**
-     * Performs on-the-fly validation on the file mask.
-     *
-     * @param request
-     *            Stapler request
-     * @param response
-     *            Stapler response
-     */
-    public void doCheckPattern(final StaplerRequest request, final StaplerResponse response)
-            throws IOException, ServletException {
-        new FormFieldValidator.WorkspaceFileMask(request, response).process();
-    }
-
-    /**
-     * Performs on-the-fly validation on the bugs threshold.
-     *
-     * @param request
-     *            Stapler request
-     * @param response
-     *            Stapler response
-     */
-    public void doCheckThreshold(final StaplerRequest request, final StaplerResponse response)
-            throws IOException, ServletException {
-        new ThresholdValidator(request, response).process();
-    }
 
     /** {@inheritDoc} */
     @Override
     public FindBugsPublisher newInstance(final StaplerRequest request) throws FormException {
-        return request.bindParameters(FindBugsPublisher.class, "findbugs_");
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean isApplicable(final Class<? extends AbstractProject> jobType) {
-        return !AbstractMavenProject.class.isAssignableFrom(jobType);
+        return request.bindParameters(FindBugsPublisher.class, PLUGIN_NAME + "_");
     }
 }

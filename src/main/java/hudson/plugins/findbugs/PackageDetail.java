@@ -1,6 +1,7 @@
 package hudson.plugins.findbugs;
 
 import hudson.model.AbstractBuild;
+import hudson.plugins.findbugs.util.AbstractAnnotationsDetail;
 import hudson.plugins.findbugs.util.SourceDetail;
 import hudson.plugins.findbugs.util.model.JavaPackage;
 
@@ -10,7 +11,7 @@ import org.kohsuke.stapler.StaplerResponse;
 /**
  * Result object to visualize the package statistics of a module.
  */
-public class PackageDetail extends AbstractWarningsDetail {
+public class PackageDetail extends AbstractAnnotationsDetail {
     /** Unique identifier of this class. */
     private static final long serialVersionUID = -5315146140343619856L;
     /** The package to show the details for. */

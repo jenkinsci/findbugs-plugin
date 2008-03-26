@@ -34,13 +34,13 @@ public class FindBugsReporterDescriptor extends MavenReporterDescriptor {
     /** {@inheritDoc} */
     @Override
     public String getHelpFile() {
-        return "/plugin/findbugs/help.html";
+        return "/plugin/" + FindBugsDescriptor.PLUGIN_NAME + "/help.html";
     }
 
     /** {@inheritDoc} */
     @Override
     public MavenReporter newInstance(final StaplerRequest request) throws FormException {
-        return request.bindParameters(FindBugsReporter.class, "findbugs_");
+        return request.bindParameters(FindBugsReporter.class, FindBugsDescriptor.PLUGIN_NAME + "_");
     }
 }
 
