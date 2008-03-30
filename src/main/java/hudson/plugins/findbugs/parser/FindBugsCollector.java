@@ -32,7 +32,7 @@ public class FindBugsCollector implements FileCallable<JavaProject> {
     /** Determines whether to skip old files. */
     private static final boolean SKIP_OLD_FILES = false;
     /** Logger. */
-    private final transient PrintStream logger;
+    private transient PrintStream logger;
     /** Build time stamp, only newer files are considered. */
     private final long buildTime;
     /** Ant file-set pattern to scan for FindBugs files. */
@@ -73,19 +73,19 @@ public class FindBugsCollector implements FileCallable<JavaProject> {
 
                 if (SKIP_OLD_FILES && findbugsFile.lastModified() < buildTime) {
                     String message = Messages.FindBugs_FindBugsCollector_Error_FileNotUpToDate(findbugsFile);
-                    logger.println(message);
+                    getLogger().println(message);
                     module.setError(message);
                     continue;
                 }
                 if (!findbugsFile.canRead()) {
                     String message = Messages.FindBugs_FindBugsCollector_Error_NoPermission(findbugsFile);
-                    logger.println(message);
+                    getLogger().println(message);
                     module.setError(message);
                     continue;
                 }
                 if (new FilePath(findbugsFile).length() <= 0) {
                     String message = Messages.FindBugs_FindBugsCollector_Error_EmptyFile(findbugsFile);
-                    logger.println(message);
+                    getLogger().println(message);
                     module.setError(message);
                     continue;
                 }
@@ -95,7 +95,7 @@ public class FindBugsCollector implements FileCallable<JavaProject> {
             }
         }
         catch (InterruptedException exception) {
-            logger.println("Parsing has been canceled.");
+            getLogger().println("Parsing has been canceled.");
         }
         return project;
     }
@@ -121,17 +121,17 @@ public class FindBugsCollector implements FileCallable<JavaProject> {
             FilePath filePath = new FilePath(findbugsFile);
             MavenFindBugsParser mavenFindBugsParser = new MavenFindBugsParser();
             if (mavenFindBugsParser.accepts(filePath.read())) {
-                logger.println("Activating parser for maven-findbugs-plugin <= 1.1.1.");
+                getLogger().println("Activating parser for maven-findbugs-plugin <= 1.1.1.");
                 module = mavenFindBugsParser.parse(filePath.read(), emptyModule.getName(), workspace);
                 module.setError(Messages.FindBugs_FindBugsCollector_Error_OldMavenPlugin(findbugsFile));
             }
             else {
-                logger.println("Activating parser for findbugs ant task, batch script, or maven-findbugs-plugin > 1.1.1.");
+                getLogger().println("Activating parser for findbugs ant task, batch script, or maven-findbugs-plugin > 1.1.1.");
                 NativeFindBugsParser parser = new NativeFindBugsParser();
                 String moduleRoot = StringUtils.substringBefore(findbugsFile.getPath().replace('\\', '/'), "/target/");
                 module = parser.parse(filePath.read(), moduleRoot, emptyModule.getName());
             }
-            logger.println("Successfully parsed findbugs file " + findbugsFile + " of module "
+            getLogger().println("Successfully parsed findbugs file " + findbugsFile + " of module "
                     + module.getName() + " with " + module.getNumberOfAnnotations() + " warnings.");
         }
         catch (IOException e) {
@@ -146,7 +146,7 @@ public class FindBugsCollector implements FileCallable<JavaProject> {
         if (exception != null) {
             String errorMessage = Messages.FindBugs_FindBugsCollector_Error_Exception(findbugsFile)
                     + "\n\n" + ExceptionUtils.getStackTrace(exception);
-            logger.println(errorMessage);
+            getLogger().println(errorMessage);
             module.setError(errorMessage);
         }
         return module;
@@ -196,5 +196,17 @@ public class FindBugsCollector implements FileCallable<JavaProject> {
         fileSet.setIncludes(filePattern);
 
         return fileSet.getDirectoryScanner(project).getIncludedFiles();
+    }
+
+    /**
+     * Returns the logger.
+     *
+     * @return the logger
+     */
+    private PrintStream getLogger() {
+        if (logger == null) {
+            logger = System.out;
+        }
+        return logger;
     }
 }
