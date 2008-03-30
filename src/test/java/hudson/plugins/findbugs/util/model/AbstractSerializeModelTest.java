@@ -1,14 +1,14 @@
 package hudson.plugins.findbugs.util.model;
 
+import hudson.XmlFile;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.util.Collection;
 import java.util.Locale;
 
@@ -104,20 +104,20 @@ public abstract class AbstractSerializeModelTest {
         verifyProject(project);
         verifyFirstAnnotation(project);
 
-        try {
-            OutputStream fout = new FileOutputStream("project.ser");
-            ObjectOutputStream out = new ObjectOutputStream(fout);
-
-            out.writeObject(project);
-            out.flush();
-            out.close();
-        }
-        catch (FileNotFoundException exception) {
-            // ignore
-        }
-        catch (IOException exception) {
-            // ignore
-        }
+//        try {
+//            OutputStream fout = new FileOutputStream("project.ser");
+//            ObjectOutputStream out = new ObjectOutputStream(fout);
+//
+//            out.writeObject(project);
+//            out.flush();
+//            out.close();
+//        }
+//        catch (FileNotFoundException exception) {
+//            // ignore
+//        }
+//        catch (IOException exception) {
+//            // ignore
+//        }
 
         return project;
     }
@@ -336,6 +336,8 @@ public abstract class AbstractSerializeModelTest {
     @Test
     public void testObjectIsSameAfterDeserialization() throws IOException, ClassNotFoundException {
         JavaProject original = createOriginal();
+//        Collection<FileAnnotation> files = original.getAnnotations();
+//        createXmlFile(new File("/project.ser.xml")).write(files.toArray(new FileAnnotation[files.size()]));
 
         ByteArrayOutputStream outputStream = serialize(original);
         JavaProject copy = deserialize(outputStream.toByteArray());
@@ -343,6 +345,14 @@ public abstract class AbstractSerializeModelTest {
         verifyProject(copy);
         verifyFirstAnnotation(copy);
     }
+
+    /**
+     * Creates the XML serialization file.
+     *
+     * @param file the file for the XML data
+     * @return the XML serialization file
+     */
+    protected abstract XmlFile createXmlFile(final File file);
 
     /**
      * Deserializes an object from the specified data and returns it.
