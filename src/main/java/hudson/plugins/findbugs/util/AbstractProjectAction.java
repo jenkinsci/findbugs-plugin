@@ -119,7 +119,12 @@ public abstract class AbstractProjectAction<T extends ResultAction<?>> implement
     public ResultAction<?> getLastAction() {
         AbstractBuild<?, ?> lastBuild = project.getLastBuild();
         if (lastBuild != null) {
-            return lastBuild.getAction(resultActionType);
+            if (lastBuild.isBuilding()) {
+                lastBuild = lastBuild.getPreviousBuild();
+            }
+            if (lastBuild != null) {
+                return lastBuild.getAction(resultActionType);
+            }
         }
         return null;
     }
