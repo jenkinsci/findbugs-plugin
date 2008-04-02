@@ -1,8 +1,6 @@
-package hudson.plugins.findbugs;
+package hudson.plugins.findbugs.util;
 
 import hudson.model.AbstractBuild;
-import hudson.plugins.findbugs.util.AbstractAnnotationsDetail;
-import hudson.plugins.findbugs.util.SourceDetail;
 import hudson.plugins.findbugs.util.model.JavaPackage;
 
 import org.kohsuke.stapler.StaplerRequest;
@@ -16,6 +14,8 @@ public class PackageDetail extends AbstractAnnotationsDetail {
     private static final long serialVersionUID = -5315146140343619856L;
     /** The package to show the details for. */
     private final JavaPackage javaPackage;
+    /** Header in jelly script. */
+    private final String header;
 
     /**
      * Creates a new instance of <code>ModuleDetail</code>.
@@ -24,15 +24,27 @@ public class PackageDetail extends AbstractAnnotationsDetail {
      *            current build as owner of this action.
      * @param javaPackage
      *            the package to show the details for
+     * @param header
+     *            header to be shown on detail page
      */
-    public PackageDetail(final AbstractBuild<?, ?> owner, final JavaPackage javaPackage) {
+    public PackageDetail(final AbstractBuild<?, ?> owner, final JavaPackage javaPackage, final String header) {
         super(owner, javaPackage.getAnnotations());
         this.javaPackage = javaPackage;
+        this.header = header;
     }
 
     /** {@inheritDoc} */
     public String getDisplayName() {
         return javaPackage.getName();
+    }
+
+    /**
+     * Returns the header for the detail screen.
+     *
+     * @return the header
+     */
+    public String getHeader() {
+        return header + " - " + Messages.PackageDetail_header(javaPackage.getName());
     }
 
     /**

@@ -7,6 +7,8 @@ import hudson.plugins.findbugs.parser.Bug;
 import hudson.plugins.findbugs.util.AnnotationDifferencer;
 import hudson.plugins.findbugs.util.ChartRenderer;
 import hudson.plugins.findbugs.util.ErrorDetail;
+import hudson.plugins.findbugs.util.ModuleDetail;
+import hudson.plugins.findbugs.util.PackageDetail;
 import hudson.plugins.findbugs.util.SourceDetail;
 import hudson.plugins.findbugs.util.model.AnnotationStream;
 import hudson.plugins.findbugs.util.model.FileAnnotation;
@@ -500,11 +502,11 @@ public class FindBugsResult implements ModelObject, Serializable {
                     return new SourceDetail(getOwner(), getProject().getAnnotation(link));
                 }
                 else {
-                    return new PackageDetail(getOwner(), getModules().iterator().next().getPackage(link));
+                    return new PackageDetail(getOwner(), getModules().iterator().next().getPackage(link), Messages.FindBugs_Detail_header());
                 }
             }
             else {
-                return new ModuleDetail(getOwner(), getModule(link));
+                return new ModuleDetail(getOwner(), getModule(link), Messages.FindBugs_Detail_header());
             }
         }
     }
