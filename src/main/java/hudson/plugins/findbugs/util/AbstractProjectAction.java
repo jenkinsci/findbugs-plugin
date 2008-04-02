@@ -53,7 +53,7 @@ public abstract class AbstractProjectAction<T extends ResultAction<?>> implement
         this.project = project;
         this.resultActionType = resultActionType;
         this.iconUrl = iconUrl;
-        this.resultsUrl = "../lastBuild/" + pluginName + "Result";
+        this.resultsUrl = pluginName + "Result";
     }
 
     /**
@@ -117,14 +117,9 @@ public abstract class AbstractProjectAction<T extends ResultAction<?>> implement
      * @return the last valid result action, or <code>null</code> if no such action is found
      */
     public ResultAction<?> getLastAction() {
-        AbstractBuild<?, ?> lastBuild = project.getLastBuild();
+        AbstractBuild<?, ?> lastBuild = getLastFinishedBuild();
         if (lastBuild != null) {
-            if (lastBuild.isBuilding()) {
-                lastBuild = lastBuild.getPreviousBuild();
-            }
-            if (lastBuild != null) {
-                return lastBuild.getAction(resultActionType);
-            }
+            return lastBuild.getAction(resultActionType);
         }
         return null;
     }
@@ -200,7 +195,24 @@ public abstract class AbstractProjectAction<T extends ResultAction<?>> implement
      *             in case of an error
      */
     public void doIndex(final StaplerRequest request, final StaplerResponse response) throws IOException {
-        response.sendRedirect2(resultsUrl);
+        AbstractBuild<?, ?> build = getLastFinishedBuild();
+        if (build != null) {
+            response.sendRedirect2("../" + build.getNumber() + "/" + resultsUrl);
+        }
+    }
+
+    /**
+     * Returns the last finished build.
+     *
+     * @return the last finished build or <code>null</code> if there is no
+     *         such build
+     */
+    private AbstractBuild<?, ?> getLastFinishedBuild() {
+        AbstractBuild<?, ?> lastBuild = project.getLastBuild();
+        while (lastBuild != null && lastBuild.isBuilding()) {
+            lastBuild = lastBuild.getPreviousBuild();
+        }
+        return lastBuild;
     }
 
     /**
