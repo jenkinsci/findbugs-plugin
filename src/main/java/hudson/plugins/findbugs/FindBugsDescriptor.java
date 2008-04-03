@@ -35,7 +35,6 @@ public final class FindBugsDescriptor extends PluginDescriptor {
         return PLUGIN_NAME;
     }
 
-
     /** {@inheritDoc} */
     @Override
     public FindBugsPublisher newInstance(final StaplerRequest request) throws FormException {

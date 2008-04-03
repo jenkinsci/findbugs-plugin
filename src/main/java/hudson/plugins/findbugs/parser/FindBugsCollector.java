@@ -4,6 +4,7 @@ import hudson.FilePath;
 import hudson.FilePath.FileCallable;
 import hudson.plugins.findbugs.Messages;
 import hudson.plugins.findbugs.parser.maven.MavenFindBugsParser;
+import hudson.plugins.findbugs.util.MavenModuleDetector;
 import hudson.plugins.findbugs.util.model.JavaProject;
 import hudson.plugins.findbugs.util.model.MavenModule;
 import hudson.remoting.VirtualChannel;
@@ -68,7 +69,7 @@ public class FindBugsCollector implements FileCallable<JavaProject> {
             for (String file : findBugsFiles) {
                 File findbugsFile = new File(workspace, file);
 
-                String moduleName = guessModuleName(findbugsFile.getAbsolutePath());
+                String moduleName = MavenModuleDetector.guessModuleName(findbugsFile.getAbsolutePath());
                 MavenModule module = new MavenModule(moduleName);
 
                 if (SKIP_OLD_FILES && findbugsFile.lastModified() < buildTime) {
@@ -150,34 +151,6 @@ public class FindBugsCollector implements FileCallable<JavaProject> {
             module.setError(errorMessage);
         }
         return module;
-    }
-
-    /**
-     * Guesses the module name based on the specified file name. Actually works
-     * only for maven projects.
-     *
-     * @param fileName
-     *            the filename to guess the module name from
-     * @return the module name
-     */
-    public static String guessModuleName(final String fileName) {
-        String separator;
-        if (fileName.contains(SLASH)) {
-            separator = SLASH;
-        }
-        else {
-            separator = "\\";
-        }
-        String path = StringUtils.substringBefore(fileName, separator + "target");
-        if (fileName.equals(path)) {
-            return "";
-        }
-        if (path.contains(separator)) {
-            return StringUtils.substringAfterLast(path, separator);
-        }
-        else {
-            return path;
-        }
     }
 
     /**
