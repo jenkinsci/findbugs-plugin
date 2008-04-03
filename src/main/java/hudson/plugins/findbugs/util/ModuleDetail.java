@@ -3,6 +3,7 @@ package hudson.plugins.findbugs.util;
 import hudson.model.AbstractBuild;
 import hudson.plugins.findbugs.util.model.JavaPackage;
 import hudson.plugins.findbugs.util.model.MavenModule;
+import hudson.plugins.findbugs.util.model.WorkspaceFile;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -43,7 +44,7 @@ public class ModuleDetail extends AbstractAnnotationsDetail {
      * @return the header
      */
     public String getHeader() {
-        return header + " - " + Messages.ModuleDetail_header(module.getName());
+        return header + " - " + Messages.ModuleDetail_header() + " " + module.getName();
     }
 
     /** {@inheritDoc} */
@@ -130,6 +131,15 @@ public class ModuleDetail extends AbstractAnnotationsDetail {
      */
     public String getToolTip(final String packageName) {
         return module.getPackage(packageName).getToolTip();
+    }
+
+    /**
+     * Gets the files of this module that have annotations.
+     *
+     * @return the files with annotations
+     */
+    public Collection<WorkspaceFile> getFiles() {
+        return module.getFiles();
     }
 }
 

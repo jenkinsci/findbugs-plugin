@@ -2,6 +2,9 @@ package hudson.plugins.findbugs.util;
 
 import hudson.model.AbstractBuild;
 import hudson.plugins.findbugs.util.model.JavaPackage;
+import hudson.plugins.findbugs.util.model.WorkspaceFile;
+
+import java.util.Collection;
 
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
@@ -44,7 +47,7 @@ public class PackageDetail extends AbstractAnnotationsDetail {
      * @return the header
      */
     public String getHeader() {
-        return header + " - " + Messages.PackageDetail_header(javaPackage.getName());
+        return header + " - " + getPackageCategoryName() + " " + javaPackage.getName();
     }
 
     /**
@@ -68,6 +71,15 @@ public class PackageDetail extends AbstractAnnotationsDetail {
      */
     public Object getDynamic(final String link, final StaplerRequest request, final StaplerResponse response) {
         return new SourceDetail(getOwner(), getAnnotation(link));
+    }
+
+    /**
+     * Gets the files of this module that have annotations.
+     *
+     * @return the files with annotations
+     */
+    public Collection<WorkspaceFile> getFiles() {
+        return javaPackage.getFiles();
     }
 }
 

@@ -8,7 +8,7 @@
 
 		    <st:include page="/summaryTable.jelly" />
 
-			<st:include page="/warningsTable.jelly" />
+			<st:include page="/annotationsTable.jelly" />
 
 		</l:main-panel>
 	</l:layout>

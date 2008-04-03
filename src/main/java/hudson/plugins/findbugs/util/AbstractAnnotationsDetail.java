@@ -82,4 +82,31 @@ public abstract class AbstractAnnotationsDetail extends AnnotationContainer impl
                 detailObject.getNumberOfAnnotations(Priority.LOW), upperBound);
         ChartUtil.generateGraph(request, response, chart, 400, 20);
     }
+
+    /**
+     * Returns the package category name for the scanned files. Currently, only
+     * java and c# files are supported.
+     *
+     * @return the package category name for the scanned files
+     */
+    public String getPackageCategoryName() {
+        if (hasAnnotations()) {
+            String fileName = getAnnotations().iterator().next().getFileName();
+            if (fileName.endsWith(".cs")) {
+                return hudson.plugins.findbugs.util.Messages.NamespaceDetail_header();
+            }
+        }
+        return hudson.plugins.findbugs.util.Messages.PackageDetail_header();
+    }
+
+    /**
+     * Returns a localized priority name.
+     *
+     * @param priorityName
+     *            priority as String value
+     * @return localized priority name
+     */
+    public String getLocalizedPriority(final String priorityName) {
+        return Priority.fromString(priorityName).getLongLocalizedString();
+    }
 }

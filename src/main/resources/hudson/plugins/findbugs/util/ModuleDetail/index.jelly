@@ -14,7 +14,7 @@
       </j:if>
 
       <j:if test="${it.isSinglePackageModule()}">
-		<st:include page="/warningsTable.jelly" />
+		<st:include page="/annotationsTable.jelly" />
       </j:if>
 
     </l:main-panel>
