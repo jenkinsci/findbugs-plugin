@@ -19,8 +19,8 @@ public class ModuleDetail extends AbstractAnnotationsDetail {
     private static final long serialVersionUID = -1854984151887397361L;
     /** The module to show the details for. */
     private final MavenModule module;
-    /** Header in jelly script. */
-    private final String header;
+    /** Header prefix. */
+    private final String headerPrefix;
 
     /**
      * Creates a new instance of <code>ModuleDetail</code>.
@@ -33,18 +33,9 @@ public class ModuleDetail extends AbstractAnnotationsDetail {
      *            header to be shown on detail page
      */
     public ModuleDetail(final AbstractBuild<?, ?> owner, final MavenModule module, final String header) {
-        super(owner, module.getAnnotations());
+        super(owner, module.getAnnotations(), header + " - " + Messages.ModuleDetail_header() + " " + module.getName());
         this.module = module;
-        this.header = header;
-    }
-
-    /**
-     * Returns the header for the detail screen.
-     *
-     * @return the header
-     */
-    public String getHeader() {
-        return header + " - " + Messages.ModuleDetail_header() + " " + module.getName();
+        headerPrefix = header;
     }
 
     /** {@inheritDoc} */
@@ -117,7 +108,7 @@ public class ModuleDetail extends AbstractAnnotationsDetail {
             return new SourceDetail(getOwner(), getAnnotation(link));
         }
         else {
-            return new PackageDetail(getOwner(), module.getPackage(link), header);
+            return new PackageDetail(getOwner(), module.getPackage(link), headerPrefix);
         }
     }
 

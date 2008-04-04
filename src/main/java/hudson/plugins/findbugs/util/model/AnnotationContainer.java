@@ -1,5 +1,7 @@
 package hudson.plugins.findbugs.util.model;
 
+import hudson.plugins.findbugs.util.Messages;
+
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
@@ -195,6 +197,23 @@ public class AnnotationContainer implements AnnotationProvider, Serializable {
             }
         }
         return StringUtils.removeEnd(message.toString(), " - ");
+    }
+
+
+    /**
+     * Returns the package category name for the scanned files. Currently, only
+     * java and c# files are supported.
+     *
+     * @return the package category name for the scanned files
+     */
+    public final String getPackageCategoryName() {
+        if (hasAnnotations()) {
+            String fileName = getAnnotations().iterator().next().getFileName();
+            if (fileName.endsWith(".cs")) {
+                return Messages.NamespaceDetail_header();
+            }
+        }
+        return Messages.PackageDetail_header();
     }
 }
 

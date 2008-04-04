@@ -1,8 +1,6 @@
-package hudson.plugins.findbugs;
+package hudson.plugins.findbugs.util;
 
 import hudson.model.AbstractBuild;
-import hudson.plugins.findbugs.util.AbstractAnnotationsDetail;
-import hudson.plugins.findbugs.util.SourceDetail;
 import hudson.plugins.findbugs.util.model.FileAnnotation;
 
 import java.util.Set;
@@ -18,31 +16,33 @@ public class NewWarningsDetail extends AbstractAnnotationsDetail {
     private static final long serialVersionUID = 5093487322493056475L;
 
     /**
-     * Creates a new instance of <code>FixedWarningsDetail</code>.
+     * Creates a new instance of <code>NewWarningsDetail</code>.
      *
      * @param owner
      *            the current build as owner of this action
      * @param newWarnings
      *            all new warnings in this build
+     * @param header
+     *            header to be shown on detail page
      */
-    public NewWarningsDetail(final AbstractBuild<?, ?> owner, final Set<FileAnnotation> newWarnings) {
-        super(owner, newWarnings);
+    public NewWarningsDetail(final AbstractBuild<?, ?> owner, final Set<FileAnnotation> newWarnings, final String header) {
+        super(owner, newWarnings, header);
     }
 
     /** {@inheritDoc} */
     public String getDisplayName() {
-        return Messages.FindBugs_NewWarningsDetail_Name();
+        return Messages.NewWarningsDetail_Name();
     }
 
     /**
-     * Returns the dynamic result of the FindBugs analysis (detail page for a package).
+     * Returns the dynamic result of this object (detail page for a source file).
      *
-     * @param link the package name to get the result for
+     * @param link the source file to get the result for
      * @param request
      *            Stapler request
      * @param response
      *            Stapler response
-     * @return the dynamic result of the FindBugs analysis (detail page for a package).
+     * @return the dynamic result of this object (detail page for a source file).
      */
     public Object getDynamic(final String link, final StaplerRequest request, final StaplerResponse response) {
         return new SourceDetail(getOwner(), getAnnotation(link));

@@ -7,7 +7,9 @@ import hudson.plugins.findbugs.parser.Bug;
 import hudson.plugins.findbugs.util.AnnotationDifferencer;
 import hudson.plugins.findbugs.util.ChartRenderer;
 import hudson.plugins.findbugs.util.ErrorDetail;
+import hudson.plugins.findbugs.util.FixedWarningsDetail;
 import hudson.plugins.findbugs.util.ModuleDetail;
+import hudson.plugins.findbugs.util.NewWarningsDetail;
 import hudson.plugins.findbugs.util.PackageDetail;
 import hudson.plugins.findbugs.util.SourceDetail;
 import hudson.plugins.findbugs.util.model.AnnotationStream;
@@ -488,10 +490,10 @@ public class FindBugsResult implements ModelObject, Serializable {
      */
     public Object getDynamic(final String link, final StaplerRequest request, final StaplerResponse response) {
         if ("fixed".equals(link)) {
-            return new FixedWarningsDetail(getOwner(), getFixedWarnings());
+            return new FixedWarningsDetail(getOwner(), getFixedWarnings(), Messages.FindBugs_FixedWarnings_Detail_header());
         }
         else if ("new".equals(link)) {
-            return new NewWarningsDetail(getOwner(), getNewWarnings());
+            return new NewWarningsDetail(getOwner(), getNewWarnings(), Messages.FindBugs_NewWarnings_Detail_header());
         }
         else if ("error".equals(link)) {
             return new ErrorDetail(getOwner(), "FindBugs", errors);

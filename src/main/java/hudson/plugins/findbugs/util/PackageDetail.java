@@ -17,8 +17,6 @@ public class PackageDetail extends AbstractAnnotationsDetail {
     private static final long serialVersionUID = -5315146140343619856L;
     /** The package to show the details for. */
     private final JavaPackage javaPackage;
-    /** Header in jelly script. */
-    private final String header;
 
     /**
      * Creates a new instance of <code>ModuleDetail</code>.
@@ -31,23 +29,13 @@ public class PackageDetail extends AbstractAnnotationsDetail {
      *            header to be shown on detail page
      */
     public PackageDetail(final AbstractBuild<?, ?> owner, final JavaPackage javaPackage, final String header) {
-        super(owner, javaPackage.getAnnotations());
+        super(owner, javaPackage.getAnnotations(), header + " - " + javaPackage.getPackageCategoryName() + " " + javaPackage.getName());
         this.javaPackage = javaPackage;
-        this.header = header;
     }
 
     /** {@inheritDoc} */
     public String getDisplayName() {
         return javaPackage.getName();
-    }
-
-    /**
-     * Returns the header for the detail screen.
-     *
-     * @return the header
-     */
-    public String getHeader() {
-        return header + " - " + getPackageCategoryName() + " " + javaPackage.getName();
     }
 
     /**

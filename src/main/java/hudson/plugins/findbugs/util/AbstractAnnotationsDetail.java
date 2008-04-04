@@ -22,6 +22,8 @@ import org.kohsuke.stapler.StaplerResponse;
 public abstract class AbstractAnnotationsDetail extends AnnotationContainer implements ModelObject {
     /** Current build as owner of this object. */
     private final AbstractBuild<?, ?> owner;
+    /** Header in jelly script. */
+    private final String header;
 
     /**
      * Creates a new instance of <code>AbstractWarningsDetail</code>.
@@ -31,11 +33,21 @@ public abstract class AbstractAnnotationsDetail extends AnnotationContainer impl
      * @param annotations
      *            the set of warnings represented by this object
      */
-    public AbstractAnnotationsDetail(final AbstractBuild<?, ?> owner, final Collection<FileAnnotation> annotations) {
+    public AbstractAnnotationsDetail(final AbstractBuild<?, ?> owner, final Collection<FileAnnotation> annotations, final String header) {
         super();
         this.owner = owner;
+        this.header = header;
 
         addAnnotations(annotations);
+    }
+
+    /**
+     * Returns the header for the detail screen.
+     *
+     * @return the header
+     */
+    public String getHeader() {
+        return header;
     }
 
     /**
@@ -81,22 +93,6 @@ public abstract class AbstractAnnotationsDetail extends AnnotationContainer impl
                 detailObject.getNumberOfAnnotations(Priority.NORMAL),
                 detailObject.getNumberOfAnnotations(Priority.LOW), upperBound);
         ChartUtil.generateGraph(request, response, chart, 400, 20);
-    }
-
-    /**
-     * Returns the package category name for the scanned files. Currently, only
-     * java and c# files are supported.
-     *
-     * @return the package category name for the scanned files
-     */
-    public String getPackageCategoryName() {
-        if (hasAnnotations()) {
-            String fileName = getAnnotations().iterator().next().getFileName();
-            if (fileName.endsWith(".cs")) {
-                return hudson.plugins.findbugs.util.Messages.NamespaceDetail_header();
-            }
-        }
-        return hudson.plugins.findbugs.util.Messages.PackageDetail_header();
     }
 
     /**

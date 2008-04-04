@@ -1,7 +1,6 @@
-package hudson.plugins.findbugs;
+package hudson.plugins.findbugs.util;
 
 import hudson.model.AbstractBuild;
-import hudson.plugins.findbugs.util.AbstractAnnotationsDetail;
 import hudson.plugins.findbugs.util.model.FileAnnotation;
 
 import java.util.Set;
@@ -20,14 +19,16 @@ public class FixedWarningsDetail extends AbstractAnnotationsDetail {
      *            the current results object as owner of this action
      * @param fixedWarnings
      *            all fixed warnings in this build
+     * @param header
+     *            header to be shown on detail page
      */
-    public FixedWarningsDetail(final AbstractBuild<?, ?> owner, final Set<FileAnnotation> fixedWarnings) {
-        super(owner, fixedWarnings);
+    public FixedWarningsDetail(final AbstractBuild<?, ?> owner, final Set<FileAnnotation> fixedWarnings, final String header) {
+        super(owner, fixedWarnings, header);
     }
 
     /** {@inheritDoc} */
     public String getDisplayName() {
-        return Messages.FindBugs_FixedWarningsDetail_Name();
+        return Messages.FixedWarningsDetail_Name();
     }
 }
 
