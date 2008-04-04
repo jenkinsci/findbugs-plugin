@@ -46,7 +46,6 @@ public class NativeFindBugsParserTest extends AbstractEnglishLocaleTest {
         File jarFile = Which.jarFile(DetectorFactoryCollection.class);
         String string = jarFile.toString();
         System.setProperty("hudson.plugins.findbugs.pluginpath", "file:" + StringUtils.substringBefore(string, "net\\sourceforge\\findbugs\\findbugs") + "com\\mebigfatguy\\fbcontrib\\3.4.2-hudson-1\\fbcontrib-3.4.2-hudson-1.jar");
-        System.setProperty("hudson.plugins.findbugs.pluginpath", "file:/C:/Build/Results/plugins/findbugs/WEB-INF/lib/fbcontrib-3.4.2-hudson-1.jar");
     }
 
     /**
