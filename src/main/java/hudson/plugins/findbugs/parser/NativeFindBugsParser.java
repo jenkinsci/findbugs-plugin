@@ -1,8 +1,10 @@
 package hudson.plugins.findbugs.parser;
 
+import hudson.plugins.findbugs.FindBugsResult;
 import hudson.plugins.findbugs.util.model.LineRange;
 import hudson.plugins.findbugs.util.model.MavenModule;
 import hudson.plugins.findbugs.util.model.Priority;
+import hudson.remoting.Which;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,6 +12,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.logging.Logger;
 
 import org.apache.commons.lang.StringUtils;
 import org.dom4j.DocumentException;
@@ -29,6 +32,8 @@ import edu.umd.cs.findbugs.ba.SourceFinder;
  * maven-findbugs-plugin >= 1.2-SNAPSHOT).
  */
 public class NativeFindBugsParser {
+    /** Logger. */
+    private static final Logger LOGGER = Logger.getLogger(FindBugsResult.class.getName());
     static {
        initializeFindBugs();
     }
@@ -164,10 +169,36 @@ public class NativeFindBugsParser {
      */
     private static void initializeFindBugs() {
         try {
-            DetectorFactoryCollection.rawInstance().setPluginList(new URL[] {new URL("file://")});
+            String path = System.getProperty("hudson.plugins.findbugs.pluginpath");
+            if (path != null) {
+                DetectorFactoryCollection.rawInstance().setPluginList(new URL[] {new URL(path)});
+            }
+            else {
+                URL pluginPath = getPluginPath();
+                String original = pluginPath.toString().replace("\\", "/");
+                String urlName = StringUtils.substringBeforeLast(original, "/") + "/fbcontrib-3.4.2-hudson-1.jar";
+
+                DetectorFactoryCollection.rawInstance().setPluginList(new URL[] {pluginPath, new URL(urlName)});
+            }
         }
         catch (MalformedURLException exception) {
             throw new IllegalArgumentException(exception);
+        }
+    }
+
+    /**
+     * Returns the path to the FindBugs plug-in.
+     *
+     * @return path to the FindBugs plug-in
+     * @throws MalformedURLException
+     *             if the guessed URL is not valid
+     */
+    private static URL getPluginPath() throws MalformedURLException {
+        try {
+            return Which.jarFile(DetectorFactoryCollection.class).toURL();
+        }
+        catch (Exception exception) {
+            return new URL("file://");
         }
     }
 

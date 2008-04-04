@@ -4,17 +4,24 @@ import static org.junit.Assert.*;
 import hudson.plugins.findbugs.FindBugsMessages;
 import hudson.plugins.findbugs.util.AbstractEnglishLocaleTest;
 import hudson.plugins.findbugs.util.model.FileAnnotation;
+import hudson.plugins.findbugs.util.model.JavaPackage;
 import hudson.plugins.findbugs.util.model.LineRange;
 import hudson.plugins.findbugs.util.model.MavenModule;
 import hudson.plugins.findbugs.util.model.Priority;
+import hudson.remoting.Which;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.apache.commons.lang.StringUtils;
 import org.dom4j.DocumentException;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.xml.sax.SAXException;
+
+import edu.umd.cs.findbugs.DetectorFactoryCollection;
 
 /**
  *  Tests the extraction of FindBugs analysis results.
@@ -27,6 +34,20 @@ public class NativeFindBugsParserTest extends AbstractEnglishLocaleTest {
     private static final int NUMBER_OF_WARNINGS = 2;
     /** Error message. */
     private static final String ERROR_MESSAGE = "Wrong number of bugs parsed.";
+
+    /**
+     * Initializes the FindBugs contrib library with the path to fbcontrib.
+     *
+     * @throws IOException
+     *             in case of an error
+     */
+    @BeforeClass
+    public static void initializeFindBugsLibrary() throws IOException {
+        File jarFile = Which.jarFile(DetectorFactoryCollection.class);
+        String string = jarFile.toString();
+        System.setProperty("hudson.plugins.findbugs.pluginpath", "file:" + StringUtils.substringBefore(string, "net\\sourceforge\\findbugs\\findbugs") + "com\\mebigfatguy\\fbcontrib\\3.4.2-hudson-1\\fbcontrib-3.4.2-hudson-1.jar");
+        System.setProperty("hudson.plugins.findbugs.pluginpath", "file:/C:/Build/Results/plugins/findbugs/WEB-INF/lib/fbcontrib-3.4.2-hudson-1.jar");
+    }
 
     /**
      * Parses the specified file.
@@ -69,6 +90,27 @@ public class NativeFindBugsParserTest extends AbstractEnglishLocaleTest {
         scanNativeFile("findbugs-multclass.xml", "FindBugs",
                 Priority.HIGH, "umd/cs/findbugs/PluginLoader.java", "edu.umd.cs.findbugs", 82, 82,
                 1, "edu/umd/cs/findbugs/PluginLoader.java", "edu.umd.cs.findbugs", 93, 93, 1);
+    }
+
+    /**
+     * Checks whether, if a bug instance contains more than one
+     * element, we correctly take the first one as referring to the
+     * buggy class.
+     */
+    @Test
+    public void scanFbContribFile() throws Exception {
+        MavenModule parseFile = parseFile("fbcontrib.xml");
+        JavaPackage javaPackage = parseFile.getPackage("hudson.plugins.tasks");
+        assertEquals(ERROR_MESSAGE, 16, javaPackage.getNumberOfAnnotations());
+
+        boolean found = false;
+        for (FileAnnotation annotation : javaPackage.getAnnotations()) {
+            if (annotation.getFileName().contains("ResultSummary.java")) {
+                found = true;
+                assertFalse("Warning message could not be resolved.", annotation.getToolTip().contains("A warning was recorded, but findbugs can't find the description of this bug pattern"));
+            }
+        }
+        assertTrue("No warning in class ResultSummary.java found.", found);
     }
 
     /**
