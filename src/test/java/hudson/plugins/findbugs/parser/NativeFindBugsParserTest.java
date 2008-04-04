@@ -44,8 +44,8 @@ public class NativeFindBugsParserTest extends AbstractEnglishLocaleTest {
     @BeforeClass
     public static void initializeFindBugsLibrary() throws IOException {
         File jarFile = Which.jarFile(DetectorFactoryCollection.class);
-        String string = jarFile.toString();
-        System.setProperty("hudson.plugins.findbugs.pluginpath", "file:" + StringUtils.substringBefore(string, "net\\sourceforge\\findbugs\\findbugs") + "com\\mebigfatguy\\fbcontrib\\3.4.2-hudson-1\\fbcontrib-3.4.2-hudson-1.jar");
+        String corePlugin = jarFile.toString();
+        System.setProperty("hudson.plugins.findbugs.pluginpath", "file:/" + corePlugin + ";file:" + StringUtils.substringBefore(corePlugin, "net\\sourceforge\\findbugs\\findbugs") + "com\\mebigfatguy\\fbcontrib\\3.4.2-hudson-1\\fbcontrib-3.4.2-hudson-1.jar");
     }
 
     /**
@@ -209,6 +209,8 @@ public class NativeFindBugsParserTest extends AbstractEnglishLocaleTest {
         assertEquals("Wrong file name parsed.", fileName, annotation.getFileName());
         assertEquals("Wrong package name parsed.", packageName, annotation.getPackageName());
         assertEquals("Wrong module name parsed.", projectName, annotation.getModuleName());
+
+        assertFalse("Warning message could not be resolved.", annotation.getToolTip().contains("A warning was recorded, but findbugs can't find the description of this bug pattern"));
 
         Collection<LineRange> lineRanges = annotation.getLineRanges();
         assertEquals("Wrong number of line ranges parsed.", ranges, lineRanges.size());

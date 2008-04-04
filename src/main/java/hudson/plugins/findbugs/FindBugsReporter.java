@@ -15,11 +15,15 @@ import hudson.model.Result;
 import hudson.plugins.findbugs.parser.FindBugsCollector;
 import hudson.plugins.findbugs.util.HealthReportBuilder;
 import hudson.plugins.findbugs.util.model.JavaProject;
+import hudson.remoting.Which;
 
+import java.io.File;
 import java.io.IOException;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.maven.project.MavenProject;
+
+import edu.umd.cs.findbugs.DetectorFactoryCollection;
 
 // FIXME: this class more or less is a copy of the FindBugsPublisher, we should find a way to generalize portions of this class
 public class FindBugsReporter extends MavenReporter {
@@ -130,6 +134,8 @@ public class FindBugsReporter extends MavenReporter {
         return pattern;
     }
 
+
+
     /** {@inheritDoc} */
     @Override
     public boolean postExecute(final MavenBuildProxy build, final MavenProject pom, final MojoInfo mojo,
@@ -138,6 +144,18 @@ public class FindBugsReporter extends MavenReporter {
             return true;
         }
 
+        // TODO: this hack works only if slave and master are on the same machine
+        String urls = build.execute(new BuildCallable<String, IOException>() {
+            public String call(final MavenBuild build) throws IOException, InterruptedException {
+                File jarFile = Which.jarFile(DetectorFactoryCollection.class);
+                String pluginPath = jarFile.toString();
+                String original = pluginPath.toString().replace("\\", "/");
+                String urlName = StringUtils.substringBeforeLast(original, "/") + "/fbcontrib-3.4.2-hudson-1.jar";
+                return "file:/" + pluginPath + ";file:/" + urlName;
+            }
+        });
+        System.setProperty("hudson.plugins.findbugs.pluginpath", urls);
+        listener.getLogger().println(urls);
         FilePath pomPath = new FilePath(pom.getBasedir());
         FindBugsCollector findBugsCollector = new FindBugsCollector(listener.getLogger(),
                 build.getTimestamp().getTimeInMillis(),

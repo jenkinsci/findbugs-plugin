@@ -171,7 +171,13 @@ public class NativeFindBugsParser {
         try {
             String path = System.getProperty("hudson.plugins.findbugs.pluginpath");
             if (path != null) {
-                DetectorFactoryCollection.rawInstance().setPluginList(new URL[] {new URL(path)});
+                String[] urlStrings = StringUtils.split(path, ";");
+                URL[] urls = new URL[urlStrings.length];
+
+                for (int i = 0; i < urlStrings.length; i++) {
+                    urls[i] = new URL(urlStrings[i]);
+                }
+                DetectorFactoryCollection.rawInstance().setPluginList(urls);
             }
             else {
                 URL pluginPath = getPluginPath();
