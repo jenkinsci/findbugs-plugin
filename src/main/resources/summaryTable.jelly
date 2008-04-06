@@ -15,7 +15,7 @@
 				<j:forEach var="priority" items="${it.priorities}">
 					<td class="pane">
 						<j:if test="${it.getNumberOfAnnotations(priority) == 0}">
-							${it.getNumberOfAnnotations(priority)}
+							0
 						</j:if>
 						<j:if test="${it.getNumberOfAnnotations(priority) != 0}">
 							<a href="${priority}">${it.getNumberOfAnnotations(priority)}</a>
