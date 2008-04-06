@@ -12,9 +12,16 @@
 		<tbody>
 			<tr>
 				<td class="pane">${it.numberOfAnnotations}</td>
-				<td class="pane">${it.getNumberOfAnnotations("HIGH")}</td>
-				<td class="pane">${it.getNumberOfAnnotations("NORMAL")}</td>
-				<td class="pane">${it.getNumberOfAnnotations("LOW")}</td>
+				<j:forEach var="priority" items="${it.priorities}">
+					<td class="pane">
+						<j:if test="${it.getNumberOfAnnotations(priority) == 0}">
+							${it.getNumberOfAnnotations(priority)}
+						</j:if>
+						<j:if test="${it.getNumberOfAnnotations(priority) != 0}">
+							<a href="${priority}">${it.getNumberOfAnnotations(priority)}</a>
+						</j:if>
+					</td>
+				</j:forEach>
 			</tr>
 		</tbody>
 	</table>

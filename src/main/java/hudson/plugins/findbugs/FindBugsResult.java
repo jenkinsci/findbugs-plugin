@@ -11,6 +11,7 @@ import hudson.plugins.findbugs.util.FixedWarningsDetail;
 import hudson.plugins.findbugs.util.ModuleDetail;
 import hudson.plugins.findbugs.util.NewWarningsDetail;
 import hudson.plugins.findbugs.util.PackageDetail;
+import hudson.plugins.findbugs.util.PriorityDetailFactory;
 import hudson.plugins.findbugs.util.SourceDetail;
 import hudson.plugins.findbugs.util.model.AnnotationStream;
 import hudson.plugins.findbugs.util.model.FileAnnotation;
@@ -489,7 +490,11 @@ public class FindBugsResult implements ModelObject, Serializable {
      *         package).
      */
     public Object getDynamic(final String link, final StaplerRequest request, final StaplerResponse response) {
-        if ("fixed".equals(link)) {
+        PriorityDetailFactory factory = new PriorityDetailFactory();
+        if (factory.isPriority(link)) {
+            return factory.create(link, owner, getProject(), Messages.FindBugs_Detail_header());
+        }
+        else if ("fixed".equals(link)) {
             return new FixedWarningsDetail(getOwner(), getFixedWarnings(), Messages.FindBugs_FixedWarnings_Detail_header());
         }
         else if ("new".equals(link)) {
@@ -661,5 +666,14 @@ public class FindBugsResult implements ModelObject, Serializable {
         else {
             return getModule(name).getToolTip();
         }
+    }
+
+    /**
+     * Returns all possible priorities.
+     *
+     * @return all priorities
+     */
+    public Priority[] getPriorities() {
+        return Priority.values();
     }
 }

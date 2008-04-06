@@ -21,15 +21,19 @@
 							${it.numberOfAnnotations}
 						</td>
 						<td class="pane">
-							${it.numberOfNewWarnings}
+							<j:if test="${it.numberOfNewWarnings == 0}">
+								0
+							</j:if>
 							<j:if test="${it.numberOfNewWarnings != 0}">
-								(<a href="new">${%Details}</a>)
+								<a href="new">${it.numberOfNewWarnings}</a>
 							</j:if>
 						</td>
 						<td class="pane">
-							${it.numberOfFixedWarnings}
+							<j:if test="${it.numberOfFixedWarnings == 0}">
+								0
+							</j:if>
 							<j:if test="${it.numberOfFixedWarnings != 0}">
-								(<a href="fixed">${%Details}</a>)
+								<a href="fixed">${it.numberOfFixedWarnings}</a>
 							</j:if>
 						</td>
 					</tr>

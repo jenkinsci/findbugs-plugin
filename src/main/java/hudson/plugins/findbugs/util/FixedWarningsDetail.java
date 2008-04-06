@@ -3,7 +3,7 @@ package hudson.plugins.findbugs.util;
 import hudson.model.AbstractBuild;
 import hudson.plugins.findbugs.util.model.FileAnnotation;
 
-import java.util.Set;
+import java.util.Collection;
 
 /**
  * Result object to visualize the fixed warnings in a build.
@@ -22,7 +22,7 @@ public class FixedWarningsDetail extends AbstractAnnotationsDetail {
      * @param header
      *            header to be shown on detail page
      */
-    public FixedWarningsDetail(final AbstractBuild<?, ?> owner, final Set<FileAnnotation> fixedWarnings, final String header) {
+    public FixedWarningsDetail(final AbstractBuild<?, ?> owner, final Collection<FileAnnotation> fixedWarnings, final String header) {
         super(owner, fixedWarnings, header);
     }
 

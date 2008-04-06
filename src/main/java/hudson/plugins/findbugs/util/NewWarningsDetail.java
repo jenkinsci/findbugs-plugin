@@ -3,7 +3,7 @@ package hudson.plugins.findbugs.util;
 import hudson.model.AbstractBuild;
 import hudson.plugins.findbugs.util.model.FileAnnotation;
 
-import java.util.Set;
+import java.util.Collection;
 
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
@@ -25,7 +25,7 @@ public class NewWarningsDetail extends AbstractAnnotationsDetail {
      * @param header
      *            header to be shown on detail page
      */
-    public NewWarningsDetail(final AbstractBuild<?, ?> owner, final Set<FileAnnotation> newWarnings, final String header) {
+    public NewWarningsDetail(final AbstractBuild<?, ?> owner, final Collection<FileAnnotation> newWarnings, final String header) {
         super(owner, newWarnings, header);
     }
 

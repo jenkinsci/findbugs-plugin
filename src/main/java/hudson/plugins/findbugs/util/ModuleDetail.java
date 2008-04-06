@@ -19,8 +19,6 @@ public class ModuleDetail extends AbstractAnnotationsDetail {
     private static final long serialVersionUID = -1854984151887397361L;
     /** The module to show the details for. */
     private final MavenModule module;
-    /** Header prefix. */
-    private final String headerPrefix;
 
     /**
      * Creates a new instance of <code>ModuleDetail</code>.
@@ -33,14 +31,22 @@ public class ModuleDetail extends AbstractAnnotationsDetail {
      *            header to be shown on detail page
      */
     public ModuleDetail(final AbstractBuild<?, ?> owner, final MavenModule module, final String header) {
-        super(owner, module.getAnnotations(), header + " - " + Messages.ModuleDetail_header() + " " + module.getName());
+        super(owner, module.getAnnotations(), header);
         this.module = module;
-        headerPrefix = header;
     }
 
     /** {@inheritDoc} */
     public String getDisplayName() {
         return module.getName();
+    }
+
+    /**
+     * Returns the header for the detail screen.
+     *
+     * @return the header
+     */
+    public String getHeader() {
+        return getTitle() + " - " + Messages.ModuleDetail_header() + " " + module.getName();
     }
 
     /**
@@ -87,28 +93,20 @@ public class ModuleDetail extends AbstractAnnotationsDetail {
     }
 
     /**
-     * Returns the dynamic result of this module detail view. Depending on the
-     * number of packages, one of the following detail objects is returned:
-     * <ul>
-     * <li>A detail object for a single workspace file (if the module contains
-     * only one package).</li>
-     * <li>A package detail object for a specified package (in any other case).</li>
-     * </ul>
+     * Returns a package detail object if there are more packages available.
+     * Otherwise a <code>null</code> value is returned.
      *
      * @param link
      *            the link to identify the sub page to show
-     * @param request
-     *            Stapler request
-     * @param response
-     *            Stapler response
      * @return the dynamic result of this module detail view
      */
-    public Object getDynamic(final String link, final StaplerRequest request, final StaplerResponse response) {
+    @Override
+    public AbstractAnnotationsDetail getDynamic(final String link) {
         if (isSinglePackageModule()) {
-            return new SourceDetail(getOwner(), getAnnotation(link));
+            return null;
         }
         else {
-            return new PackageDetail(getOwner(), module.getPackage(link), headerPrefix);
+            return new PackageDetail(getOwner(), module.getPackage(link), getTitle());
         }
     }
 

@@ -6,9 +6,6 @@ import hudson.plugins.findbugs.util.model.WorkspaceFile;
 
 import java.util.Collection;
 
-import org.kohsuke.stapler.StaplerRequest;
-import org.kohsuke.stapler.StaplerResponse;
-
 /**
  * Result object to visualize the package statistics of a module.
  */
@@ -29,8 +26,17 @@ public class PackageDetail extends AbstractAnnotationsDetail {
      *            header to be shown on detail page
      */
     public PackageDetail(final AbstractBuild<?, ?> owner, final JavaPackage javaPackage, final String header) {
-        super(owner, javaPackage.getAnnotations(), header + " - " + javaPackage.getPackageCategoryName() + " " + javaPackage.getName());
+        super(owner, javaPackage.getAnnotations(), header);
         this.javaPackage = javaPackage;
+    }
+
+    /**
+     * Returns the header for the detail screen.
+     *
+     * @return the header
+     */
+    public String getHeader() {
+        return getTitle() + " - " + javaPackage.getPackageCategoryName() + " " + javaPackage.getName();
     }
 
     /** {@inheritDoc} */
@@ -45,20 +51,6 @@ public class PackageDetail extends AbstractAnnotationsDetail {
      */
     public JavaPackage getPackage() {
         return javaPackage;
-    }
-
-    /**
-     * Returns the dynamic result of the FindBugs analysis (detail page for a package).
-     *
-     * @param link the package name to get the result for
-     * @param request
-     *            Stapler request
-     * @param response
-     *            Stapler response
-     * @return the dynamic result of the FindBugs analysis (detail page for a package).
-     */
-    public Object getDynamic(final String link, final StaplerRequest request, final StaplerResponse response) {
-        return new SourceDetail(getOwner(), getAnnotation(link));
     }
 
     /**

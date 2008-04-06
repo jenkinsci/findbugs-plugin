@@ -46,7 +46,7 @@ public abstract class AbstractAnnotationsDetail extends AnnotationContainer impl
      *
      * @return the header
      */
-    public String getHeader() {
+    protected String getTitle() {
         return header;
     }
 
@@ -104,5 +104,61 @@ public abstract class AbstractAnnotationsDetail extends AnnotationContainer impl
      */
     public String getLocalizedPriority(final String priorityName) {
         return Priority.fromString(priorityName).getLongLocalizedString();
+    }
+
+    /**
+     * Returns the dynamic result of this module detail view. Depending on the
+     * number of packages, one of the following detail objects is returned:
+     * <ul>
+     * <li>A detail object for a single workspace file (if the module contains
+     * only one package).</li>
+     * <li>A package detail object for a specified package (in any other case).</li>
+     * </ul>
+     *
+     * @param link
+     *            the link to identify the sub page to show
+     * @param request
+     *            Stapler request
+     * @param response
+     *            Stapler response
+     * @return the dynamic result of this module detail view
+     */
+    public Object getDynamic(final String link, final StaplerRequest request, final StaplerResponse response) {
+        PriorityDetailFactory factory = new PriorityDetailFactory();
+        if (factory.isPriority(link)) {
+            return factory.create(link, owner, this, getTitle());
+        }
+        AbstractAnnotationsDetail detail = getDynamic(link);
+        if (detail == null) {
+            return new SourceDetail(getOwner(), getAnnotation(link));
+        }
+        else {
+            return detail;
+        }
+    }
+
+    /**
+     * Returns the dynamic result of this module detail view. Depending on the
+     * link value the sub-class could return a special detail object. If there
+     * is no such one, then <code>null</code> must be returned. In this
+     * case, the link will be interpreted as source detail of the specified
+     * annotation.
+     *
+     * @param link
+     *            the link to identify the sub page to show, or null if the
+     *            source detail should be shown
+     * @return the dynamic result of this module detail view
+     */
+    protected AbstractAnnotationsDetail getDynamic(final String link) {
+        return null;
+    }
+
+    /**
+     * Returns all possible priorities.
+     *
+     * @return all priorities
+     */
+    public Priority[] getPriorities() {
+        return Priority.values();
     }
 }
