@@ -21,7 +21,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
-import edu.umd.cs.findbugs.DetectorFactoryCollection;
+import edu.umd.cs.findbugs.detect.FindDoubleCheck;
 
 /**
  *  Tests the extraction of FindBugs analysis results.
@@ -43,9 +43,9 @@ public class NativeFindBugsParserTest extends AbstractEnglishLocaleTest {
      */
     @BeforeClass
     public static void initializeFindBugsLibrary() throws IOException {
-        File jarFile = Which.jarFile(DetectorFactoryCollection.class);
+        File jarFile = Which.jarFile(FindDoubleCheck.class);
         String corePlugin = jarFile.toString();
-        System.setProperty("hudson.plugins.findbugs.pluginpath", "file:/" + corePlugin + ";file:" + StringUtils.substringBefore(corePlugin, "net\\sourceforge\\findbugs\\findbugs") + "com\\mebigfatguy\\fbcontrib\\3.4.2-hudson-1\\fbcontrib-3.4.2-hudson-1.jar");
+        System.setProperty("hudson.plugins.findbugs.pluginpath", "file:/" + corePlugin + ";file:" + StringUtils.substringBefore(corePlugin, "net\\sourceforge\\findbugs\\coreplugin") + "com\\mebigfatguy\\fbcontrib\\3.4.2-hudson-1\\fbcontrib-3.4.2-hudson-1.jar");
     }
 
     /**
