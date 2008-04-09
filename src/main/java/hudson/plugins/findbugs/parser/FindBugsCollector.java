@@ -66,10 +66,11 @@ public class FindBugsCollector implements FileCallable<JavaProject> {
         }
 
         try {
+            MavenModuleDetector moduleDetector = new MavenModuleDetector();
             for (String file : findBugsFiles) {
                 File findbugsFile = new File(workspace, file);
 
-                String moduleName = MavenModuleDetector.guessModuleName(findbugsFile.getAbsolutePath());
+                String moduleName = moduleDetector.guessModuleName(findbugsFile.getAbsolutePath());
                 MavenModule module = new MavenModule(moduleName);
 
                 if (SKIP_OLD_FILES && findbugsFile.lastModified() < buildTime) {

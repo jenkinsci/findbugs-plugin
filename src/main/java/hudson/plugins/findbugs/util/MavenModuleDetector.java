@@ -1,6 +1,10 @@
 package hudson.plugins.findbugs.util;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.apache.commons.digester.Digester;
 import org.apache.commons.lang.StringUtils;
@@ -10,6 +14,24 @@ import org.xml.sax.SAXException;
  * Detects maven module names by parsing the name of a source file.
  */
 public final class MavenModuleDetector {
+    /** The factory to create input streams with. */
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings("SIC")
+    private FileInputStreamFactory factory = new FileInputStreamFactory() {
+        /** {@inheritDoc} */
+        public InputStream create(String fileName) throws FileNotFoundException {
+            return new FileInputStream(new File(fileName));
+        }
+    };
+
+    /**
+     * Sets the factory to the specified value.
+     *
+     * @param fileInputStreamFactory the value to set
+     */
+    public void setFileInputStreamFactory(final FileInputStreamFactory fileInputStreamFactory) {
+        factory = fileInputStreamFactory;
+    }
+
     /**
      * Guesses a maven module name based on the source folder.
      *
@@ -19,7 +41,7 @@ public final class MavenModuleDetector {
      * @return the guessed module name or an empty string if the name could not be
      *         resolved
      */
-    public static String guessModuleName(final String fileName) {
+    public String guessModuleName(final String fileName) {
         String unixName = fileName.replace("\\", "/");
         String module = checkPrefix(unixName, "/src");
         if (StringUtils.isNotBlank(module)) {
@@ -43,7 +65,7 @@ public final class MavenModuleDetector {
      * @return the module name or an empty string if the name could not be
      *         resolved
      */
-    private static String checkPrefix(final String file, final String folder) {
+    private String checkPrefix(final String file, final String folder) {
         if (file.contains(folder)) {
             String module = StringUtils.substringBeforeLast(file, folder);
             String projectName = parsePom(module);
@@ -66,20 +88,19 @@ public final class MavenModuleDetector {
      * @return the project name or an empty string if the name could not be
      *         resolved
      */
-    private static String parsePom(final String fileName) {
+    private String parsePom(final String fileName) {
         try {
-            java.io.File pom = new java.io.File(fileName + "/pom.xml");
-            if (pom.exists()) {
-                Digester digester = new Digester();
-                digester.setValidating(false);
-                digester.setClassLoader(MavenModuleDetector.class.getClassLoader());
+            InputStream pom = factory.create(fileName + "/pom.xml");
 
-                digester.push(new StringBuffer());
-                digester.addCallMethod("project/name", "append", 0);
+            Digester digester = new Digester();
+            digester.setValidating(false);
+            digester.setClassLoader(MavenModuleDetector.class.getClassLoader());
 
-                StringBuffer result = (StringBuffer)digester.parse(pom);
-                return result.toString();
-            }
+            digester.push(new StringBuffer());
+            digester.addCallMethod("project/name", "append", 0);
+
+            StringBuffer result = (StringBuffer)digester.parse(pom);
+            return result.toString();
         }
         catch (IOException exception) {
             // ignore
@@ -88,13 +109,6 @@ public final class MavenModuleDetector {
             // ignore
         }
         return StringUtils.EMPTY;
-    }
-
-    /**
-     * Creates a new instance of <code>MavenModuleDetector</code>.
-     */
-    private MavenModuleDetector() {
-        // prevents instantiation
     }
 }
 
