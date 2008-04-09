@@ -48,16 +48,9 @@ public class NativeFindBugsParserTest extends AbstractEnglishLocaleTest {
      */
     @Test
     public void scanFileWithMultipleLinesAndRanges() throws Exception {
-        try {
-            scanNativeFile(FINDBUGS_NATIVE_XML, FINDBUGS_NATIVE_XML,
-                    Priority.NORMAL, "org/apache/hadoop/dfs/BlockCrcUpgrade.java", "org.apache.hadoop.dfs", 1309, 1309,
-                    5, "org/apache/hadoop/streaming/StreamJob.java", "org.apache.hadoop.streaming", 935, 980, 1);
-        }
-        catch (NoSuchMethodError exception) { // seems to be a class loading problem with two different jaxen versions
-            scanNativeFile(FINDBUGS_NATIVE_XML, FINDBUGS_NATIVE_XML,
-                    Priority.NORMAL, "org/apache/hadoop/dfs/BlockCrcUpgrade.java", "org.apache.hadoop.dfs", 1309, 1309,
-                    5, "org/apache/hadoop/streaming/StreamJob.java", "org.apache.hadoop.streaming", 935, 980, 1);
-        }
+        scanNativeFile(FINDBUGS_NATIVE_XML, FINDBUGS_NATIVE_XML,
+                Priority.NORMAL, "org/apache/hadoop/dfs/BlockCrcUpgrade.java", "org.apache.hadoop.dfs", 1309, 1309,
+                5, "org/apache/hadoop/streaming/StreamJob.java", "org.apache.hadoop.streaming", 935, 980, 1);
     }
 
     /**
