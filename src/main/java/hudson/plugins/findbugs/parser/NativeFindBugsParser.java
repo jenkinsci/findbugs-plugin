@@ -17,6 +17,8 @@ import java.util.logging.Logger;
 import org.apache.commons.lang.StringUtils;
 import org.dom4j.DocumentException;
 
+import com.mebigfatguy.fbcontrib.FBContrib;
+
 import edu.umd.cs.findbugs.BugAnnotation;
 import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugPattern;
@@ -26,12 +28,17 @@ import edu.umd.cs.findbugs.SortedBugCollection;
 import edu.umd.cs.findbugs.SourceLineAnnotation;
 import edu.umd.cs.findbugs.ba.SourceFile;
 import edu.umd.cs.findbugs.ba.SourceFinder;
+import edu.umd.cs.findbugs.detect.DroppedException;
 
 /**
  * A parser for the native FindBugs XML files (ant task, batch file or
  * maven-findbugs-plugin >= 1.2-SNAPSHOT).
  */
 public class NativeFindBugsParser {
+    /**
+     * FIXME: Document field NO_DETECTORS
+     */
+    private static final String NO_DETECTORS = "hudson.plugins.findbugs.nodetectorplugins";
     /** Logger. */
     private static final Logger LOGGER = Logger.getLogger(FindBugsResult.class.getName());
     static {
@@ -169,23 +176,8 @@ public class NativeFindBugsParser {
      */
     private static void initializeFindBugs() {
         try {
-            String path = System.getProperty("hudson.plugins.findbugs.pluginpath");
-            if (path != null) {
-                String[] urlStrings = StringUtils.split(path, ";");
-                URL[] urls = new URL[urlStrings.length];
-
-                for (int i = 0; i < urlStrings.length; i++) {
-                    urls[i] = new URL(urlStrings[i]);
-                }
-                DetectorFactoryCollection.rawInstance().setPluginList(urls);
-            }
-            else {
-                URL pluginPath = getPluginPath();
-                String original = pluginPath.toString().replace("\\", "/");
-                String urlName = StringUtils.substringBeforeLast(original, "/") + "/fbcontrib-3.4.2-hudson-1.jar";
-
-                DetectorFactoryCollection.rawInstance().setPluginList(new URL[] {pluginPath, new URL(urlName)});
-            }
+            DetectorFactoryCollection.rawInstance().setPluginList(
+                    new URL[] {getPluginPath(DroppedException.class), getPluginPath(FBContrib.class)});
         }
         catch (MalformedURLException exception) {
             throw new IllegalArgumentException(exception);
@@ -193,15 +185,17 @@ public class NativeFindBugsParser {
     }
 
     /**
-     * Returns the path to the FindBugs plug-in.
+     * Returns the path to the JAR file containing the given path
      *
+     * @param clazz
+     *            the class to get the JAR URL for
      * @return path to the FindBugs plug-in
      * @throws MalformedURLException
      *             if the guessed URL is not valid
      */
-    private static URL getPluginPath() throws MalformedURLException {
+    private static URL getPluginPath(final Class<?> clazz) throws MalformedURLException {
         try {
-            return Which.jarFile(DetectorFactoryCollection.class).toURL();
+            return Which.jarFile(clazz).toURL();
         }
         catch (Exception exception) {
             return new URL("file://");
