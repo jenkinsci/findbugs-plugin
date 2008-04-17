@@ -34,7 +34,7 @@ public abstract class AbstractAnnotationsDetail extends AnnotationContainer impl
      *            the set of warnings represented by this object
      */
     public AbstractAnnotationsDetail(final AbstractBuild<?, ?> owner, final Collection<FileAnnotation> annotations, final String header) {
-        super();
+        super(true);
         this.owner = owner;
         this.header = header;
 

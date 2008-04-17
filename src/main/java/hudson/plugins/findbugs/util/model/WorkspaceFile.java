@@ -1,5 +1,11 @@
 package hudson.plugins.findbugs.util.model;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.NoSuchElementException;
+
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -13,6 +19,8 @@ public class WorkspaceFile extends AnnotationContainer {
     private static final long serialVersionUID = 601361940925156719L;
     /** The absolute filename of this file. */
     private final String name;
+    /** This file. */
+    private final List<WorkspaceFile> files;
 
     /**
      * Creates a new instance of <code>WorkspaceFile</code>.
@@ -21,9 +29,12 @@ public class WorkspaceFile extends AnnotationContainer {
      *            absolute path of this file
      */
     public WorkspaceFile(final String fileName) {
-        super();
+        super(false);
 
         name = fileName.replace('\\', '/');
+        List<WorkspaceFile> singleFile = new ArrayList<WorkspaceFile>();
+        singleFile.add(this);
+        files = Collections.unmodifiableList(singleFile);
     }
 
     /**
@@ -51,8 +62,23 @@ public class WorkspaceFile extends AnnotationContainer {
      * @return the created object
      */
     private Object readResolve() {
-        rebuildPriorities();
+        rebuildMappings(false);
         return this;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Collection<WorkspaceFile> getFiles() {
+        return files;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public WorkspaceFile getFile(final String fileName) {
+        if (getName().equals(fileName)) {
+            return this;
+        }
+        throw new NoSuchElementException("File not found: " + fileName);
     }
 }
 

@@ -53,13 +53,16 @@ public class PackageDetail extends AbstractAnnotationsDetail {
         return javaPackage;
     }
 
-    /**
-     * Gets the files of this module that have annotations.
-     *
-     * @return the files with annotations
-     */
+    /** {@inheritDoc} */
+    @Override
     public Collection<WorkspaceFile> getFiles() {
         return javaPackage.getFiles();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public WorkspaceFile getFile(final String fileName) {
+        return javaPackage.getFile(fileName);
     }
 }
 

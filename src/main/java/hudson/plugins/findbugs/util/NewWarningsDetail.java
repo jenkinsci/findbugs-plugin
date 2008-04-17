@@ -44,6 +44,7 @@ public class NewWarningsDetail extends AbstractAnnotationsDetail {
      *            Stapler response
      * @return the dynamic result of this object (detail page for a source file).
      */
+    @Override
     public Object getDynamic(final String link, final StaplerRequest request, final StaplerResponse response) {
         return new SourceDetail(getOwner(), getAnnotation(link));
     }

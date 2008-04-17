@@ -28,22 +28,53 @@ public class AnnotationContainer implements AnnotationProvider, Serializable {
     private final Map<Long, FileAnnotation> annotations = new HashMap<Long, FileAnnotation>();
     /** The annotations mapped by priority. */
     private transient Map<Priority, Set<FileAnnotation>> annotationsByPriority;
+    /** Determines whether to build up a set of {@link WorkspaceFile}s. */
+    private boolean handleFiles;
+    /** The files that contain annotations mapped by file name. */
+    private transient Map<String, WorkspaceFile> filesByName;
 
     /**
      * Creates a new instance of <code>AnnotationContainer</code>.
      */
     public AnnotationContainer() {
-        initializePrioritiesMap();
+        this(false);
     }
 
     /**
-     * Initializes the priorities maps.
+     * Creates a new instance of <code>AnnotationContainer</code>.
+     *
+     * @param handleFiles
+     *            determines whether to build up a set of {@link WorkspaceFile}s.
+     *            If set to <code>true</code> then this container will
+     *            automatically build up a workspace file mapping that could be
+     *            used by clients of this class. Set this value to
+     *            <code>false</code> if your subclass already has such a
+     *            mapping or provides a faster implementation of the associated
+     *            methods {@link #getFiles()} and {@link #getFile(String)}.
      */
-    private void initializePrioritiesMap() {
+    protected AnnotationContainer(final boolean handleFiles) {
+        initialize(handleFiles);
+    }
+
+    /**
+     * Initializes the priorities maps and the filename to file mapping.
+     *
+     * @param handleFilesByContainer
+     *            determines whether to build up a set of {@link WorkspaceFile}s.
+     *            If set to <code>true</code> then this container will
+     *            automatically build up a workspace file mapping that could be
+     *            used by clients of this class. Set this value to
+     *            <code>false</code> if your subclass already has such a
+     *            mapping or provides a faster implementation of the associated
+     *            methods {@link #getFiles()} and {@link #getFile(String)}.
+     */
+    private void initialize(final boolean handleFilesByContainer) {
         annotationsByPriority = new EnumMap<Priority, Set<FileAnnotation>>(Priority.class);
         for (Priority priority : Priority.values()) {
             annotationsByPriority.put(priority, new HashSet<FileAnnotation>());
         }
+        filesByName = new HashMap<String, WorkspaceFile>();
+        handleFiles = handleFilesByContainer;
     }
 
     /**
@@ -52,18 +83,45 @@ public class AnnotationContainer implements AnnotationProvider, Serializable {
      * @return the created object
      */
     private Object readResolve() {
-        rebuildPriorities();
+        rebuildMappings(handleFiles);
         return this;
     }
 
     /**
-     * Rebuilds the priorities after deserialization.
+     * Rebuilds the priorities and files after deserialization.
+     *
+     * @param handleFilesByContainer
+     *            determines whether to build up a set of {@link WorkspaceFile}s.
+     *            If set to <code>true</code> then this container will
+     *            automatically build up a workspace file mapping that could be
+     *            used by clients of this class. Set this value to
+     *            <code>false</code> if your subclass already has such a
+     *            mapping or provides a faster implementation of the associated
+     *            methods {@link #getFiles()} and {@link #getFile(String)}.
      */
-    protected void rebuildPriorities() {
-        initializePrioritiesMap();
+    protected void rebuildMappings(final boolean handleFilesByContainer) {
+        initialize(handleFilesByContainer);
         for (FileAnnotation annotation : getAnnotations()) {
             annotationsByPriority.get(annotation.getPriority()).add(annotation);
+            if (handleFilesByContainer) {
+                addFile(annotation);
+            }
         }
+    }
+
+    /**
+     * Adds a new file to this container that will contain the specified
+     * annotation. If the file already exists, then the annotation is only added
+     * to this file.
+     *
+     * @param annotation the new annotation
+     */
+    protected final void addFile(final FileAnnotation annotation) {
+        String fileName = annotation.getFileName();
+        if (!filesByName.containsKey(fileName)) {
+            filesByName.put(fileName, new WorkspaceFile(fileName));
+        }
+        filesByName.get(fileName).addAnnotation(annotation);
     }
 
     /**
@@ -108,7 +166,9 @@ public class AnnotationContainer implements AnnotationProvider, Serializable {
      *            the added annotation
      */
     protected void annotationAdded(final FileAnnotation annotation) {
-        // empty default implementation
+        if (handleFiles) {
+            addFile(annotation);
+        }
     }
 
     /** {@inheritDoc} */
@@ -214,6 +274,35 @@ public class AnnotationContainer implements AnnotationProvider, Serializable {
             }
         }
         return Messages.PackageDetail_header();
+    }
+
+    /**
+     * Gets the files of this container that have annotations.
+     *
+     * @return the files with annotations
+     */
+    @SuppressWarnings("unchecked")
+    public Collection<WorkspaceFile> getFiles() {
+        if (handleFiles) {
+            return Collections.unmodifiableCollection(filesByName.values());
+        }
+        else {
+            return Collections.EMPTY_LIST;
+        }
+    }
+
+    /**
+     * Gets the file with the given name.
+     *
+     * @param fileName
+     *            the short name of the file
+     * @return the file with the given name
+     */
+    public WorkspaceFile getFile(final String fileName) {
+        if (handleFiles && filesByName.containsKey(fileName)) {
+            return filesByName.get(fileName);
+        }
+        throw new NoSuchElementException("File not found: " + fileName);
     }
 }
 

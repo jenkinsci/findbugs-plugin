@@ -28,12 +28,21 @@ public class JavaProject extends AnnotationContainer {
     private String error;
 
     /**
+     * Creates a new instance of <code>JavaProject</code>. File handling is
+     * performed in this class since the files are already mapped in the modules
+     * of this project.
+     */
+    public JavaProject() {
+        super(false);
+    }
+
+    /**
      * Rebuilds the priorities mapping.
      *
      * @return the created object
      */
     private Object readResolve() {
-        rebuildPriorities();
+        rebuildMappings(false);
         return this;
     }
 
@@ -113,11 +122,8 @@ public class JavaProject extends AnnotationContainer {
         return getSingleModule().getPackage(name);
     }
 
-    /**
-     * Gets the files of this project that have annotations.
-     *
-     * @return the files with annotations
-     */
+    /** {@inheritDoc} */
+    @Override
     public Collection<WorkspaceFile> getFiles() {
         List<WorkspaceFile> files = new ArrayList<WorkspaceFile>();
         for (MavenModule module : moduleMapping.values()) {
@@ -126,13 +132,8 @@ public class JavaProject extends AnnotationContainer {
         return files;
     }
 
-    /**
-     * Returns the file with the given name. This method is only valid for
-     * single module projects.
-     *
-     * @param name the file name
-     * @return the file with the given name.
-     */
+    /** {@inheritDoc} */
+    @Override
     public WorkspaceFile getFile(final String name) {
         return getSingleModule().getFile(name);
     }

@@ -24,10 +24,12 @@ public class MavenModule extends AnnotationContainer {
     private String error;
 
     /**
-     * Creates a new instance of <code>MavenModule</code>.
+     * Creates a new instance of <code>MavenModule</code>. File handling is
+     * performed in this class since the files are already mapped in the modules
+     * of this project.
      */
     public MavenModule() {
-        super();
+        super(false);
     }
 
     /**
@@ -66,7 +68,7 @@ public class MavenModule extends AnnotationContainer {
      * @return the created object
      */
     private Object readResolve() {
-        rebuildPriorities();
+        rebuildMappings(false);
         return this;
     }
 
@@ -109,26 +111,18 @@ public class MavenModule extends AnnotationContainer {
         throw new NoSuchElementException("Package not found: " + packageName);
     }
 
-    /**
-     * Gets the files of this module that have annotations.
-     *
-     * @return the files with annotations
-     */
+    /** {@inheritDoc} */
+    @Override
     public Collection<WorkspaceFile> getFiles() {
-        List<WorkspaceFile> packages = new ArrayList<WorkspaceFile>();
+        List<WorkspaceFile> files = new ArrayList<WorkspaceFile>();
         for (JavaPackage javaPackage : packageMapping.values()) {
-            packages.addAll(javaPackage.getFiles());
+            files.addAll(javaPackage.getFiles());
         }
-        return packages;
+        return files;
     }
 
-    /**
-     * Returns the file with the given name. This method is only valid for
-     * single package modules.
-     *
-     * @param fileName the file name
-     * @return the file with the given name.
-     */
+    /** {@inheritDoc} */
+    @Override
     public WorkspaceFile getFile(final String fileName) {
         if (packageMapping.size() != 1) {
             throw new IllegalArgumentException("Number of modules != 1");

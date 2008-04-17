@@ -16,7 +16,7 @@ public class PriorityDetailFactory {
      */
     public boolean isPriority(final String value) {
         for (Priority priority : Priority.values()) {
-            if (priority.toString().equals(value)) {
+            if (priority.toString().equalsIgnoreCase(value)) {
                 return true;
             }
         }
@@ -37,13 +37,13 @@ public class PriorityDetailFactory {
      * @return the priority detail
      */
     public PrioritiesDetail create(final String priority, final AbstractBuild<?, ?> owner, final AnnotationContainer container, final String header) {
-        if (Priority.HIGH.toString().equals(priority)) {
+        if (Priority.HIGH.toString().equalsIgnoreCase(priority)) {
             return createPrioritiesDetail(Priority.HIGH, owner, container, header);
         }
-        else if (Priority.NORMAL.toString().equals(priority)) {
+        else if (Priority.NORMAL.toString().equalsIgnoreCase(priority)) {
             return createPrioritiesDetail(Priority.NORMAL, owner, container, header);
         }
-        else if (Priority.LOW.toString().equals(priority)) {
+        else if (Priority.LOW.toString().equalsIgnoreCase(priority)) {
             return createPrioritiesDetail(Priority.LOW, owner, container, header);
         }
         throw new IllegalArgumentException("Wrong priority provided: " + priority);
@@ -62,7 +62,7 @@ public class PriorityDetailFactory {
      *            header to show
      * @return the priority detail
      */
-    private PrioritiesDetail createPrioritiesDetail(final Priority priority, final AbstractBuild<?, ?> owner, final AnnotationContainer container, final String header) {
+    protected PrioritiesDetail createPrioritiesDetail(final Priority priority, final AbstractBuild<?, ?> owner, final AnnotationContainer container, final String header) {
         return new PrioritiesDetail(owner, container.getAnnotations(priority), priority, header);
     }
 }
