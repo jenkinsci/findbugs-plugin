@@ -22,8 +22,6 @@ import org.kohsuke.stapler.StaplerResponse;
 public abstract class AbstractAnnotationsDetail extends AnnotationContainer implements ModelObject {
     /** Current build as owner of this object. */
     private final AbstractBuild<?, ?> owner;
-    /** Header in jelly script. */
-    private final String header;
 
     /**
      * Creates a new instance of <code>AbstractWarningsDetail</code>.
@@ -34,20 +32,10 @@ public abstract class AbstractAnnotationsDetail extends AnnotationContainer impl
      *            the set of warnings represented by this object
      */
     public AbstractAnnotationsDetail(final AbstractBuild<?, ?> owner, final Collection<FileAnnotation> annotations, final String header) {
-        super(true);
+        super(true, header);
         this.owner = owner;
-        this.header = header;
 
         addAnnotations(annotations);
-    }
-
-    /**
-     * Returns the header for the detail screen.
-     *
-     * @return the header
-     */
-    protected String getTitle() {
-        return header;
     }
 
     /**
@@ -126,7 +114,7 @@ public abstract class AbstractAnnotationsDetail extends AnnotationContainer impl
     public Object getDynamic(final String link, final StaplerRequest request, final StaplerResponse response) {
         PriorityDetailFactory factory = new PriorityDetailFactory();
         if (factory.isPriority(link)) {
-            return factory.create(link, owner, this, getTitle());
+            return factory.create(link, owner, this, getName());
         }
         AbstractAnnotationsDetail detail = getDynamic(link);
         if (detail == null) {

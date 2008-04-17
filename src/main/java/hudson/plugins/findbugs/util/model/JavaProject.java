@@ -28,15 +28,6 @@ public class JavaProject extends AnnotationContainer {
     private String error;
 
     /**
-     * Creates a new instance of <code>JavaProject</code>. File handling is
-     * performed in this class since the files are already mapped in the modules
-     * of this project.
-     */
-    public JavaProject() {
-        super(false);
-    }
-
-    /**
      * Rebuilds the priorities mapping.
      *
      * @return the created object

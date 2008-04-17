@@ -17,7 +17,7 @@ public class MavenModule extends AnnotationContainer {
     /** Unique identifier of this class. */
     private static final long serialVersionUID = 5467122420572804130L;
     /** Name of this module. */
-    private String name;
+    private String name; // NOPMD: backward compatibility
     /** All Java packages in this maven module (mapped by their name). */
     private final Map<String, JavaPackage> packageMapping = new HashMap<String, JavaPackage>();
     /** The error message that denotes that the creation of the module has been failed. */
@@ -29,7 +29,7 @@ public class MavenModule extends AnnotationContainer {
      * of this project.
      */
     public MavenModule() {
-        super(false);
+        super();
     }
 
     /**
@@ -39,27 +39,7 @@ public class MavenModule extends AnnotationContainer {
      *            name of the module
      */
     public MavenModule(final String moduleName) {
-        this();
-
-        name = moduleName;
-    }
-
-    /**
-     * Returns the module name.
-     *
-     * @return the module name
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Sets the name of this module.
-     *
-     * @param name the name of this module
-     */
-    public void setName(final String name) {
-        this.name = name;
+        super(false, moduleName);
     }
 
     /**
@@ -69,6 +49,9 @@ public class MavenModule extends AnnotationContainer {
      */
     private Object readResolve() {
         rebuildMappings(false);
+        if (name != null) {
+            setName(name);
+        }
         return this;
     }
 

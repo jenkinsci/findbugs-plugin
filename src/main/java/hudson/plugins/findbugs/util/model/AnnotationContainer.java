@@ -32,12 +32,32 @@ public class AnnotationContainer implements AnnotationProvider, Serializable {
     private boolean handleFiles;
     /** The files that contain annotations mapped by file name. */
     private transient Map<String, WorkspaceFile> filesByName;
+    /** Name of this container. */
+    private String name;
 
     /**
      * Creates a new instance of <code>AnnotationContainer</code>.
      */
     public AnnotationContainer() {
-        this(false);
+        this(false, StringUtils.EMPTY);
+    }
+
+    /**
+     * Returns the name of this container.
+     *
+     * @return the name of this container
+     */
+    public final String getName() {
+        return name;
+    }
+
+    /**
+     * Sets the name of this container.
+     *
+     * @param name the name of this container
+     */
+    public final void setName(final String name) {
+        this.name = name;
     }
 
     /**
@@ -51,9 +71,11 @@ public class AnnotationContainer implements AnnotationProvider, Serializable {
      *            <code>false</code> if your subclass already has such a
      *            mapping or provides a faster implementation of the associated
      *            methods {@link #getFiles()} and {@link #getFile(String)}.
+     * @param name the name of this container
      */
-    protected AnnotationContainer(final boolean handleFiles) {
+    protected AnnotationContainer(final boolean handleFiles, final String name) {
         initialize(handleFiles);
+        this.name = name;
     }
 
     /**

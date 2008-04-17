@@ -36,7 +36,7 @@ public class PackageDetail extends AbstractAnnotationsDetail {
      * @return the header
      */
     public String getHeader() {
-        return getTitle() + " - " + javaPackage.getPackageCategoryName() + " " + javaPackage.getName();
+        return getName() + " - " + javaPackage.getPackageCategoryName() + " " + javaPackage.getName();
     }
 
     /** {@inheritDoc} */

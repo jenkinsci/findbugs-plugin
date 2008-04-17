@@ -46,7 +46,7 @@ public class ModuleDetail extends AbstractAnnotationsDetail {
      * @return the header
      */
     public String getHeader() {
-        return getTitle() + " - " + Messages.ModuleDetail_header() + " " + module.getName();
+        return getName() + " - " + Messages.ModuleDetail_header() + " " + module.getName();
     }
 
     /**
@@ -106,7 +106,7 @@ public class ModuleDetail extends AbstractAnnotationsDetail {
             return null;
         }
         else {
-            return new PackageDetail(getOwner(), module.getPackage(link), getTitle());
+            return new PackageDetail(getOwner(), module.getPackage(link), getName());
         }
     }
 

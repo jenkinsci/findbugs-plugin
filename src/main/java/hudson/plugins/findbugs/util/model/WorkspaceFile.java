@@ -13,12 +13,11 @@ import org.apache.commons.lang.StringUtils;
  *
  * @author Ulli Hafner
  */
-@SuppressWarnings("PMD.CyclomaticComplexity")
 public class WorkspaceFile extends AnnotationContainer {
     /** Unique identifier of this class. */
     private static final long serialVersionUID = 601361940925156719L;
     /** The absolute filename of this file. */
-    private final String name;
+    private String name; // NOPMD: backward compatibility
     /** This file. */
     private final List<WorkspaceFile> files;
 
@@ -29,21 +28,11 @@ public class WorkspaceFile extends AnnotationContainer {
      *            absolute path of this file
      */
     public WorkspaceFile(final String fileName) {
-        super(false);
+        super(false, fileName.replace('\\', '/'));
 
-        name = fileName.replace('\\', '/');
         List<WorkspaceFile> singleFile = new ArrayList<WorkspaceFile>();
         singleFile.add(this);
         files = Collections.unmodifiableList(singleFile);
-    }
-
-    /**
-     * Returns the filename name of this file.
-     *
-     * @return the name
-     */
-    public String getName() {
-        return name;
     }
 
     /**
@@ -52,7 +41,7 @@ public class WorkspaceFile extends AnnotationContainer {
      * @return a readable name of this workspace file.
      */
     public String getShortName() {
-        return StringUtils.substringAfterLast(name, "/");
+        return StringUtils.substringAfterLast(getName(), "/");
     }
 
     /**
@@ -63,6 +52,9 @@ public class WorkspaceFile extends AnnotationContainer {
      */
     private Object readResolve() {
         rebuildMappings(false);
+        if (name != null) {
+            setName(name);
+        }
         return this;
     }
 

@@ -9,9 +9,8 @@ package hudson.plugins.findbugs.util.model;
 public class JavaPackage extends AnnotationContainer {
     /** Unique identifier of this class. */
     private static final long serialVersionUID = 4034932648975191723L;
-    // FIXME: Pull up
     /** Name of this package. */
-    private final String name;
+    private String name; // NOPMD: backward compatibility
 
     /**
      * Creates a new instance of <code>JavaPackage</code>.
@@ -20,9 +19,7 @@ public class JavaPackage extends AnnotationContainer {
      *            the name of this package
      */
     public JavaPackage(final String packageName) {
-        super(true);
-
-        name = packageName;
+        super(true, packageName);
     }
 
     /**
@@ -32,16 +29,10 @@ public class JavaPackage extends AnnotationContainer {
      */
     private Object readResolve() {
         rebuildMappings(true);
+        if (name != null) {
+            setName(name);
+        }
         return this;
-    }
-
-    /**
-     * Returns the name of this package.
-     *
-     * @return the name of this package
-     */
-    public String getName() {
-        return name;
     }
 }
 
