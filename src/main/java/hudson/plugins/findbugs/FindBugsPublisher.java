@@ -1,6 +1,5 @@
 package hudson.plugins.findbugs;
 
-import hudson.Launcher;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.Action;
@@ -65,8 +64,6 @@ public class FindBugsPublisher extends HealthAwarePublisher {
      *
      * @param build
      *            the build
-     * @param launcher
-     *            the launcher
      * @param listener
      *            the build listener
      * @return <code>true</code> if the build could continue
@@ -76,8 +73,7 @@ public class FindBugsPublisher extends HealthAwarePublisher {
      *             if user cancels the operation
      */
     @Override
-    public boolean perform(final AbstractBuild<?, ?> build, final Launcher launcher,
-            final BuildListener listener) throws InterruptedException, IOException {
+    public boolean perform(final AbstractBuild<?, ?> build, final BuildListener listener) throws InterruptedException, IOException {
         PrintStream logger = listener.getLogger();
         try {
             logger.println("Collecting findbugs analysis files...");
