@@ -226,7 +226,7 @@ public abstract class AbstractProjectAction<T extends ResultAction<?>> implement
      *             in case of an error
      */
     public void doFlipTrend(final StaplerRequest request, final StaplerResponse response) throws IOException {
-        boolean useHealthBuilder = true;
+        boolean useHealthBuilder = false;
 
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {

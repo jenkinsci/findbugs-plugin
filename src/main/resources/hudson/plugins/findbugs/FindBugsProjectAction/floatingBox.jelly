@@ -6,7 +6,7 @@
 	        <j:set var="trendQueryParameter" value="?useHealthBuilder=${mode}" />
 	      </j:if>
 	      <j:if test="${mode == null}">
-	        <j:set var="trendQueryParameter" value="?useHealthBuilder=true" />
+	        <j:set var="trendQueryParameter" value="?useHealthBuilder=false" />
 	      </j:if>
 	      <p/>
 		  <div class="test-trend-caption">
