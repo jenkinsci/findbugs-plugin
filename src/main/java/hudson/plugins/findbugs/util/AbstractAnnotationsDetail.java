@@ -30,9 +30,11 @@ public abstract class AbstractAnnotationsDetail extends AnnotationContainer impl
      *            current build as owner of this object.
      * @param annotations
      *            the set of warnings represented by this object
+     * @param name
+     *            the name of this object
      */
-    public AbstractAnnotationsDetail(final AbstractBuild<?, ?> owner, final Collection<FileAnnotation> annotations, final String header) {
-        super(true, header);
+    public AbstractAnnotationsDetail(final AbstractBuild<?, ?> owner, final Collection<FileAnnotation> annotations, final String name) {
+        super(true, name);
         this.owner = owner;
 
         addAnnotations(annotations);
