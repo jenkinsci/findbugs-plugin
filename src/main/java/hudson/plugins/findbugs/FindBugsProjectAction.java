@@ -36,8 +36,14 @@ public class FindBugsProjectAction extends AbstractProjectAction<FindBugsResultA
 
     /** {@inheritDoc} */
     @Override
-    protected String getCookieName() {
+    public String getCookieName() {
         return "FindBugs_displayMode";
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String getTrendName() {
+        return Messages.FindBugs_Trend_Name();
     }
 }
 

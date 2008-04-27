@@ -1,6 +1,5 @@
 package hudson.plugins.findbugs.parser;
 
-import hudson.plugins.findbugs.FindBugsResult;
 import hudson.plugins.findbugs.util.model.LineRange;
 import hudson.plugins.findbugs.util.model.MavenModule;
 import hudson.plugins.findbugs.util.model.Priority;
@@ -12,7 +11,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.logging.Logger;
 
 import org.apache.commons.lang.StringUtils;
 import org.dom4j.DocumentException;
@@ -35,12 +33,6 @@ import edu.umd.cs.findbugs.detect.DroppedException;
  * maven-findbugs-plugin >= 1.2-SNAPSHOT).
  */
 public class NativeFindBugsParser {
-    /**
-     * FIXME: Document field NO_DETECTORS
-     */
-    private static final String NO_DETECTORS = "hudson.plugins.findbugs.nodetectorplugins";
-    /** Logger. */
-    private static final Logger LOGGER = Logger.getLogger(FindBugsResult.class.getName());
     static {
        initializeFindBugs();
     }

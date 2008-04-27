@@ -144,6 +144,7 @@ public class FindBugsReporter extends MavenReporter {
             return true;
         }
 
+        // FIXME: should be adapted to the new class loading scheme
         // TODO: this hack works only if slave and master are on the same machine
         String urls = build.execute(new BuildCallable<String, IOException>() {
             public String call(final MavenBuild build) throws IOException, InterruptedException {
