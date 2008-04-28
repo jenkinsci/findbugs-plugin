@@ -92,16 +92,16 @@ public class FindBugsResult implements ModelObject, Serializable {
     private long zeroWarningsHighScore;
 
     /** Error messages. */
-    private final List<String> errors;
+    private List<String> errors;
 
     /** Current build as owner of this action. */
     @SuppressWarnings("Se")
     private final AbstractBuild<?, ?> owner;
 
     /** The modules with no warnings. */
-    private final Map<String, MavenModule> emptyModules;
+    private Map<String, MavenModule> emptyModules;
     /** The total number of modules with or without warnings. */
-    private final int numberOfModules;
+    private int numberOfModules;
 
     /**
      * Creates a new instance of <code>FindBugsResult</code>.
@@ -173,6 +173,20 @@ public class FindBugsResult implements ModelObject, Serializable {
         catch (IOException exception) {
             LOGGER.log(Level.WARNING, "Failed to serialize the findbugs result.", exception);
         }
+    }
+
+    /**
+     * Rebuilds > 2.0 properties.
+     *
+     * @return the created object
+     */
+    private Object readResolve() {
+        if (emptyModules == null) {
+            emptyModules = new HashMap<String, MavenModule>();
+            errors = new ArrayList<String>();
+            numberOfModules = 1;
+        }
+        return this;
     }
 
     /**
