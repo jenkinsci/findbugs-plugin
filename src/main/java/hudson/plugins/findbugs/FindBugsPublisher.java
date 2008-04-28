@@ -61,7 +61,7 @@ public class FindBugsPublisher extends HealthAwarePublisher {
         logger.println("Collecting findbugs analysis files...");
 
         JavaProject project = parseAllWorkspaceFiles(build, logger);
-        FindBugsResult result = createResult(build, project);
+        FindBugsResult result = new FindBugsResultBuilder().build(build, project);
 
         HealthReportBuilder healthReportBuilder = createHealthReporter(
                 Messages.FindBugs_ResultAction_HealthReportSingleItem(),
@@ -90,36 +90,6 @@ public class FindBugsPublisher extends HealthAwarePublisher {
                         StringUtils.defaultIfEmpty(getPattern(), DEFAULT_PATTERN), true);
 
         return build.getProject().getWorkspace().act(findBugsCollector);
-    }
-
-    /**
-     * Creates a result that persists the FindBugs information for the
-     * specified build.
-     *
-     * @param build
-     *            the build to create the action for
-     * @param project
-     *            the project containing the annotations
-     * @return the result action
-     */
-    private FindBugsResult createResult(final AbstractBuild<?, ?> build, final JavaProject project) {
-        Object previous = build.getPreviousBuild();
-        FindBugsResult result;
-        if (previous instanceof AbstractBuild<?, ?>) {
-            AbstractBuild<?, ?> previousBuild = (AbstractBuild<?, ?>)previous;
-            FindBugsResultAction previousAction = previousBuild.getAction(FindBugsResultAction.class);
-            if (previousAction == null) {
-                result = new FindBugsResult(build, project);
-            }
-            else {
-                result = new FindBugsResult(build, project, previousAction.getResult().getProject(),
-                        previousAction.getResult().getZeroWarningsHighScore());
-            }
-        }
-        else {
-            result = new FindBugsResult(build, project);
-        }
-        return result;
     }
 
     /** {@inheritDoc} */

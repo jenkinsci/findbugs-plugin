@@ -8,7 +8,6 @@ import hudson.maven.MavenReporter;
 import hudson.maven.MavenReporterDescriptor;
 import hudson.maven.MojoInfo;
 import hudson.maven.MavenBuildProxy.BuildCallable;
-import hudson.model.AbstractBuild;
 import hudson.model.Action;
 import hudson.model.BuildListener;
 import hudson.model.Result;
@@ -134,8 +133,6 @@ public class FindBugsReporter extends MavenReporter {
         return pattern;
     }
 
-
-
     /** {@inheritDoc} */
     @Override
     public boolean postExecute(final MavenBuildProxy build, final MavenProject pom, final MojoInfo mojo,
@@ -144,15 +141,8 @@ public class FindBugsReporter extends MavenReporter {
             return true;
         }
 
-        // TODO: this hack works only if slave and master are on the same machine
-        URL[] urls = build.execute(new BuildCallable<URL[], IOException>() {
-            public URL[] call(final MavenBuild build) throws IOException, InterruptedException {
-                return PlainFindBugsParser.createPluginUrls();
-            }
-        });
-        DetectorFactoryCollection.rawInstance().setPluginList(urls);
+        initializeFindBugsLibrary(build);
 
-        listener.getLogger().println(urls);
         FilePath pomPath = new FilePath(pom.getBasedir());
         FindBugsCollector findBugsCollector = new FindBugsCollector(listener.getLogger(),
                 build.getTimestamp().getTimeInMillis(),
@@ -161,23 +151,7 @@ public class FindBugsReporter extends MavenReporter {
 
         build.execute(new BuildCallable<Void, IOException>() {
             public Void call(final MavenBuild build) throws IOException, InterruptedException {
-                Object previous = build.getPreviousBuild();
-                FindBugsResult result;
-                if (previous instanceof AbstractBuild<?, ?>) {
-                    AbstractBuild<?, ?> previousBuild = (AbstractBuild<?, ?>)previous;
-                    FindBugsResultAction previousAction = previousBuild.getAction(FindBugsResultAction.class);
-                    if (previousAction == null) {
-                        result = new FindBugsResult(build, project);
-                    }
-                    else {
-                        result = new FindBugsResult(build, project, previousAction.getResult().getProject(),
-                                previousAction.getResult().getZeroWarningsHighScore());
-                    }
-                }
-                else {
-                    result = new FindBugsResult(build, project);
-                }
-
+                FindBugsResult result = new FindBugsResultBuilder().build(build, project);
                 HealthReportBuilder healthReportBuilder = new HealthReportBuilder(thresholdEnabled, minimumAnnotations,
                         healthyReportEnabled, healthyAnnotations, unHealthyAnnotations,
                         Messages.FindBugs_ResultAction_HealthReportSingleItem(),
@@ -191,8 +165,7 @@ public class FindBugsReporter extends MavenReporter {
 
         int warnings = project.getNumberOfAnnotations();
         if (warnings > 0) {
-            listener.getLogger().println(
-                    "A total of " + warnings + " potential bugs have been found.");
+            listener.getLogger().println("A total of " + warnings + " potential bugs have been found.");
             if (thresholdEnabled && warnings >= minimumAnnotations) {
                 build.setResult(Result.UNSTABLE);
             }
@@ -202,6 +175,27 @@ public class FindBugsReporter extends MavenReporter {
         }
 
         return true;
+    }
+
+    /**
+     * Initializes the native FindBugs library.
+     *
+     * @param build
+     *            the current build
+     * @throws IOException
+     *             in case of an error
+     * @throws InterruptedException
+     *             in case of an error
+     */
+    // TODO: this hack works only if slave and master are on the same machine
+    private void initializeFindBugsLibrary(final MavenBuildProxy build) throws IOException,
+            InterruptedException {
+        URL[] urls = build.execute(new BuildCallable<URL[], IOException>() {
+            public URL[] call(final MavenBuild build) throws IOException, InterruptedException {
+                return PlainFindBugsParser.createPluginUrls();
+            }
+        });
+        DetectorFactoryCollection.rawInstance().setPluginList(urls);
     }
 
     /** {@inheritDoc} */
