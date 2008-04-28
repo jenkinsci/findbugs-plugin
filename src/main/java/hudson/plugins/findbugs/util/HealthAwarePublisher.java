@@ -5,10 +5,12 @@ import hudson.model.AbstractBuild;
 import hudson.model.Build;
 import hudson.model.BuildListener;
 import hudson.model.Result;
+import hudson.plugins.findbugs.util.model.JavaProject;
 import hudson.tasks.BuildStep;
 import hudson.tasks.Publisher;
 
 import java.io.IOException;
+import java.io.PrintStream;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -95,43 +97,75 @@ public abstract class HealthAwarePublisher extends Publisher {
 
     /** {@inheritDoc} */
     @Override
-    public final boolean perform(final AbstractBuild<?, ?> build, final Launcher launcher, final BuildListener listener)
-            throws InterruptedException, IOException {
-        if (build.getResult() != Result.ABORTED) {
-            return perform(build, listener);
+    public final boolean perform(final AbstractBuild<?, ?> build, final Launcher launcher,
+            final BuildListener listener) throws InterruptedException, IOException {
+        if (build.getResult() != Result.ABORTED && build.getResult() != Result.FAILURE) {
+            try {
+                JavaProject project = perform(build, listener);
+                evaluateBuildResult(build, listener.getLogger(), project);
+            }
+            catch (AbortException exception) {
+                listener.getLogger().println(exception.getMessage());
+                build.setResult(Result.FAILURE);
+                return false;
+            }
         }
         return true;
     }
 
     /**
-     * Runs the step over the given build and reports the progress to the listener.
+     * Evaluates the build result. The build is marked as unstable if the
+     * threshold has been exceeded.
      *
+     * @param build
+     *            the build to create the action for
+     * @param logger
+     *            the logger
+     * @param project
+     *            the project with the annotations
+     */
+    private void evaluateBuildResult(final AbstractBuild<?, ?> build, final PrintStream logger, final JavaProject project) {
+        int annotationCount = project.getNumberOfAnnotations();
+        if (annotationCount > 0) {
+            logger.println("A total of " + annotationCount + " annotations have been found.");
+            if (isThresholdEnabled() && annotationCount >= getMinimumAnnotations()) {
+                build.setResult(Result.UNSTABLE);
+            }
+        }
+        else {
+            logger.println("No annotations have been found.");
+        }
+    }
+
+    /**
+     * Runs the step over the given build and reports the progress to the
+     * listener.
      * <p>
      * A plugin can contribute the action object to {@link Build#getActions()}
      * so that a 'report' becomes a part of the persisted data of {@link Build}.
-     * This is how JUnit plugin attaches the test report to a build page, for example.
+     * This is how JUnit plugin attaches the test report to a build page, for
+     * example.
      *
      * @param build
      *            the build
      * @param listener
      *            the build listener
-     * @return
-     *      true if the build can continue, false if there was an error
-     *      and the build needs to be aborted.
-     *
+     * @return the created project
      * @throws InterruptedException
-     *      If the build is interrupted by the user (in an attempt to abort the build.)
-     *      Normally the {@link BuildStep} implementations may simply forward the exception
-     *      it got from its lower-level functions.
+     *             If the build is interrupted by the user (in an attempt to
+     *             abort the build.) Normally the {@link BuildStep}
+     *             implementations may simply forward the exception it got from
+     *             its lower-level functions.
      * @throws IOException
-     *      If the implementation wants to abort the processing when an {@link IOException}
-     *      happens, it can simply propagate the exception to the caller. This will cause
-     *      the build to fail, with the default error message.
-     *      Implementations are encouraged to catch {@link IOException} on its own to
-     *      provide a better error message, if it can do so, so that users have better
-     *      understanding on why it failed.
+     *             If the implementation wants to abort the processing when an
+     *             {@link IOException} happens, it can simply propagate the
+     *             exception to the caller. This will cause the build to fail,
+     *             with the default error message. Implementations are
+     *             encouraged to catch {@link IOException} on its own to provide
+     *             a better error message, if it can do so, so that users have
+     *             better understanding on why it failed.
      */
-    protected abstract boolean perform(AbstractBuild<?, ?> build, BuildListener listener) throws InterruptedException, IOException;
+    protected abstract JavaProject perform(AbstractBuild<?, ?> build, BuildListener listener) throws InterruptedException, IOException;
 
     /**
      * Creates a new instance of <code>HealthReportBuilder</code>.
