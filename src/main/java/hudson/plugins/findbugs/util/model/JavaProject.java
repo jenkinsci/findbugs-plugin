@@ -74,11 +74,24 @@ public class JavaProject extends AnnotationContainer {
     }
 
     /**
+     * Returns whether the maven module with the given name exists.
+     *
+     * @param moduleName
+     *            the module to check for
+     * @return <code>true</code> if the maven module with the given name
+     *         exists, <code>false</code> otherwise
+     */
+    public boolean containsModule(final String moduleName) {
+        return moduleMapping.get(moduleName) != null;
+    }
+
+    /**
      * Returns the maven module with the given name.
      *
      * @param moduleName
      *            the module to get
      * @return the module with the given name
+     * @see #hasModule(String)
      */
     public MavenModule getModule(final String moduleName) {
         MavenModule mavenModule = moduleMapping.get(moduleName);
