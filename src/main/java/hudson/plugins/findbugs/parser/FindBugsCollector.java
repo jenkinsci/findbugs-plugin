@@ -26,8 +26,6 @@ import org.xml.sax.SAXException;
  * @author Ulli Hafner
  */
 public class FindBugsCollector implements FileCallable<JavaProject> {
-    /** Slash separator on UNIX. */
-    private static final String SLASH = "/";
     /** Generated ID. */
     private static final long serialVersionUID = -6415863872891783891L;
     /** Determines whether to skip old files. */
@@ -38,6 +36,8 @@ public class FindBugsCollector implements FileCallable<JavaProject> {
     private final long buildTime;
     /** Ant file-set pattern to scan for FindBugs files. */
     private final String filePattern;
+    /** Determines whether we need to initialize FindBugs or not. */
+    private final boolean autoInitializeFindBugs;
 
     /**
      * Creates a new instance of <code>FindBugsCollector</code>.
@@ -48,11 +48,14 @@ public class FindBugsCollector implements FileCallable<JavaProject> {
      *            build time stamp, only newer files are considered
      * @param filePattern
      *            ant file-set pattern to scan for FindBugs files
+     * @param autoInitializeFindBugs
+     *            determines whether we need to initialize FindBugs or not
      */
-    public FindBugsCollector(final PrintStream listener, final long buildTime, final String filePattern) {
+    public FindBugsCollector(final PrintStream listener, final long buildTime, final String filePattern, final boolean autoInitializeFindBugs) {
         logger = listener;
         this.buildTime = buildTime;
         this.filePattern = filePattern;
+        this.autoInitializeFindBugs = autoInitializeFindBugs;
     }
 
     /** {@inheritDoc} */
@@ -133,7 +136,13 @@ public class FindBugsCollector implements FileCallable<JavaProject> {
             }
             else {
                 getLogger().println("Activating parser for findbugs ant task, batch script, or maven-findbugs-plugin > 1.1.1.");
-                NativeFindBugsParser parser = new NativeFindBugsParser();
+                PlainFindBugsParser parser;
+                if (autoInitializeFindBugs) {
+                    parser = new NativeFindBugsParser();
+                }
+                else {
+                    parser = new PlainFindBugsParser();
+                }
                 String moduleRoot = StringUtils.substringBefore(findbugsFile.getPath().replace('\\', '/'), "/target/");
                 module = parser.parse(filePath.read(), moduleRoot, emptyModule.getName());
             }

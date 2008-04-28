@@ -13,12 +13,12 @@ import hudson.model.Action;
 import hudson.model.BuildListener;
 import hudson.model.Result;
 import hudson.plugins.findbugs.parser.FindBugsCollector;
+import hudson.plugins.findbugs.parser.PlainFindBugsParser;
 import hudson.plugins.findbugs.util.HealthReportBuilder;
 import hudson.plugins.findbugs.util.model.JavaProject;
-import hudson.remoting.Which;
 
-import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.maven.project.MavenProject;
@@ -144,23 +144,19 @@ public class FindBugsReporter extends MavenReporter {
             return true;
         }
 
-        // FIXME: should be adapted to the new class loading scheme
         // TODO: this hack works only if slave and master are on the same machine
-        String urls = build.execute(new BuildCallable<String, IOException>() {
-            public String call(final MavenBuild build) throws IOException, InterruptedException {
-                File jarFile = Which.jarFile(DetectorFactoryCollection.class);
-                String pluginPath = jarFile.toString();
-                String original = pluginPath.toString().replace("\\", "/");
-                String urlName = StringUtils.substringBeforeLast(original, "/") + "/fbcontrib-3.4.2-hudson-1.jar";
-                return "file:/" + pluginPath + ";file:/" + urlName;
+        URL[] urls = build.execute(new BuildCallable<URL[], IOException>() {
+            public URL[] call(final MavenBuild build) throws IOException, InterruptedException {
+                return PlainFindBugsParser.createPluginUrls();
             }
         });
-        System.setProperty("hudson.plugins.findbugs.pluginpath", urls);
+        DetectorFactoryCollection.rawInstance().setPluginList(urls);
+
         listener.getLogger().println(urls);
         FilePath pomPath = new FilePath(pom.getBasedir());
         FindBugsCollector findBugsCollector = new FindBugsCollector(listener.getLogger(),
                 build.getTimestamp().getTimeInMillis(),
-                StringUtils.defaultIfEmpty(getPattern(), DEFAULT_PATTERN));
+                StringUtils.defaultIfEmpty(getPattern(), DEFAULT_PATTERN), false);
         final JavaProject project = pomPath.act(findBugsCollector);
 
         build.execute(new BuildCallable<Void, IOException>() {
