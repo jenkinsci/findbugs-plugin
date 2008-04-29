@@ -3,11 +3,18 @@ package hudson.plugins.findbugs.util;
 import hudson.model.AbstractBuild;
 import hudson.model.HealthReport;
 import hudson.model.HealthReportingAction;
+import hudson.plugins.findbugs.util.model.AnnotationProvider;
+import hudson.plugins.findbugs.util.model.Priority;
 import hudson.util.ChartUtil;
+import hudson.util.DataSetBuilder;
+import hudson.util.ChartUtil.NumberOnlyBuildLabel;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.jfree.chart.JFreeChart;
+import org.jfree.data.category.CategoryDataset;
 import org.kohsuke.stapler.StaplerProxy;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
@@ -26,7 +33,7 @@ import edu.umd.cs.findbugs.annotations.SuppressWarnings;
  *            type of the result of this action
  * @author Ulli Hafner
  */
-public abstract class AbstractResultAction<T> implements StaplerProxy, HealthReportingAction, ResultAction<T> {
+public abstract class AbstractResultAction<T extends AnnotationProvider> implements StaplerProxy, HealthReportingAction, ResultAction<T> {
     /** Height of the graph. */
     private static final int HEIGHT = 200;
     /** Width of the graph. */
@@ -69,15 +76,8 @@ public abstract class AbstractResultAction<T> implements StaplerProxy, HealthRep
 
     /** {@inheritDoc} */
     public final HealthReport getBuildHealth() {
-        return healthReportBuilder.computeHealth(getHealthCounter());
+        return healthReportBuilder.computeHealth(getResult().getNumberOfAnnotations());
     }
-
-    /**
-     * Returns the health counter of this result.
-     *
-     * @return the health counter of this result.
-     */
-    protected abstract int getHealthCounter();
 
     /**
      * Returns the associated build of this action.
@@ -105,7 +105,7 @@ public abstract class AbstractResultAction<T> implements StaplerProxy, HealthRep
 
     /** {@inheritDoc} */
     public String getIconFileName() {
-        if (getHealthCounter() > 0) {
+        if (getResult().getNumberOfAnnotations() > 0) {
             return getIconUrl();
         }
         return null;
@@ -160,4 +160,63 @@ public abstract class AbstractResultAction<T> implements StaplerProxy, HealthRep
      * @return the chart for this action.
      */
     protected abstract JFreeChart createChart(StaplerRequest request, StaplerResponse response);
+
+    /**
+     * Returns the data set that represents the result. For each build, the
+     * number of warnings is used as result value.
+     *
+     * @param useHealthBuilder
+     *            determines whether the health builder should be used to create
+     *            the data set
+     * @return the data set
+     */
+    protected CategoryDataset buildDataSet(final boolean useHealthBuilder) {
+        DataSetBuilder<Integer, NumberOnlyBuildLabel> builder = new DataSetBuilder<Integer, NumberOnlyBuildLabel>();
+        for (AbstractResultAction<T> action = this; action != null; action = action.getPreviousBuild()) {
+            T current = action.getResult();
+            if (current != null) {
+                List<Integer> series;
+                if (useHealthBuilder && getHealthReportBuilder().isEnabled()) {
+                    series = getHealthReportBuilder().createSeries(current.getNumberOfAnnotations());
+                }
+                else {
+                    series = new ArrayList<Integer>();
+                    series.add(current.getNumberOfAnnotations(Priority.LOW));
+                    series.add(current.getNumberOfAnnotations(Priority.NORMAL));
+                    series.add(current.getNumberOfAnnotations(Priority.HIGH));
+                }
+                int level = 0;
+                for (Integer integer : series) {
+                    builder.add(integer, level, new NumberOnlyBuildLabel(action.getOwner()));
+                    level++;
+                }
+            }
+        }
+        return builder.build();
+    }
+
+    /**
+     * Gets the result of a previous build if it's recorded, or <code>null</code> if not.
+     *
+     * @return the result of a previous build, or <code>null</code>
+     */
+    @java.lang.SuppressWarnings("unchecked")
+    protected AbstractResultAction<T> getPreviousBuild() {
+        AbstractBuild<?, ?> build = getOwner();
+        while (true) {
+            build = build.getPreviousBuild();
+            if (build == null) {
+                return null;
+            }
+            AbstractResultAction<T> action = build.getAction(getClass());
+            if (action != null) {
+                return action;
+            }
+        }
+    }
+
+    /** {@inheritDoc} */
+    public boolean hasPreviousResultAction() {
+        return getPreviousBuild() != null;
+    }
 }

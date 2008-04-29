@@ -91,7 +91,7 @@ public class JavaProject extends AnnotationContainer {
      * @param moduleName
      *            the module to get
      * @return the module with the given name
-     * @see #hasModule(String)
+     * @see #containsModule(String)
      */
     public MavenModule getModule(final String moduleName) {
         MavenModule mavenModule = moduleMapping.get(moduleName);
