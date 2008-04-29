@@ -1,7 +1,7 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt" xmlns:local="local">
     <j:if test="${from.hasValidResults(it.lastSuccessfulBuild)}">
 	    <div align="right">
-	      <j:set var="mode" value="${h.getCookie(request, it.cookieName).value}" />
+	      <j:set var="mode" value="${h.getCookie(request, from.cookieName).value}" />
 	      <j:if test="${mode != null}">
 	        <j:set var="trendQueryParameter" value="?useHealthBuilder=${mode}" />
 	      </j:if>
@@ -10,14 +10,14 @@
 	      </j:if>
 	      <p/>
 		  <div class="test-trend-caption">
-		    ${it.trendName}
+		    ${from.trendName}
 		  </div>
 		  <div>
-		    <img src="${it.urlName}/trend${trendQueryParameter}" lazymap="${it.urlName}/trendMap${trendQueryParameter}"/>
+		    <img src="${from.urlName}/trend${trendQueryParameter}" lazymap="${from.urlName}/trendMap${trendQueryParameter}"/>
 		  </div>
 	      <j:if test="${from.isHealthinessEnabled()}">
 		      <div style="text-align:right">
-		        <a href="${it.urlName}/flipTrend">
+		        <a href="${from.urlName}/flipTrend">
 		          <j:choose>
 		            <j:when test="${mode}">
 		              (${%show priorities})
