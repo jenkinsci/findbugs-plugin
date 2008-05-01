@@ -37,6 +37,8 @@ public abstract class AbstractProjectAction<T extends ResultAction<?>> implement
     private final String url;
     /** Plug-in results URL. */
     private final String resultUrl;
+    /** Determines the height of the trend graph. */
+    private final int height;
 
     /**
      * Creates a new instance of <code>AbstractProjectAction</code>.
@@ -47,10 +49,13 @@ public abstract class AbstractProjectAction<T extends ResultAction<?>> implement
      *            the type of the result action
      * @param plugin
      *            the plug-in that owns this action
+     * @param height
+     *            the height of the trend graph
      */
-    public AbstractProjectAction(final AbstractProject<?, ?> project, final Class<T> resultActionType, final PluginDescriptor plugin) {
+    public AbstractProjectAction(final AbstractProject<?, ?> project, final Class<T> resultActionType, final PluginDescriptor plugin, final int height) {
         this.project = project;
         this.resultActionType = resultActionType;
+        this.height = height;
         iconUrl = plugin.getIconUrl();
         url = plugin.getPluginName();
         resultUrl = plugin.getPluginResultUrlName();
@@ -163,7 +168,7 @@ public abstract class AbstractProjectAction<T extends ResultAction<?>> implement
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
         else {
-            action.doGraph(request, response);
+            action.doGraph(request, response, height);
         }
     }
 
@@ -191,7 +196,7 @@ public abstract class AbstractProjectAction<T extends ResultAction<?>> implement
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
         else {
-            action.doGraphMap(request, response);
+            action.doGraphMap(request, response, height);
         }
     }
 

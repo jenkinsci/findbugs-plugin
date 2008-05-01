@@ -35,8 +35,6 @@ import edu.umd.cs.findbugs.annotations.SuppressWarnings;
  * @author Ulli Hafner
  */
 public abstract class AbstractResultAction<T extends AnnotationProvider> implements StaplerProxy, HealthReportingAction, ToolTipProvider, ResultAction<T> {
-    /** Height of the graph. */
-    private static final int HEIGHT = 200;
     /** Width of the graph. */
     private static final int WIDTH = 500;
     /** The associated build of this action. */
@@ -54,7 +52,8 @@ public abstract class AbstractResultAction<T extends AnnotationProvider> impleme
      *            the associated build of this action
      * @param healthReportBuilder
      *            health builder to use
-     * @param result the result of the action
+     * @param result
+     *            the result of the action
      */
     public AbstractResultAction(final AbstractBuild<?, ?> owner, final HealthReportBuilder healthReportBuilder, final T result) {
         super();
@@ -131,15 +130,17 @@ public abstract class AbstractResultAction<T extends AnnotationProvider> impleme
      *            Stapler request
      * @param response
      *            Stapler response
+     * @param height
+     *            the height of the trend graph
      * @throws IOException
      *             in case of an error
      */
-    public final void doGraph(final StaplerRequest request, final StaplerResponse response) throws IOException {
+    public final void doGraph(final StaplerRequest request, final StaplerResponse response, final int height) throws IOException {
         if (ChartUtil.awtProblem) {
             response.sendRedirect2(request.getContextPath() + "/images/headless.png");
             return;
         }
-        ChartUtil.generateGraph(request, response, createChart(request, response), WIDTH, HEIGHT);
+        ChartUtil.generateGraph(request, response, createChart(request, response), WIDTH, height);
     }
 
     /**
@@ -149,11 +150,13 @@ public abstract class AbstractResultAction<T extends AnnotationProvider> impleme
      *            Stapler request
      * @param response
      *            Stapler response
+     * @param height
+     *            the height of the trend graph
      * @throws IOException
      *             in case of an error
      */
-    public final void doGraphMap(final StaplerRequest request, final StaplerResponse response) throws IOException {
-        ChartUtil.generateClickableMap(request, response, createChart(request, response), WIDTH, HEIGHT);
+    public final void doGraphMap(final StaplerRequest request, final StaplerResponse response, final int height) throws IOException {
+        ChartUtil.generateClickableMap(request, response, createChart(request, response), WIDTH, height);
     }
 
     /**

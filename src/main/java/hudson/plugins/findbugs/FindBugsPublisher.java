@@ -42,16 +42,18 @@ public class FindBugsPublisher extends HealthAwarePublisher {
      * @param unHealthy
      *            Report health as 0% when the number of warnings is greater
      *            than this value
+     * @param height
+     *            the height of the trend graph
      * @stapler-constructor
      */
-    public FindBugsPublisher(final String pattern, final String threshold, final String healthy, final String unHealthy) {
-        super(pattern, threshold, healthy, unHealthy);
+    public FindBugsPublisher(final String pattern, final String threshold, final String healthy, final String unHealthy, final String height) {
+        super(pattern, threshold, healthy, unHealthy, height);
     }
 
     /** {@inheritDoc} */
     @Override
     public Action getProjectAction(final AbstractProject<?, ?> project) {
-        return new FindBugsProjectAction(project);
+        return new FindBugsProjectAction(project, getTrendHeight());
     }
 
     /** {@inheritDoc} */

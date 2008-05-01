@@ -26,6 +26,8 @@ import edu.umd.cs.findbugs.DetectorFactoryCollection;
 
 // FIXME: this class more or less is a copy of the FindBugsPublisher, we should find a way to generalize portions of this class
 public class FindBugsReporter extends MavenReporter {
+    /** Default height of the graph. */
+    private static final int HEIGHT = 200;
     /** Descriptor of this publisher. */
     public static final FindBugsReporterDescriptor FINDBUGS_SCANNER_DESCRIPTOR = new FindBugsReporterDescriptor(FindBugsPublisher.FIND_BUGS_DESCRIPTOR);
     /** Default FindBugs pattern. */
@@ -48,6 +50,8 @@ public class FindBugsReporter extends MavenReporter {
     private int unHealthyAnnotations;
     /** Determines whether to use the provided healthy thresholds. */
     private boolean healthyReportEnabled;
+    /** Determines the height of the trend graph. */
+    private final String height;
 
     /**
      * Creates a new instance of <code>FindBugsReporter</code>.
@@ -63,14 +67,17 @@ public class FindBugsReporter extends MavenReporter {
      * @param unHealthy
      *            Report health as 0% when the number of warnings is greater
      *            than this value
+     * @param height
+     *            the height of the trend graph
      * @stapler-constructor
      */
-    public FindBugsReporter(final String pattern, final String threshold, final String healthy, final String unHealthy) {
+    public FindBugsReporter(final String pattern, final String threshold, final String healthy, final String unHealthy, final String height) {
         super();
         this.threshold = threshold;
         this.healthy = healthy;
         this.unHealthy = unHealthy;
         this.pattern = pattern;
+        this.height = height;
 
         if (!StringUtils.isEmpty(threshold)) {
             try {
@@ -201,13 +208,39 @@ public class FindBugsReporter extends MavenReporter {
     /** {@inheritDoc} */
     @Override
     public Action getProjectAction(final MavenModule module) {
-        return new FindBugsProjectAction(module);
+        return new FindBugsProjectAction(module, getTrendHeight());
     }
 
     /** {@inheritDoc} */
     @Override
     public MavenReporterDescriptor getDescriptor() {
         return FINDBUGS_SCANNER_DESCRIPTOR;
+    }
+
+    /**
+     * Returns the height of the trend graph.
+     *
+     * @return the height of the trend graph
+     */
+    public String getHeight() {
+        return height;
+    }
+
+    /**
+     * Returns the height of the trend graph.
+     *
+     * @return the height of the trend graph
+     */
+    public int getTrendHeight() {
+        if (!StringUtils.isEmpty(height)) {
+            try {
+                return Math.max(50, Integer.valueOf(height));
+            }
+            catch (NumberFormatException exception) {
+                // nothing to do, we use the default value
+            }
+        }
+        return HEIGHT;
     }
 }
 

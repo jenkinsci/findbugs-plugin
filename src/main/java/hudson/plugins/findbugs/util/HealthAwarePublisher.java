@@ -28,6 +28,8 @@ import org.apache.commons.lang.StringUtils;
  * </ul>
  */
 public abstract class HealthAwarePublisher extends Publisher {
+    /** Default height of the graph. */
+    private static final int HEIGHT = 200;
     /** Ant file-set pattern of files to work with. */
     private final String pattern;
     /** Annotation threshold to be reached if a build should be considered as unstable. */
@@ -46,6 +48,8 @@ public abstract class HealthAwarePublisher extends Publisher {
     private int unHealthyAnnotations;
     /** Determines whether to use the provided healthy thresholds. */
     private boolean healthyReportEnabled;
+    /** Determines the height of the trend graph. */
+    private final String height;
 
     /**
      * Creates a new instance of <code>HealthAwarePublisher</code>.
@@ -61,14 +65,17 @@ public abstract class HealthAwarePublisher extends Publisher {
      * @param unHealthy
      *            Report health as 0% when the number of open tasks is greater
      *            than this value
+     * @param height
+     *            the height of the trend graph
      */
     public HealthAwarePublisher(final String pattern, final String threshold,
-            final String healthy, final String unHealthy) {
+            final String healthy, final String unHealthy, final String height) {
         super();
         this.threshold = threshold;
         this.healthy = healthy;
         this.unHealthy = unHealthy;
         this.pattern = pattern;
+        this.height = height;
 
         if (!StringUtils.isEmpty(threshold)) {
             try {
@@ -141,9 +148,9 @@ public abstract class HealthAwarePublisher extends Publisher {
      * Runs the step over the given build and reports the progress to the
      * listener.
      * <p>
-     * A plugin can contribute the action object to {@link Build#getActions()}
+     * A plug-in can contribute the action object to {@link Build#getActions()}
      * so that a 'report' becomes a part of the persisted data of {@link Build}.
-     * This is how JUnit plugin attaches the test report to a build page, for
+     * This is how JUnit plug-in attaches the test report to a build page, for
      * example.
      *
      * @param build
@@ -262,5 +269,31 @@ public abstract class HealthAwarePublisher extends Publisher {
      */
     public String getPattern() {
         return pattern;
+    }
+
+    /**
+     * Returns the height of the trend graph.
+     *
+     * @return the height of the trend graph
+     */
+    public String getHeight() {
+        return height;
+    }
+
+    /**
+     * Returns the height of the trend graph.
+     *
+     * @return the height of the trend graph
+     */
+    public int getTrendHeight() {
+        if (!StringUtils.isEmpty(height)) {
+            try {
+                return Math.max(50, Integer.valueOf(height));
+            }
+            catch (NumberFormatException exception) {
+                // nothing to do, we use the default value
+            }
+        }
+        return HEIGHT;
     }
 }
