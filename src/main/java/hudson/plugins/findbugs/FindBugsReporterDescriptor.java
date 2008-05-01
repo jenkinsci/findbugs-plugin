@@ -1,9 +1,11 @@
 package hudson.plugins.findbugs;
 
 import hudson.maven.MavenReporter;
-import hudson.maven.MavenReporterDescriptor;
+import hudson.plugins.findbugs.util.PluginDescriptor;
+import hudson.plugins.findbugs.util.ReporterDescriptor;
 
 import org.kohsuke.stapler.StaplerRequest;
+
 
 /**
  * Descriptor for the class {@link FindBugsReporter}. Used as a singleton. The
@@ -11,18 +13,15 @@ import org.kohsuke.stapler.StaplerRequest;
  *
  * @author Ulli Hafner
  */
-public class FindBugsReporterDescriptor extends MavenReporterDescriptor {
+public class FindBugsReporterDescriptor extends ReporterDescriptor {
     /**
      * Creates a new instance of <code>FindBugsReporterDescriptor</code>.
+     *
+     * @param pluginDescriptor
+     *            the plug-in descriptor of the publisher
      */
-    public FindBugsReporterDescriptor() {
-        super(FindBugsReporter.class);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getDisplayName() {
-        return Messages.FindBugs_Publisher_Name();
+    public FindBugsReporterDescriptor(final PluginDescriptor pluginDescriptor) {
+        super(FindBugsReporter.class, pluginDescriptor);
     }
 
     /** {@inheritDoc} */
@@ -33,14 +32,8 @@ public class FindBugsReporterDescriptor extends MavenReporterDescriptor {
 
     /** {@inheritDoc} */
     @Override
-    public String getHelpFile() {
-        return "/plugin/" + FindBugsDescriptor.PLUGIN_NAME + "/help.html";
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public MavenReporter newInstance(final StaplerRequest request) throws FormException {
-        return request.bindParameters(FindBugsReporter.class, FindBugsDescriptor.PLUGIN_NAME + "_");
+        return request.bindParameters(FindBugsReporter.class, getPublisherDescriptor().getPluginName() + "_");
     }
 }
 

@@ -86,10 +86,13 @@ public class FindBugsPublisher extends HealthAwarePublisher {
      *             if user cancels the operation
      */
     private JavaProject parseAllWorkspaceFiles(final AbstractBuild<?, ?> build, final PrintStream logger) throws IOException, InterruptedException {
-        FindBugsCollector findBugsCollector = new FindBugsCollector(logger, build.getTimestamp().getTimeInMillis(),
-                        StringUtils.defaultIfEmpty(getPattern(), DEFAULT_PATTERN), true);
+        FindBugsCollector collector = new FindBugsCollector(
+                    logger,
+                    build.getTimestamp().getTimeInMillis(),
+                    StringUtils.defaultIfEmpty(getPattern(), DEFAULT_PATTERN),
+                    true);
 
-        return build.getProject().getWorkspace().act(findBugsCollector);
+        return build.getProject().getWorkspace().act(collector);
     }
 
     /** {@inheritDoc} */

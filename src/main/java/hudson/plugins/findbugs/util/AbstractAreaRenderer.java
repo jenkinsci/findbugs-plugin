@@ -15,53 +15,36 @@ import org.jfree.data.category.CategoryDataset;
 public abstract class AbstractAreaRenderer extends StackedAreaRenderer2 {
     /** Base URL of the graph links. */
     private final String url;
-    /** Tooltip to be shown if there is one item. */
-    private final String singleTooltip;
-    /** Tooltip to be shown if there are multiple items. */
-    private final String multipleTooltip;
+    /** Tooltip provider for the clickable map. */
+    private final ToolTipBuilder toolTipBuilder;
 
     /**
      * Creates a new instance of <code>AbstractAreaRenderer</code>.
      *
      * @param url
      *            base URL of the graph links
-     * @param singleTooltip
-     *            tooltip if there is one item
-     * @param multipleTooltip
-     *            tooltip if there are multiple items
+     * @param toolTipProvider
+     *            tooltip provider for the clickable map
      */
-    public AbstractAreaRenderer(final String url, final String singleTooltip, final String multipleTooltip) {
+    public AbstractAreaRenderer(final String url, final ToolTipProvider toolTipProvider) {
         super();
-
+        toolTipBuilder = new ToolTipBuilder(toolTipProvider);
         this.url = "/" + url + "/";
-        this.singleTooltip = singleTooltip;
-        this.multipleTooltip = multipleTooltip;
     }
 
     /** {@inheritDoc} */
     @Override
-    public String generateURL(final CategoryDataset dataset, final int row, final int column) {
+    public final String generateURL(final CategoryDataset dataset, final int row, final int column) {
         return getLabel(dataset, column).build.getNumber() + url;
     }
 
     /**
-     * Returns the tooltip if there is one item.
+     * Gets the tool tip builder.
      *
-     * @return the tooltip if there is one item
+     * @return the tool tip builder
      */
-    public String getSingleTooltip() {
-        return singleTooltip;
-    }
-
-    /**
-     * Returns the tooltip if there are multiple items.
-     *
-     * @param number
-     *            number of items
-     * @return the tooltip if there are multiple items
-     */
-    public String getMultipleTooltip(final int number) {
-        return String.format(multipleTooltip, number);
+    public final ToolTipBuilder getToolTipBuilder() {
+        return toolTipBuilder;
     }
 
     /**

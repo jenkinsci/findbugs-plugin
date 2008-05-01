@@ -27,7 +27,7 @@ import edu.umd.cs.findbugs.DetectorFactoryCollection;
 // FIXME: this class more or less is a copy of the FindBugsPublisher, we should find a way to generalize portions of this class
 public class FindBugsReporter extends MavenReporter {
     /** Descriptor of this publisher. */
-    public static final FindBugsReporterDescriptor FINDBUGS_SCANNER_DESCRIPTOR = new FindBugsReporterDescriptor();
+    public static final FindBugsReporterDescriptor FINDBUGS_SCANNER_DESCRIPTOR = new FindBugsReporterDescriptor(FindBugsPublisher.FIND_BUGS_DESCRIPTOR);
     /** Default FindBugs pattern. */
     private static final String DEFAULT_PATTERN = "**/findbugsXml.xml";
     /** Ant file-set pattern of files to work with. */

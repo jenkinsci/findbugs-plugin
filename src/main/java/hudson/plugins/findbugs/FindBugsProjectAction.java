@@ -21,7 +21,7 @@ public class FindBugsProjectAction extends AbstractProjectAction<FindBugsResultA
      *            the project that owns this action
      */
     public FindBugsProjectAction(final AbstractProject<?, ?> project) {
-        super(project, FindBugsResultAction.class, FindBugsDescriptor.ACTION_ICON, FindBugsDescriptor.PLUGIN_NAME);
+        super(project, FindBugsResultAction.class, FindBugsPublisher.FIND_BUGS_DESCRIPTOR);
     }
 
     /** {@inheritDoc} */
@@ -30,12 +30,8 @@ public class FindBugsProjectAction extends AbstractProjectAction<FindBugsResultA
     }
 
     /** {@inheritDoc} */
-    public String getUrlName() {
-        return FindBugsDescriptor.PLUGIN_NAME;
-    }
-
-    /** {@inheritDoc} */
     @Override
+    // TODO: if a new graph is added replace with a super-class method
     public String getCookieName() {
         return "FindBugs_displayMode";
     }

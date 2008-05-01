@@ -33,8 +33,10 @@ public abstract class AbstractProjectAction<T extends ResultAction<?>> implement
     private final Class<T> resultActionType;
     /** The icon URL of this action: it will be shown as soon as a result is available. */
     private final String iconUrl;
-    /** URL to the results of the last build. */
-    private final String resultsUrl;
+    /** Plug-in URL. */
+    private final String url;
+    /** Plug-in results URL. */
+    private final String resultUrl;
 
     /**
      * Creates a new instance of <code>AbstractProjectAction</code>.
@@ -43,17 +45,15 @@ public abstract class AbstractProjectAction<T extends ResultAction<?>> implement
      *            the project that owns this action
      * @param resultActionType
      *            the type of the result action
-     * @param iconUrl
-     *            the icon URL of this action: it will be shown as soon as a
-     *            result is available.
-     * @param pluginName
-     *            the plug-in name
+     * @param plugin
+     *            the plug-in that owns this action
      */
-    public AbstractProjectAction(final AbstractProject<?, ?> project, final Class<T> resultActionType, final String iconUrl, final String pluginName) {
+    public AbstractProjectAction(final AbstractProject<?, ?> project, final Class<T> resultActionType, final PluginDescriptor plugin) {
         this.project = project;
         this.resultActionType = resultActionType;
-        this.iconUrl = iconUrl;
-        this.resultsUrl = pluginName + "Result";
+        iconUrl = plugin.getIconUrl();
+        url = plugin.getPluginName();
+        resultUrl = plugin.getPluginResultUrlName();
     }
 
     /**
@@ -109,6 +109,11 @@ public abstract class AbstractProjectAction<T extends ResultAction<?>> implement
             return iconUrl;
         }
         return null;
+    }
+
+    /** {@inheritDoc} */
+    public final String getUrlName() {
+        return url;
     }
 
     /**
@@ -204,7 +209,7 @@ public abstract class AbstractProjectAction<T extends ResultAction<?>> implement
     public void doIndex(final StaplerRequest request, final StaplerResponse response) throws IOException {
         AbstractBuild<?, ?> build = getLastFinishedBuild();
         if (build != null) {
-            response.sendRedirect2("../" + build.getNumber() + "/" + resultsUrl);
+            response.sendRedirect2(String.format("../%d/%s", build.getNumber(), resultUrl));
         }
     }
 

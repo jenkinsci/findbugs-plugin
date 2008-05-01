@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.category.CategoryDataset;
 import org.kohsuke.stapler.StaplerProxy;
@@ -33,7 +34,7 @@ import edu.umd.cs.findbugs.annotations.SuppressWarnings;
  *            type of the result of this action
  * @author Ulli Hafner
  */
-public abstract class AbstractResultAction<T extends AnnotationProvider> implements StaplerProxy, HealthReportingAction, ResultAction<T> {
+public abstract class AbstractResultAction<T extends AnnotationProvider> implements StaplerProxy, HealthReportingAction, ToolTipProvider, ResultAction<T> {
     /** Height of the graph. */
     private static final int HEIGHT = 200;
     /** Width of the graph. */
@@ -60,6 +61,18 @@ public abstract class AbstractResultAction<T extends AnnotationProvider> impleme
         this.owner = owner;
         this.healthReportBuilder = healthReportBuilder;
         this.result = result;
+    }
+
+    /**
+     * Returns the descriptor of the associated plug-in.
+     *
+     * @return the descriptor of the associated plug-in
+     */
+    protected abstract PluginDescriptor getDescriptor();
+
+    /** {@inheritDoc} */
+    public String getUrlName() {
+        return getDescriptor().getPluginResultUrlName();
     }
 
     /**
@@ -106,17 +119,10 @@ public abstract class AbstractResultAction<T extends AnnotationProvider> impleme
     /** {@inheritDoc} */
     public String getIconFileName() {
         if (getResult().getNumberOfAnnotations() > 0) {
-            return getIconUrl();
+            return getDescriptor().getIconUrl();
         }
         return null;
     }
-
-    /**
-     * Returns the file name URL of the icon.
-     *
-     * @return the file name URL of the icon.
-     */
-    protected abstract String getIconUrl();
 
     /**
      * Generates a PNG image for the result trend.
@@ -159,7 +165,13 @@ public abstract class AbstractResultAction<T extends AnnotationProvider> impleme
      *            Stapler response
      * @return the chart for this action.
      */
-    protected abstract JFreeChart createChart(StaplerRequest request, StaplerResponse response);
+    private JFreeChart createChart(final StaplerRequest request, final StaplerResponse response) {
+        String parameter = request.getParameter("useHealthBuilder");
+        boolean useHealthBuilder = Boolean.valueOf(StringUtils.defaultIfEmpty(parameter, "true"));
+
+        return getHealthReportBuilder().createGraph(useHealthBuilder,
+                getDescriptor().getPluginResultUrlName(), buildDataSet(useHealthBuilder), this);
+    }
 
     /**
      * Returns the data set that represents the result. For each build, the

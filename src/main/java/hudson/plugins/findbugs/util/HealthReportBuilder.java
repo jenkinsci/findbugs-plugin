@@ -323,20 +323,18 @@ public class HealthReportBuilder implements Serializable {
      *            the URL shown in the tool tips
      * @param dataset
      *            the data set of the values to render
-     * @param singleTooltip
-     *            tooltip if there is one item
-     * @param multipleTooltip
-     *            tooltip if there are multiple items
+     * @param toolTipProvider
+     *            tooltip provider for the clickable map
      * @return the created graph
      */
     public JFreeChart createGraph(final boolean useHealthBuilder, final String url, final CategoryDataset dataset,
-            final String singleTooltip, final String multipleTooltip) {
+            final ToolTipProvider toolTipProvider) {
         StackedAreaRenderer renderer;
         if (useHealthBuilder && isEnabled()) {
-            renderer = new ResultAreaRenderer(url, singleTooltip, multipleTooltip);
+            renderer = new ResultAreaRenderer(url, toolTipProvider);
         }
         else {
-            renderer = new PrioritiesAreaRenderer(url, singleTooltip, multipleTooltip);
+            renderer = new PrioritiesAreaRenderer(url, toolTipProvider);
         }
 
         return ChartBuilder.createChart(dataset, renderer, getThreshold(),

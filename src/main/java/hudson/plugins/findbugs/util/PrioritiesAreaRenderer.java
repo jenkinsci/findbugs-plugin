@@ -15,7 +15,7 @@ import org.jfree.data.category.CategoryDataset;
  * @author Ulli Hafner
  */
 // TODO: the link should be aware of the priorities and filter the selected priority
-public final class PrioritiesAreaRenderer extends AbstractAreaRenderer {
+public class PrioritiesAreaRenderer extends AbstractAreaRenderer {
     /** Unique identifier of this class. */
     private static final long serialVersionUID = -4683951507836348304L;
 
@@ -24,26 +24,18 @@ public final class PrioritiesAreaRenderer extends AbstractAreaRenderer {
      *
      * @param url
      *            base URL of the graph links
-     * @param singleTooltip
-     *            tooltip if there is one item
-     * @param multipleTooltip
-     *            tooltip if there are multiple items
+     * @param toolTipProvider
+     *            tooltip provider for the clickable map
      */
-    public PrioritiesAreaRenderer(final String url, final String singleTooltip, final String multipleTooltip) {
-        super(url, singleTooltip, multipleTooltip);
+    public PrioritiesAreaRenderer(final String url, final ToolTipProvider toolTipProvider) {
+        super(url, toolTipProvider);
     }
 
     /** {@inheritDoc} */
     @Override
     public String generateToolTip(final CategoryDataset dataset, final int row, final int column) {
         StringBuilder tooltip = new StringBuilder();
-        int number = dataset.getValue(row, column).intValue();
-        if (number == 1) {
-            tooltip.append(getSingleTooltip());
-        }
-        else {
-            tooltip.append(getMultipleTooltip(number));
-        }
+        tooltip.append(getToolTipBuilder().getTooltip(dataset.getValue(row, column).intValue()));
         tooltip.append(" ");
         if (row == 2) {
             tooltip.append(Messages.Trend_PriorityHigh());

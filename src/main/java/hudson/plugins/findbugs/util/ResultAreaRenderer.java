@@ -15,7 +15,7 @@ import org.jfree.data.category.CategoryDataset;
  *
  * @author Ulli Hafner
  */
-public final class ResultAreaRenderer extends AbstractAreaRenderer {
+public class ResultAreaRenderer extends AbstractAreaRenderer {
     /** Unique identifier of this class. */
     private static final long serialVersionUID = -4683951507836348304L;
 
@@ -24,13 +24,11 @@ public final class ResultAreaRenderer extends AbstractAreaRenderer {
      *
      * @param url
      *            base URL of the graph links
-     * @param singleTooltip
-     *            tooltip if there is one item
-     * @param multipleTooltip
-     *            tooltip if there are multiple items
+     * @param toolTipProvider
+     *            tooltip provider for the clickable map
      */
-    public ResultAreaRenderer(final String url, final String singleTooltip, final String multipleTooltip) {
-        super(url, singleTooltip, multipleTooltip);
+    public ResultAreaRenderer(final String url, final ToolTipProvider toolTipProvider) {
+        super(url, toolTipProvider);
     }
 
     /** {@inheritDoc} */
@@ -43,11 +41,6 @@ public final class ResultAreaRenderer extends AbstractAreaRenderer {
                 number += value.intValue();
             }
         }
-        if (number == 1) {
-            return getSingleTooltip();
-        }
-        else {
-            return getMultipleTooltip(number);
-        }
+        return getToolTipBuilder().getTooltip(number);
     }
 }

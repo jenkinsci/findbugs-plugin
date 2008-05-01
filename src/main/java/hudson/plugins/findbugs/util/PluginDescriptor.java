@@ -38,7 +38,23 @@ public abstract class PluginDescriptor extends BuildStepDescriptor<Publisher> {
      *
      * @return the name of the plug-in
      */
-    protected abstract String getPluginName();
+    public final String getPluginResultUrlName() {
+        return getPluginName() + "Result";
+    }
+
+    /**
+     * Returns the name of the plug-in.
+     *
+     * @return the name of the plug-in
+     */
+    public abstract String getPluginName();
+
+    /**
+     * Returns the URL of the plug-in icon (24x24 image).
+     *
+     * @return the URL of the plug-in icon
+     */
+    public abstract String getIconUrl();
 
     /**
      * Performs on-the-fly validation on the file mask.
