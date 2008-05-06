@@ -22,6 +22,7 @@ import java.net.URL;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.maven.project.MavenProject;
+import org.codehaus.plexus.component.configurator.ComponentConfigurationException;
 
 import edu.umd.cs.findbugs.DetectorFactoryCollection;
 
@@ -32,7 +33,9 @@ public class FindBugsReporter extends MavenReporter {
     /** Descriptor of this publisher. */
     public static final FindBugsReporterDescriptor FINDBUGS_SCANNER_DESCRIPTOR = new FindBugsReporterDescriptor(FindBugsPublisher.FIND_BUGS_DESCRIPTOR);
     /** Default FindBugs pattern. */
-    private static final String DEFAULT_PATTERN = "findbugsXml.xml";
+    private static final String FINDBUGS_XML_FILE = "findbugsXml.xml";
+    /** Default FindBugs pattern. */
+    private static final String MAVEN_FINDBUGS_XML_FILE = "findbugs.xml";
     /** Ant file-set pattern of files to work with. */
     private final String pattern;
     /** Annotation threshold to be reached if a build should be considered as unstable. */
@@ -167,6 +170,16 @@ public class FindBugsReporter extends MavenReporter {
             listener.getLogger().println("Scipping findbugs plug-in: there is already a result available.");
             return true;
         }
+        String fileName = MAVEN_FINDBUGS_XML_FILE;
+        try {
+            Boolean isNativeFormat = mojo.getConfigurationValue("findbugsXmlOutput", Boolean.class);
+            if (Boolean.TRUE.equals(isNativeFormat)) {
+                fileName = FINDBUGS_XML_FILE;
+            }
+        }
+        catch (ComponentConfigurationException exception) {
+            // ignore and use old format
+        }
 
         synchronized (lockLibraryInitialization) {
             if (!isInitialized) {
@@ -177,8 +190,7 @@ public class FindBugsReporter extends MavenReporter {
 
         FilePath targetPath = new FilePath(new FilePath(pom.getBasedir()), "target");
         FindBugsCollector findBugsCollector = new FindBugsCollector(listener.getLogger(),
-                build.getTimestamp().getTimeInMillis(),
-                StringUtils.defaultIfEmpty(getPattern(), DEFAULT_PATTERN), false);
+                build.getTimestamp().getTimeInMillis(), fileName, false);
         final JavaProject project = targetPath.act(findBugsCollector);
 
         build.execute(new BuildCallable<Void, IOException>() {
