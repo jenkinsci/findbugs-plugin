@@ -32,7 +32,7 @@ public class FindBugsReporter extends MavenReporter {
     /** Descriptor of this publisher. */
     public static final FindBugsReporterDescriptor FINDBUGS_SCANNER_DESCRIPTOR = new FindBugsReporterDescriptor(FindBugsPublisher.FIND_BUGS_DESCRIPTOR);
     /** Default FindBugs pattern. */
-    private static final String DEFAULT_PATTERN = "**/findbugsXml.xml";
+    private static final String DEFAULT_PATTERN = "findbugsXml.xml";
     /** Ant file-set pattern of files to work with. */
     private final String pattern;
     /** Annotation threshold to be reached if a build should be considered as unstable. */
@@ -175,11 +175,11 @@ public class FindBugsReporter extends MavenReporter {
             }
         }
 
-        FilePath pomPath = new FilePath(pom.getBasedir());
+        FilePath targetPath = new FilePath(new FilePath(pom.getBasedir()), "target");
         FindBugsCollector findBugsCollector = new FindBugsCollector(listener.getLogger(),
                 build.getTimestamp().getTimeInMillis(),
                 StringUtils.defaultIfEmpty(getPattern(), DEFAULT_PATTERN), false);
-        final JavaProject project = pomPath.act(findBugsCollector);
+        final JavaProject project = targetPath.act(findBugsCollector);
 
         build.execute(new BuildCallable<Void, IOException>() {
             public Void call(final MavenBuild build) throws IOException, InterruptedException {
