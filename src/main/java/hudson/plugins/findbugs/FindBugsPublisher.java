@@ -68,7 +68,7 @@ public class FindBugsPublisher extends HealthAwarePublisher {
         HealthReportBuilder healthReportBuilder = createHealthReporter(
                 Messages.FindBugs_ResultAction_HealthReportSingleItem(),
                 Messages.FindBugs_ResultAction_HealthReportMultipleItem("%d"));
-        build.getActions().add(new FindBugsResultAction(build, result, healthReportBuilder));
+        build.getActions().add(new FindBugsResultAction(build, healthReportBuilder, result));
 
         return project;
     }

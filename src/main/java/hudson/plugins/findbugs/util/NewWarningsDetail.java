@@ -1,12 +1,10 @@
 package hudson.plugins.findbugs.util;
 
 import hudson.model.AbstractBuild;
+import hudson.model.ModelObject;
 import hudson.plugins.findbugs.util.model.FileAnnotation;
 
 import java.util.Collection;
-
-import org.kohsuke.stapler.StaplerRequest;
-import org.kohsuke.stapler.StaplerResponse;
 
 /**
  * Result object to visualize the new warnings in a build.
@@ -35,17 +33,16 @@ public class NewWarningsDetail extends AbstractAnnotationsDetail {
     }
 
     /**
-     * Returns the dynamic result of this object (detail page for a source file).
+     * Returns the dynamic result of this object (detail page for a source
+     * file).
      *
-     * @param link the source file to get the result for
-     * @param request
-     *            Stapler request
-     * @param response
-     *            Stapler response
-     * @return the dynamic result of this object (detail page for a source file).
+     * @param link
+     *            the source file to get the result for
+     * @return the dynamic result of this object (detail page for a source
+     *         file).
      */
     @Override
-    public Object getDynamic(final String link, final StaplerRequest request, final StaplerResponse response) {
+    public ModelObject getDynamic(final String link) {
         return new SourceDetail(getOwner(), getAnnotation(link));
     }
 }

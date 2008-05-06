@@ -1,6 +1,7 @@
 package hudson.plugins.findbugs.util;
 
 import hudson.model.AbstractBuild;
+import hudson.model.ModelObject;
 import hudson.plugins.findbugs.util.model.JavaPackage;
 import hudson.plugins.findbugs.util.model.MavenModule;
 import hudson.plugins.findbugs.util.model.WorkspaceFile;
@@ -101,7 +102,7 @@ public class ModuleDetail extends AbstractAnnotationsDetail {
      * @return the dynamic result of this module detail view
      */
     @Override
-    public AbstractAnnotationsDetail getDynamic(final String link) {
+    public ModelObject getDynamic(final String link) {
         if (isSinglePackageModule()) {
             return null;
         }

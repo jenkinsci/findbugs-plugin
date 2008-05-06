@@ -28,8 +28,6 @@ import org.apache.commons.lang.StringUtils;
  * </ul>
  */
 public abstract class HealthAwarePublisher extends Publisher {
-    /** Default height of the graph. */
-    private static final int HEIGHT = 200;
     /** Ant file-set pattern of files to work with. */
     private final String pattern;
     /** Annotation threshold to be reached if a build should be considered as unstable. */
@@ -286,14 +284,6 @@ public abstract class HealthAwarePublisher extends Publisher {
      * @return the height of the trend graph
      */
     public int getTrendHeight() {
-        if (!StringUtils.isEmpty(height)) {
-            try {
-                return Math.max(50, Integer.valueOf(height));
-            }
-            catch (NumberFormatException exception) {
-                // nothing to do, we use the default value
-            }
-        }
-        return HEIGHT;
+        return new TrendReportSize(height).getHeight();
     }
 }

@@ -14,6 +14,7 @@ import hudson.model.Result;
 import hudson.plugins.findbugs.parser.FindBugsCollector;
 import hudson.plugins.findbugs.parser.PlainFindBugsParser;
 import hudson.plugins.findbugs.util.HealthReportBuilder;
+import hudson.plugins.findbugs.util.TrendReportSize;
 import hudson.plugins.findbugs.util.model.JavaProject;
 
 import java.io.IOException;
@@ -26,8 +27,8 @@ import edu.umd.cs.findbugs.DetectorFactoryCollection;
 
 // FIXME: this class more or less is a copy of the FindBugsPublisher, we should find a way to generalize portions of this class
 public class FindBugsReporter extends MavenReporter {
-    /** Default height of the graph. */
-    private static final int HEIGHT = 200;
+    /** Unique identifier of this class. */
+    private static final long serialVersionUID = -288391908253344862L;
     /** Descriptor of this publisher. */
     public static final FindBugsReporterDescriptor FINDBUGS_SCANNER_DESCRIPTOR = new FindBugsReporterDescriptor(FindBugsPublisher.FIND_BUGS_DESCRIPTOR);
     /** Default FindBugs pattern. */
@@ -52,6 +53,10 @@ public class FindBugsReporter extends MavenReporter {
     private boolean healthyReportEnabled;
     /** Determines the height of the trend graph. */
     private final String height;
+    /** Lock to prevent several calls to FindBugs initializations. */
+    private transient Boolean lockLibraryInitialization = Boolean.TRUE;
+    /** Determines whether the FindBugs library has been initialized yet. */
+    private transient boolean isInitialized;
 
     /**
      * Creates a new instance of <code>FindBugsReporter</code>.
@@ -105,6 +110,17 @@ public class FindBugsReporter extends MavenReporter {
     }
 
     /**
+     * Initializes transient fields.
+     *
+     * @return the created object
+     */
+    private Object readResolve() {
+        lockLibraryInitialization = Boolean.TRUE;
+        isInitialized = false;
+        return this;
+    }
+
+    /**
      * Returns the Bug threshold to be reached if a build should be considered as unstable.
      *
      * @return the bug threshold
@@ -144,11 +160,20 @@ public class FindBugsReporter extends MavenReporter {
     @Override
     public boolean postExecute(final MavenBuildProxy build, final MavenProject pom, final MojoInfo mojo,
             final BuildListener listener, final Throwable error) throws InterruptedException, IOException {
-        if (!"findbugs".equals(mojo.getGoal())) {
+        if (!"findbugs".equals(mojo.getGoal()) && !"site".equals(mojo.getGoal())) {
+            return true;
+        }
+        if (hasResultAction(build)) {
+            listener.getLogger().println("Scipping findbugs plug-in: there is already a result available.");
             return true;
         }
 
-        initializeFindBugsLibrary(build);
+        synchronized (lockLibraryInitialization) {
+            if (!isInitialized) {
+                initializeFindBugsLibrary(build);
+                isInitialized = true;
+            }
+        }
 
         FilePath pomPath = new FilePath(pom.getBasedir());
         FindBugsCollector findBugsCollector = new FindBugsCollector(listener.getLogger(),
@@ -163,7 +188,7 @@ public class FindBugsReporter extends MavenReporter {
                         healthyReportEnabled, healthyAnnotations, unHealthyAnnotations,
                         Messages.FindBugs_ResultAction_HealthReportSingleItem(),
                         Messages.FindBugs_ResultAction_HealthReportMultipleItem("%d"));
-                build.getActions().add(new FindBugsResultAction(build, result, healthReportBuilder));
+                build.getActions().add(new MavenFindBugsResultAction(build, healthReportBuilder, height, result));
                 build.registerAsProjectAction(FindBugsReporter.this);
 
                 return null;
@@ -182,6 +207,25 @@ public class FindBugsReporter extends MavenReporter {
         }
 
         return true;
+    }
+
+    /**
+     * Returns whether we already have a result for this build.
+     *
+     * @param build
+     *            the current build.
+     * @return <code>true</code> if we already have a task result action.
+     * @throws IOException
+     *             in case of an IO error
+     * @throws InterruptedException
+     *             if the call has been interrupted
+     */
+    private Boolean hasResultAction(final MavenBuildProxy build) throws IOException, InterruptedException {
+        return build.execute(new BuildCallable<Boolean, IOException>() {
+            public Boolean call(final MavenBuild mavenBuild) throws IOException, InterruptedException {
+                return mavenBuild.getAction(MavenFindBugsResultAction.class) != null;
+            }
+        });
     }
 
     /**
@@ -232,15 +276,7 @@ public class FindBugsReporter extends MavenReporter {
      * @return the height of the trend graph
      */
     public int getTrendHeight() {
-        if (!StringUtils.isEmpty(height)) {
-            try {
-                return Math.max(50, Integer.valueOf(height));
-            }
-            catch (NumberFormatException exception) {
-                // nothing to do, we use the default value
-            }
-        }
-        return HEIGHT;
+        return new TrendReportSize(height).getHeight();
     }
 }
 

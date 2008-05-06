@@ -113,12 +113,12 @@ public abstract class AbstractAnnotationsDetail extends AnnotationContainer impl
      *            Stapler response
      * @return the dynamic result of this module detail view
      */
-    public Object getDynamic(final String link, final StaplerRequest request, final StaplerResponse response) {
+    public final Object getDynamic(final String link, final StaplerRequest request, final StaplerResponse response) {
         PriorityDetailFactory factory = new PriorityDetailFactory();
         if (factory.isPriority(link)) {
             return factory.create(link, owner, this, getName());
         }
-        AbstractAnnotationsDetail detail = getDynamic(link);
+        ModelObject detail = getDynamic(link);
         if (detail == null) {
             return new SourceDetail(getOwner(), getAnnotation(link));
         }
@@ -139,7 +139,7 @@ public abstract class AbstractAnnotationsDetail extends AnnotationContainer impl
      *            source detail should be shown
      * @return the dynamic result of this module detail view
      */
-    protected AbstractAnnotationsDetail getDynamic(final String link) {
+    protected ModelObject getDynamic(final String link) {
         return null;
     }
 

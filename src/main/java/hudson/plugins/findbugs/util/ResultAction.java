@@ -55,6 +55,8 @@ public interface ResultAction<T> extends Action {
      *            Stapler request
      * @param response
      *            Stapler response
+     * @param height
+     *            the height of the trend graph
      * @throws IOException
      *             in case of an error
      */
@@ -67,6 +69,8 @@ public interface ResultAction<T> extends Action {
      *            Stapler request
      * @param response
      *            Stapler response
+     * @param height
+     *            the height of the trend graph
      * @throws IOException
      *             in case of an error
      */

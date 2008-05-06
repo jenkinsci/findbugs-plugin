@@ -27,13 +27,25 @@ public class FindBugsResultAction extends AbstractResultAction<FindBugsResult> {
      *
      * @param owner
      *            the associated build of this action
+     * @param healthReportBuilder
+     *            health builder to use
      * @param result
      *            the result in this build
+     */
+    public FindBugsResultAction(final AbstractBuild<?, ?> owner, final HealthReportBuilder healthReportBuilder, final FindBugsResult result) {
+        super(owner, healthReportBuilder, result);
+    }
+
+    /**
+     * Creates a new instance of <code>FindBugsBuildAction</code>.
+     *
+     * @param owner
+     *            the associated build of this action
      * @param healthReportBuilder
      *            health builder to use
      */
-    public FindBugsResultAction(final AbstractBuild<?, ?> owner, final FindBugsResult result, final HealthReportBuilder healthReportBuilder) {
-        super(owner, healthReportBuilder, result);
+    public FindBugsResultAction(final AbstractBuild<?, ?> owner, final HealthReportBuilder healthReportBuilder) {
+        super(owner, healthReportBuilder);
     }
 
     /** {@inheritDoc} */

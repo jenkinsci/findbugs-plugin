@@ -56,10 +56,22 @@ public abstract class AbstractResultAction<T extends AnnotationProvider> impleme
      *            the result of the action
      */
     public AbstractResultAction(final AbstractBuild<?, ?> owner, final HealthReportBuilder healthReportBuilder, final T result) {
+        this(owner, healthReportBuilder);
+        this.result = result;
+    }
+
+    /**
+     * Creates a new instance of <code>AbstractResultAction</code>.
+     *
+     * @param owner
+     *            the associated build of this action
+     * @param healthReportBuilder
+     *            health builder to use
+     */
+    public AbstractResultAction(final AbstractBuild<?, ?> owner, final HealthReportBuilder healthReportBuilder) {
         super();
         this.owner = owner;
         this.healthReportBuilder = healthReportBuilder;
-        this.result = result;
     }
 
     /**

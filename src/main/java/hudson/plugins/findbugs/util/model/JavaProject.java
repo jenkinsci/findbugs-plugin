@@ -199,6 +199,17 @@ public class JavaProject extends AnnotationContainer {
     }
 
     /**
+     * Adds the specified modules with their annotations to this project.
+     *
+     * @param modules the modules to add
+     */
+    public void addModules(final Collection<MavenModule> modules) {
+        for (MavenModule mavenModule : modules) {
+            addModule(mavenModule);
+        }
+    }
+
+    /**
      * Returns whether a module with an error is part of this project.
      *
      * @return <code>true</code> if at least one module has an error.
