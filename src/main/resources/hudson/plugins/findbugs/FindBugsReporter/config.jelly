@@ -1,5 +1,6 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define"
 	xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+  <f:advanced>
 	<f:entry title="${%Unstable threshold}" description="${%description.threshold}">
 		<f:textbox name="findbugs_threshold" value="${instance.threshold}"
 			checkUrl="'${rootURL}/publisher/FindBugsPublisher/checkThreshold?job=${it.fullName}&amp;value='+escape(this.value)" />
@@ -35,4 +36,5 @@
 	<f:entry title="${%Trend report height}" description="${%description.height}">
 		<f:textbox name="findbugs_height" value="${instance.height}" />
 	</f:entry>
+  </f:advanced>
 </j:jelly>
