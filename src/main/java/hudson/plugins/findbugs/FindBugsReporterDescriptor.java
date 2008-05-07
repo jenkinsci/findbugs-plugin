@@ -26,12 +26,6 @@ public class FindBugsReporterDescriptor extends ReporterDescriptor {
 
     /** {@inheritDoc} */
     @Override
-    public String getConfigPage() {
-        return getViewPage(FindBugsPublisher.class, "config.jelly");
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public MavenReporter newInstance(final StaplerRequest request) throws FormException {
         return request.bindParameters(FindBugsReporter.class, getPublisherDescriptor().getPluginName() + "_");
     }
