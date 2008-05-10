@@ -13,6 +13,8 @@ import org.jfree.data.category.CategoryDataset;
  * @author Ulli Hafner
  */
 public abstract class AbstractAreaRenderer extends StackedAreaRenderer2 {
+    /** Unique identifier of this class. */
+    private static final long serialVersionUID = 1440842055316682192L;
     /** Base URL of the graph links. */
     private final String url;
     /** Tooltip provider for the clickable map. */

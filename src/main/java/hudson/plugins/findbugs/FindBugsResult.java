@@ -93,6 +93,7 @@ public class FindBugsResult implements ModelObject, Serializable, AnnotationProv
     private long zeroWarningsHighScore;
 
     /** Error messages. */
+    @SuppressWarnings("Se")
     private List<String> errors;
 
     /** Current build as owner of this action. */
@@ -100,6 +101,7 @@ public class FindBugsResult implements ModelObject, Serializable, AnnotationProv
     private final AbstractBuild<?, ?> owner;
 
     /** The modules with no warnings. */
+    @SuppressWarnings("Se")
     private Map<String, MavenModule> emptyModules;
     /** The total number of modules with or without warnings. */
     private int numberOfModules;

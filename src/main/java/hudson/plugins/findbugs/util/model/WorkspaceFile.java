@@ -8,6 +8,8 @@ import java.util.NoSuchElementException;
 
 import org.apache.commons.lang.StringUtils;
 
+import edu.umd.cs.findbugs.annotations.SuppressWarnings;
+
 /**
  * A serializable Java Bean class representing a file in the Hudson workspace.
  *
@@ -19,6 +21,7 @@ public class WorkspaceFile extends AnnotationContainer {
     /** The absolute filename of this file. */
     private String name; // NOPMD: backward compatibility
     /** This file. */
+    @SuppressWarnings("Se")
     private final List<WorkspaceFile> files;
 
     /**

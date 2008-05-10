@@ -31,6 +31,8 @@ import org.apache.maven.project.MavenProject;
  * </ul>
  */
 public abstract class HealthAwareMavenReporter extends MavenReporter {
+    /** Unique identifier of this class. */
+    private static final long serialVersionUID = 3003791883748835331L;
     /** Annotation threshold to be reached if a build should be considered as unstable. */
     private final String threshold;
     /** Determines whether to use the provided threshold to mark a build as unstable. */

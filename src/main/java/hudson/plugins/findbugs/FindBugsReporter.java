@@ -40,7 +40,7 @@ public class FindBugsReporter extends HealthAwareMavenReporter {
     @SuppressWarnings("unused")
     private String pattern; // obsolete since release 2.5
     /** Lock to prevent several calls to FindBugs initializations. */
-    private transient Boolean lockLibraryInitialization = Boolean.TRUE;
+    private transient Object lockLibraryInitialization = new Object();
     /** Determines whether the FindBugs library has been initialized yet. */
     private transient boolean isInitialized;
 
@@ -70,7 +70,7 @@ public class FindBugsReporter extends HealthAwareMavenReporter {
      * @return the created object
      */
     private Object readResolve() {
-        lockLibraryInitialization = Boolean.TRUE;
+        lockLibraryInitialization = new Object();
         isInitialized = false;
         return this;
     }
@@ -137,15 +137,8 @@ public class FindBugsReporter extends HealthAwareMavenReporter {
      *             in case of an error
      */
     // TODO: this hack works only if slave and master are on the same machine
-    @SuppressWarnings("serial")
-    private void initializeFindBugsLibrary(final MavenBuildProxy build) throws IOException,
-            InterruptedException {
-        URL[] urls = build.execute(new BuildCallable<URL[], IOException>() {
-            public URL[] call(final MavenBuild build) throws IOException, InterruptedException {
-                return PlainFindBugsParser.createPluginUrls();
-            }
-        });
-        DetectorFactoryCollection.rawInstance().setPluginList(urls);
+    private void initializeFindBugsLibrary(final MavenBuildProxy build) throws IOException, InterruptedException {
+        DetectorFactoryCollection.rawInstance().setPluginList(build.execute(new FindBugsLibraryUrlDetector()));
     }
 
     /** {@inheritDoc} */
@@ -164,6 +157,19 @@ public class FindBugsReporter extends HealthAwareMavenReporter {
     @Override
     public MavenReporterDescriptor getDescriptor() {
         return FINDBUGS_SCANNER_DESCRIPTOR;
+    }
+
+    /**
+     * Detects the URLs of the find-bugs library plug-ins.
+     */
+    private static final class FindBugsLibraryUrlDetector implements BuildCallable<URL[], IOException> {
+        /** Unique identifier of this class. */
+        private static final long serialVersionUID = 8714527548935228652L;
+
+        /** {@inheritDoc} */
+        public URL[] call(final MavenBuild mavenBuild) throws IOException, InterruptedException {
+            return PlainFindBugsParser.createPluginUrls();
+        }
     }
 }
 

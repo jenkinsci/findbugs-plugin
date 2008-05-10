@@ -15,6 +15,8 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 
+import edu.umd.cs.findbugs.annotations.SuppressWarnings;
+
 /**
  * A container for annotations.
  *
@@ -25,6 +27,7 @@ public class AnnotationContainer implements AnnotationProvider, Serializable {
     private static final long serialVersionUID = 855696821788264261L;
 
     /** The annotations mapped by their key. */
+    @SuppressWarnings("Se")
     private final Map<Long, FileAnnotation> annotations = new HashMap<Long, FileAnnotation>();
     /** The annotations mapped by priority. */
     private transient Map<Priority, Set<FileAnnotation>> annotationsByPriority;
@@ -303,7 +306,7 @@ public class AnnotationContainer implements AnnotationProvider, Serializable {
      *
      * @return the files with annotations
      */
-    @SuppressWarnings("unchecked")
+    @java.lang.SuppressWarnings("unchecked")
     public Collection<WorkspaceFile> getFiles() {
         if (handleFiles) {
             return Collections.unmodifiableCollection(filesByName.values());

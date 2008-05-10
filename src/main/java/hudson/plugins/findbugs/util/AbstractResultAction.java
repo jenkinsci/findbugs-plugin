@@ -35,6 +35,8 @@ import edu.umd.cs.findbugs.annotations.SuppressWarnings;
  * @author Ulli Hafner
  */
 public abstract class AbstractResultAction<T extends AnnotationProvider> implements StaplerProxy, HealthReportingAction, ToolTipProvider, ResultAction<T> {
+    /** Unique identifier of this class. */
+    private static final long serialVersionUID = -7201451538713818948L;
     /** Width of the graph. */
     private static final int WIDTH = 500;
     /** The associated build of this action. */

@@ -24,6 +24,8 @@ import edu.umd.cs.findbugs.annotations.SuppressWarnings;
  * @author Ulli Hafner
  */
 public abstract class AbstractProjectAction<T extends ResultAction<?>> implements Action  {
+    /** Unique identifier of this class. */
+    private static final long serialVersionUID = -8775531952208541253L;
     /** One year (in seconds). */
     private static final int ONE_YEAR = 60 * 60 * 24 * 365;
     /** Project that owns this action. */
@@ -144,7 +146,7 @@ public abstract class AbstractProjectAction<T extends ResultAction<?>> implement
      *            Stapler response
      * @throws IOException
      *             in case of an error in
-     *             {@link ResultAction#doGraph(StaplerRequest, StaplerResponse)}
+     *             {@link ResultAction#doGraph(StaplerRequest, StaplerResponse, int)}
      */
     public void doTrend(final StaplerRequest request, final StaplerResponse response) throws IOException {
         createGraph(request, response);
@@ -159,7 +161,7 @@ public abstract class AbstractProjectAction<T extends ResultAction<?>> implement
      *            Stapler response
      * @throws IOException
      *             in case of an error in
-     *             {@link ResultAction#doGraph(StaplerRequest, StaplerResponse)}
+     *             {@link ResultAction#doGraph(StaplerRequest, StaplerResponse, int)}
      */
     private void createGraph(final StaplerRequest request, final StaplerResponse response)
             throws IOException {

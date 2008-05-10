@@ -117,7 +117,6 @@ public class SourceDetail implements ModelObject {
      * @param sourceFile
      *            the source code of the whole file as rendered HTML string
      */
-    @SuppressWarnings("PMD.CyclomaticComplexity")
     public final void splitSourceFile(final String sourceFile) {
         StringBuilder output = new StringBuilder(sourceFile.length());
 
@@ -126,33 +125,26 @@ public class SourceDetail implements ModelObject {
 
         try {
             while (lineNumber < SOURCE_GENERATOR_OFFSET) {
-                output.append(lineIterator.nextLine());
-                output.append("\n");
+                copyLine(output, lineIterator);
                 lineNumber++;
             }
             lineNumber = 1;
-            int ranges = 1;
+            boolean isFirstRange = true;
             for (LineRange range : annotation.getLineRanges()) {
                 while (lineNumber < range.getStart()) {
-                    output.append(lineIterator.nextLine());
-                    output.append("\n");
+                    copyLine(output, lineIterator);
                     lineNumber++;
                 }
                 output.append("</code>\n");
                 output.append("</td></tr>\n");
                 output.append("<tr><td bgcolor=\"");
-                if (ranges == 1) {
-                    output.append(FIRST_COLOR);
-                }
-                else {
-                    output.append(OTHER_COLOR);
-                }
+                appendRangeColor(output, isFirstRange);
                 output.append("\">\n");
                 output.append("<div tooltip=\"");
                 if (range.getStart() > 0) {
-                    output.append(StringEscapeUtils.escapeHtml(annotation.getMessage()));
+                    outputEscaped(output, annotation.getMessage());
                 }
-                output.append(StringEscapeUtils.escapeHtml(annotation.getToolTip()));
+                outputEscaped(output, annotation.getToolTip());
                 output.append("\" nodismiss=\"\">\n");
                 output.append("<code><b>\n");
                 if (range.getStart() <= 0) {
@@ -163,8 +155,7 @@ public class SourceDetail implements ModelObject {
                 }
                 else {
                     while (lineNumber <= range.getEnd()) {
-                        output.append(lineIterator.nextLine());
-                        output.append("\n");
+                        copyLine(output, lineIterator);
                         lineNumber++;
                     }
                 }
@@ -173,17 +164,52 @@ public class SourceDetail implements ModelObject {
                 output.append("</td></tr>\n");
                 output.append("<tr><td>\n");
                 output.append("<code>\n");
-                ranges++;
+                isFirstRange = false;
             }
             while (lineIterator.hasNext()) {
-                output.append(lineIterator.nextLine());
-                output.append("\n");
+                copyLine(output, lineIterator);
             }
         }
         catch (NoSuchElementException exception) {
             // ignore an illegal range
         }
         sourceCode = output.toString();
+    }
+
+    /**
+     * Writes the message to the output stream (with escaped HTML).
+     * @param output the output to write to
+     * @param message
+     *      the message to write
+     */
+    private void outputEscaped(final StringBuilder output, final String message) {
+        output.append(StringEscapeUtils.escapeHtml(message));
+    }
+
+    /**
+     * Appends the right range color.
+     *
+     * @param output the output to append the color
+     * @param isFirstRange determines whether the range is the first one
+     */
+    private void appendRangeColor(final StringBuilder output, final boolean isFirstRange) {
+        if (isFirstRange) {
+            output.append(FIRST_COLOR);
+        }
+        else {
+            output.append(OTHER_COLOR);
+        }
+    }
+
+    /**
+     * Copies the next line of the input to the output.
+     *
+     * @param output output
+     * @param lineIterator input
+     */
+    private void copyLine(final StringBuilder output, final LineIterator lineIterator) {
+        output.append(lineIterator.nextLine());
+        output.append("\n");
     }
 
     /**

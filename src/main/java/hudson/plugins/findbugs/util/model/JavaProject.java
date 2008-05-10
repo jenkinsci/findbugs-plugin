@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
+import edu.umd.cs.findbugs.annotations.SuppressWarnings;
+
 /**
  * A serializable Java Bean class representing a project that has been built by
  * Hudson.
@@ -19,6 +21,7 @@ public class JavaProject extends AnnotationContainer {
     /** Unique identifier of this class. */
     private static final long serialVersionUID = 8556968267678442661L;
     /** All maven modules in this project (mapped by their name). */
+    @SuppressWarnings("Se")
     private final Map<String, MavenModule> moduleMapping = new HashMap<String, MavenModule>();
     /** Path of the workspace. */
     private String workspacePath;

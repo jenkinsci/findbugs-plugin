@@ -20,6 +20,8 @@ import org.kohsuke.stapler.StaplerResponse;
  * Hudson Stapler objects that contain a subset of annotations.
  */
 public abstract class AbstractAnnotationsDetail extends AnnotationContainer implements ModelObject {
+    /** Unique identifier of this class. */
+    private static final long serialVersionUID = 1750266351592937774L;
     /** Current build as owner of this object. */
     private final AbstractBuild<?, ?> owner;
 
