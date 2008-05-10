@@ -3,7 +3,6 @@ package hudson.plugins.findbugs;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.Action;
-import hudson.model.BuildListener;
 import hudson.model.Descriptor;
 import hudson.plugins.findbugs.parser.FindBugsCollector;
 import hudson.plugins.findbugs.util.HealthAwarePublisher;
@@ -18,7 +17,7 @@ import java.io.PrintStream;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * Publishes the results of the FindBugs analysis.
+ * Publishes the results of the FindBugs analysis (freestyle project type).
  *
  * @author Ulli Hafner
  */
@@ -47,7 +46,7 @@ public class FindBugsPublisher extends HealthAwarePublisher {
      * @stapler-constructor
      */
     public FindBugsPublisher(final String pattern, final String threshold, final String healthy, final String unHealthy, final String height) {
-        super(pattern, threshold, healthy, unHealthy, height);
+        super(pattern, threshold, healthy, unHealthy, height, "FINDBUGS");
     }
 
     /** {@inheritDoc} */
@@ -58,9 +57,8 @@ public class FindBugsPublisher extends HealthAwarePublisher {
 
     /** {@inheritDoc} */
     @Override
-    public JavaProject perform(final AbstractBuild<?, ?> build, final BuildListener listener) throws InterruptedException, IOException {
-        PrintStream logger = listener.getLogger();
-        logger.println("Collecting findbugs analysis files...");
+    public JavaProject perform(final AbstractBuild<?, ?> build, final PrintStream logger) throws InterruptedException, IOException {
+        log(logger, "Collecting findbugs analysis files...");
 
         JavaProject project = parseAllWorkspaceFiles(build, logger);
         FindBugsResult result = new FindBugsResultBuilder().build(build, project);
@@ -88,11 +86,7 @@ public class FindBugsPublisher extends HealthAwarePublisher {
      *             if user cancels the operation
      */
     private JavaProject parseAllWorkspaceFiles(final AbstractBuild<?, ?> build, final PrintStream logger) throws IOException, InterruptedException {
-        FindBugsCollector collector = new FindBugsCollector(
-                    logger,
-                    build.getTimestamp().getTimeInMillis(),
-                    StringUtils.defaultIfEmpty(getPattern(), DEFAULT_PATTERN),
-                    true);
+        FindBugsCollector collector = new FindBugsCollector(logger, StringUtils.defaultIfEmpty(getPattern(), DEFAULT_PATTERN), true);
 
         return build.getProject().getWorkspace().act(collector);
     }

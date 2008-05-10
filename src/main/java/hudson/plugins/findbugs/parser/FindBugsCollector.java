@@ -28,12 +28,8 @@ import org.xml.sax.SAXException;
 public class FindBugsCollector implements FileCallable<JavaProject> {
     /** Generated ID. */
     private static final long serialVersionUID = -6415863872891783891L;
-    /** Determines whether to skip old files. */
-    private static final boolean SKIP_OLD_FILES = false;
     /** Logger. */
-    private transient PrintStream logger;
-    /** Build time stamp, only newer files are considered. */
-    private final long buildTime;
+    private final transient PrintStream logger;
     /** Ant file-set pattern to scan for FindBugs files. */
     private final String filePattern;
     /** Determines whether we need to initialize FindBugs or not. */
@@ -44,18 +40,26 @@ public class FindBugsCollector implements FileCallable<JavaProject> {
      *
      * @param listener
      *            the Logger
-     * @param buildTime
-     *            build time stamp, only newer files are considered
      * @param filePattern
      *            ant file-set pattern to scan for FindBugs files
      * @param autoInitializeFindBugs
      *            determines whether we need to initialize FindBugs or not
      */
-    public FindBugsCollector(final PrintStream listener, final long buildTime, final String filePattern, final boolean autoInitializeFindBugs) {
+    public FindBugsCollector(final PrintStream listener, final String filePattern, final boolean autoInitializeFindBugs) {
         logger = listener;
-        this.buildTime = buildTime;
         this.filePattern = filePattern;
         this.autoInitializeFindBugs = autoInitializeFindBugs;
+    }
+
+    /**
+     * Logs the specified message.
+     *
+     * @param message the message
+     */
+    protected void log(final String message) {
+        if (logger != null) {
+            logger.println("[FINDBUGS] " + message);
+        }
     }
 
     /** {@inheritDoc} */
@@ -80,21 +84,15 @@ public class FindBugsCollector implements FileCallable<JavaProject> {
                 }
                 MavenModule module = new MavenModule(moduleName);
 
-                if (SKIP_OLD_FILES && findbugsFile.lastModified() < buildTime) {
-                    String message = Messages.FindBugs_FindBugsCollector_Error_FileNotUpToDate(findbugsFile);
-                    getLogger().println(message);
-                    module.setError(message);
-                    continue;
-                }
                 if (!findbugsFile.canRead()) {
                     String message = Messages.FindBugs_FindBugsCollector_Error_NoPermission(findbugsFile);
-                    getLogger().println(message);
+                    log(message);
                     module.setError(message);
                     continue;
                 }
                 if (new FilePath(findbugsFile).length() <= 0) {
                     String message = Messages.FindBugs_FindBugsCollector_Error_EmptyFile(findbugsFile);
-                    getLogger().println(message);
+                    log(message);
                     module.setError(message);
                     continue;
                 }
@@ -104,7 +102,7 @@ public class FindBugsCollector implements FileCallable<JavaProject> {
             }
         }
         catch (InterruptedException exception) {
-            getLogger().println("Parsing has been canceled.");
+            log("Parsing has been canceled.");
         }
         return project;
     }
@@ -130,12 +128,12 @@ public class FindBugsCollector implements FileCallable<JavaProject> {
             FilePath filePath = new FilePath(findbugsFile);
             MavenFindBugsParser mavenFindBugsParser = new MavenFindBugsParser();
             if (mavenFindBugsParser.accepts(filePath.read())) {
-                getLogger().println("Activating parser for maven-findbugs-plugin <= 1.1.1.");
+                log("Activating deprecated FindBugs parser (maven-findbugs-plugin <= 1.1.1)");
                 module = mavenFindBugsParser.parse(filePath.read(), emptyModule.getName(), workspace);
                 module.setError(Messages.FindBugs_FindBugsCollector_Error_OldMavenPlugin(findbugsFile));
             }
             else {
-                getLogger().println("Activating parser for findbugs ant task, batch script, or maven-findbugs-plugin > 1.1.1.");
+                log("Activating up-to-date parser (maven-findbugs-plugin >= 1.2 or ant).");
                 PlainFindBugsParser parser;
                 if (autoInitializeFindBugs) {
                     parser = new NativeFindBugsParser();
@@ -146,7 +144,7 @@ public class FindBugsCollector implements FileCallable<JavaProject> {
                 String moduleRoot = StringUtils.substringBefore(findbugsFile.getPath().replace('\\', '/'), "/target/");
                 module = parser.parse(filePath.read(), moduleRoot, emptyModule.getName());
             }
-            getLogger().println("Successfully parsed findbugs file " + findbugsFile + " of module "
+            log("Successfully parsed findbugs file " + findbugsFile + " of module "
                     + module.getName() + " with " + module.getNumberOfAnnotations() + " warnings.");
         }
         catch (IOException e) {
@@ -161,7 +159,7 @@ public class FindBugsCollector implements FileCallable<JavaProject> {
         if (exception != null) {
             String errorMessage = Messages.FindBugs_FindBugsCollector_Error_Exception(findbugsFile)
                     + "\n\n" + ExceptionUtils.getStackTrace(exception);
-            getLogger().println(errorMessage);
+            log(errorMessage);
             module.setError(errorMessage);
         }
         return module;
@@ -183,17 +181,5 @@ public class FindBugsCollector implements FileCallable<JavaProject> {
         fileSet.setIncludes(filePattern);
 
         return fileSet.getDirectoryScanner(project).getIncludedFiles();
-    }
-
-    /**
-     * Returns the logger.
-     *
-     * @return the logger
-     */
-    private PrintStream getLogger() {
-        if (logger == null) {
-            logger = System.out;
-        }
-        return logger;
     }
 }

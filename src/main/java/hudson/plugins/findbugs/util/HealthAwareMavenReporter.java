@@ -1,20 +1,25 @@
 package hudson.plugins.findbugs.util;
 
-import hudson.Launcher;
-import hudson.model.AbstractBuild;
+import hudson.FilePath;
+import hudson.maven.MavenBuild;
+import hudson.maven.MavenBuildProxy;
+import hudson.maven.MavenReporter;
+import hudson.maven.MojoInfo;
+import hudson.maven.MavenBuildProxy.BuildCallable;
+import hudson.model.Action;
 import hudson.model.BuildListener;
 import hudson.model.Result;
 import hudson.plugins.findbugs.util.model.JavaProject;
 import hudson.tasks.BuildStep;
-import hudson.tasks.Publisher;
 
 import java.io.IOException;
 import java.io.PrintStream;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.maven.project.MavenProject;
 
 /**
- * A base class for publishers with the following two characteristics:
+ * A base class for maven reporters with the following two characteristics:
  * <ul>
  * <li>It provides a unstable threshold, that could be enabled and set in the
  * configuration screen. If the number of annotations in a build exceeds this
@@ -23,12 +28,9 @@ import org.apache.commons.lang.StringUtils;
  * <li>It provides thresholds for the build health, that could be adjusted in
  * the configuration screen. These values are used by the
  * {@link HealthReportBuilder} to compute the health and the health trend graph.</li>
- * <li>It works on files based on a user configurable file name pattern. </li>
  * </ul>
  */
-public abstract class HealthAwarePublisher extends Publisher {
-    /** Ant file-set pattern of files to work with. */
-    private final String pattern;
+public abstract class HealthAwareMavenReporter extends MavenReporter {
     /** Annotation threshold to be reached if a build should be considered as unstable. */
     private final String threshold;
     /** Determines whether to use the provided threshold to mark a build as unstable. */
@@ -51,31 +53,28 @@ public abstract class HealthAwarePublisher extends Publisher {
     private final String pluginName;
 
     /**
-     * Creates a new instance of <code>HealthAwarePublisher</code>.
+     * Creates a new instance of <code>HealthReportingMavenReporter</code>.
      *
-     * @param pattern
-     *            Ant file-set pattern of files to scan for open tasks in
      * @param threshold
-     *            Tasks threshold to be reached if a build should be considered
-     *            as unstable.
+     *            Bug threshold to be reached if a build should be considered as
+     *            unstable.
      * @param healthy
-     *            Report health as 100% when the number of open tasks is less
-     *            than this value
+     *            Report health as 100% when the number of warnings is less than
+     *            this value
      * @param unHealthy
-     *            Report health as 0% when the number of open tasks is greater
+     *            Report health as 0% when the number of warnings is greater
      *            than this value
      * @param height
      *            the height of the trend graph
      * @param pluginName
      *            the name of the plug-in
      */
-    public HealthAwarePublisher(final String pattern, final String threshold,
-            final String healthy, final String unHealthy, final String height, final String pluginName) {
+    public HealthAwareMavenReporter(final String threshold, final String healthy, final String unHealthy,
+            final String height, final String pluginName) {
         super();
         this.threshold = threshold;
         this.healthy = healthy;
         this.unHealthy = unHealthy;
-        this.pattern = pattern;
         this.height = height;
         this.pluginName = "[" + pluginName + "] ";
 
@@ -105,28 +104,58 @@ public abstract class HealthAwarePublisher extends Publisher {
     }
 
     /** {@inheritDoc} */
+    @SuppressWarnings("serial")
     @Override
-    public final boolean perform(final AbstractBuild<?, ?> build, final Launcher launcher, final BuildListener listener) throws InterruptedException, IOException {
-        if (build.getResult() != Result.ABORTED && build.getResult() != Result.FAILURE) {
-            PrintStream logger = listener.getLogger();
-            try {
-                JavaProject project = perform(build, logger);
-                evaluateBuildResult(build, logger, project);
-            }
-            catch (AbortException exception) {
-                logger.println(exception.getMessage());
-                build.setResult(Result.FAILURE);
-                return false;
-            }
+    public final boolean postExecute(final MavenBuildProxy build, final MavenProject pom, final MojoInfo mojo,
+            final BuildListener listener, final Throwable error) throws InterruptedException, IOException {
+        if (!acceptGoal(mojo.getGoal())) {
+            return true;
         }
+        PrintStream logger = listener.getLogger();
+        if (hasResultAction(build)) {
+            log(logger, "Scipping maven reporter: there is already a result available.");
+            return true;
+        }
+
+        try {
+            final JavaProject project = perform(build, pom, mojo, logger);
+
+            build.execute(new BuildCallable<Void, IOException>() {
+                public Void call(final MavenBuild mavenBuild) throws IOException, InterruptedException {
+                    persistResult(project, mavenBuild);
+
+                    return null;
+                }
+            });
+
+            evaluateBuildResult(build, logger, project);
+        }
+        catch (AbortException exception) {
+            logger.println(exception.getMessage());
+            build.setResult(Result.FAILURE);
+            return false;
+        }
+
         return true;
     }
 
     /**
+     * Determines whether this plug-in will accept the specified goal. The
+     * {@link #postExecute(MavenBuildProxy, MavenProject, MojoInfo,
+     * BuildListener, Throwable)} will only by invoked if the plug-in returns
+     * <code>true</code>.
+     *
+     * @param goal the maven goal
+     * @return <code>true</code> if the plug-in accepts this goal
+     */
+    protected abstract boolean acceptGoal(final String goal);
+
+    /**
      * Performs the publishing of the results of this plug-in.
      *
-     * @param build
-     *            the build
+     * @param build the build proxy (on the slave)
+     * @param pom the pom of the module
+     * @param mojo the executed mojo
      * @param logger the logger to report the progress to
      *
      * @return the java project containing the found annotations
@@ -145,7 +174,25 @@ public abstract class HealthAwarePublisher extends Publisher {
      *             a better error message, if it can do so, so that users have
      *             better understanding on why it failed.
      */
-    protected abstract JavaProject perform(AbstractBuild<?, ?> build, PrintStream logger) throws InterruptedException, IOException;
+    protected abstract JavaProject perform(MavenBuildProxy build, MavenProject pom, MojoInfo mojo, PrintStream logger) throws InterruptedException, IOException;
+
+    /**
+     * Persists the result in the build (on the master).
+     *
+     * @param project the created project
+     * @param build the build (on the master)
+     */
+    protected abstract void persistResult(JavaProject project, MavenBuild build);
+
+    /**
+     * Logs the specified message.
+     *
+     * @param logger the logger
+     * @param message the message
+     */
+    protected void log(final PrintStream logger, final String message) {
+        logger.println(StringUtils.defaultString(pluginName) + message);
+    }
 
     /**
      * Evaluates the build result. The build is marked as unstable if the
@@ -158,7 +205,7 @@ public abstract class HealthAwarePublisher extends Publisher {
      * @param project
      *            the project with the annotations
      */
-    private void evaluateBuildResult(final AbstractBuild<?, ?> build, final PrintStream logger, final JavaProject project) {
+    private void evaluateBuildResult(final MavenBuildProxy build, final PrintStream logger, final JavaProject project) {
         int annotationCount = project.getNumberOfAnnotations();
         if (annotationCount > 0) {
             log(logger, "A total of " + annotationCount + " annotations have been found.");
@@ -172,13 +219,40 @@ public abstract class HealthAwarePublisher extends Publisher {
     }
 
     /**
-     * Logs the specified message.
+     * Returns whether we already have a result for this build.
      *
-     * @param logger the logger
-     * @param message the message
+     * @param build
+     *            the current build.
+     * @return <code>true</code> if we already have a task result action.
+     * @throws IOException
+     *             in case of an IO error
+     * @throws InterruptedException
+     *             if the call has been interrupted
      */
-    protected void log(final PrintStream logger, final String message) {
-        logger.println(StringUtils.defaultString(pluginName) + message);
+    @SuppressWarnings("serial")
+    private Boolean hasResultAction(final MavenBuildProxy build) throws IOException, InterruptedException {
+        return build.execute(new BuildCallable<Boolean, IOException>() {
+            public Boolean call(final MavenBuild mavenBuild) throws IOException, InterruptedException {
+                return mavenBuild.getAction(getResultActionClass()) != null;
+            }
+        });
+    }
+
+    /**
+     * Returns the type of the result action.
+     *
+     * @return the type of the result action
+     */
+    protected abstract Class<? extends Action> getResultActionClass();
+
+    /**
+     * Returns the path to the target folder.
+     *
+     * @param pom the maven pom
+     * @return the path to the target folder
+     */
+    protected FilePath getTargetPath(final MavenProject pom) {
+        return new FilePath(new FilePath(pom.getBasedir()), "target");
     }
 
     /**
@@ -191,11 +265,11 @@ public abstract class HealthAwarePublisher extends Publisher {
      *            found
      * @return the new health report builder
      */
-    protected HealthReportBuilder createHealthReporter(final String reportSingleCount, final String reportMultipleCount) {
-        return new HealthReportBuilder(thresholdEnabled, minimumAnnotations, healthyReportEnabled, healthyAnnotations, unHealthyAnnotations,
+    protected HealthReportBuilder createHealthBuilder(final String reportSingleCount, final String reportMultipleCount) {
+        return new HealthReportBuilder(isThresholdEnabled(), getMinimumAnnotations(),
+                isHealthyReportEnabled(), getHealthyAnnotations(), getUnHealthyAnnotations(),
                 reportSingleCount, reportMultipleCount);
     }
-
 
     /**
      * Determines whether a threshold has been defined.
@@ -270,15 +344,6 @@ public abstract class HealthAwarePublisher extends Publisher {
     }
 
     /**
-     * Returns the Ant file-set pattern of files to work with.
-     *
-     * @return Ant file-set pattern of files to work with
-     */
-    public String getPattern() {
-        return pattern;
-    }
-
-    /**
      * Returns the height of the trend graph.
      *
      * @return the height of the trend graph
@@ -296,3 +361,4 @@ public abstract class HealthAwarePublisher extends Publisher {
         return new TrendReportSize(height).getHeight();
     }
 }
+
