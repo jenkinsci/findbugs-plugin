@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 
 import org.apache.commons.lang.StringUtils;
+import org.kohsuke.stapler.DataBoundConstructor;
 
 /**
  * Publishes the results of the FindBugs analysis (freestyle project type).
@@ -45,8 +46,8 @@ public class FindBugsPublisher extends HealthAwarePublisher {
      *            than this value
      * @param height
      *            the height of the trend graph
-     * @stapler-constructor
      */
+    @DataBoundConstructor
     public FindBugsPublisher(final String pattern, final String threshold, final String healthy, final String unHealthy, final String height) {
         super(threshold, healthy, unHealthy, height, "FINDBUGS");
         this.pattern = pattern;

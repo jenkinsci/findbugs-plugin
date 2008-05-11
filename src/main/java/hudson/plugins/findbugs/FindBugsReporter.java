@@ -19,6 +19,7 @@ import java.net.URL;
 
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.component.configurator.ComponentConfigurationException;
+import org.kohsuke.stapler.DataBoundConstructor;
 
 import edu.umd.cs.findbugs.DetectorFactoryCollection;
 
@@ -58,8 +59,8 @@ public class FindBugsReporter extends HealthAwareMavenReporter {
      *            than this value
      * @param height
      *            the height of the trend graph
-     * @stapler-constructor
      */
+    @DataBoundConstructor
     public FindBugsReporter(final String threshold, final String healthy, final String unHealthy, final String height) {
         super(threshold, healthy, unHealthy, height, "FINDBUGS");
     }
