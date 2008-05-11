@@ -12,7 +12,7 @@ import org.junit.Test;
  */
 public class ResultSummaryTest extends AbstractEnglishLocaleTest {
     /**
-     * Checks the text for no warnings in 1 file.
+     * Checks the text for no warnings in 0 files.
      */
     @Test
     public void test0WarningsIn0File() {
@@ -28,7 +28,7 @@ public class ResultSummaryTest extends AbstractEnglishLocaleTest {
     }
 
     /**
-     * Checks the text for no warnings in 1 file.
+     * Checks the text for no warnings in 5 files.
      */
     @Test
     public void test0WarningsIn5Files() {
@@ -36,7 +36,7 @@ public class ResultSummaryTest extends AbstractEnglishLocaleTest {
     }
 
     /**
-     * Checks the text for no warnings in 1 file.
+     * Checks the text for 1 warning in 2 files.
      */
     @Test
     public void test1WarningIn2Files() {
@@ -44,7 +44,7 @@ public class ResultSummaryTest extends AbstractEnglishLocaleTest {
     }
 
     /**
-     * Checks the text for no warnings in 1 file.
+     * Checks the text for 5 warnings in 1 file.
      */
     @Test
     public void test5WarningsIn1File() {
