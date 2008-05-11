@@ -15,6 +15,14 @@ public class ResultSummaryTest extends AbstractEnglishLocaleTest {
      * Checks the text for no warnings in 1 file.
      */
     @Test
+    public void test0WarningsIn0File() {
+        checkSummaryText(0, 0, "FindBugs: 0 warnings in 0 FindBugs files.");
+    }
+
+    /**
+     * Checks the text for no warnings in 1 file.
+     */
+    @Test
     public void test0WarningsIn1File() {
         checkSummaryText(0, 1, "FindBugs: 0 warnings in 1 FindBugs file.");
     }

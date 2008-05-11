@@ -30,7 +30,7 @@ public final class ResultSummary {
             summary.append("</a>");
         }
         summary.append(" ");
-        if (result.getNumberOfModules() > 1) {
+        if (result.getNumberOfModules() != 1) {
             summary.append(Messages.FindBugs_ResultAction_MultipleFiles(result.getNumberOfModules()));
         }
         else {
