@@ -38,7 +38,7 @@
 			</tbody>
 		</table>
 	</f:entry>
-	<f:entry title="${%Trend report height}" description="${%Height of the trend report image. Leave this field empty to use the default height.}">
+	<f:entry title="${%Trend report height}" description="${%description.height}">
 		<f:textbox name="findbugs_height" value="${instance.height}" />
 	</f:entry>
   </f:advanced>
