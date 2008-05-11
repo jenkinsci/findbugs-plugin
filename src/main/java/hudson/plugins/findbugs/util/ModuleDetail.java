@@ -14,6 +14,8 @@ import org.kohsuke.stapler.StaplerResponse;
 
 /**
  * Result object to visualize the package statistics of a module.
+ *
+ * @author Ulli Hafner
  */
 public class ModuleDetail extends AbstractAnnotationsDetail {
     /** Unique identifier of this class. */

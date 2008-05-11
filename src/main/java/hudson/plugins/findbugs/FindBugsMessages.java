@@ -12,7 +12,9 @@ import org.apache.commons.lang.StringUtils;
 import org.xml.sax.SAXException;
 
 /**
- *  Parses the FindBugs pattern descriptions and provides access to these HTML messages.
+ * Parses the FindBugs pattern descriptions and provides access to these HTML messages.
+ *
+ * @author Ulli Hafner
  */
 public final class FindBugsMessages {
     /** Maps a key to HTML description. */

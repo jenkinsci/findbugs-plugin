@@ -26,6 +26,8 @@ public class FindBugsPublisher extends HealthAwarePublisher {
     private static final String DEFAULT_PATTERN = "**/findbugs.xml";
     /** Descriptor of this publisher. */
     public static final PluginDescriptor FIND_BUGS_DESCRIPTOR = new FindBugsDescriptor();
+    /** Ant file-set pattern of files to work with. */
+    private final String pattern;
 
     /**
      * Creates a new instance of <code>FindBugsPublisher</code>.
@@ -46,7 +48,17 @@ public class FindBugsPublisher extends HealthAwarePublisher {
      * @stapler-constructor
      */
     public FindBugsPublisher(final String pattern, final String threshold, final String healthy, final String unHealthy, final String height) {
-        super(pattern, threshold, healthy, unHealthy, height, "FINDBUGS");
+        super(threshold, healthy, unHealthy, height, "FINDBUGS");
+        this.pattern = pattern;
+    }
+
+    /**
+     * Returns the Ant file-set pattern of files to work with.
+     *
+     * @return Ant file-set pattern of files to work with
+     */
+    public String getPattern() {
+        return pattern;
     }
 
     /** {@inheritDoc} */

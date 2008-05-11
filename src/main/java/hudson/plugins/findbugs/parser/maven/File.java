@@ -7,6 +7,8 @@ import java.util.Set;
 
 /**
  * Java Bean class for a file of the maven FindBugs format.
+ *
+ * @author Ulli Hafner
  */
 public class File {
     /** Name of this class. */

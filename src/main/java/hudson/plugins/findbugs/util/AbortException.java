@@ -2,6 +2,8 @@ package hudson.plugins.findbugs.util;
 
 /**
  * Indicates an orderly abortion of the processing.
+ *
+ * @author Ulli Hafner
  */
 public final class AbortException extends RuntimeException {
     /** Generated ID. */

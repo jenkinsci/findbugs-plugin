@@ -7,6 +7,8 @@ import java.util.Set;
 
 /**
  * Java Bean class for a bug collection of the maven FindBugs format.
+ *
+ * @author Ulli Hafner
  */
 public class BugCollection {
     /** All files of this bug collection. */

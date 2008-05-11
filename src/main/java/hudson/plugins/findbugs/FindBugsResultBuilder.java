@@ -6,6 +6,8 @@ import hudson.plugins.findbugs.util.model.JavaProject;
 /**
  * Creates a new FindBugs result based on the values of a previous build and the
  * current project.
+ *
+ * @author Ulli Hafner
  */
 public class FindBugsResultBuilder {
     /**

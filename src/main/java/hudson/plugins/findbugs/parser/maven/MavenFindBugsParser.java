@@ -18,6 +18,8 @@ import org.xml.sax.SAXException;
 
 /**
  * A parser for the maven-findbugs-plugin XML files (version <= 1.1.1).
+ *
+ * @author Ulli Hafner
  */
 public class MavenFindBugsParser {
     /**

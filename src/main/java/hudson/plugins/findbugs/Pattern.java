@@ -2,6 +2,8 @@ package hudson.plugins.findbugs;
 
 /**
  * Bug pattern describing a bug type.
+ *
+ * @author Ulli Hafner
  */
 public class Pattern {
     /** Type of the bug. */

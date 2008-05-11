@@ -4,6 +4,8 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * Java Bean class for a warning of the maven FindBugs format.
+ *
+ * @author Ulli Hafner
  */
 @SuppressWarnings("PMD.CyclomaticComplexity")
 public class BugInstance {

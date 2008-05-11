@@ -8,6 +8,8 @@ import edu.umd.cs.findbugs.DetectorFactoryCollection;
  * A parser for the native FindBugs XML files (ant task, batch file or
  * maven-findbugs-plugin >= 1.2-SNAPSHOT). This parser is automatically
  * initialized.
+ *
+ * @author Ulli Hafner
  */
 public class NativeFindBugsParser extends PlainFindBugsParser {
     static {

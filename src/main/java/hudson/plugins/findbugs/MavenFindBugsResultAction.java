@@ -20,6 +20,8 @@ import java.util.Map;
  * A {@link FindBugsResultAction} for native maven jobs. This action
  * additionally provides result aggregation for sub-modules and for the main
  * project.
+ *
+ * @author Ulli Hafner
  */
 public class MavenFindBugsResultAction extends FindBugsResultAction implements AggregatableAction, MavenAggregatedReport {
     /** Unique identifier of this class. */

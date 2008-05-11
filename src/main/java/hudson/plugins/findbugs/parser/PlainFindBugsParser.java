@@ -29,6 +29,8 @@ import edu.umd.cs.findbugs.detect.DroppedException;
 /**
  * A parser for the native FindBugs XML files (ant task, batch file or
  * maven-findbugs-plugin >= 1.2-SNAPSHOT).
+ *
+ * @author Ulli Hafner
  */
 public class PlainFindBugsParser {
     /**

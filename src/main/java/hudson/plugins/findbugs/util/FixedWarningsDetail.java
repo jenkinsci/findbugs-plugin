@@ -7,6 +7,8 @@ import java.util.Collection;
 
 /**
  * Result object to visualize the fixed warnings in a build.
+ *
+ * @author Ulli Hafner
  */
 public class FixedWarningsDetail extends AbstractAnnotationsDetail {
     /** Unique identifier of this class. */

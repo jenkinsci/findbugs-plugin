@@ -8,6 +8,8 @@ import java.util.Collection;
 
 /**
  * Result object to visualize the new warnings in a build.
+ *
+ * @author Ulli Hafner
  */
 public class NewWarningsDetail extends AbstractAnnotationsDetail {
     /** Unique identifier of this class. */
