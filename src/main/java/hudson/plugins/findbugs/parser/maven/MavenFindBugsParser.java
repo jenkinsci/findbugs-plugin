@@ -2,6 +2,7 @@ package hudson.plugins.findbugs.parser.maven;
 
 import hudson.FilePath;
 import hudson.plugins.findbugs.parser.Bug;
+import hudson.plugins.findbugs.util.FileFinder;
 import hudson.plugins.findbugs.util.model.FileAnnotation;
 import hudson.plugins.findbugs.util.model.MavenModule;
 import hudson.plugins.findbugs.util.model.Priority;
@@ -66,7 +67,7 @@ public class MavenFindBugsParser {
     public MavenModule parse(final InputStream file, final String moduleName, final File workspace) throws IOException, SAXException, InterruptedException {
         MavenModule mavenModule = parse(file, moduleName);
 
-        String[] files = new FilePath(workspace).act(new JavaFileFinder());
+        String[] files = new FilePath(workspace).act(new FileFinder());
 
         mapFiles(mavenModule, files);
 

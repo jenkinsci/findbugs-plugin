@@ -1,4 +1,4 @@
-package hudson.plugins.findbugs.parser.maven;
+package hudson.plugins.findbugs.util;
 
 import hudson.FilePath.FileCallable;
 import hudson.remoting.VirtualChannel;
@@ -14,26 +14,47 @@ import org.apache.tools.ant.types.FileSet;
  *
  * @author Ulli Hafner
  */
-public class JavaFileFinder implements FileCallable<String[]> {
+public class FileFinder implements FileCallable<String[]> {
     /** Generated ID. */
     private static final long serialVersionUID = 2970029366847565970L;
+    /** File name pattern for java files. */
+    private static final String JAVA_PATTERN = "**/*.java";
+    /** The pattern to scan for. */
+    private final String pattern;
 
     /**
-     * Returns an array with the filenames of the Java files that have been
+     * Creates a new instance of <code>FileFinder</code>. This instance will scan
+     * for Java files, see {@link #JAVA_PATTERN}.
+     */
+    public FileFinder() {
+        this(JAVA_PATTERN);
+    }
+
+    /**
+     * Creates a new instance of {@link FileFinder}.
+     *
+     * @param pattern the ant file pattern to scan for
+     */
+    public FileFinder(final String pattern) {
+        this.pattern = pattern;
+
+    }
+    /**
+     * Returns an array with the filenames of the specified file pattern that have been
      * found in the workspace.
      *
      * @param workspace
      *            root directory of the workspace
      * @param channel
      *            not used
-     * @return the filenames of the FindBugs files
+     * @return the filenames of all found files
      */
     public String[] invoke(final File workspace, final VirtualChannel channel) throws IOException {
         FileSet fileSet = new FileSet();
         Project antProject = new Project();
         fileSet.setProject(antProject);
         fileSet.setDir(workspace);
-        fileSet.setIncludes("**/*.java");
+        fileSet.setIncludes(pattern);
 
         return fileSet.getDirectoryScanner(antProject).getIncludedFiles();
     }

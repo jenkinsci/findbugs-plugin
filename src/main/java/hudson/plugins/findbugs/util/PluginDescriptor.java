@@ -69,7 +69,7 @@ public abstract class PluginDescriptor extends BuildStepDescriptor<Publisher> {
     }
 
     /**
-     * Performs on-the-fly validation on the bugs threshold.
+     * Performs on-the-fly validation on the annotations threshold.
      *
      * @param request
      *            Stapler request
@@ -83,7 +83,7 @@ public abstract class PluginDescriptor extends BuildStepDescriptor<Publisher> {
     /** {@inheritDoc} */
     @SuppressWarnings("unchecked")
     @Override
-    public final boolean isApplicable(final Class<? extends AbstractProject> jobType) {
+    public boolean isApplicable(final Class<? extends AbstractProject> jobType) {
         return !AbstractMavenProject.class.isAssignableFrom(jobType);
     }
 }
