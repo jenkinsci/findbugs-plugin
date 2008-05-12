@@ -1,5 +1,7 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
+
   <parent>
     <groupId>org.jvnet.hudson.plugins</groupId>
     <artifactId>plugin</artifactId>
@@ -12,13 +14,24 @@
   <name>Hudson FindBugs Plug-in</name>
   <version>2.5-SNAPSHOT</version>
   <url>http://hudson.gotdns.com/wiki/display/HUDSON/FindBugs+Plugin</url>
-  <description>This plug-in generates the trend report for FindBugs, an open source program
-  which uses static analysis to look for bugs in Java code. </description>
+  <description>This plug-in generates the trend report for FindBugs,
+    an open source program which uses static analysis to look for bugs
+    in Java code. </description>
 
   <licenses>
-  	<license><name>MIT license</name><comments>All source code is under the MIT license.</comments></license>
-  	<license><name>GNU LESSER GENERAL PUBLIC LICENSE</name><comments>FindBugs messages.xml file from the findbugs 1.2.1 release .</comments></license>
-  	<license><comments>The findbugs logo is a trademark by The University of Maryland. These icons are a courtesy of the FindBugs team.</comments></license>
+    <license>
+      <name>MIT license</name>
+      <comments>All source code is under the MIT license.</comments>
+    </license>
+    <license>
+      <name>GNU LESSER GENERAL PUBLIC LICENSE</name>
+      <comments>FindBugs messages.xml file from the findbugs
+        1.2.1 release .</comments>
+    </license>
+    <license>
+      <comments>The findbugs logo is a trademark by The University of
+        Maryland. These icons are a courtesy of the FindBugs team.</comments>
+    </license>
   </licenses>
 
   <dependencies>
@@ -73,13 +86,21 @@
   </dependencies>
 
   <build>
-     <plugins>
-    	<plugin>
-    	    <groupId>org.kohsuke.stapler</groupId>
-    	    <artifactId>maven-stapler-plugin</artifactId>
-    	    <extensions>true</extensions>
-    	</plugin>
-     </plugins>
+    <plugins>
+      <plugin>
+        <groupId>org.kohsuke.stapler</groupId>
+        <artifactId>maven-stapler-plugin</artifactId>
+        <extensions>true</extensions>
+      </plugin>
+      <plugin>
+        <groupId>org.jvnet.hudson.tools</groupId>
+        <artifactId>maven-hpi-plugin</artifactId>
+        <configuration>
+          <showDeprecation>true</showDeprecation>
+          <showWarnings>true</showWarnings>
+        </configuration>
+      </plugin>
+    </plugins>
   </build>
 
   <repositories>
@@ -95,5 +116,44 @@
       </snapshots>
     </repository>
   </repositories>
+
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-pmd-plugin</artifactId>
+        <version>4.3</version>
+        <configuration>
+          <rulesets>
+            <ruleset>${project.artifactId}/.ruleset</ruleset>
+          </rulesets>
+          <targetJdk>1.5</targetJdk>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>findbugs-maven-plugin</artifactId>
+        <version>1.2</version>
+        <configuration>
+          <xmlOutput>true</xmlOutput>
+          <findbugsXmlOutput>true</findbugsXmlOutput>
+          <findbugsXmlWithMessages>true</findbugsXmlWithMessages>
+          <threshold>Low</threshold>
+          <effort>Max</effort>
+          <debug>false</debug>
+          <relaxed>false</relaxed>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <version>2.1</version>
+        <configuration>
+          <configLocation>${project.artifactId}/checkstyle-configuration.xml
+          </configLocation>
+        </configuration>
+      </plugin>
+    </plugins>
+  </reporting>
 
 </project>
