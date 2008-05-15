@@ -1,6 +1,9 @@
 package hudson.plugins.findbugs;
 
 import hudson.plugins.findbugs.util.PluginDescriptor;
+import net.sf.json.JSONObject;
+
+import org.kohsuke.stapler.StaplerRequest;
 
 /**
  * Descriptor for the class {@link FindBugsPublisher}. Used as a singleton. The
@@ -37,5 +40,11 @@ public final class FindBugsDescriptor extends PluginDescriptor {
     @Override
     public String getIconUrl() {
         return ACTION_ICON;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public FindBugsPublisher newInstance(final StaplerRequest request, final JSONObject formData) throws FormException {
+        return request.bindParameters(FindBugsPublisher.class, PLUGIN_NAME + ".");
     }
 }
