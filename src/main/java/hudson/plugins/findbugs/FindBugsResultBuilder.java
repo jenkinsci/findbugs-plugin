@@ -22,7 +22,7 @@ public class FindBugsResultBuilder {
      */
     public FindBugsResult build(final AbstractBuild<?, ?> build, final JavaProject project) {
         Object previous = build.getPreviousBuild();
-        if (previous instanceof AbstractBuild<?, ?>) {
+        while (previous instanceof AbstractBuild<?, ?> && previous != null) {
             AbstractBuild<?, ?> previousBuild = (AbstractBuild<?, ?>)previous;
             FindBugsResultAction previousAction = previousBuild.getAction(FindBugsResultAction.class);
             if (previousAction != null) {
@@ -30,6 +30,7 @@ public class FindBugsResultBuilder {
                         previousAction.getResult().getProject(),
                         previousAction.getResult().getZeroWarningsHighScore());
             }
+            previous = previousBuild.getPreviousBuild();
         }
         return new FindBugsResult(build, project);
     }
