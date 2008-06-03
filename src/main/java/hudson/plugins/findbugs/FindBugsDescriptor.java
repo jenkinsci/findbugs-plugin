@@ -45,6 +45,6 @@ public final class FindBugsDescriptor extends PluginDescriptor {
     /** {@inheritDoc} */
     @Override
     public FindBugsPublisher newInstance(final StaplerRequest request, final JSONObject formData) throws FormException {
-        return request.bindParameters(FindBugsPublisher.class, PLUGIN_NAME + ".");
+        return request.bindJSON(FindBugsPublisher.class, formData);
     }
 }

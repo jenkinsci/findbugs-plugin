@@ -28,6 +28,6 @@ public class FindBugsReporterDescriptor extends ReporterDescriptor {
     /** {@inheritDoc} */
     @Override
     public MavenReporter newInstance(final StaplerRequest request, final JSONObject formData) throws FormException {
-        return request.bindParameters(FindBugsReporter.class, getPublisherDescriptor().getPluginName() + ".");
+        return request.bindJSON(FindBugsReporter.class, formData);
     }
 }
