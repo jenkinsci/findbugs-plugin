@@ -515,7 +515,7 @@ public class FindBugsResult implements ModelObject, Serializable, AnnotationProv
      *            the module to get
      * @return the module
      */
-    private MavenModule getModule(final String name) {
+    public MavenModule getModule(final String name) {
         MavenModule module;
         if (emptyModules.containsKey(name)) {
             module = emptyModules.get(name);
@@ -642,20 +642,14 @@ public class FindBugsResult implements ModelObject, Serializable, AnnotationProv
     }
 
     /**
-     * Returns a tooltip showing the distribution of priorities for the selected
-     * package.
+     * Returns the package with the given name.
      *
      * @param name
-     *            the package to show the distribution for
-     * @return a tooltip showing the distribution of priorities
+     *            the package to get
+     * @return the package
      */
-    public String getToolTip(final String name) {
-        if (isSingleModuleProject()) {
-            return getModules().iterator().next().getPackage(name).getToolTip();
-        }
-        else {
-            return getModule(name).getToolTip();
-        }
+    public JavaPackage getPackage(final String name) {
+        return getModules().iterator().next().getPackage(name);
     }
 
     /**
