@@ -165,7 +165,17 @@ public class MavenFindBugsParser {
 
         for (hudson.plugins.findbugs.parser.maven.File file : collection.getFiles()) {
             for (BugInstance warning : file.getBugInstances()) {
-                Priority priority = Priority.valueOf(StringUtils.upperCase(warning.getPriority()));
+                String value = warning.getPriority();
+                Priority priority;
+                if ("high".equalsIgnoreCase(value)) {
+                    priority = Priority.HIGH;
+                }
+                else if ("normal".equalsIgnoreCase(value)) {
+                    priority = Priority.NORMAL;
+                }
+                else {
+                    priority = Priority.LOW;
+                }
                 Bug bug = new Bug(priority, warning.getMessage(), warning.getCategory(), warning.getType(),
                             warning.getStart(), warning.getEnd());
                 bug.setPackageName(StringUtils.substringBeforeLast(file.getClassname(), "."));

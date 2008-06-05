@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <BugCollection version="1.2.0" threshold="Low" effort="Max" >
 <file classname="com.avaloq.adt.env.core.db.ChangeDBCore" >
-<BugInstance type="SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING" priority="Low" category="BAD_PRACTICE" message="SQL: A prepared statement is generated from a nonconstant String at com.avaloq.adt.env.core.db.ChangeDBCore.setProperty(String, long, String, boolean, Connection) " lineNumber="332" />
+<BugInstance type="SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING" priority="Exp" category="BAD_PRACTICE" message="SQL: A prepared statement is generated from a nonconstant String at com.avaloq.adt.env.core.db.ChangeDBCore.setProperty(String, long, String, boolean, Connection) " lineNumber="332" />
 <BugInstance type="SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING" priority="Low" category="BAD_PRACTICE" message="SQL: A prepared statement is generated from a nonconstant String at com.avaloq.adt.env.core.db.ChangeDBCore.acknowledgeProject(long) " lineNumber="649" />
 <BugInstance type="SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING" priority="High" category="BAD_PRACTICE" message="SQL: A prepared statement is generated from a nonconstant String at com.avaloq.adt.env.core.db.ChangeDBCore.getNackComment(long, String, Connection) " lineNumber="1445" />
 <BugInstance type="SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING" priority="High" category="BAD_PRACTICE" message="SQL: A prepared statement is generated from a nonconstant String at com.avaloq.adt.env.core.db.ChangeDBCore.setChangeNotePublState(String[], int) " lineNumber="1475" />
