@@ -2,6 +2,7 @@ package hudson.plugins.findbugs.util;
 
 import hudson.model.AbstractBuild;
 import hudson.model.ModelObject;
+import hudson.plugins.findbugs.util.model.AnnotationContainer;
 import hudson.plugins.findbugs.util.model.FileAnnotation;
 import hudson.plugins.findbugs.util.model.Priority;
 
@@ -31,7 +32,7 @@ public class PrioritiesDetail extends AbstractAnnotationsDetail {
      *            header to be shown on detail page
      */
     public PrioritiesDetail(final AbstractBuild<?, ?> owner, final Collection<FileAnnotation> annotations, final Priority priority, final String header) {
-        super(owner, annotations, header);
+        super(owner, annotations, header, Hierarchy.PROJECT);
         this.priority = priority;
     }
 
@@ -58,6 +59,12 @@ public class PrioritiesDetail extends AbstractAnnotationsDetail {
     @Override
     public ModelObject getDynamic(final String link) {
         return new SourceDetail(getOwner(), getAnnotation(link));
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    protected Collection<? extends AnnotationContainer> getChildren() {
+        return getModules();
     }
 }
 
