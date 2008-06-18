@@ -2,6 +2,7 @@ package hudson.plugins.findbugs.util;
 
 import static org.junit.Assert.*;
 import hudson.model.HealthReport;
+import hudson.plugins.findbugs.util.HealthReportBuilder;
 
 import java.util.List;
 

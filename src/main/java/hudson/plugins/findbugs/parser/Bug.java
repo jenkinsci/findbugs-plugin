@@ -18,10 +18,6 @@ import org.apache.commons.lang.StringUtils;
 public class Bug extends AbstractAnnotation {
     /** Unique identifier of this class. */
     private static final long serialVersionUID = 5171661552905752370L;
-    /** Bug category. */
-    private final String category;
-    /** Bug type. */
-    private final String type;
     /** Bug HTML description. */
     private String tooltip = StringUtils.EMPTY;
 
@@ -43,10 +39,7 @@ public class Bug extends AbstractAnnotation {
      */
     public Bug(final Priority priority, final String message, final String category, final String type,
             final int start, final int end) {
-        super(priority, message, start, end);
-
-        this.category = category;
-        this.type = type;
+        super(priority, message, start, end, category, type);
     }
 
     /**
@@ -109,15 +102,6 @@ public class Bug extends AbstractAnnotation {
     }
 
     /**
-     * Returns the category of the bug.
-     *
-     * @return the bug category
-     */
-    public String getCategory() {
-        return category;
-    }
-
-    /**
      * Gets the associated file name of this bug (without path).
      *
      * @return the short file name
@@ -126,60 +110,9 @@ public class Bug extends AbstractAnnotation {
         return StringUtils.substringAfterLast(getFileName(), "/");
     }
 
-    /**
-     * Returns the bug type.
-     *
-     * @return the bug type
-     */
-    public String getType() {
-        return type;
-    }
-
     /** {@inheritDoc} */
     public String getToolTip() {
         return StringUtils.defaultIfEmpty(tooltip, FindBugsMessages.getInstance().getMessage(getType()));
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public int hashCode() {
-        int prime = 31;
-        int result = super.hashCode();
-        result = prime * result + ((category == null) ? 0 : category.hashCode());
-        result = prime * result + ((type == null) ? 0 : type.hashCode());
-        return result;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (!super.equals(obj)) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Bug other = (Bug)obj;
-        if (category == null) {
-            if (other.category != null) {
-                return false;
-            }
-        }
-        else if (!category.equals(other.category)) {
-            return false;
-        }
-        if (type == null) {
-            if (other.type != null) {
-                return false;
-            }
-        }
-        else if (!type.equals(other.type)) {
-            return false;
-        }
-        return true;
     }
 }
 

@@ -1,7 +1,6 @@
 package hudson.plugins.findbugs.util;
 
 import hudson.model.AbstractBuild;
-import hudson.model.ModelObject;
 import hudson.plugins.findbugs.util.model.AnnotationContainer;
 import hudson.plugins.findbugs.util.model.FileAnnotation;
 import hudson.plugins.findbugs.util.model.Priority;
@@ -41,6 +40,7 @@ public class PrioritiesDetail extends AbstractAnnotationsDetail {
      *
      * @return the header
      */
+    @Override
     public String getHeader() {
         return getName() + " - " + priority.getLongLocalizedString();
     }
@@ -48,17 +48,6 @@ public class PrioritiesDetail extends AbstractAnnotationsDetail {
     /** {@inheritDoc} */
     public String getDisplayName() {
         return priority.getLongLocalizedString();
-    }
-
-    /**
-     * Returns the dynamic result of the FindBugs analysis (detail page for a package).
-     *
-     * @param link the package name to get the result for
-     * @return the dynamic result of the FindBugs analysis (detail page for a package).
-     */
-    @Override
-    public ModelObject getDynamic(final String link) {
-        return new SourceDetail(getOwner(), getAnnotation(link));
     }
 
     /** {@inheritDoc} */

@@ -1,6 +1,7 @@
 package hudson.plugins.findbugs.util;
 
 import static org.junit.Assert.*;
+import hudson.plugins.findbugs.util.AnnotationDifferencer;
 import hudson.plugins.findbugs.util.model.FileAnnotation;
 import hudson.plugins.findbugs.util.model.Priority;
 

@@ -1,4 +1,4 @@
-package hudson.plugins.findbugs.util;
+	package		hudson.plugins.findbugs.util    ; // NOPMD
 
 /**
  * Indicates an orderly abortion of the processing.

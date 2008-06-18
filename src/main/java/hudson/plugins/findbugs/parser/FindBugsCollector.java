@@ -4,7 +4,7 @@ import hudson.FilePath;
 import hudson.FilePath.FileCallable;
 import hudson.plugins.findbugs.Messages;
 import hudson.plugins.findbugs.parser.maven.MavenFindBugsParser;
-import hudson.plugins.findbugs.util.MavenModuleDetector;
+import hudson.plugins.findbugs.util.ModuleDetector;
 import hudson.plugins.findbugs.util.model.JavaProject;
 import hudson.plugins.findbugs.util.model.MavenModule;
 import hudson.remoting.VirtualChannel;
@@ -73,7 +73,7 @@ public class FindBugsCollector implements FileCallable<JavaProject> {
         }
 
         try {
-            MavenModuleDetector moduleDetector = new MavenModuleDetector();
+            ModuleDetector moduleDetector = new ModuleDetector();
             int duplicateModuleCounter = 1;
             for (String file : findBugsFiles) {
                 File findbugsFile = new File(workspace, file);
