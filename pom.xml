@@ -31,6 +31,10 @@
       <comments>The findbugs logo is a trademark by The University of
         Maryland. These icons are a courtesy of the FindBugs team.</comments>
     </license>
+    <license>
+      <name>BSD license</name>
+      <comments>All YUI source code is under the BSD license.</comments>
+    </license>
   </licenses>
 
   <dependencies>
