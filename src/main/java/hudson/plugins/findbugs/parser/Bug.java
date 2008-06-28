@@ -101,15 +101,6 @@ public class Bug extends AbstractAnnotation {
         this.tooltip = tooltip;
     }
 
-    /**
-     * Gets the associated file name of this bug (without path).
-     *
-     * @return the short file name
-     */
-    public String getShortFileName() {
-        return StringUtils.substringAfterLast(getFileName(), "/");
-    }
-
     /** {@inheritDoc} */
     public String getToolTip() {
         return StringUtils.defaultIfEmpty(tooltip, FindBugsMessages.getInstance().getMessage(getType()));
