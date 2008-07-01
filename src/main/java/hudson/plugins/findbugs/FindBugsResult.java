@@ -5,19 +5,11 @@ import hudson.model.AbstractBuild;
 import hudson.model.ModelObject;
 import hudson.plugins.findbugs.parser.Bug;
 import hudson.plugins.findbugs.util.AnnotationDifferencer;
-import hudson.plugins.findbugs.util.AttributeDetail;
 import hudson.plugins.findbugs.util.ChartRenderer;
-import hudson.plugins.findbugs.util.ErrorDetail;
-import hudson.plugins.findbugs.util.FixedWarningsDetail;
-import hudson.plugins.findbugs.util.ModuleDetail;
-import hudson.plugins.findbugs.util.NewWarningsDetail;
-import hudson.plugins.findbugs.util.PackageDetail;
-import hudson.plugins.findbugs.util.PriorityDetailFactory;
-import hudson.plugins.findbugs.util.SourceDetail;
+import hudson.plugins.findbugs.util.DetailBuilder;
 import hudson.plugins.findbugs.util.model.AnnotationContainer;
 import hudson.plugins.findbugs.util.model.AnnotationProvider;
 import hudson.plugins.findbugs.util.model.AnnotationStream;
-import hudson.plugins.findbugs.util.model.DefaultAnnotationContainer;
 import hudson.plugins.findbugs.util.model.FileAnnotation;
 import hudson.plugins.findbugs.util.model.JavaProject;
 import hudson.plugins.findbugs.util.model.MavenModule;
@@ -38,7 +30,6 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
@@ -207,14 +198,7 @@ public class FindBugsResult implements ModelObject, Serializable, AnnotationProv
     private List<String> composeErrorMessage(final JavaProject javaProject) {
         List<String> messages = new ArrayList<String>();
         if (javaProject.hasError()) {
-            if (javaProject.getError() != null) {
-                messages.add(javaProject.getError());
-            }
-            for (MavenModule module : javaProject.getModules()) {
-                if (module.hasError()) {
-                    messages.add(module.getError());
-                }
-            }
+            messages.addAll(javaProject.getErrors());
         }
         return messages;
     }
@@ -483,39 +467,14 @@ public class FindBugsResult implements ModelObject, Serializable, AnnotationProv
      *         package).
      */
     public Object getDynamic(final String link, final StaplerRequest request, final StaplerResponse response) {
-        PriorityDetailFactory factory = new PriorityDetailFactory();
-        if (factory.isPriority(link)) {
-            return factory.create(link, owner, getProject(), getDisplayName());
-        }
-        else if ("fixed".equals(link)) {
-            return new FixedWarningsDetail(getOwner(), getFixedWarnings(), getDisplayName());
-        }
-        else if ("new".equals(link)) {
-            return new NewWarningsDetail(getOwner(), getNewWarnings(), getDisplayName());
-        }
-        else if ("error".equals(link)) {
-            return new ErrorDetail(getOwner(), "FindBugs", errors);
-        }
-        else if (link.startsWith("module.")) {
-            return new ModuleDetail(getOwner(), getModule(StringUtils.substringAfter(link, "module.")), getDisplayName());
-        }
-        else if (link.startsWith("package.")) {
-            return new PackageDetail(getOwner(), getProject().getPackage(StringUtils.substringAfter(link, "package.")), getDisplayName());
-        }
-        else if (link.startsWith("source.")) {
-            return new SourceDetail(getOwner(), getProject().getAnnotation(StringUtils.substringAfter(link, "source.")));
-        }
-        else if (link.startsWith("category.")) {
-            String category = StringUtils.substringAfter(link, "category.");
-            return new AttributeDetail(getOwner(), getProject().getCategory(category), getDisplayName(), hudson.plugins.findbugs.util.Messages.CategoryDetail_header() +  " " + category);
-        }
-        else if (link.startsWith("type.")) {
-            String type = StringUtils.substringAfter(link, "type.");
-            return new AttributeDetail(getOwner(), getProject().getType(type), getDisplayName(), hudson.plugins.findbugs.util.Messages.TypeDetail_header() + " " + type);
-        }
-        return null;
+        return new DetailBuilder().createTrendDetails(link, owner, getContainer(), getFixedWarnings(), getNewWarnings(), errors, getDisplayName());
     }
 
+    /**
+     * Gets the annotation container.
+     *
+     * @return the container
+     */
     public AnnotationContainer getContainer() {
         return getProject();
     }
@@ -605,24 +564,7 @@ public class FindBugsResult implements ModelObject, Serializable, AnnotationProv
      *             in case of an error
      */
     public final void doStatistics(final StaplerRequest request, final StaplerResponse response) throws IOException {
-        String parameter = request.getParameter("object");
-        if (parameter.startsWith("category.")) {
-            Set<FileAnnotation> annotations = getProject().getCategory(StringUtils.substringAfter(parameter, "category."));
-            ChartRenderer.renderPriorititesChart(request, response, new DefaultAnnotationContainer(annotations), getProject().getAnnotationBound());
-        }
-        else if (parameter.startsWith("type.")) {
-            Set<FileAnnotation> annotations = getProject().getType(StringUtils.substringAfter(parameter, "type."));
-            ChartRenderer.renderPriorititesChart(request, response, new DefaultAnnotationContainer(annotations), getProject().getAnnotationBound());
-        }
-        else if (parameter.startsWith("package.")) {
-            AnnotationContainer annotations = getProject().getPackage(StringUtils.substringAfter(parameter, "package."));
-            ChartRenderer.renderPriorititesChart(request, response, annotations, getProject().getAnnotationBound());
-        }
-        else if (parameter.startsWith("module.")) {
-            AnnotationContainer annotations = getModule(StringUtils.substringAfter(parameter, "module."));
-            ChartRenderer.renderPriorititesChart(request, response, annotations, getProject().getAnnotationBound());
-        }
-        // TODO: we should parameterize the annotation bound (second parameter instead of getChild)
+        new ChartRenderer().doStatistics(request, response, getContainer());
     }
 
     /**
