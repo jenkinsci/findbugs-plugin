@@ -1,7 +1,8 @@
 <projectDescription>
   <name>findbugs</name>
-  <comment>This plug-in generates the trend report for FindBugs, an open source program
-  which uses static analysis to look for bugs in Java code.</comment>
+  <comment>This plug-in generates the trend report for FindBugs,
+    an open source program which uses static analysis to look for bugs
+    in Java code.</comment>
   <projects/>
   <buildSpec>
     <buildCommand>
