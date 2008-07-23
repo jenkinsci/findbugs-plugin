@@ -4,7 +4,8 @@ import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.Action;
 import hudson.model.Descriptor;
-import hudson.plugins.findbugs.parser.FindBugsCollector;
+import hudson.plugins.findbugs.parser.FindBugsParser;
+import hudson.plugins.findbugs.util.FilesParser;
 import hudson.plugins.findbugs.util.HealthAwarePublisher;
 import hudson.plugins.findbugs.util.HealthReportBuilder;
 import hudson.plugins.findbugs.util.PluginDescriptor;
@@ -72,8 +73,9 @@ public class FindBugsPublisher extends HealthAwarePublisher {
     @Override
     public JavaProject perform(final AbstractBuild<?, ?> build, final PrintStream logger) throws InterruptedException, IOException {
         log(logger, "Collecting findbugs analysis files...");
-
-        JavaProject project = parseAllWorkspaceFiles(build, logger);
+        FilesParser collector = new FilesParser(logger, StringUtils.defaultIfEmpty(getPattern(), DEFAULT_PATTERN),
+                new FindBugsParser(build.getProject().getWorkspace(), true));
+        JavaProject project = build.getProject().getWorkspace().act(collector);
         FindBugsResult result = new FindBugsResultBuilder().build(build, project);
 
         HealthReportBuilder healthReportBuilder = createHealthReporter(
@@ -82,26 +84,6 @@ public class FindBugsPublisher extends HealthAwarePublisher {
         build.getActions().add(new FindBugsResultAction(build, healthReportBuilder, result));
 
         return project;
-    }
-
-    /**
-     * Scans the workspace for FindBugs files matching the specified pattern and
-     * returns all found annotations merged in a project.
-     *
-     * @param build
-     *            the build to create the action for
-     * @param logger
-     *            the logger
-     * @return the project with the annotations
-     * @throws IOException
-     *             if the files could not be read
-     * @throws InterruptedException
-     *             if user cancels the operation
-     */
-    private JavaProject parseAllWorkspaceFiles(final AbstractBuild<?, ?> build, final PrintStream logger) throws IOException, InterruptedException {
-        FindBugsCollector collector = new FindBugsCollector(logger, StringUtils.defaultIfEmpty(getPattern(), DEFAULT_PATTERN), true);
-
-        return build.getProject().getWorkspace().act(collector);
     }
 
     /** {@inheritDoc} */

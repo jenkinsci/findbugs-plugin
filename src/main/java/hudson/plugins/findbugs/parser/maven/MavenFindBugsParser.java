@@ -7,7 +7,6 @@ import hudson.plugins.findbugs.util.model.FileAnnotation;
 import hudson.plugins.findbugs.util.model.MavenModule;
 import hudson.plugins.findbugs.util.model.Priority;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -66,10 +65,10 @@ public class MavenFindBugsParser {
      * @throws InterruptedException
      *             if the user aborts the mapping
      */
-    public MavenModule parse(final InputStream file, final String moduleName, final File workspace) throws IOException, SAXException, InterruptedException {
+    public MavenModule parse(final InputStream file, final String moduleName, final FilePath workspace) throws IOException, SAXException, InterruptedException {
         MavenModule mavenModule = parse(file, moduleName);
 
-        String[] files = new FilePath(workspace).act(new FileFinder());
+        String[] files = workspace.act(new FileFinder());
 
         mapFiles(mavenModule, files);
 

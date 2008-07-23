@@ -7,8 +7,9 @@ import hudson.maven.MavenReporterDescriptor;
 import hudson.maven.MojoInfo;
 import hudson.maven.MavenBuildProxy.BuildCallable;
 import hudson.model.Action;
-import hudson.plugins.findbugs.parser.FindBugsCollector;
+import hudson.plugins.findbugs.parser.FindBugsParser;
 import hudson.plugins.findbugs.parser.PlainFindBugsParser;
+import hudson.plugins.findbugs.util.FilesParser;
 import hudson.plugins.findbugs.util.HealthAwareMavenReporter;
 import hudson.plugins.findbugs.util.HealthReportBuilder;
 import hudson.plugins.findbugs.util.model.JavaProject;
@@ -91,7 +92,8 @@ public class FindBugsReporter extends HealthAwareMavenReporter {
                 isInitialized = true;
             }
         }
-        FindBugsCollector findBugsCollector = new FindBugsCollector(logger, determineFileName(mojo), false);
+        FilesParser findBugsCollector = new FilesParser(logger, determineFileName(mojo),
+                    new FindBugsParser(build.getModuleSetRootDir(), false));
 
         return getTargetPath(pom).act(findBugsCollector);
     }
