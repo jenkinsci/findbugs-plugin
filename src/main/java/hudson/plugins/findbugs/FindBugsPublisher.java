@@ -74,7 +74,8 @@ public class FindBugsPublisher extends HealthAwarePublisher {
     public JavaProject perform(final AbstractBuild<?, ?> build, final PrintStream logger) throws InterruptedException, IOException {
         log(logger, "Collecting findbugs analysis files...");
         FilesParser collector = new FilesParser(logger, StringUtils.defaultIfEmpty(getPattern(), DEFAULT_PATTERN),
-                new FindBugsParser(build.getProject().getWorkspace(), true));
+                new FindBugsParser(build.getProject().getWorkspace(), true),
+                isMavenBuild(build), isAntBuild(build));
         JavaProject project = build.getProject().getWorkspace().act(collector);
         FindBugsResult result = new FindBugsResultBuilder().build(build, project);
 

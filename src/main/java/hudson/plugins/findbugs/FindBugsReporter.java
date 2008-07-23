@@ -93,7 +93,7 @@ public class FindBugsReporter extends HealthAwareMavenReporter {
             }
         }
         FilesParser findBugsCollector = new FilesParser(logger, determineFileName(mojo),
-                    new FindBugsParser(build.getModuleSetRootDir(), false));
+                    new FindBugsParser(build.getModuleSetRootDir(), false), true, false);
 
         return getTargetPath(pom).act(findBugsCollector);
     }
