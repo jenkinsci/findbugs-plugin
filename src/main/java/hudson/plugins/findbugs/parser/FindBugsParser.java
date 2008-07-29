@@ -1,20 +1,19 @@
 package hudson.plugins.findbugs.parser;
 
 import hudson.FilePath;
-import hudson.plugins.findbugs.Messages;
 import hudson.plugins.findbugs.parser.maven.MavenFindBugsParser;
 import hudson.plugins.findbugs.util.AnnotationParser;
-import hudson.plugins.findbugs.util.model.MavenModule;
+import hudson.plugins.findbugs.util.model.FileAnnotation;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.exception.ExceptionUtils;
 import org.dom4j.DocumentException;
 import org.xml.sax.SAXException;
 
@@ -65,14 +64,12 @@ public class FindBugsParser implements AnnotationParser {
     }
 
     /** {@inheritDoc} */
-    public MavenModule parse(final File file, final String moduleName) throws InvocationTargetException {
-        Exception exception = null;
-        MavenModule module = new MavenModule(moduleName);
+    public Collection<FileAnnotation> parse(final File file, final String moduleName) throws InvocationTargetException {
+        Collection<FileAnnotation> annotations;
         try {
             MavenFindBugsParser mavenFindBugsParser = new MavenFindBugsParser();
             if (mavenFindBugsParser.accepts(new FileInputStream(file))) {
-                module = mavenFindBugsParser.parse(new FileInputStream(file), moduleName, workspace);
-                module.setError(Messages.FindBugs_FindBugsCollector_Error_OldMavenPlugin(file.getAbsolutePath()));
+                return mavenFindBugsParser.parse(new FileInputStream(file), moduleName, workspace);
             }
             else {
                 PlainFindBugsParser parser;
@@ -83,32 +80,24 @@ public class FindBugsParser implements AnnotationParser {
                     parser = new PlainFindBugsParser();
                 }
                 String moduleRoot = StringUtils.substringBefore(file.getAbsolutePath().replace('\\', '/'), "/target/");
-                module = parser.parse(new FileInputStream(file), moduleRoot, moduleName);
+
+                return parser.parse(new FileInputStream(file), moduleRoot, moduleName);
             }
         }
-        catch (IOException e) {
-            exception = e;
+        catch (IOException exception) {
+            throw new InvocationTargetException(exception);
         }
-        catch (SAXException e) {
-            exception = e;
+        catch (SAXException exception) {
+            throw new InvocationTargetException(exception);
         }
-        catch (DocumentException e) {
-            exception = e;
+        catch (DocumentException exception) {
+            throw new InvocationTargetException(exception);
         }
-        catch (InterruptedException e) {
-            // ignore this exception and return
-        }
-        if (exception != null) {
-            String errorMessage = Messages.FindBugs_FindBugsCollector_Error_Exception(file.getAbsolutePath())
-                    + "\n\n" + ExceptionUtils.getStackTrace(exception);
-            module.setError(errorMessage);
-        }
-        return module;
     }
 
     /** {@inheritDoc} */
-    public MavenModule parse(final InputStream file, final String moduleName) throws InvocationTargetException {
-        return null;
+    public Collection<FileAnnotation> parse(final InputStream file, final String moduleName) throws InvocationTargetException {
+        throw new UnsupportedOperationException("FinBugs parser does not parse input streams.");
     }
 }
 

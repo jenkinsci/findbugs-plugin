@@ -40,7 +40,15 @@ public class NativeFindBugsParserTest extends AbstractEnglishLocaleTest {
      *             in case of an error
      */
     private MavenModule parseFile(final String fileName) throws IOException, DocumentException {
-        return new NativeFindBugsParser().parse(NativeFindBugsParserTest.class.getResourceAsStream(fileName), "", fileName);
+        Collection<FileAnnotation> annotations = new NativeFindBugsParser().parse(NativeFindBugsParserTest.class.getResourceAsStream(fileName), "", fileName);
+
+        MavenModule module = new MavenModule(fileName);
+        if (!annotations.isEmpty()) {
+            module.setName(annotations.iterator().next().getModuleName());
+        }
+        module.addAnnotations(annotations);
+
+        return module;
     }
 
     /**

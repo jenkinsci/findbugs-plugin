@@ -8,8 +8,8 @@ import hudson.plugins.findbugs.parser.FindBugsParser;
 import hudson.plugins.findbugs.util.FilesParser;
 import hudson.plugins.findbugs.util.HealthAwarePublisher;
 import hudson.plugins.findbugs.util.HealthReportBuilder;
+import hudson.plugins.findbugs.util.ParserResult;
 import hudson.plugins.findbugs.util.PluginDescriptor;
-import hudson.plugins.findbugs.util.model.JavaProject;
 import hudson.tasks.Publisher;
 
 import java.io.IOException;
@@ -71,12 +71,12 @@ public class FindBugsPublisher extends HealthAwarePublisher {
 
     /** {@inheritDoc} */
     @Override
-    public JavaProject perform(final AbstractBuild<?, ?> build, final PrintStream logger) throws InterruptedException, IOException {
+    public ParserResult perform(final AbstractBuild<?, ?> build, final PrintStream logger) throws InterruptedException, IOException {
         log(logger, "Collecting findbugs analysis files...");
         FilesParser collector = new FilesParser(logger, StringUtils.defaultIfEmpty(getPattern(), DEFAULT_PATTERN),
                 new FindBugsParser(build.getProject().getWorkspace(), true),
                 isMavenBuild(build), isAntBuild(build));
-        JavaProject project = build.getProject().getWorkspace().act(collector);
+        ParserResult project = build.getProject().getWorkspace().act(collector);
         FindBugsResult result = new FindBugsResultBuilder().build(build, project);
 
         HealthReportBuilder healthReportBuilder = createHealthReporter(

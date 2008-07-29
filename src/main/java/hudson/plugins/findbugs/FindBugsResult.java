@@ -3,6 +3,7 @@ package hudson.plugins.findbugs;
 import hudson.model.AbstractBuild;
 import hudson.plugins.findbugs.parser.Bug;
 import hudson.plugins.findbugs.util.AnnotationsBuildResult;
+import hudson.plugins.findbugs.util.ParserResult;
 import hudson.plugins.findbugs.util.model.JavaProject;
 
 /**
@@ -23,11 +24,11 @@ public class FindBugsResult extends AnnotationsBuildResult {
      *
      * @param build
      *            the current build as owner of this action
-     * @param project
-     *            the parsed FindBugs result
+     * @param result
+     *            the parsed result with all annotations
      */
-    public FindBugsResult(final AbstractBuild<?, ?> build, final JavaProject project) {
-        super(build, project);
+    public FindBugsResult(final AbstractBuild<?, ?> build, final ParserResult result) {
+        super(build, result);
     }
 
     /**
@@ -35,13 +36,13 @@ public class FindBugsResult extends AnnotationsBuildResult {
      *
      * @param build
      *            the current build as owner of this action
-     * @param project
-     *            the parsed FindBugs result
+     * @param result
+     *            the parsed result with all annotations
      * @param previous
      *            the result of the previous build
      */
-    public FindBugsResult(final AbstractBuild<?, ?> build, final JavaProject project, final FindBugsResult previous) {
-        super(build, project, previous);
+    public FindBugsResult(final AbstractBuild<?, ?> build, final ParserResult result, final FindBugsResult previous) {
+        super(build, result, previous);
     }
 
     /**

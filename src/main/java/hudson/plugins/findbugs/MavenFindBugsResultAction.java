@@ -10,9 +10,7 @@ import hudson.model.AbstractBuild;
 import hudson.model.Action;
 import hudson.plugins.findbugs.util.HealthReportBuilder;
 import hudson.plugins.findbugs.util.TrendReportSize;
-import hudson.plugins.findbugs.util.model.JavaProject;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -88,33 +86,7 @@ public class MavenFindBugsResultAction extends FindBugsResultAction implements A
      *      Newly completed build.
      */
     public void update(final Map<MavenModule, List<MavenBuild>> moduleBuilds, final MavenBuild newBuild) {
-        JavaProject project = new JavaProject();
-        for (List<MavenBuild> builds : moduleBuilds.values()) {
-            if (!builds.isEmpty()) {
-                addModule(project, builds);
-            }
-        }
-        setResult(new FindBugsResultBuilder().build(getOwner(), project));
-    }
-
-    /**
-     * Adds a new module to the specified project. The new module is obtained
-     * from the specified list of builds.
-     *
-     * @param project
-     *            the project to add the module to
-     * @param builds
-     *            the builds for a module
-     */
-    private void addModule(final JavaProject project, final List<MavenBuild> builds) {
-        MavenBuild mavenBuild = builds.get(0);
-        MavenFindBugsResultAction action = mavenBuild.getAction(getClass());
-        if (action != null) {
-            Collection<hudson.plugins.findbugs.util.model.MavenModule> modules = action.getResult().getProject().getModules();
-            for (hudson.plugins.findbugs.util.model.MavenModule mavenModule : modules) {
-                project.addModule(mavenModule);
-            }
-        }
+        setResult(new FindBugsResultBuilder().build(getOwner(), createAggregatedResult(moduleBuilds)));
     }
 }
 

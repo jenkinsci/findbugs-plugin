@@ -1,7 +1,7 @@
 package hudson.plugins.findbugs;
 
 import hudson.model.AbstractBuild;
-import hudson.plugins.findbugs.util.model.JavaProject;
+import hudson.plugins.findbugs.util.ParserResult;
 
 /**
  * Creates a new FindBugs result based on the values of a previous build and the
@@ -20,7 +20,7 @@ public class FindBugsResultBuilder {
      *            the project containing the annotations
      * @return the result action
      */
-    public FindBugsResult build(final AbstractBuild<?, ?> build, final JavaProject project) {
+    public FindBugsResult build(final AbstractBuild<?, ?> build, final ParserResult project) {
         Object previous = build.getPreviousBuild();
         while (previous instanceof AbstractBuild<?, ?>) {
             AbstractBuild<?, ?> previousBuild = (AbstractBuild<?, ?>)previous;

@@ -1,7 +1,7 @@
 package hudson.plugins.findbugs.parser;
 
+import hudson.plugins.findbugs.util.model.FileAnnotation;
 import hudson.plugins.findbugs.util.model.LineRange;
-import hudson.plugins.findbugs.util.model.MavenModule;
 import hudson.plugins.findbugs.util.model.Priority;
 import hudson.remoting.Which;
 
@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -48,7 +49,7 @@ public class PlainFindBugsParser {
      *             if the file could not be parsed
      * @throws DocumentException
      */
-    public MavenModule parse(final InputStream file, final String moduleRoot, final String moduleName)
+    public Collection<FileAnnotation> parse(final InputStream file, final String moduleRoot, final String moduleName)
             throws IOException, DocumentException {
         Project project = createMavenProject(moduleRoot);
 
@@ -59,8 +60,7 @@ public class PlainFindBugsParser {
         sourceFinder.setSourceBaseList(project.getSourceDirList());
 
         String actualName = extractModuleName(moduleName, project);
-        MavenModule module = new MavenModule(actualName);
-
+        ArrayList<FileAnnotation> annotations = new ArrayList<FileAnnotation>();
         Collection<BugInstance> bugs = collection.getCollection();
         for (BugInstance warning : bugs) {
             SourceLineAnnotation sourceLine = warning.getPrimarySourceLineAnnotation();
@@ -89,9 +89,9 @@ public class PlainFindBugsParser {
             bug.setPackageName(warning.getPrimaryClass().getPackageName());
             bug.setModuleName(actualName);
 
-            module.addAnnotation(bug);
+            annotations.add(bug);
         }
-        return module;
+        return annotations;
     }
 
     /**

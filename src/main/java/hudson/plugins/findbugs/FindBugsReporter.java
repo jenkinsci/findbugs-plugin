@@ -12,7 +12,7 @@ import hudson.plugins.findbugs.parser.PlainFindBugsParser;
 import hudson.plugins.findbugs.util.FilesParser;
 import hudson.plugins.findbugs.util.HealthAwareMavenReporter;
 import hudson.plugins.findbugs.util.HealthReportBuilder;
-import hudson.plugins.findbugs.util.model.JavaProject;
+import hudson.plugins.findbugs.util.ParserResult;
 
 import java.io.IOException;
 import java.io.PrintStream;
@@ -85,7 +85,7 @@ public class FindBugsReporter extends HealthAwareMavenReporter {
 
     /** {@inheritDoc} */
     @Override
-    public JavaProject perform(final MavenBuildProxy build, final MavenProject pom, final MojoInfo mojo, final PrintStream logger) throws InterruptedException, IOException {
+    public ParserResult perform(final MavenBuildProxy build, final MavenProject pom, final MojoInfo mojo, final PrintStream logger) throws InterruptedException, IOException {
         synchronized (lockLibraryInitialization) {
             if (!isInitialized) {
                 initializeFindBugsLibrary(build);
@@ -100,7 +100,7 @@ public class FindBugsReporter extends HealthAwareMavenReporter {
 
     /** {@inheritDoc} */
     @Override
-    protected void persistResult(final JavaProject project, final MavenBuild build) {
+    protected void persistResult(final ParserResult project, final MavenBuild build) {
         FindBugsResult result = new FindBugsResultBuilder().build(build, project);
         HealthReportBuilder healthReportBuilder = createHealthBuilder(
                 Messages.FindBugs_ResultAction_HealthReportSingleItem(),

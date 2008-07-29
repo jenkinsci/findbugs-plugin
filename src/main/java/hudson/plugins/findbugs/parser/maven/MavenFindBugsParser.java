@@ -4,11 +4,12 @@ import hudson.FilePath;
 import hudson.plugins.findbugs.parser.Bug;
 import hudson.plugins.findbugs.util.FileFinder;
 import hudson.plugins.findbugs.util.model.FileAnnotation;
-import hudson.plugins.findbugs.util.model.MavenModule;
 import hudson.plugins.findbugs.util.model.Priority;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 
 import org.apache.commons.digester.Digester;
@@ -65,25 +66,30 @@ public class MavenFindBugsParser {
      * @throws InterruptedException
      *             if the user aborts the mapping
      */
-    public MavenModule parse(final InputStream file, final String moduleName, final FilePath workspace) throws IOException, SAXException, InterruptedException {
-        MavenModule mavenModule = parse(file, moduleName);
+    public Collection<FileAnnotation> parse(final InputStream file, final String moduleName, final FilePath workspace) throws IOException, SAXException {
+        Collection<FileAnnotation> annotations = parse(file, moduleName);
 
-        String[] files = workspace.act(new FileFinder());
+        try {
+            String[] files = workspace.act(new FileFinder());
 
-        mapFiles(mavenModule, files);
+            mapFiles(annotations, files);
+        }
+        catch (InterruptedException exception) {
+            // if the user cancels than just skip the mapping
+        }
 
-        return mavenModule;
+        return annotations;
     }
 
     /**
      * Maps each class with an warning to a workspace file.
      *
-     * @param mavenModule
+     * @param annotations
      *            the module containing the warnings
      * @param files
      *            the java files in the workspace
      */
-    public void mapFiles(final MavenModule mavenModule, final String[] files) {
+    public void mapFiles(final Collection<FileAnnotation> annotations, final String[] files) {
         HashMap<String, String> fileMapping = new HashMap<String, String>();
 
         for (int i = 0; i < files.length; i++) {
@@ -101,7 +107,7 @@ public class MavenFindBugsParser {
                 fileMapping.put(key, files[i]);
             }
         }
-        for (FileAnnotation annotation : mavenModule.getAnnotations()) {
+        for (FileAnnotation annotation : annotations) {
             String key = StringUtils.substringBeforeLast(annotation.getPackageName() + "." + annotation.getFileName(), "$") + ".java";
             if (fileMapping.containsKey(key) && annotation instanceof Bug) {
                 ((Bug)annotation).setFileName(fileMapping.get(key));
@@ -123,7 +129,7 @@ public class MavenFindBugsParser {
      * @throws SAXException
      *             if the file is not in valid XML format
      */
-    public MavenModule parse(final InputStream file, final String moduleName) throws IOException, SAXException {
+    public Collection<FileAnnotation> parse(final InputStream file, final String moduleName) throws IOException, SAXException {
         Digester digester = new Digester();
         digester.setValidating(false);
         digester.setClassLoader(MavenFindBugsParser.class.getClassLoader());
@@ -159,8 +165,8 @@ public class MavenFindBugsParser {
      *            name of the maven module
      * @return a maven module of the annotations API
      */
-    private MavenModule convert(final BugCollection collection, final String moduleName) {
-        MavenModule module = new MavenModule(moduleName);
+    private Collection<FileAnnotation> convert(final BugCollection collection, final String moduleName) {
+        ArrayList<FileAnnotation> annotations = new ArrayList<FileAnnotation>();
 
         for (hudson.plugins.findbugs.parser.maven.File file : collection.getFiles()) {
             for (BugInstance warning : file.getBugInstances()) {
@@ -181,10 +187,10 @@ public class MavenFindBugsParser {
                 bug.setModuleName(moduleName);
                 bug.setFileName(StringUtils.substringAfterLast(file.getClassname(), "."));
 
-                module.addAnnotation(bug);
+                annotations.add(bug);
             }
         }
-        return module;
+        return annotations;
     }
 }
 

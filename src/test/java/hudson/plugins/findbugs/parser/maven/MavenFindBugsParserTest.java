@@ -12,6 +12,7 @@ import hudson.plugins.findbugs.util.model.Priority;
 import hudson.plugins.findbugs.util.model.WorkspaceFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import junit.framework.Assert;
@@ -69,7 +70,12 @@ public class MavenFindBugsParserTest {
      *             in case of an error
      */
     private MavenModule parseFile(final String fileName) throws IOException, SAXException {
-        return mavenFindBugsParser.parse(MavenFindBugsParserTest.class.getResourceAsStream(fileName), fileName);
+        Collection<FileAnnotation> annotations = mavenFindBugsParser.parse(MavenFindBugsParserTest.class.getResourceAsStream(fileName), fileName);
+
+        MavenModule module = new MavenModule();
+        module.addAnnotations(annotations);
+
+        return module;
     }
 
     /**
@@ -254,10 +260,10 @@ public class MavenFindBugsParserTest {
         bug.setPackageName("java.lang");
         bug.setFileName(className);
 
-        MavenModule module = new MavenModule();
-        module.addAnnotation(bug);
+        ArrayList<FileAnnotation> annotations = new ArrayList<FileAnnotation>();
+        annotations.add(bug);
 
-        mavenFindBugsParser.mapFiles(module, javaFiles);
+        mavenFindBugsParser.mapFiles(annotations, javaFiles);
         return bug;
     }
 }
