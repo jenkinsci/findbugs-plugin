@@ -5,10 +5,8 @@ import hudson.maven.MavenBuildProxy;
 import hudson.maven.MavenModule;
 import hudson.maven.MavenReporterDescriptor;
 import hudson.maven.MojoInfo;
-import hudson.maven.MavenBuildProxy.BuildCallable;
 import hudson.model.Action;
 import hudson.plugins.findbugs.parser.FindBugsParser;
-import hudson.plugins.findbugs.parser.PlainFindBugsParser;
 import hudson.plugins.findbugs.util.FilesParser;
 import hudson.plugins.findbugs.util.HealthAwareMavenReporter;
 import hudson.plugins.findbugs.util.HealthReportBuilder;
@@ -16,13 +14,10 @@ import hudson.plugins.findbugs.util.ParserResult;
 
 import java.io.IOException;
 import java.io.PrintStream;
-import java.net.URL;
 
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.component.configurator.ComponentConfigurationException;
 import org.kohsuke.stapler.DataBoundConstructor;
-
-import edu.umd.cs.findbugs.DetectorFactoryCollection;
 
 /**
  * Publishes the results of the FindBugs analysis (maven 2 project type).
@@ -41,10 +36,6 @@ public class FindBugsReporter extends HealthAwareMavenReporter {
     /** Ant file-set pattern of files to work with. */
     @SuppressWarnings("unused")
     private String pattern; // obsolete since release 2.5
-    /** Lock to prevent several calls to FindBugs initializations. */
-    private transient Object lockLibraryInitialization = new Object();
-    /** Determines whether the FindBugs library has been initialized yet. */
-    private transient boolean isInitialized;
 
     /**
      * Creates a new instance of <code>FindBugsReporter</code>.
@@ -66,17 +57,6 @@ public class FindBugsReporter extends HealthAwareMavenReporter {
         super(threshold, healthy, unHealthy, height, "FINDBUGS");
     }
 
-    /**
-     * Initializes transient fields.
-     *
-     * @return the created object
-     */
-    private Object readResolve() {
-        lockLibraryInitialization = new Object();
-        isInitialized = false;
-        return this;
-    }
-
     /** {@inheritDoc} */
     @Override
     protected boolean acceptGoal(final String goal) {
@@ -86,14 +66,8 @@ public class FindBugsReporter extends HealthAwareMavenReporter {
     /** {@inheritDoc} */
     @Override
     public ParserResult perform(final MavenBuildProxy build, final MavenProject pom, final MojoInfo mojo, final PrintStream logger) throws InterruptedException, IOException {
-        synchronized (lockLibraryInitialization) {
-            if (!isInitialized) {
-                initializeFindBugsLibrary(build);
-                isInitialized = true;
-            }
-        }
         FilesParser findBugsCollector = new FilesParser(logger, determineFileName(mojo),
-                    new FindBugsParser(build.getModuleSetRootDir(), false), true, false);
+                    new FindBugsParser(build.getModuleSetRootDir()), true, false);
 
         return getTargetPath(pom).act(findBugsCollector);
     }
@@ -129,21 +103,6 @@ public class FindBugsReporter extends HealthAwareMavenReporter {
         return fileName;
     }
 
-    /**
-     * Initializes the native FindBugs library.
-     *
-     * @param build
-     *            the current build
-     * @throws IOException
-     *             in case of an error
-     * @throws InterruptedException
-     *             in case of an error
-     */
-    // TODO: this hack works only if slave and master are on the same machine
-    private void initializeFindBugsLibrary(final MavenBuildProxy build) throws IOException, InterruptedException {
-        DetectorFactoryCollection.rawInstance().setPluginList(build.execute(new FindBugsLibraryUrlDetector()));
-    }
-
     /** {@inheritDoc} */
     @Override
     public Action getProjectAction(final MavenModule module) {
@@ -160,19 +119,6 @@ public class FindBugsReporter extends HealthAwareMavenReporter {
     @Override
     public MavenReporterDescriptor getDescriptor() {
         return FINDBUGS_SCANNER_DESCRIPTOR;
-    }
-
-    /**
-     * Detects the URLs of the find-bugs library plug-ins.
-     */
-    private static final class FindBugsLibraryUrlDetector implements BuildCallable<URL[], IOException> {
-        /** Unique identifier of this class. */
-        private static final long serialVersionUID = 8714527548935228652L;
-
-        /** {@inheritDoc} */
-        public URL[] call(final MavenBuild mavenBuild) throws IOException, InterruptedException {
-            return PlainFindBugsParser.createPluginUrls();
-        }
     }
 }
 

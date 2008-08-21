@@ -2,6 +2,7 @@ package hudson.plugins.findbugs.parser;
 
 import static org.junit.Assert.*;
 import hudson.plugins.findbugs.FindBugsMessages;
+import hudson.plugins.findbugs.Messages;
 import hudson.plugins.findbugs.util.AbstractEnglishLocaleTest;
 import hudson.plugins.findbugs.util.model.FileAnnotation;
 import hudson.plugins.findbugs.util.model.JavaPackage;
@@ -11,7 +12,9 @@ import hudson.plugins.findbugs.util.model.Priority;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import org.dom4j.DocumentException;
 import org.junit.Test;
@@ -20,14 +23,21 @@ import org.xml.sax.SAXException;
 /**
  *  Tests the extraction of FindBugs analysis results.
  */
-@SuppressWarnings("PMD.SignatureDeclareThrowsException")
 public class NativeFindBugsParserTest extends AbstractEnglishLocaleTest {
+    /** Error message. */
+    private static final String WRONG_MESSAGE_PARSED = "Wrong message parsed.";
+    /** Error message. */
+    private static final String BUG_WITH_GIVEN_HASHCODE_NOT_FOUND = "Bug with given hashcode not found";
+    /** Hash code of second warning. */
+    private static final String SECOND_WARNING = "f32497e4bd8c80ef6228f10bd3363f52";
+    /** Hash code of first warning. */
+    private static final String FIRST_WARNING = "4d839755cabf60eacc6438ac77ac5104";
     /** File in native format. */
     private static final String FINDBUGS_NATIVE_XML = "findbugs-native.xml";
     /** Number of warnings contained in files. */
     private static final int NUMBER_OF_WARNINGS = 2;
     /** Error message. */
-    private static final String ERROR_MESSAGE = "Wrong number of bugs parsed.";
+    private static final String WRONG_NUMBER_OF_WARNINGS_PARSED = "Wrong number of bugs parsed.";
 
     /**
      * Parses the specified file.
@@ -40,8 +50,7 @@ public class NativeFindBugsParserTest extends AbstractEnglishLocaleTest {
      *             in case of an error
      */
     private MavenModule parseFile(final String fileName) throws IOException, DocumentException {
-        Collection<FileAnnotation> annotations = new NativeFindBugsParser().parse(NativeFindBugsParserTest.class.getResourceAsStream(fileName), "", fileName);
-
+        Collection<FileAnnotation> annotations = new NativeFindBugsParser().parse(NativeFindBugsParserTest.class.getResourceAsStream(fileName), "", fileName, new HashMap<String, String>());
         MavenModule module = new MavenModule(fileName);
         if (!annotations.isEmpty()) {
             module.setName(annotations.iterator().next().getModuleName());
@@ -52,43 +61,81 @@ public class NativeFindBugsParserTest extends AbstractEnglishLocaleTest {
     }
 
     /**
-     * Checks whether we correctly detect a file in FindBugs native format.
+     * Tests the message mapping.
+     *
+     * @throws IOException
+     *             in case of an error
+     * @throws SAXException
+     *             in case of an error
      */
     @Test
-    public void scanFileWithMultipleLinesAndRanges() throws Exception {
+    public void testMessageMapping() throws SAXException, IOException {
+        Map<String, String> mapping = new NativeFindBugsParser().createHashToMessageMapping(NativeFindBugsParserTest.class.getResourceAsStream(FINDBUGS_NATIVE_XML));
+
+        assertEquals(WRONG_NUMBER_OF_WARNINGS_PARSED, 2, mapping.size());
+        assertTrue(BUG_WITH_GIVEN_HASHCODE_NOT_FOUND, mapping.containsKey(FIRST_WARNING));
+        assertTrue(BUG_WITH_GIVEN_HASHCODE_NOT_FOUND, mapping.containsKey(SECOND_WARNING));
+
+        assertEquals(WRONG_MESSAGE_PARSED, "Inconsistent synchronization of org.apache.hadoop.dfs.BlockCrcUpgradeObjectDatanode.blocksPreviouslyUpgraded; locked 85% of time", mapping.get(FIRST_WARNING));
+        assertEquals(WRONG_MESSAGE_PARSED, "Should org.apache.hadoop.streaming.StreamJob$MultiPropertyOption be a _static_ inner class?", mapping.get(SECOND_WARNING));
+    }
+
+    /**
+     * Checks whether we correctly detect a file in FindBugs native format.
+     *
+     * @throws IOException
+     *             in case of an error
+     * @throws SAXException
+     *             in case of an error
+     * @throws DocumentException
+     *             in case of an error
+     */
+    @Test
+    public void testFileWithMultipleLinesAndRanges() throws IOException, DocumentException, SAXException {
         scanNativeFile(FINDBUGS_NATIVE_XML, FINDBUGS_NATIVE_XML,
                 Priority.NORMAL, "org/apache/hadoop/dfs/BlockCrcUpgrade.java", "org.apache.hadoop.dfs", 1309, 1309,
                 5, "org/apache/hadoop/streaming/StreamJob.java", "org.apache.hadoop.streaming", 935, 980, 1);
     }
 
     /**
-     * Checks whether, if a bug instance contains more than one
-     * element, we correctly take the first one as referring to the
-     * buggy class.
+     * Checks whether, if a bug instance contains more than one element, we
+     * correctly take the first one as referring to the buggy class.
+     *
+     * @throws IOException
+     *             in case of an error
+     * @throws SAXException
+     *             in case of an error
+     * @throws DocumentException
+     *             in case of an error
      */
     @Test
-    public void scanFileWarningsHaveMultipleClasses() throws Exception {
+    public void scanFileWarningsHaveMultipleClasses() throws IOException, DocumentException, SAXException {
         scanNativeFile("findbugs-multclass.xml", "FindBugs",
                 Priority.HIGH, "umd/cs/findbugs/PluginLoader.java", "edu.umd.cs.findbugs", 82, 82,
                 1, "edu/umd/cs/findbugs/PluginLoader.java", "edu.umd.cs.findbugs", 93, 93, 1);
     }
 
     /**
-     * Checks whether, if a bug instance contains more than one
-     * element, we correctly take the first one as referring to the
-     * buggy class.
+     * Checks whether we could also parse bugs of the fbcontrib plug-in.
+     *
+     * @throws IOException
+     *             in case of an error
+     * @throws DocumentException
+     *             in case of an error
      */
     @Test
-    public void scanFbContribFile() throws Exception {
+    public void scanFbContribFile() throws IOException, DocumentException {
         MavenModule parseFile = parseFile("fbcontrib.xml");
         JavaPackage javaPackage = parseFile.getPackage("hudson.plugins.tasks");
-        assertEquals(ERROR_MESSAGE, 16, javaPackage.getNumberOfAnnotations());
+        assertEquals(WRONG_NUMBER_OF_WARNINGS_PARSED, 16, javaPackage.getNumberOfAnnotations());
 
         boolean found = false;
         for (FileAnnotation annotation : javaPackage.getAnnotations()) {
             if (annotation.getFileName().contains("ResultSummary.java")) {
                 found = true;
-                assertFalse("Warning message could not be resolved.", annotation.getToolTip().contains("A warning was recorded, but findbugs can't find the description of this bug pattern"));
+                assertFalse("Warning message could not be resolved.",
+                        annotation.getToolTip().contains(
+                                    "A warning was recorded, but findbugs can't find the description of this bug pattern"));
             }
         }
         assertTrue("No warning in class ResultSummary.java found.", found);
@@ -140,9 +187,9 @@ public class NativeFindBugsParserTest extends AbstractEnglishLocaleTest {
         MavenModule module = parseFile(findbugsFile);
         assertEquals("Wrong project name guessed", projectName, module.getName());
 
-        assertEquals(ERROR_MESSAGE, NUMBER_OF_WARNINGS, module.getNumberOfAnnotations());
+        assertEquals(WRONG_NUMBER_OF_WARNINGS_PARSED, NUMBER_OF_WARNINGS, module.getNumberOfAnnotations());
         Collection<FileAnnotation> warnings = module.getAnnotations();
-        assertEquals(ERROR_MESSAGE, NUMBER_OF_WARNINGS, warnings.size());
+        assertEquals(WRONG_NUMBER_OF_WARNINGS_PARSED, NUMBER_OF_WARNINGS, warnings.size());
 
 
         Iterator<FileAnnotation> annotations = warnings.iterator();
@@ -204,6 +251,6 @@ public class NativeFindBugsParserTest extends AbstractEnglishLocaleTest {
         assertEquals("Wrong priority parsed.", priority, annotation.getPriority());
         assertEquals("Wrong start of line range", start, annotation.getPrimaryLineNumber());
 
-        assertFalse("No message for bug pattern detected", annotation.getToolTip().contains("Unknown bug pattern"));
+        assertFalse("No message for bug pattern detected", annotation.getToolTip().equals(Messages.FindBugs_Publisher_NoMessageFoundText()));
     }
 }

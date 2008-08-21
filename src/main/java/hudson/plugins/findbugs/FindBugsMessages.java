@@ -18,7 +18,7 @@ import org.xml.sax.SAXException;
  */
 public final class FindBugsMessages {
     /** Maps a key to HTML description. */
-    private Map<String, String> messages;
+    private final Map<String, String> messages = new HashMap<String, String>();
     /** Singleton instance. */
     private static final FindBugsMessages INSTANCE = new FindBugsMessages();
 
@@ -35,14 +35,27 @@ public final class FindBugsMessages {
      * Initializes the messages map.
      *
      * @throws SAXException
+     *             if we can't parse a file
+     * @throws IOException
+     *             if we can't read a file
+     */
+    public synchronized void initialize() throws IOException, SAXException {
+        loadMessages("messages.xml");
+        loadMessages("fb-contrib-messages.xml");
+    }
+
+    /**
+     * Loads the message file and adds all messages to the mapping.
+     *
+     * @param fileName the file to load
+     * @throws SAXException
      *             if we can't parse the file
      * @throws IOException
      *             if we can't read the file
      */
-    public synchronized void initialize() throws IOException, SAXException {
-        InputStream file = FindBugsMessages.class.getResourceAsStream("messages.xml");
+    private void loadMessages(final String fileName) throws IOException, SAXException {
+        InputStream file = FindBugsMessages.class.getResourceAsStream(fileName);
         List<Pattern> patterns = parse(file);
-        messages = new HashMap<String, String>(patterns.size());
         for (Pattern pattern : patterns) {
             messages.put(pattern.getType(), pattern.getDescription());
         }

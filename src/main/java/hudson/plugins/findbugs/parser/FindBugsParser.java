@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
-import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.dom4j.DocumentException;
@@ -27,8 +26,6 @@ public class FindBugsParser implements AnnotationParser {
     private static final long serialVersionUID = 8306319007761954027L;
     /** Workspace root. */
     private final FilePath workspace;
-    /** Determines whether we need to initialize FindBugs or not. */
-    private final boolean autoInitializeFindBugs;
 
     /**
      * Creates a new instance of {@link FindBugsParser}.
@@ -36,26 +33,9 @@ public class FindBugsParser implements AnnotationParser {
      * @param workspace
      *            the workspace folder to be used as basis for source code
      *            mapping
-     * @param autoInitializeFindBugs
-     *            determines whether we need to initialize FindBugs or not
      */
-    public FindBugsParser(final FilePath workspace, final boolean autoInitializeFindBugs) {
+    public FindBugsParser(final FilePath workspace) {
         this.workspace = workspace;
-        this.autoInitializeFindBugs = autoInitializeFindBugs;
-    }
-
-    /**
-     * Creates a new instance of {@link FindBugsParser}.
-     *
-     * @param workspace
-     *            the workspace folder to be used as basis for source code
-     *            mapping
-     * @param autoInitializeFindBugs
-     *            determines whether we need to initialize FindBugs or not
-     */
-    public FindBugsParser(final FilePath workspace, final boolean autoInitializeFindBugs, final List<String> sourceFolders) {
-        this.workspace = workspace;
-        this.autoInitializeFindBugs = autoInitializeFindBugs;
     }
 
     /** {@inheritDoc} */
@@ -65,23 +45,14 @@ public class FindBugsParser implements AnnotationParser {
 
     /** {@inheritDoc} */
     public Collection<FileAnnotation> parse(final File file, final String moduleName) throws InvocationTargetException {
-        Collection<FileAnnotation> annotations;
         try {
             MavenFindBugsParser mavenFindBugsParser = new MavenFindBugsParser();
             if (mavenFindBugsParser.accepts(new FileInputStream(file))) {
                 return mavenFindBugsParser.parse(new FileInputStream(file), moduleName, workspace);
             }
             else {
-                PlainFindBugsParser parser;
-                if (autoInitializeFindBugs) {
-                    parser = new NativeFindBugsParser();
-                }
-                else {
-                    parser = new PlainFindBugsParser();
-                }
                 String moduleRoot = StringUtils.substringBefore(file.getAbsolutePath().replace('\\', '/'), "/target/");
-
-                return parser.parse(new FileInputStream(file), moduleRoot, moduleName);
+                return new NativeFindBugsParser().parse(file, moduleRoot, moduleName);
             }
         }
         catch (IOException exception) {
