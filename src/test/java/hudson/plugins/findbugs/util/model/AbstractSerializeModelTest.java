@@ -37,8 +37,6 @@ public abstract class AbstractSerializeModelTest extends AbstractEnglishLocaleTe
     protected static final String PATH_TO_FILE1 = "Path/To/File";
     /** Short file name. */
     private static final String FILE1 = StringUtils.substringAfterLast(PATH_TO_FILE1, "/");
-    /** Short file name. */
-    private static final String FILE2 = StringUtils.substringAfterLast(PATH_TO_FILE2, "/");
     /** Task property. */
     protected static final String LOW = "Low";
     /** Task property. */

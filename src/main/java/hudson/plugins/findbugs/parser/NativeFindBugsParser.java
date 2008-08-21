@@ -139,7 +139,7 @@ public class NativeFindBugsParser {
             Bug bug = new Bug(getPriority(warning),
                     StringUtils.defaultIfEmpty(hashToMessageMapping.get(warning.getInstanceHash()), warning.getMessage()), warning.getBugPattern().getCategory(),
                         warning.getType(), sourceLine.getStartLine(), sourceLine.getEndLine());
-
+            bug.setInstanceHash(warning.getInstanceHash());
 
             Iterator<BugAnnotation> annotationIterator = warning.annotationIterator();
             while (annotationIterator.hasNext()) {

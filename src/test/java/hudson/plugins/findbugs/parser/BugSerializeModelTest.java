@@ -58,7 +58,9 @@ public class BugSerializeModelTest extends AbstractSerializeModelTest {
      */
     @Override
     protected AbstractAnnotation createAnnotation(final int line, final String message, final Priority priority) {
-        return new Bug(priority, message, message, message, line);
+        Bug bug = new Bug(priority, message, message, message, line);
+        bug.setInstanceHash(message);
+        return bug;
     }
 
     /**
