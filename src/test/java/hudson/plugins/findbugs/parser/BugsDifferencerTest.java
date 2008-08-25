@@ -5,6 +5,8 @@ import hudson.plugins.findbugs.util.AnnotationDifferencerTest;
 import hudson.plugins.findbugs.util.model.FileAnnotation;
 import hudson.plugins.findbugs.util.model.Priority;
 
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 /**
  * Tests the {@link AnnotationDifferencer} for bugs.
  */
@@ -13,7 +15,9 @@ public class BugsDifferencerTest extends AnnotationDifferencerTest {
     @Override
     public FileAnnotation createAnnotation(final Priority priority, final String message, final String category,
             final String type, final int start, final int end) {
-        return new Bug(priority, message, message, message, start, end);
+        Bug bug = new Bug(priority, message, message, message, start, end);
+        bug.setInstanceHash(String.valueOf(new HashCodeBuilder().append(priority).append(message).append(category).append(type).append(start).append(end).toHashCode()));
+        return bug;
     }
 }
 
