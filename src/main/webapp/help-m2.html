@@ -9,7 +9,7 @@ warnings, and so on.</p>
 You will achieve the best results with the <a
 	href="http://mojo.codehaus.org/findbugs-maven-plugin/">findbugs-maven-plugin</a>
 version 1.2 or newer. Version 1.1.1 produces an old file format that
-contains insufficient warning information. So if possible, please
+contains insufficient warning information. So if possible,
 upgrade to this version. If your <code>pom.xml</code> contains the following
 configuration then this plug-in will automatically pick up the correct
 results file: <pre>
@@ -19,6 +19,7 @@ results file: <pre>
    &lt;version&gt;1.2&lt;/version&gt;
    &lt;configuration&gt;
       &lt;findbugsXmlOutput&gt;true&lt;/findbugsXmlOutput&gt;
+      &lt;findbugsXmlWithMessages&gt;true&lt;/findbugsXmlWithMessages&gt;
       &lt;xmlOutput&gt;true&lt;/xmlOutput&gt;
       [...]
    &lt;/configuration&gt;
