@@ -47,10 +47,13 @@ public class FindBugsPublisher extends HealthAwarePublisher {
      *            than this value
      * @param height
      *            the height of the trend graph
+     * @param thresholdLimit
+     *            determines which warning priorities should be considered when
+     *            evaluating the build stability and health
      */
     @DataBoundConstructor
-    public FindBugsPublisher(final String pattern, final String threshold, final String healthy, final String unHealthy, final String height) {
-        super(threshold, healthy, unHealthy, height, "FINDBUGS");
+    public FindBugsPublisher(final String pattern, final String threshold, final String healthy, final String unHealthy, final String height, final String thresholdLimit) {
+        super(threshold, healthy, unHealthy, height, thresholdLimit, "FINDBUGS");
         this.pattern = pattern;
     }
 
@@ -81,7 +84,7 @@ public class FindBugsPublisher extends HealthAwarePublisher {
 
         HealthReportBuilder healthReportBuilder = createHealthReporter(
                 Messages.FindBugs_ResultAction_HealthReportSingleItem(),
-                Messages.FindBugs_ResultAction_HealthReportMultipleItem("%d"));
+                Messages.FindBugs_ResultAction_HealthReportMultipleItem());
         build.getActions().add(new FindBugsResultAction(build, healthReportBuilder, result));
 
         return project;
