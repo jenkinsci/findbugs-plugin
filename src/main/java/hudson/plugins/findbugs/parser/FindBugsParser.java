@@ -10,6 +10,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.apache.commons.lang.StringUtils;
@@ -26,6 +27,8 @@ public class FindBugsParser implements AnnotationParser {
     private static final long serialVersionUID = 8306319007761954027L;
     /** Workspace root. */
     private final FilePath workspace;
+    /** Collection of source folders. */
+    private final Collection<String> sources;
 
     /**
      * Creates a new instance of {@link FindBugsParser}.
@@ -35,7 +38,22 @@ public class FindBugsParser implements AnnotationParser {
      *            mapping
      */
     public FindBugsParser(final FilePath workspace) {
+        this(workspace, new ArrayList<String>());
+    }
+
+    /**
+     * Creates a new instance of {@link FindBugsParser}.
+     *
+     * @param workspace
+     *            the workspace folder to be used as basis for source code
+     *            mapping
+     * @param sources
+     *            a collection of folders to scan for source files. If empty,
+     *            the source folders are guessed.
+     */
+    public FindBugsParser(final FilePath workspace, final Collection<String> sources) {
         this.workspace = workspace;
+        this.sources = sources;
     }
 
     /** {@inheritDoc} */
@@ -51,8 +69,13 @@ public class FindBugsParser implements AnnotationParser {
                 return mavenFindBugsParser.parse(new FileInputStream(file), moduleName, workspace);
             }
             else {
-                String moduleRoot = StringUtils.substringBefore(file.getAbsolutePath().replace('\\', '/'), "/target/");
-                return new NativeFindBugsParser().parse(file, moduleRoot, moduleName);
+                if (sources.isEmpty()) {
+                    String moduleRoot = StringUtils.substringBefore(file.getAbsolutePath().replace('\\', '/'), "/target/");
+                    sources.add(moduleRoot + "/src/main/java");
+                    sources.add(moduleRoot + "/src/test/java");
+                    sources.add(moduleRoot + "/src");
+                }
+                return new NativeFindBugsParser().parse(file, sources, moduleName);
             }
         }
         catch (IOException exception) {

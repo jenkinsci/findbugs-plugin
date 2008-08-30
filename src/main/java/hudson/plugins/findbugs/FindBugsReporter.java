@@ -14,6 +14,8 @@ import hudson.plugins.findbugs.util.ParserResult;
 
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.component.configurator.ComponentConfigurationException;
@@ -69,8 +71,11 @@ public class FindBugsReporter extends HealthAwareMavenReporter {
     /** {@inheritDoc} */
     @Override
     public ParserResult perform(final MavenBuildProxy build, final MavenProject pom, final MojoInfo mojo, final PrintStream logger) throws InterruptedException, IOException {
+        List<String> sources = new ArrayList<String>(pom.getCompileSourceRoots());
+        sources.addAll(pom.getTestCompileSourceRoots());
+
         FilesParser findBugsCollector = new FilesParser(logger, determineFileName(mojo),
-                    new FindBugsParser(build.getModuleSetRootDir()), true, false);
+                    new FindBugsParser(build.getModuleSetRootDir(), sources), true, false);
 
         return getTargetPath(pom).act(findBugsCollector);
     }
