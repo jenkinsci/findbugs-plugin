@@ -1,7 +1,6 @@
 package hudson.plugins.findbugs.util;
 
 import static org.easymock.EasyMock.*;
-import hudson.plugins.findbugs.util.SourceDetail;
 import hudson.plugins.findbugs.util.model.FileAnnotation;
 import hudson.plugins.findbugs.util.model.LineRange;
 

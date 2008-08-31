@@ -74,7 +74,7 @@ public class File {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final File other = (File)obj;
+        File other = (File)obj;
         if (classname == null) {
             if (other.classname != null) {
                 return false;

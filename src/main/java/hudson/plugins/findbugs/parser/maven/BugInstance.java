@@ -167,6 +167,7 @@ public class BugInstance {
 
     /** {@inheritDoc} */
     @Override
+    @SuppressWarnings("PMD")
     public int hashCode() {
         int prime = 31;
         int result = 1;
@@ -182,7 +183,7 @@ public class BugInstance {
     }
 
     /** {@inheritDoc} */
-    @SuppressWarnings("PMD.CyclomaticComplexity")
+    @SuppressWarnings("PMD")
     @Override
     public boolean equals(final Object obj) {
         if (this == obj) {
@@ -194,7 +195,7 @@ public class BugInstance {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final BugInstance other = (BugInstance)obj;
+        BugInstance other = (BugInstance)obj;
         if (category == null) {
             if (other.category != null) {
                 return false;

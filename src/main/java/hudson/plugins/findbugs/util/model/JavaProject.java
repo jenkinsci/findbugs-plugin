@@ -87,7 +87,7 @@ public class JavaProject extends AnnotationContainer {
      * @return <code>true</code> if at least one module has an error.
      */
     public boolean hasError() {
-        return moduleErrors.size() > 0 || error != null;
+        return !moduleErrors.isEmpty() || error != null;
     }
 
     /**
