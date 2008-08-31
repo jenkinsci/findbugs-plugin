@@ -1,7 +1,6 @@
 package hudson.plugins.findbugs.util;
 
 import hudson.model.AbstractBuild;
-import hudson.plugins.findbugs.util.model.AnnotationContainer;
 import hudson.plugins.findbugs.util.model.WorkspaceFile;
 
 import java.util.ArrayList;
@@ -46,12 +45,6 @@ public class FileDetail extends AbstractAnnotationsDetail {
     /** {@inheritDoc} */
     public String getDisplayName() {
         return file.getShortName();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    protected Collection<? extends AnnotationContainer> getChildren() {
-        return getFiles();
     }
 
     /** {@inheritDoc} */

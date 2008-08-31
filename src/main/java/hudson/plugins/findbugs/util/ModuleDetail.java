@@ -1,10 +1,7 @@
 package hudson.plugins.findbugs.util;
 
 import hudson.model.AbstractBuild;
-import hudson.plugins.findbugs.util.model.AnnotationContainer;
 import hudson.plugins.findbugs.util.model.MavenModule;
-
-import java.util.Collection;
 
 /**
  * Result object to visualize the package statistics of a module.
@@ -57,12 +54,6 @@ public class ModuleDetail extends AbstractAnnotationsDetail {
      */
     public String getToolTip(final String packageName) {
         return module.getPackage(packageName).getToolTip();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    protected Collection<? extends AnnotationContainer> getChildren() {
-        return getPackages();
     }
 }
 
