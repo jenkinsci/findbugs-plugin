@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import edu.umd.cs.findbugs.annotations.SuppressWarnings;
+
 /**
  * A serializable Java Bean class representing a project that has been built by
  * Hudson.
@@ -18,6 +20,7 @@ public class JavaProject extends AnnotationContainer {
     /** The error message that denotes that why project creation has been failed. */
     private String error;
     /** The error messages of the modules. */
+    @SuppressWarnings("SE")
     private final List<String> moduleErrors = new ArrayList<String>();
 
     /**

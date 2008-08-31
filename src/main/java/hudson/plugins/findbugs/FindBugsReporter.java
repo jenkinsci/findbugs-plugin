@@ -26,6 +26,7 @@ import org.kohsuke.stapler.DataBoundConstructor;
  *
  * @author Ulli Hafner
  */
+// CHECKSTYLE:COUPLING-OFF
 public class FindBugsReporter extends HealthAwareMavenReporter {
     /** Unique identifier of this class. */
     private static final long serialVersionUID = -288391908253344862L;
@@ -69,6 +70,7 @@ public class FindBugsReporter extends HealthAwareMavenReporter {
     }
 
     /** {@inheritDoc} */
+    @SuppressWarnings("unchecked")
     @Override
     public ParserResult perform(final MavenBuildProxy build, final MavenProject pom, final MojoInfo mojo, final PrintStream logger) throws InterruptedException, IOException {
         List<String> sources = new ArrayList<String>(pom.getCompileSourceRoots());

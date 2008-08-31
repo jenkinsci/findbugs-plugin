@@ -63,8 +63,6 @@ public class MavenFindBugsParser {
      *             if the file could not be parsed
      * @throws SAXException
      *             if the file is not in valid XML format
-     * @throws InterruptedException
-     *             if the user aborts the mapping
      */
     public Collection<FileAnnotation> parse(final InputStream file, final String moduleName, final FilePath workspace) throws IOException, SAXException {
         Collection<FileAnnotation> annotations = parse(file, moduleName);

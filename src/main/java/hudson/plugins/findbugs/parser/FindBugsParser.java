@@ -28,6 +28,7 @@ public class FindBugsParser implements AnnotationParser {
     /** Workspace root. */
     private final FilePath workspace;
     /** Collection of source folders. */
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings("Se")
     private final Collection<String> sources;
 
     /**
@@ -53,7 +54,7 @@ public class FindBugsParser implements AnnotationParser {
      */
     public FindBugsParser(final FilePath workspace, final Collection<String> sources) {
         this.workspace = workspace;
-        this.sources = sources;
+        this.sources = new ArrayList<String>(sources);
     }
 
     /** {@inheritDoc} */
