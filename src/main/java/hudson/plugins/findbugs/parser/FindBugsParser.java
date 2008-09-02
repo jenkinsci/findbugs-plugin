@@ -29,7 +29,7 @@ public class FindBugsParser implements AnnotationParser {
     private final FilePath workspace;
     /** Collection of source folders. */
     @edu.umd.cs.findbugs.annotations.SuppressWarnings("Se")
-    private final Collection<String> sources;
+    private final Collection<String> mavenSources;
 
     /**
      * Creates a new instance of {@link FindBugsParser}.
@@ -48,13 +48,13 @@ public class FindBugsParser implements AnnotationParser {
      * @param workspace
      *            the workspace folder to be used as basis for source code
      *            mapping
-     * @param sources
+     * @param mavenSources
      *            a collection of folders to scan for source files. If empty,
      *            the source folders are guessed.
      */
-    public FindBugsParser(final FilePath workspace, final Collection<String> sources) {
+    public FindBugsParser(final FilePath workspace, final Collection<String> mavenSources) {
         this.workspace = workspace;
-        this.sources = new ArrayList<String>(sources);
+        this.mavenSources = new ArrayList<String>(mavenSources);
     }
 
     /** {@inheritDoc} */
@@ -70,6 +70,7 @@ public class FindBugsParser implements AnnotationParser {
                 return mavenFindBugsParser.parse(new FileInputStream(file), moduleName, workspace);
             }
             else {
+                Collection<String> sources = new ArrayList<String>(mavenSources);
                 if (sources.isEmpty()) {
                     String moduleRoot = StringUtils.substringBefore(file.getAbsolutePath().replace('\\', '/'), "/target/");
                     sources.add(moduleRoot + "/src/main/java");
