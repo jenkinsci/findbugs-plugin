@@ -106,11 +106,12 @@ public class ParserResult implements Serializable {
      */
     public void addAnnotation(final FileAnnotation annotation) {
         if (!annotations.contains(annotation)) {
+            findRelativeFile(annotation);
+
             annotations.add(annotation);
             Integer count = annotationCountByPriority.get(annotation.getPriority());
             annotationCountByPriority.put(annotation.getPriority(), count + 1);
         }
-        findRelativeFile(annotation);
     }
 
     /**
