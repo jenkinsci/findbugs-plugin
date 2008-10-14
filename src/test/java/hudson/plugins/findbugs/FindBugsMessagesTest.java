@@ -67,7 +67,9 @@ public class FindBugsMessagesTest {
         FindBugsMessages.getInstance().initialize();
 
         assertTrue(WRONG_WARNING_MESSAGE, FindBugsMessages.getInstance().getMessage("NP_STORE_INTO_NONNULL_FIELD").contains("A value that could be null is stored into a field that has been annotated as NonNull."));
+        assertEquals(WRONG_WARNING_MESSAGE, "Store of null value into field annotated NonNull", FindBugsMessages.getInstance().getShortMessage("NP_STORE_INTO_NONNULL_FIELD"));
         assertTrue(WRONG_WARNING_MESSAGE, FindBugsMessages.getInstance().getMessage("NMCS_NEEDLESS_MEMBER_COLLECTION_SYNCHRONIZATION").contains("This class defines a private collection member as synchronized. It appears however"));
+        assertEquals(WRONG_WARNING_MESSAGE, "Class defines unneeded synchronization on member collection", FindBugsMessages.getInstance().getShortMessage("NMCS_NEEDLESS_MEMBER_COLLECTION_SYNCHRONIZATION"));
     }
 }
 

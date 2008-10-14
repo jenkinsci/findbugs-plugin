@@ -19,6 +19,8 @@ import org.xml.sax.SAXException;
 public final class FindBugsMessages {
     /** Maps a key to HTML description. */
     private final Map<String, String> messages = new HashMap<String, String>();
+    /** Maps a key to HTML description. */
+    private final Map<String, String> shortMessages = new HashMap<String, String>();
     /** Singleton instance. */
     private static final FindBugsMessages INSTANCE = new FindBugsMessages();
 
@@ -58,6 +60,7 @@ public final class FindBugsMessages {
         List<Pattern> patterns = parse(file);
         for (Pattern pattern : patterns) {
             messages.put(pattern.getType(), pattern.getDescription());
+            shortMessages.put(pattern.getType(), pattern.getShortDescription());
         }
     }
 
@@ -81,6 +84,7 @@ public final class FindBugsMessages {
         digester.addObjectCreate("*/BugPattern", Pattern.class);
         digester.addSetProperties("*/BugPattern");
         digester.addCallMethod("*/BugPattern/Details", "setDescription", 0);
+        digester.addCallMethod("*/BugPattern/ShortDescription", "setShortDescription", 0);
         digester.addSetNext("*/BugPattern", "add");
 
         digester.parse(file);
@@ -97,6 +101,17 @@ public final class FindBugsMessages {
      */
     public String getMessage(final String name)  {
         return StringUtils.defaultIfEmpty(messages.get(name), Messages.FindBugs_Publisher_NoMessageFoundText());
+    }
+
+    /**
+     * Returns a short description for the specified bug.
+     *
+     * @param name
+     *            name of the bug
+     * @return a HTML description for the specified bug.
+     */
+    public String getShortMessage(final String name)  {
+        return StringUtils.defaultIfEmpty(shortMessages.get(name), Messages.FindBugs_Publisher_NoMessageFoundText());
     }
 
     /**

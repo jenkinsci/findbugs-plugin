@@ -10,6 +10,8 @@ public class Pattern {
     private String type;
     /** Detailed HTML description of the bug. */
     private String description;
+    /** Short description of the bug. */
+    private String shortDescription;
 
     /**
      * Sets the type to the specified value.
@@ -45,6 +47,24 @@ public class Pattern {
      */
     public String getDescription() {
         return description;
+    }
+
+    /**
+     * Sets the shortDescription to the specified value.
+     *
+     * @param shortDescription the value to set
+     */
+    public void setShortDescription(final String shortDescription) {
+        this.shortDescription = shortDescription;
+    }
+
+    /**
+     * Returns the shortDescription.
+     *
+     * @return the shortDescription
+     */
+    public String getShortDescription() {
+        return shortDescription;
     }
 }
 

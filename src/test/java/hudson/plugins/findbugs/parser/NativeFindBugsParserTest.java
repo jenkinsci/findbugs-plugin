@@ -143,6 +143,23 @@ public class NativeFindBugsParserTest extends AbstractEnglishLocaleTest {
     }
 
     /**
+     * Checks whether we generate a message if there is no message in the XML file.
+     *
+     * @throws IOException
+     *             in case of an error
+     * @throws DocumentException
+     *             in case of an error
+     */
+    @Test
+    public void handleFilesWithoutMessages() throws IOException, DocumentException {
+        MavenModule module = parseFile("findbugs-nomessage.xml");
+        assertEquals(WRONG_NUMBER_OF_WARNINGS_PARSED, 1, module.getNumberOfAnnotations());
+
+        FileAnnotation next = module.getAnnotations().iterator().next();
+        assertEquals("Warning has no message.", "Redundant nullcheck of value known to be non-null", next.getMessage());
+    }
+
+    /**
      * Checks whether we correctly detect a file in FindBugs native format.
      *
      * @param findbugsFile

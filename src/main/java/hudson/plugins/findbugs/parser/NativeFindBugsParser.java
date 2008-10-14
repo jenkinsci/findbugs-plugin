@@ -1,5 +1,6 @@
 package hudson.plugins.findbugs.parser;
 
+import hudson.plugins.findbugs.FindBugsMessages;
 import hudson.plugins.findbugs.util.model.FileAnnotation;
 import hudson.plugins.findbugs.util.model.LineRange;
 import hudson.plugins.findbugs.util.model.Priority;
@@ -136,8 +137,12 @@ public class NativeFindBugsParser {
         for (BugInstance warning : bugs) {
             SourceLineAnnotation sourceLine = warning.getPrimarySourceLineAnnotation();
 
+            String message = warning.getMessage();
+            if (message.contains("TEST: Unknown warning")) {
+                message = FindBugsMessages.getInstance().getShortMessage(warning.getType());
+            }
             Bug bug = new Bug(getPriority(warning),
-                    StringUtils.defaultIfEmpty(hashToMessageMapping.get(warning.getInstanceHash()), warning.getMessage()), warning.getBugPattern().getCategory(),
+                    StringUtils.defaultIfEmpty(hashToMessageMapping.get(warning.getInstanceHash()), message), warning.getBugPattern().getCategory(),
                         warning.getType(), sourceLine.getStartLine(), sourceLine.getEndLine());
             bug.setInstanceHash(warning.getInstanceHash());
 
