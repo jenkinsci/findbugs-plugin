@@ -47,7 +47,7 @@ which uses the <code class="literal">findbugs</code> task, e.g.:
   &lt;target name="findbugs" depends="jar"&gt;
 
     &lt;findbugs home="${findbugs.home}"
-              output="xml"
+              output="xml:withMessages"
               outputFile="findbugs.xml" &gt;
       &lt;auxClasspath path="${basedir}/lib/Regex.jar" /&gt;
       &lt;sourcePath path="${basedir}/src/java" /&gt;
