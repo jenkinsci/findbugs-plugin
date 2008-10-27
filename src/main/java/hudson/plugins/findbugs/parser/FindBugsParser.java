@@ -8,7 +8,6 @@ import hudson.plugins.findbugs.util.model.FileAnnotation;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -89,11 +88,6 @@ public class FindBugsParser implements AnnotationParser {
         catch (DocumentException exception) {
             throw new InvocationTargetException(exception);
         }
-    }
-
-    /** {@inheritDoc} */
-    public Collection<FileAnnotation> parse(final InputStream file, final String moduleName) throws InvocationTargetException {
-        throw new UnsupportedOperationException("FinBugs parser does not parse input streams.");
     }
 }
 
