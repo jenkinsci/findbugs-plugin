@@ -24,7 +24,7 @@ public class FindBugsResultTest extends AbstractAnnotationsBuildResultTest<FindB
 
     /** {@inheritDoc} */
     @Override
-    protected void verifyHighScoreMessage(final int expectedZeroWarningsBuildNumber, final boolean expectedIsNewHighScore, final long expectedHighScore, final int gap, final FindBugsResult result) {
+    protected void verifyHighScoreMessage(final int expectedZeroWarningsBuildNumber, final boolean expectedIsNewHighScore, final long expectedHighScore, final long gap, final FindBugsResult result) {
         if (result.hasNoAnnotations() && result.getDelta() == 0) {
             assertTrue(result.getDetails().contains(Messages.FindBugs_ResultAction_NoWarningsSince(expectedZeroWarningsBuildNumber)));
             if (expectedIsNewHighScore) {
