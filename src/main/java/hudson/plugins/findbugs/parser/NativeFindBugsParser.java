@@ -15,6 +15,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.commons.digester.Digester;
 import org.apache.commons.lang.StringUtils;
@@ -160,6 +162,9 @@ public class NativeFindBugsParser {
                 fileName = sourceFile.getFullFileName();
             }
             catch (IOException exception) {
+                Logger.getLogger(getClass().getName()).log(Level.WARNING,
+                        "Can't resolve absolute file name for file " + sourceLine.getSourceFile()
+                        + ", dir list = " + project.getSourceDirList().toString());
                 fileName = sourceLine.getPackageName().replace(".", "/") + "/" + sourceLine.getSourceFile();
             }
             bug.setFileName(fileName);
