@@ -7,7 +7,6 @@ import hudson.model.Descriptor;
 import hudson.plugins.findbugs.parser.FindBugsParser;
 import hudson.plugins.findbugs.util.FilesParser;
 import hudson.plugins.findbugs.util.HealthAwarePublisher;
-import hudson.plugins.findbugs.util.HealthReportBuilder;
 import hudson.plugins.findbugs.util.ParserResult;
 import hudson.plugins.findbugs.util.PluginDescriptor;
 import hudson.tasks.Publisher;
@@ -82,10 +81,7 @@ public class FindBugsPublisher extends HealthAwarePublisher {
         ParserResult project = build.getProject().getWorkspace().act(collector);
         FindBugsResult result = new FindBugsResultBuilder().build(build, project);
 
-        HealthReportBuilder healthReportBuilder = createHealthReporter(
-                Messages.FindBugs_ResultAction_HealthReportSingleItem(),
-                Messages.FindBugs_ResultAction_HealthReportMultipleItem());
-        build.getActions().add(new FindBugsResultAction(build, healthReportBuilder, result));
+        build.getActions().add(new FindBugsResultAction(build, this, result));
 
         return project;
     }

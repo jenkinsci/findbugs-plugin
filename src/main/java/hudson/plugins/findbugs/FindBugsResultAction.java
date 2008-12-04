@@ -2,7 +2,7 @@ package hudson.plugins.findbugs;
 
 import hudson.model.AbstractBuild;
 import hudson.plugins.findbugs.util.AbstractResultAction;
-import hudson.plugins.findbugs.util.HealthReportBuilder;
+import hudson.plugins.findbugs.util.HealthDescriptor;
 import hudson.plugins.findbugs.util.PluginDescriptor;
 
 import java.util.NoSuchElementException;
@@ -27,13 +27,13 @@ public class FindBugsResultAction extends AbstractResultAction<FindBugsResult> {
      *
      * @param owner
      *            the associated build of this action
-     * @param healthReportBuilder
-     *            health builder to use
+     * @param healthDescriptor
+     *            health descriptor to use
      * @param result
      *            the result in this build
      */
-    public FindBugsResultAction(final AbstractBuild<?, ?> owner, final HealthReportBuilder healthReportBuilder, final FindBugsResult result) {
-        super(owner, healthReportBuilder, result);
+    public FindBugsResultAction(final AbstractBuild<?, ?> owner, final HealthDescriptor healthDescriptor, final FindBugsResult result) {
+        super(owner, new FindBugsHealthDescriptor(healthDescriptor), result);
     }
 
     /**
@@ -41,11 +41,11 @@ public class FindBugsResultAction extends AbstractResultAction<FindBugsResult> {
      *
      * @param owner
      *            the associated build of this action
-     * @param healthReportBuilder
-     *            health builder to use
+     * @param healthDescriptor
+     *            health descriptor to use
      */
-    public FindBugsResultAction(final AbstractBuild<?, ?> owner, final HealthReportBuilder healthReportBuilder) {
-        super(owner, healthReportBuilder);
+    public FindBugsResultAction(final AbstractBuild<?, ?> owner, final HealthDescriptor healthDescriptor) {
+        super(owner, new FindBugsHealthDescriptor(healthDescriptor));
     }
 
     /** {@inheritDoc} */

@@ -9,7 +9,6 @@ import hudson.model.Action;
 import hudson.plugins.findbugs.parser.FindBugsParser;
 import hudson.plugins.findbugs.util.FilesParser;
 import hudson.plugins.findbugs.util.HealthAwareMavenReporter;
-import hudson.plugins.findbugs.util.HealthReportBuilder;
 import hudson.plugins.findbugs.util.ParserResult;
 
 import java.io.IOException;
@@ -86,10 +85,7 @@ public class FindBugsReporter extends HealthAwareMavenReporter {
     @Override
     protected void persistResult(final ParserResult project, final MavenBuild build) {
         FindBugsResult result = new FindBugsResultBuilder().build(build, project);
-        HealthReportBuilder healthReportBuilder = createHealthBuilder(
-                Messages.FindBugs_ResultAction_HealthReportSingleItem(),
-                Messages.FindBugs_ResultAction_HealthReportMultipleItem());
-        build.getActions().add(new MavenFindBugsResultAction(build, healthReportBuilder, getHeight(), result));
+        build.getActions().add(new MavenFindBugsResultAction(build, this, getHeight(), result));
         build.registerAsProjectAction(FindBugsReporter.this);
     }
 

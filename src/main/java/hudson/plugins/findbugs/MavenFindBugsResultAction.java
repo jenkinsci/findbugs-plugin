@@ -8,7 +8,7 @@ import hudson.maven.MavenModuleSet;
 import hudson.maven.MavenModuleSetBuild;
 import hudson.model.AbstractBuild;
 import hudson.model.Action;
-import hudson.plugins.findbugs.util.HealthReportBuilder;
+import hudson.plugins.findbugs.util.HealthDescriptor;
 import hudson.plugins.findbugs.util.TrendReportSize;
 
 import java.util.List;
@@ -32,13 +32,13 @@ public class MavenFindBugsResultAction extends FindBugsResultAction implements A
      *
      * @param owner
      *            the associated build of this action
-     * @param healthReportBuilder
-     *            health builder to use
+     * @param healthDescriptor
+     *            health descriptor to use
      * @param height
      *            the height of the trend graph
      */
-    public MavenFindBugsResultAction(final MavenModuleSetBuild owner, final HealthReportBuilder healthReportBuilder, final String height) {
-        super(owner, healthReportBuilder);
+    public MavenFindBugsResultAction(final MavenModuleSetBuild owner, final HealthDescriptor healthDescriptor, final String height) {
+        super(owner, healthDescriptor);
         this.height = height;
     }
 
@@ -47,21 +47,21 @@ public class MavenFindBugsResultAction extends FindBugsResultAction implements A
      *
      * @param owner
      *            the associated build of this action
-     * @param healthReportBuilder
-     *            health builder to use
+     * @param healthDescriptor
+     *            health descriptor to use
      * @param height
      *            the height of the trend graph
      * @param result
      *            the result in this build
      */
-    public MavenFindBugsResultAction(final AbstractBuild<?, ?> owner, final HealthReportBuilder healthReportBuilder, final String height, final FindBugsResult result) {
-        super(owner, healthReportBuilder, result);
+    public MavenFindBugsResultAction(final AbstractBuild<?, ?> owner, final HealthDescriptor healthDescriptor, final String height, final FindBugsResult result) {
+        super(owner, healthDescriptor, result);
         this.height = height;
     }
 
     /** {@inheritDoc} */
     public MavenAggregatedReport createAggregatedAction(final MavenModuleSetBuild build, final Map<MavenModule, List<MavenBuild>> moduleBuilds) {
-        return new MavenFindBugsResultAction(build, getHealthReportBuilder(), height);
+        return new MavenFindBugsResultAction(build, getHealthDescriptor(), height);
     }
 
     /** {@inheritDoc} */
