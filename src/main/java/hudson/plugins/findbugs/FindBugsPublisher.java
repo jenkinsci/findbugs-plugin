@@ -23,6 +23,8 @@ import org.kohsuke.stapler.DataBoundConstructor;
  * @author Ulli Hafner
  */
 public class FindBugsPublisher extends HealthAwarePublisher {
+    /** Unique ID of this class. */
+    private static final long serialVersionUID = -5748362182226609649L;
     /** Default FindBugs pattern. */
     private static final String DEFAULT_PATTERN = "**/findbugs.xml";
     /** Descriptor of this publisher. */
@@ -49,12 +51,18 @@ public class FindBugsPublisher extends HealthAwarePublisher {
      * @param thresholdLimit
      *            determines which warning priorities should be considered when
      *            evaluating the build stability and health
+     * @param defaultEncoding
+     *            the default encoding to be used when reading and parsing files
      */
+    // CHECKSTYLE:OFF
+    @SuppressWarnings("PMD.ExcessiveParameterList")
     @DataBoundConstructor
-    public FindBugsPublisher(final String pattern, final String threshold, final String healthy, final String unHealthy, final String height, final String thresholdLimit) {
-        super(threshold, healthy, unHealthy, height, thresholdLimit, "FINDBUGS");
+    public FindBugsPublisher(final String pattern, final String threshold, final String healthy, final String unHealthy,
+            final String height, final String thresholdLimit, final String defaultEncoding) {
+        super(threshold, healthy, unHealthy, height, thresholdLimit, defaultEncoding, "FINDBUGS");
         this.pattern = pattern;
     }
+    // CHECKSTYLE:ON
 
     /**
      * Returns the Ant file-set pattern of files to work with.
@@ -79,7 +87,7 @@ public class FindBugsPublisher extends HealthAwarePublisher {
                 new FindBugsParser(build.getProject().getWorkspace()),
                 isMavenBuild(build), isAntBuild(build));
         ParserResult project = build.getProject().getWorkspace().act(collector);
-        FindBugsResult result = new FindBugsResultBuilder().build(build, project);
+        FindBugsResult result = new FindBugsResultBuilder().build(build, project, getDefaultEncoding());
 
         build.getActions().add(new FindBugsResultAction(build, this, result));
 

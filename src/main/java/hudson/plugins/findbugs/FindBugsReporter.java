@@ -84,8 +84,8 @@ public class FindBugsReporter extends HealthAwareMavenReporter {
     /** {@inheritDoc} */
     @Override
     protected void persistResult(final ParserResult project, final MavenBuild build) {
-        FindBugsResult result = new FindBugsResultBuilder().build(build, project);
-        build.getActions().add(new MavenFindBugsResultAction(build, this, getHeight(), result));
+        FindBugsResult result = new FindBugsResultBuilder().build(build, project, getDefaultEncoding());
+        build.getActions().add(new MavenFindBugsResultAction(build, this, getHeight(), getDefaultEncoding(), result));
         build.registerAsProjectAction(FindBugsReporter.this);
     }
 

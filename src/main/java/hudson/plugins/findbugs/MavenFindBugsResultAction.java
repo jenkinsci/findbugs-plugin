@@ -26,6 +26,8 @@ public class MavenFindBugsResultAction extends FindBugsResultAction implements A
     private static final long serialVersionUID = 1273798369273225973L;
     /** Determines the height of the trend graph. */
     private final String height;
+    /** The default encoding to be used when reading and parsing files. */
+    private final String defaultEncoding;
 
     /**
      * Creates a new instance of <code>MavenFindBugsResultAction</code>.
@@ -36,10 +38,13 @@ public class MavenFindBugsResultAction extends FindBugsResultAction implements A
      *            health descriptor to use
      * @param height
      *            the height of the trend graph
+     * @param defaultEncoding
+     *            the default encoding to be used when reading and parsing files
      */
-    public MavenFindBugsResultAction(final MavenModuleSetBuild owner, final HealthDescriptor healthDescriptor, final String height) {
+    public MavenFindBugsResultAction(final MavenModuleSetBuild owner, final HealthDescriptor healthDescriptor, final String height, final String defaultEncoding) {
         super(owner, healthDescriptor);
         this.height = height;
+        this.defaultEncoding = defaultEncoding;
     }
 
     /**
@@ -51,17 +56,20 @@ public class MavenFindBugsResultAction extends FindBugsResultAction implements A
      *            health descriptor to use
      * @param height
      *            the height of the trend graph
+     * @param defaultEncoding
+     *            the default encoding to be used when reading and parsing files
      * @param result
      *            the result in this build
      */
-    public MavenFindBugsResultAction(final AbstractBuild<?, ?> owner, final HealthDescriptor healthDescriptor, final String height, final FindBugsResult result) {
+    public MavenFindBugsResultAction(final AbstractBuild<?, ?> owner, final HealthDescriptor healthDescriptor, final String height, final String defaultEncoding, final FindBugsResult result) {
         super(owner, healthDescriptor, result);
         this.height = height;
+        this.defaultEncoding = defaultEncoding;
     }
 
     /** {@inheritDoc} */
     public MavenAggregatedReport createAggregatedAction(final MavenModuleSetBuild build, final Map<MavenModule, List<MavenBuild>> moduleBuilds) {
-        return new MavenFindBugsResultAction(build, getHealthDescriptor(), height);
+        return new MavenFindBugsResultAction(build, getHealthDescriptor(), height, defaultEncoding);
     }
 
     /** {@inheritDoc} */
@@ -86,7 +94,7 @@ public class MavenFindBugsResultAction extends FindBugsResultAction implements A
      *      Newly completed build.
      */
     public void update(final Map<MavenModule, List<MavenBuild>> moduleBuilds, final MavenBuild newBuild) {
-        setResult(new FindBugsResultBuilder().build(getOwner(), createAggregatedResult(moduleBuilds)));
+        setResult(new FindBugsResultBuilder().build(getOwner(), createAggregatedResult(moduleBuilds), defaultEncoding));
     }
 }
 

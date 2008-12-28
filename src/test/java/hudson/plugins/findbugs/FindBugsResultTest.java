@@ -13,13 +13,13 @@ public class FindBugsResultTest extends AbstractAnnotationsBuildResultTest<FindB
     /** {@inheritDoc} */
     @Override
     protected FindBugsResult createBuildResult(final AbstractBuild<?, ?> build, final ParserResult project) {
-        return new FindBugsResult(build, project);
+        return new FindBugsResult(build, null, project);
     }
 
     /** {@inheritDoc} */
     @Override
     protected FindBugsResult createBuildResult(final AbstractBuild<?, ?> build, final ParserResult project, final FindBugsResult previous) {
-        return new FindBugsResult(build, project, previous);
+        return new FindBugsResult(build, null, project, previous);
     }
 
     /** {@inheritDoc} */

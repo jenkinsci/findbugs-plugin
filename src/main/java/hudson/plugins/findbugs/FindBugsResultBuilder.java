@@ -18,19 +18,21 @@ public class FindBugsResultBuilder {
      *            the build to create the action for
      * @param project
      *            the project containing the annotations
+     * @param defaultEncoding
+     *            the default encoding to be used when reading and parsing files
      * @return the result action
      */
-    public FindBugsResult build(final AbstractBuild<?, ?> build, final ParserResult project) {
+    public FindBugsResult build(final AbstractBuild<?, ?> build, final ParserResult project, final String defaultEncoding) {
         Object previous = build.getPreviousBuild();
         while (previous instanceof AbstractBuild<?, ?>) {
             AbstractBuild<?, ?> previousBuild = (AbstractBuild<?, ?>)previous;
             FindBugsResultAction previousAction = previousBuild.getAction(FindBugsResultAction.class);
             if (previousAction != null) {
-                return new FindBugsResult(build, project, previousAction.getResult());
+                return new FindBugsResult(build, defaultEncoding, project, previousAction.getResult());
             }
             previous = previousBuild.getPreviousBuild();
         }
-        return new FindBugsResult(build, project);
+        return new FindBugsResult(build, defaultEncoding, project);
     }
 }
 

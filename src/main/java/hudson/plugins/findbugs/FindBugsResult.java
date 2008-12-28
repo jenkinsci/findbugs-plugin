@@ -24,11 +24,13 @@ public class FindBugsResult extends AnnotationsBuildResult {
      *
      * @param build
      *            the current build as owner of this action
+     * @param defaultEncoding
+     *            the default encoding to be used when reading and parsing files
      * @param result
      *            the parsed result with all annotations
      */
-    public FindBugsResult(final AbstractBuild<?, ?> build, final ParserResult result) {
-        super(build, result);
+    public FindBugsResult(final AbstractBuild<?, ?> build, final String defaultEncoding, final ParserResult result) {
+        super(build, defaultEncoding, result);
     }
 
     /**
@@ -36,13 +38,15 @@ public class FindBugsResult extends AnnotationsBuildResult {
      *
      * @param build
      *            the current build as owner of this action
+     * @param defaultEncoding
+     *            the default encoding to be used when reading and parsing files
      * @param result
      *            the parsed result with all annotations
      * @param previous
      *            the result of the previous build
      */
-    public FindBugsResult(final AbstractBuild<?, ?> build, final ParserResult result, final FindBugsResult previous) {
-        super(build, result, previous);
+    public FindBugsResult(final AbstractBuild<?, ?> build, final String defaultEncoding, final ParserResult result, final FindBugsResult previous) {
+        super(build, defaultEncoding, result, previous);
     }
 
     /**
