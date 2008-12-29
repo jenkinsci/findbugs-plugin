@@ -9,7 +9,7 @@ import hudson.maven.MavenModuleSetBuild;
 import hudson.model.AbstractBuild;
 import hudson.model.Action;
 import hudson.plugins.findbugs.util.HealthDescriptor;
-import hudson.plugins.findbugs.util.TrendReportSize;
+import hudson.plugins.findbugs.util.TrendReportHeightValidator;
 
 import java.util.List;
 import java.util.Map;
@@ -74,7 +74,7 @@ public class MavenFindBugsResultAction extends FindBugsResultAction implements A
 
     /** {@inheritDoc} */
     public Action getProjectAction(final MavenModuleSet moduleSet) {
-        return new FindBugsProjectAction(moduleSet, new TrendReportSize(height).getHeight());
+        return new FindBugsProjectAction(moduleSet, TrendReportHeightValidator.defaultHeight(height));
     }
 
     /** {@inheritDoc} */

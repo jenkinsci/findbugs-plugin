@@ -40,7 +40,7 @@ public class EncodingValidatorTest extends AbstractValidatorTest {
 
     /** {@inheritDoc} */
     @Override
-    protected Validator createValidator(final StaplerRequest request, final StaplerResponse response) {
+    protected SingleFieldValidator createValidator(final StaplerRequest request, final StaplerResponse response) {
         return new EncodingValidator(request, response) {
             /** {@inheritDoc} */
             @Override
