@@ -26,11 +26,11 @@ public class FindBugsHealthDescriptorTest extends AbstractEnglishLocaleTest {
         Localizable description = healthDescriptor.createDescription(provider);
         assertEquals(Messages.FindBugs_ResultAction_HealthReportNoItem(), description.toString());
 
-        stub(provider.getNumberOfAnnotations()).toReturn(1);
+        when(provider.getNumberOfAnnotations()).thenReturn(1);
         description = healthDescriptor.createDescription(provider);
         assertEquals(Messages.FindBugs_ResultAction_HealthReportSingleItem(), description.toString());
 
-        stub(provider.getNumberOfAnnotations()).toReturn(2);
+        when(provider.getNumberOfAnnotations()).thenReturn(2);
         description = healthDescriptor.createDescription(provider);
         assertEquals(Messages.FindBugs_ResultAction_HealthReportMultipleItem(2), description.toString());
     }
