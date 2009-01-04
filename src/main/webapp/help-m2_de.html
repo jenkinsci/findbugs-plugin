@@ -1,15 +1,16 @@
 <div>
   <p>
     Hudson kann <a href="http://findbugs.sourceforge.net/">FindBugs</a> Reports einlesen und darstellen.
-    Wenn dies aktiviert wird und der Build das Maven Goal <code>findbugs:findbugs</code> ausf�hrt,
+    Wenn dies aktiviert wird und der Build das Maven Goal <code>findbugs:findbugs</code> ausführt,
     dann analysiert Hudson nach jedem Build die erzeugten FindBugs Dateien und
     stellt deren Informationen in verschiedenen Ansichten dar: Trend Anzeige, Projekt Statistik und
     Package Statistik. Zudem zeigt Hudson die jeweiligen Warnungen direkt in der betroffen Datei an.
   </p>
-Die besten Ergebnisse erh�lt man mit dem  <a
-	href="http://mojo.codehaus.org/findbugs-maven-plugin/">findbugs-maven-plugin</a>
-Version 1.2 oder neuer. Version 1.1.1 erzeugt ein altes Dateiformat das zu wenig Details enthält. Der folgenden Abschnitt muss in
-die <code>pom.xml</code> Datei kopiert werden, damit FindBugs während des Build läuft:
+  Die besten Ergebnisse erhält man mit dem
+  <a href="http://mojo.codehaus.org/findbugs-maven-plugin/">findbugs-maven-plugin</a>
+  Version 1.2 oder neuer. Version 1.1.1 erzeugt ein altes Dateiformat das zu wenig Details enthält.
+  Der folgenden Abschnitt muss in die <code>pom.xml</code> Datei kopiert werden, damit FindBugs
+  während des Build korrekt läuft:
 <pre>
 &lt;plugin&gt;
    &lt;groupId&gt;org.codehaus.mojo&lt;/groupId&gt;
@@ -23,34 +24,5 @@ die <code>pom.xml</code> Datei kopiert werden, damit FindBugs während des Build
    &lt;/configuration&gt;
 &lt;/plugin&gt;
 </pre>
-
-Anschließend muss das Suchmuster der FindBugs-Dateien noch auf <code>**/findbugsXml.xml</code> festgesetzt werden, um die korrekten Resultate zu erhalten.
-
-<h4>Ant Konfiguration</h4>
-
-Um <span class="application">FindBugs</span> in Ant zu nutzen, muss in der Datei <code class="filename">build.xml</code> die FindBugs Task referenziert werden:
-
-<pre class="screen">
-  &lt;taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask"/&gt;
-</pre>
-
-Danach definiert man ein Target, dass diese
- <code class="literal">findbugs</code> Task benutzt:
-
-<pre class="screen">
-  &lt;target name="findbugs" depends="jar"&gt;
-
-    &lt;findbugs home="${findbugs.home}"
-              output="xml:withMessages"
-              outputFile="findbugs.xml" &gt;
-      &lt;auxClasspath path="${basedir}/lib/Regex.jar" /&gt;
-      &lt;sourcePath path="${basedir}/src/java" /&gt;
-      &lt;class location="${basedir}/bin/bcel.jar" /&gt;
-    &lt;/findbugs&gt;
-  &lt;/target&gt;
-
-</pre>
-
-Anschließend muss das Suchmuster der FindBugs-Dateien noch auf <code>**/findbugs.xml</code> festgesetzt werden, um die korrekten Resultate zu erhalten.
 
 </div>
