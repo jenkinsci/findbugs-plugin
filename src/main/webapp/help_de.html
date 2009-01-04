@@ -8,10 +8,11 @@
     angegeben werden.
   </p>
 <h4>Maven Konfiguration</h4>
-Die besten Ergebnisse erh√§lt man mit dem  <a
-	href="http://mojo.codehaus.org/findbugs-maven-plugin/">findbugs-maven-plugin</a>
-Version 1.2 oder neuer. Version 1.1.1 erzeugt ein altes Dateiformat das zu wenig Details enth√§lt. Der folgenden Abschnitt muss in
-die <code>pom.xml</code> Datei kopiert werden, damit FindBugs w√§hrend des Build l√§uft:
+  Die besten Ergebnisse erh‰lt man mit dem
+  <a href="http://mojo.codehaus.org/findbugs-maven-plugin/">findbugs-maven-plugin</a>
+  Version 1.2 oder neuer. Version 1.1.1 erzeugt ein altes Dateiformat das zu wenig Details enth‰lt.
+  Der folgenden Abschnitt muss in die <code>pom.xml</code> Datei kopiert werden, damit FindBugs
+  w‰hrend des Build l‰uft:
 <pre>
 &lt;plugin&gt;
    &lt;groupId&gt;org.codehaus.mojo&lt;/groupId&gt;
@@ -26,11 +27,13 @@ die <code>pom.xml</code> Datei kopiert werden, damit FindBugs w√§hrend des Build
 &lt;/plugin&gt;
 </pre>
 
-Anschlie√üend muss das Suchmuster der FindBugs-Dateien noch auf <code>**/findbugsXml.xml</code> festgesetzt werden, um die korrekten Resultate zu erhalten.
+Anschlieﬂend muss das Suchmuster der FindBugs-Dateien noch auf <code>**/findbugsXml.xml</code>
+ festgesetzt werden, um die korrekten Resultate zu erhalten.
 
 <h4>Ant Konfiguration</h4>
 
-Um <span class="application">FindBugs</span> in Ant zu nutzen, muss in der Datei <code class="filename">build.xml</code> die FindBugs Task referenziert werden:
+Um <span class="application">FindBugs</span> in Ant zu nutzen, muss in der
+Datei <code class="filename">build.xml</code> die FindBugs Task referenziert werden:
 
 <pre class="screen">
   &lt;taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask"/&gt;
@@ -53,6 +56,7 @@ Danach definiert man ein Target, dass diese
 
 </pre>
 
-Anschlie√üend muss das Suchmuster der FindBugs-Dateien noch auf <code>**/findbugs.xml</code> festgesetzt werden, um die korrekten Resultate zu erhalten.
+Anschlieﬂend muss das Suchmuster der FindBugs-Dateien noch auf <code>**/findbugs.xml</code>
+festgesetzt werden, um die korrekten Resultate zu erhalten.
 
 </div>
