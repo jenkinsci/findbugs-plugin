@@ -54,13 +54,23 @@ public class BugSerializeModelTest extends AbstractSerializeModelTest {
      *            the message
      * @param priority
      *            the priority
+     * @param fileName
+     *            the file name
+     * @param packageName
+     *            the package name
+     * @param moduleName
+     *            the module name
      * @return the annotation
      */
     @Override
-    protected AbstractAnnotation createAnnotation(final int line, final String message, final Priority priority) {
-        Bug bug = new Bug(priority, message, message, message, line);
-        bug.setInstanceHash(message);
-        return bug;
+    protected AbstractAnnotation createAnnotation(final int line, final String message, final Priority priority, final String fileName, final String packageName, final String moduleName) {
+        Bug annotation = new Bug(priority, message, message, message, line);
+        annotation.setInstanceHash(message);
+        annotation.setFileName(fileName);
+        annotation.setPackageName(packageName);
+        annotation.setModuleName(moduleName);
+
+        return annotation;
     }
 
     /**
