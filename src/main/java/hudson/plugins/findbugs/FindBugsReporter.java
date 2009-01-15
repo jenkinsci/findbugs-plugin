@@ -6,6 +6,7 @@ import hudson.maven.MavenModule;
 import hudson.maven.MavenReporterDescriptor;
 import hudson.maven.MojoInfo;
 import hudson.model.Action;
+import hudson.model.BuildListener;
 import hudson.plugins.findbugs.parser.FindBugsParser;
 import hudson.plugins.findbugs.util.FilesParser;
 import hudson.plugins.findbugs.util.HealthAwareMavenReporter;
@@ -18,6 +19,7 @@ import java.util.List;
 
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.component.configurator.ComponentConfigurationException;
+import org.codehaus.plexus.configuration.xml.XmlPlexusConfiguration;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 /**
@@ -60,6 +62,34 @@ public class FindBugsReporter extends HealthAwareMavenReporter {
     @DataBoundConstructor
     public FindBugsReporter(final String threshold, final String healthy, final String unHealthy, final String height, final String thresholdLimit) {
         super(threshold, healthy, unHealthy, height, thresholdLimit, "FINDBUGS");
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean preExecute(final MavenBuildProxy build, final MavenProject pom, final MojoInfo mojo,
+            final BuildListener listener) throws InterruptedException, IOException {
+        if (acceptGoal(mojo.getGoal())) {
+            activateProperty(mojo, "xmlOutput");
+            activateProperty(mojo, "findbugsXmlOutput");
+            activateProperty(mojo, "findbugsXmlWithMessages");
+        }
+        return true;
+    }
+
+
+    /**
+     * Activates the specified property of the mojo.
+     *
+     * @param mojo
+     *            the mojo to change
+     * @param property
+     *            the property toset to <code>true</code>
+     */
+    private void activateProperty(final MojoInfo mojo, final String property) {
+        XmlPlexusConfiguration configuration = (XmlPlexusConfiguration) mojo.configuration.getChild(property);
+        if (configuration != null) {
+            configuration.setValue("true");
+        }
     }
 
     /** {@inheritDoc} */
