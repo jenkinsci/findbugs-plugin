@@ -90,12 +90,29 @@ This plugin contains all of the standard FindBugs detectors.
     <!-- DM_CONVERT_CASE is the only core bug pattern in this category -->
   </BugCategory>
 
+  <BugCategory category="EXPERIMENTAL">
+    <Description>Experimental</Description>
+    <Abbreviation>X</Abbreviation>
+    <Details>Experimental and not fully vetted bug patterns</Details>
+    <!-- DM_CONVERT_CASE is the only core bug pattern in this category -->
+  </BugCategory>
+
 
   <!--
   **********************************************************************
   Detectors
   **********************************************************************
    -->
+
+ <Detector class="edu.umd.cs.findbugs.detect.InconsistentAnnotations">
+     <Details>
+<![CDATA[
+<p> This detector finds inconsistencies between type qualifiers directly
+applied to method parameters and uses of those method parameters. </p>
+]]>
+     </Details>
+   </Detector>
+
 
 	<Detector class="edu.umd.cs.findbugs.detect.SynchronizationOnSharedBuiltinConstant">
      <Details>
@@ -142,6 +159,23 @@ This plugin contains all of the standard FindBugs detectors.
 ]]>
     </Details>
   </Detector>
+
+  <Detector class="edu.umd.cs.findbugs.detect.BuildInterproceduralCallGraph">
+    <Details>
+      <![CDATA[
+      <p>Builds the interprocedural call graph.</p>
+      ]]>
+    </Details>
+  </Detector>
+  
+  <Detector class="edu.umd.cs.findbugs.detect.BuildObligationPolicyDatabase">
+	  <Details>
+		  <![CDATA[
+		  <p>Builds the database of obligation types and methods used by the FindUnsatisfiedObligation detector.
+		  ]]>
+	  </Details>
+  </Detector>
+
   <Detector class="edu.umd.cs.findbugs.detect.NoteSuppressedWarnings">
     <Details>
 <![CDATA[
@@ -382,7 +416,41 @@ This does not help the garbage collector in any way, the nulling out of fields h
   <Detector class="edu.umd.cs.findbugs.detect.CrossSiteScripting">
     <Details>
 <![CDATA[
-<p> This detector looks for obvious/blatent cases of cross site scripting vulnerabilities.</p>
+<p> This detector looks for obvious/blatant cases of cross site scripting vulnerabilities.</p>
+]]>
+    </Details>
+  </Detector>
+
+  <Detector class="edu.umd.cs.findbugs.detect.RepeatedConditionals">
+    <Details>
+<![CDATA[
+<p> This detector looks for code containing repeated conditional tests, such as (x == 5 || x == 5). 
+]]>
+    </Details>
+  </Detector>
+
+  <Detector class="edu.umd.cs.findbugs.detect.CallToUnsupportedMethod">
+    <Details>
+<![CDATA[
+<p> This detector looks for calls to methods that are unsupported.
+]]>
+    </Details>
+  </Detector>
+
+  <Detector class="edu.umd.cs.findbugs.detect.FormatStringChecker">
+    <Details>
+<![CDATA[
+<p> Checks for incorrect format strings.
+</p>
+]]>
+    </Details>
+  </Detector>
+  <Detector class="edu.umd.cs.findbugs.detect.EqualsOperandShouldHaveClassCompatibleWithThis">
+    <Details>
+<![CDATA[
+<p> Checks for equals methods that check for their operand being an instance of a class 
+that is not compatible with the class defining the equals method.
+</p>
 ]]>
     </Details>
   </Detector>
@@ -795,6 +863,16 @@ null.  It is a slow detector.</p>
     </Details>
   </Detector>
 
+  <Detector class="edu.umd.cs.findbugs.detect.FindNullDerefsInvolvingNonShortCircuitEvaluation">
+    <Details>
+<![CDATA[
+<p> This detector looks for places where a null pointer exception might
+occur, and the use of non-short-circuit evaluation causes the usual techniques to fail.
+</p>
+]]>
+    </Details>
+  </Detector>
+
   <Detector class="edu.umd.cs.findbugs.detect.FindOpenStream">
     <Details>
 <![CDATA[
@@ -1181,7 +1259,7 @@ This detector looks for bad casts of object references using data flow analysis.
     <Details>
 <![CDATA[
 <p>
-This detector looks for stores of non Serializable objects into Http sessions.
+This detector looks for stores of non Serializable objects into HTTP sessions.
 </p>
 ]]>
     </Details>
@@ -1409,10 +1487,10 @@ factory pattern to create these objects.</p>
     <Details>
     <![CDATA[
     <p> This detector looks at the arguments of calls to generic 
-    container methods that receive a <code>java.lang.Object</code>
-    to see if the argument's type is related to the container's 
+    collection methods that receive a <code>java.lang.Object</code>
+    to see if the argument's type is related to the collection's 
     parameter. Arguments with unrelated class types are never going 
-    to be in the container. For example, if <code>foo</code> is a 
+    to be in the collection. For example, if <code>foo</code> is a 
     <code>List&lt;String&gt;</code> and <code>bar</code> is a 
     <code>StringBuffer</code>, the call <code>foo.contains(bar)</code>
     will always return false. This is a fast detector. 
@@ -1455,6 +1533,16 @@ factory pattern to create these objects.</p>
       ]]>
     </Details>
   </Detector>
+
+  <Detector class="edu.umd.cs.findbugs.detect.CheckExpectedWarnings">
+	  <Details>
+		  <![CDATA[
+		  <p>Checks @ExpectedWarning and @NoWarning annotations.
+		  This detector is used only for testing FindBugs.</p>
+		  ]]>
+	  </Details>
+  </Detector>
+
   <!--
   **********************************************************************
   BugPatterns
@@ -1472,6 +1560,57 @@ factory pattern to create these objects.</p>
 ]]>
     </Details>
   </BugPattern>
+  <BugPattern type="DMI_VACUOUS_CALL_TO_EASYMOCK_METHOD">
+    <ShortDescription>Useless/vacuous call to EasyMock method</ShortDescription>
+    <LongDescription>Useless/vacuous call to {2} in {1}</LongDescription>
+    <Details>
+      <![CDATA[
+	<p>This call doesn't pass any objects to the EasyMock method, so the call doesn't do anything.
+</p>
+
+]]>
+    </Details>
+  </BugPattern>
+  <BugPattern type="DMI_SCHEDULED_THREAD_POOL_EXECUTOR_WITH_ZERO_CORE_THREADS">
+    <ShortDescription>Creation of ScheduledThreadPoolExecutor with zero core threads</ShortDescription>
+    <LongDescription>Creation of ScheduledThreadPoolExecutor with zero core threads in {1}</LongDescription>
+    <Details>
+      <![CDATA[
+	<p>(<a href="http://java.sun.com/javase/6/docs/api/java/util/concurrent/ScheduledThreadPoolExecutor.html#ScheduledThreadPoolExecutor(int)">Javadoc</a>)
+A ScheduledThreadPoolExecutor with zero core threads will never execute anything; changes to the max pool size are ignored.
+</p>
+
+]]>
+    </Details>
+  </BugPattern>
+
+  <BugPattern type="DMI_FUTILE_ATTEMPT_TO_CHANGE_MAXPOOL_SIZE_OF_SCHEDULED_THREAD_POOL_EXECUTOR">
+    <ShortDescription>Futile attempt to change max pool size of ScheduledThreadPoolExecutor</ShortDescription>
+    <LongDescription>Futile attempt to change max pool size of ScheduledThreadPoolExecutor in {1}</LongDescription>
+    <Details>
+      <![CDATA[
+	<p>(<a href="http://java.sun.com/javase/6/docs/api/java/util/concurrent/ScheduledThreadPoolExecutor.html">Javadoc</a>)
+While ScheduledThreadPoolExecutor inherits from ThreadPoolExecutor, a few of the inherited tuning methods are not useful for it. In particular, because it acts as a fixed-sized pool using corePoolSize threads and an unbounded queue, adjustments to maximumPoolSize have no useful effect.
+	</p>
+
+]]>
+    </Details>
+  </BugPattern>
+
+  <BugPattern type="DMI_UNSUPPORTED_METHOD">
+    <ShortDescription>Call to unsupported method</ShortDescription>
+    <LongDescription>Call to unsupported method {2} in {1}</LongDescription>
+    <Details>
+      <![CDATA[
+	<p>All targets of this method invocation throw an UnsupportedOperationException.
+</p>
+
+]]>
+    </Details>
+  </BugPattern>
+
+
+
   <BugPattern type="DMI_EMPTY_DB_PASSWORD">
     <ShortDescription>Empty database password</ShortDescription>
     <LongDescription>Empty database password in {1}</LongDescription>
@@ -1502,15 +1641,13 @@ factory pattern to create these objects.</p>
     <LongDescription>HTTP cookie formed from untrusted input in {1}</LongDescription>
     <Details>
       <![CDATA[
-	<p>This code constructs an HTTP Cookie using an untrusted HTTP parameter. If this cookie is added to an HTTP response, it will allow  a HTTP response splitting
+	<p>This code constructs an HTTP Cookie using an untrusted HTTP parameter. If this cookie is added to an HTTP response, it will allow a HTTP response splitting
 vulnerability. See <a href="http://en.wikipedia.org/wiki/HTTP_response_splitting">http://en.wikipedia.org/wiki/HTTP_response_splitting</a>
 for more information.</p>
-<p>FindBugs looks only for the most blatent, obvious cases of HTTP response splitting.
-If FindBugs found <em>any</em>, you <em>almostly certainly</em> have more 
+<p>FindBugs looks only for the most blatant, obvious cases of HTTP response splitting.
+If FindBugs found <em>any</em>, you <em>almost certainly</em> have more 
 vulnerabilities that FindBugs doesn't report. If you are concerned about HTTP response splitting, you should seriously 
-consider using a commercial static analysis or pen-testing tool, such as those provided by <a href="http://www.fortify.com/">Fortify Software</a>,
-a sponsor of the FindBugs project. If your software is open source, Fortify will scan your code for free
-as part of the <a href="http://opensource.fortifysoftware.com/welcome.html">JOR (Java Open Review)</a> effort.
+consider using a commercial static analysis or pen-testing tool.
 </p>
 
 ]]>
@@ -1525,12 +1662,10 @@ as part of the <a href="http://opensource.fortifysoftware.com/welcome.html">JOR 
 	<p>This code directly writes an HTTP parameter to an HTTP header, which allows for a HTTP response splitting
 vulnerability. See <a href="http://en.wikipedia.org/wiki/HTTP_response_splitting">http://en.wikipedia.org/wiki/HTTP_response_splitting</a>
 for more information.</p>
-<p>FindBugs looks only for the most blatent, obvious cases of HTTP response splitting.
-If FindBugs found <em>any</em>, you <em>almostly certainly</em> have more 
+<p>FindBugs looks only for the most blatant, obvious cases of HTTP response splitting.
+If FindBugs found <em>any</em>, you <em>almost certainly</em> have more 
 vulnerabilities that FindBugs doesn't report. If you are concerned about HTTP response splitting, you should seriously 
-consider using a commercial static analysis or pen-testing tool, such as those provided by <a href="http://www.fortify.com/">Fortify Software</a>,
-a sponsor of the FindBugs project. If your software is open source, Fortify will scan your code for free
-as part of the <a href="http://opensource.fortifysoftware.com/welcome.html">JOR (Java Open Review)</a> effort.
+consider using a commercial static analysis or pen-testing tool.
 </p>
 
 ]]>
@@ -1544,12 +1679,10 @@ as part of the <a href="http://opensource.fortifysoftware.com/welcome.html">JOR 
 	<p>This code directly writes an HTTP parameter to Servlet output, which allows for a reflected cross site scripting
 vulnerability. See <a href="http://en.wikipedia.org/wiki/Cross-site_scripting">http://en.wikipedia.org/wiki/Cross-site_scripting</a>
 for more information.</p>
-<p>FindBugs looks only for the most blatent, obvious cases of cross site scripting.
-If FindBugs found <em>any</em>, you <em>almostly certainly</em> have more cross site scripting
+<p>FindBugs looks only for the most blatant, obvious cases of cross site scripting.
+If FindBugs found <em>any</em>, you <em>almost certainly</em> have more cross site scripting
 vulnerabilities that FindBugs doesn't report. If you are concerned about cross site scripting, you should seriously 
-consider using a commercial static analysis or pen-testing tool, such as those provided by <a href="http://www.fortify.com/">Fortify Software</a>,
-a sponsor of the FindBugs project. If your software is open source, Fortify will scan your code for free
-as part of the <a href="http://opensource.fortifysoftware.com/welcome.html">JOR (Java Open Review)</a> effort.
+consider using a commercial static analysis or pen-testing tool.
 </p>
 
 ]]>
@@ -1565,12 +1698,10 @@ as part of the <a href="http://opensource.fortifysoftware.com/welcome.html">JOR 
 for a reflected cross site scripting
 vulnerability. See <a href="http://en.wikipedia.org/wiki/Cross-site_scripting">http://en.wikipedia.org/wiki/Cross-site_scripting</a>
 for more information.</p>
-<p>FindBugs looks only for the most blatent, obvious cases of cross site scripting.
-If FindBugs found <em>any</em>, you <em>almostly certainly</em> have more cross site scripting
+<p>FindBugs looks only for the most blatant, obvious cases of cross site scripting.
+If FindBugs found <em>any</em>, you <em>almost certainly</em> have more cross site scripting
 vulnerabilities that FindBugs doesn't report. If you are concerned about cross site scripting, you should seriously 
-consider using a commercial static analysis or pen-testing tool, such as those provided by <a href="http://www.fortify.com/">Fortify Software</a>,
-a sponsor of the FindBugs project. If your software is open source, Fortify will scan your code for free
-as part of the <a href="http://opensource.fortifysoftware.com/welcome.html">JOR (Java Open Review)</a> effort.
+consider using a commercial static analysis or pen-testing tool.
 </p>
 
 ]]>
@@ -1585,12 +1716,10 @@ as part of the <a href="http://opensource.fortifysoftware.com/welcome.html">JOR 
 	<p>This code directly writes an HTTP parameter to JSP output, which allows for a cross site scripting
 vulnerability. See <a href="http://en.wikipedia.org/wiki/Cross-site_scripting">http://en.wikipedia.org/wiki/Cross-site_scripting</a>
 for more information.</p>
-<p>FindBugs looks only for the most blatent, obvious cases of cross site scripting.
-If FindBugs found <em>any</em>, you <em>almostly certainly</em> have more cross site scripting
+<p>FindBugs looks only for the most blatant, obvious cases of cross site scripting.
+If FindBugs found <em>any</em>, you <em>almost certainly</em> have more cross site scripting
 vulnerabilities that FindBugs doesn't report. If you are concerned about cross site scripting, you should seriously 
-consider using a commercial static analysis or pen-testing tool, such as those provided by <a href="http://www.fortify.com/">Fortify Software</a>,
-a sponsor of the FindBugs project.  If your software is open source, Fortify will scan your code for free
-as part of the <a href="http://opensource.fortifysoftware.com/welcome.html">JOR (Java Open Review)</a> effort.
+consider using a commercial static analysis or pen-testing tool.
 </p>
 ]]>
     </Details>
@@ -1640,11 +1769,11 @@ an infinite recursive loop that will result in a stack overflow.</p>
 
 
   <BugPattern type="IL_CONTAINER_ADDED_TO_ITSELF">
-    <ShortDescription>A container is added to itself</ShortDescription>
-    <LongDescription>A container is added to itself in {1}</LongDescription>
+    <ShortDescription>A collection is added to itself</ShortDescription>
+    <LongDescription>A collection is added to itself in {1}</LongDescription>
     <Details>
 <![CDATA[
-<p>A container is added to itself. As a result, computing the hashCode of this
+<p>A collection is added to itself. As a result, computing the hashCode of this
 set will throw a StackOverflowException.
 </p>
 ]]>
@@ -1713,6 +1842,20 @@ another field.</p>
    </BugPattern>
 
 
+  <BugPattern type="RpC_REPEATED_CONDITIONAL_TEST">
+    <ShortDescription>Repeated conditional tests</ShortDescription>
+    <LongDescription>Repeated conditional test in {1}</LongDescription>
+    <Details>
+<![CDATA[
+<p>The code contains a conditional test is performed twice, one right after the other
+(e.g., <code>x == 0 || x == 0</code>). Perhaps the second occurrence is intended to be something else
+(e.g., <code>x == 0 || y == 0</code>). 
+</p>
+]]>
+    </Details>
+  </BugPattern>
+
+
   <BugPattern type="TESTING">
     <ShortDescription>Testing</ShortDescription>
     <LongDescription>Test warning generated in {1}</LongDescription>
@@ -1723,6 +1866,8 @@ bug detectors.</p>
 ]]>
     </Details>
   </BugPattern>
+
+
   <BugPattern type="UNKNOWN">
     <ShortDescription>Unknown bug pattern</ShortDescription>
     <LongDescription>Unknown bug pattern BUG_PATTERN in {1}</LongDescription>
@@ -1841,7 +1986,7 @@ to use Object.clone(), which always returns an object of the correct type.</p>
     <LongDescription>{1} uses {2} for a variable name, which is a keyword in later versions of Java</LongDescription>
     <Details>
 <![CDATA[
-<p>The identifier is a word that is reserversed as a keyword in later versions of Java, and your code will need to be changed
+<p>The identifier is a word that is reserved as a keyword in later versions of Java, and your code will need to be changed
 in order to compile it in later versions of Java.</p>
 
 ]]>
@@ -1854,7 +1999,7 @@ in order to compile it in later versions of Java.</p>
 <![CDATA[
 <p>This identifier is used as a keyword in later versions of Java. This code, and 
 any code that references this API, 
-will need to be changed  in order to compile it in later versions of Java.</p>
+will need to be changed in order to compile it in later versions of Java.</p>
 
 ]]>
     </Details>
@@ -1914,7 +2059,7 @@ will need to be changed  in order to compile it in later versions of Java.</p>
 <![CDATA[
   <p> This code creates a classloader,  which requires a security manager.
   If this code will be granted security permissions, but might be invoked by code that does not
-  have security permissions, then the classloader creation  needs to occur inside a doPrivileged block.</p>
+  have security permissions, then the classloader creation needs to occur inside a doPrivileged block.</p>
 ]]>
     </Details>
   </BugPattern>
@@ -1925,7 +2070,7 @@ will need to be changed  in order to compile it in later versions of Java.</p>
 <![CDATA[
   <p> This code creates a classloader,  which requires a security manager.
   If this code will be granted security permissions, but might be invoked by code that does not
-  have security permissions, then the classloader creation  needs to occur inside a doPrivileged block.</p>
+  have security permissions, then the classloader creation needs to occur inside a doPrivileged block.</p>
 ]]>
     </Details>
   </BugPattern>
@@ -2009,7 +2154,7 @@ of source-only retention, the annotation isn't retained in the classfile and can
 
 
   <BugPattern type="DM_RUN_FINALIZERS_ON_EXIT">
-    <ShortDescription>Method invokes dangerous method runFinalizersOnExit  </ShortDescription>
+    <ShortDescription>Method invokes dangerous method runFinalizersOnExit</ShortDescription>
     <LongDescription>{1} invokes dangerous method runFinalizersOnExit</LongDescription>
     <Details>
 <![CDATA[
@@ -2159,7 +2304,7 @@ dangerous methods in the Java libraries.</em> -- Joshua Bloch</p>
   <p>A wrapped primitive value is unboxed and converted to another primitive type as part of the
 evaluation of a conditional ternary operator (the <code> b ? e1 : e2</code> operator). The
 semantics of Java mandate that if <code>e1</code> and <code>e2</code> are wrapped
-numeric values, the values are unboxed and converted/coerced to their common  type (e.g,
+numeric values, the values are unboxed and converted/coerced to their common type (e.g,
 if <code>e1</code> is of type <code>Integer</code> 
 and <code>e2</code> is of type <code>Float</code>, then <code>e1</code> is unboxed,
 converted to a floating point value, and boxed. See JLS Section 15.25.
@@ -2173,7 +2318,7 @@ converted to a floating point value, and boxed. See JLS Section 15.25.
     <Details>
 <![CDATA[
   <p>A primitive is boxed, and then immediately unboxed. This probably is due to a manual
-	boxing in a place where  an unboxed value is required, thus forcing the compiler
+	boxing in a place where an unboxed value is required, thus forcing the compiler
 to immediately undo the work of the boxing.
 </p>
 ]]>
@@ -2187,7 +2332,7 @@ to immediately undo the work of the boxing.
     <LongDescription>Primitive value is boxed then unboxed to perform primitive coercion in {1}</LongDescription>
     <Details>
 <![CDATA[
-  <p>A primitive boxed value constructed and  then immediately converted into a different primitive type
+  <p>A primitive boxed value constructed and then immediately converted into a different primitive type
 (e.g., <code>new Double(d).intValue()</code>). Just perform direct primitive coercion (e.g., <code>(int) d</code>).</p>
 ]]>
     </Details>
@@ -2417,13 +2562,38 @@ on objects referenced by X, because they may already be getting finalized in a s
     </Details>
   </BugPattern>
 
+  <BugPattern type="EQ_CHECK_FOR_OPERAND_NOT_COMPATIBLE_WITH_THIS">
+    <ShortDescription>Equals checks for noncompatible operand</ShortDescription>
+    <LongDescription>{1} checks for operand being a {2.givenClass} </LongDescription>
+    <Details>
+<![CDATA[
+  <p> This equals method is checking to see if the argument is some incompatible type
+(i.e., a class that is neither a supertype nor subtype of the class that defines
+the equals method). For example, the Foo class might have an equals method
+that looks like:
+
+<p><code><pre>
+public boolean equals(Object o) {
+  if (o instanceof Foo)
+    return name.equals(((Foo)o).name);
+  else if (o instanceof String)
+    return name.equals(o);
+  else return false;
+</pre></code></p>
+
+<p>This is considered bad practice, as it makes it very hard to implement an equals method that
+is symmetric and transitive. Without those properties, very unexpected behavoirs are possible.
+</p>
+]]>
+    </Details>
+  </BugPattern>
   <BugPattern type="EQ_DONT_DEFINE_EQUALS_FOR_ENUM">
     <ShortDescription>Covariant equals() method defined for enum</ShortDescription>
     <LongDescription>enum {0} defines equals({0.givenClass})</LongDescription>
     <Details>
 <![CDATA[
   <p> This class defines an enumeration, and equality on enumerations are defined
-using object identity. Definine a covariant equals method for an enumeration
+using object identity. Defining a covariant equals method for an enumeration
 value is exceptionally bad practice, since it would likely result
 in having two different enumeration values that compare as equals using
 the covariant enum method, and as not equal when compared normally.
@@ -2507,7 +2677,7 @@ invoking super.equals(o).
 <![CDATA[
   <p> This class defines an equals method that overrides an equals method in a superclass. Both equals methods
 methods use <code>instanceof</code> in the determination of whether two objects are equal. This is fraught with peril,
-since it is important that the equals method is symetrical (in other words, <code>a.equals(b) == b.equals(a)</code>).
+since it is important that the equals method is symmetrical (in other words, <code>a.equals(b) == b.equals(a)</code>).
 If B is a subtype of A, and A's equals method checks that the argument is an instanceof A, and B's equals method
 checks that the argument is an instanceof B, it is quite likely that the equivalence relation defined by these
 methods is not symmetric.
@@ -2523,7 +2693,7 @@ methods is not symmetric.
   <p> This class has an equals method that will be broken if it is inherited by subclasses.
 It compares a class literal with the class of the argument (e.g., in class <code>Foo</code>
 it might check if <code>Foo.class == o.getClass()</code>).
-It is better to check  if  <code>this.getClass() == o.getClass()</code>.
+It is better to check if <code>this.getClass() == o.getClass()</code>.
 </p>
 ]]>
     </Details>
@@ -2572,7 +2742,7 @@ Plus, it means that the equals method is not symmetric.
     <LongDescription>{1} always returns false</LongDescription>
     <Details>
 <![CDATA[
-  <p> This class defines an equals method that always returns false. This means that an object is not equal to itself, and it is impossible to create useful Maps or Sets of this class. More fundementally, it means
+  <p> This class defines an equals method that always returns false. This means that an object is not equal to itself, and it is impossible to create useful Maps or Sets of this class. More fundamentally, it means
 that equals is not reflexive, one of the requirements of the equals method.</p>
 <p>The likely intended semantics are object identity: that an object is equal to itself. This is the behavior inherited from class <code>Object</code>. If you need to override an equals inherited from a different 
 superclass, you can use use:
@@ -2659,13 +2829,27 @@ that classfile. See <a href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=
 ]]>
     </Details>
   </BugPattern>
+  <BugPattern type="HE_SIGNATURE_DECLARES_HASHING_OF_UNHASHABLE_CLASS">
+    <ShortDescription>Signature declares use of unhashable class in hashed construct</ShortDescription>
+    <LongDescription>{2} doesn't define a hashCode() method but it is used in a hashed context in {1}</LongDescription>
+    <Details>
+<![CDATA[
+  <p> A method, field or class declares a generic signature where a non-hashable class
+is used in context where a hashable class is required.
+A class that declares an equals method but inherits a hashCode() method
+from Object is unhashable, since it doesn't fulfill the requirement that
+equal objects have equal hashCodes.
+</p>
+]]>
+    </Details>
+  </BugPattern>
   <BugPattern type="HE_USE_OF_UNHASHABLE_CLASS">
     <ShortDescription>Use of class without a hashCode() method in a hashed data structure</ShortDescription>
     <LongDescription>{2} doesn't define a hashCode() method but is used in a hashed data structure</LongDescription>
     <Details>
 <![CDATA[
   <p> A class defines an equals(Object)  method but not a hashCode() method,
-and thus doesn't fulfill the requirement that equal Objects have equal hashCodes.
+and thus doesn't fulfill the requirement that equal objects have equal hashCodes.
 An instance of this class is used in a hash data structure, making the need to
 fix this problem of highest importance.
 ]]>
@@ -2859,7 +3043,7 @@ but can be accessed in a way that seems to violate the annotation.</p>
     <LongDescription>{1} is a mutable servlet field</LongDescription>
     <Details>
 <![CDATA[
-<p>A web server generally only creates one instance of servlet or jsp class (i.e., treates
+<p>A web server generally only creates one instance of servlet or jsp class (i.e., treats
 the class as a Singleton), 
 and will 
 have multiple threads invoke methods on that instance to service multiple 
@@ -3161,8 +3345,8 @@ public class CircularClassInitialization {
 
 
   <BugPattern type="IT_NO_SUCH_ELEMENT">
-    <ShortDescription>Iterator next() method can't throw NoSuchElement exception</ShortDescription>
-    <LongDescription>{1} can't throw NoSuchElement exception</LongDescription>
+    <ShortDescription>Iterator next() method can't throw NoSuchElementException</ShortDescription>
+    <LongDescription>{1} can't throw NoSuchElementException</LongDescription>
     <Details>
 <![CDATA[
   <p> This class implements the <code>java.util.Iterator</code> interface.&nbsp;
@@ -3219,7 +3403,7 @@ and possible deadlock</p>
   </BugPattern>
 
   <BugPattern type="DL_SYNCHRONIZATION_ON_UNSHARED_BOXED_PRIMITIVE">
-    <ShortDescription>Synchronization on boxed primative values</ShortDescription>
+    <ShortDescription>Synchronization on boxed primitive values</ShortDescription>
     <LongDescription>Synchronization on {2} in {1}</LongDescription>
     <Details>
       <![CDATA[
@@ -3239,8 +3423,8 @@ private static final Integer fileLock = new Integer(1);
 private static final Object fileLock = new Object();
 </pre>
 The existing code might be OK, but it is confusing and a 
-future refactoing, such as the "Remove Boxing" refactoring in IntelliJ,
-might replace this with the use of an intern'd Integer object shared 
+future refactoring, such as the "Remove Boxing" refactoring in IntelliJ,
+might replace this with the use of an interned Integer object shared 
 throughout the JVM, leading to very confusing behavior and potential deadlock.
 </p>
 ]]>
@@ -3248,7 +3432,7 @@ throughout the JVM, leading to very confusing behavior and potential deadlock.
   </BugPattern>
 
   <BugPattern type="DL_SYNCHRONIZATION_ON_BOXED_PRIMITIVE">
-    <ShortDescription>Synchronization on boxed primative could lead to deadlock</ShortDescription>
+    <ShortDescription>Synchronization on boxed primitive could lead to deadlock</ShortDescription>
     <LongDescription>Synchronization on {2} could deadlock in {1}</LongDescription>
     <Details>
       <![CDATA[
@@ -3488,7 +3672,7 @@ opportunities to accidently define methods that do not override methods in their
     <LongDescription>The class name {0} shadows the simple name of implemented interface {1}</LongDescription>
     <Details>
 <![CDATA[
-  <p> This class/interface has a simple name that is identical to that of an implemented/extended  interface, except
+  <p> This class/interface has a simple name that is identical to that of an implemented/extended interface, except
 that the interface is in a different package (e.g., <code>alpha.Foo</code> extends <code>beta.Foo</code>). 
 This can be exceptionally confusing, create lots of situations in which you have to look at import statements
 to resolve references and creates many
@@ -3673,8 +3857,8 @@ removing or deprecating the method with the similar but not identical signature.
   </BugPattern>
 
   <BugPattern type="NM_BAD_EQUAL">
-    <ShortDescription>Class defines equal(); should it be equals()?</ShortDescription>
-    <LongDescription>Class {0} defines equal(); should it be equals()?</LongDescription>
+    <ShortDescription>Class defines equal(Object); should it be equals(Object)?</ShortDescription>
+    <LongDescription>Class {0} defines equal(Object); should it be equals(Object)?</LongDescription>
     <Details>
 <![CDATA[
 <p> This class defines a method <code>equal(Object)</code>.&nbsp; This method does
@@ -3750,8 +3934,7 @@ This might be intentional and OK, but should be reviewed to ensure it is what is
     </Details>
   </BugPattern>
   <BugPattern type="SE_READ_RESOLVE_MUST_RETURN_OBJECT">
-    <ShortDescription>The readResolve method must be declared with a return type
-of Object. </ShortDescription>
+    <ShortDescription>The readResolve method must be declared with a return type of Object. </ShortDescription>
     <LongDescription>The method {1} must be declared with a return type of Object rather than {1.returnType}</LongDescription>
     <Details>
 <![CDATA[
@@ -3793,7 +3976,7 @@ deserialized instance of the class.
     <Details>
 <![CDATA[
   <p> This class implements the <code>Serializable</code> interface, and defines a method
-  for custom  serialization/deserialization. But since that method isn't declared private,
+  for custom serialization/deserialization. But since that method isn't declared private,
   it will be silently ignored by the serialization/deserialization API.</p>
 ]]>
     </Details>
@@ -3814,7 +3997,7 @@ deserialized instance of the class.
   </BugPattern>
   <BugPattern type="SE_NO_SUITABLE_CONSTRUCTOR">
     <ShortDescription>Class is Serializable but its superclass doesn't define a void constructor</ShortDescription>
-    <LongDescription>{0} is Serializable  but its superclass doesn't define an accessible void constructor</LongDescription>
+    <LongDescription>{0} is Serializable but its superclass doesn't define an accessible void constructor</LongDescription>
     <Details>
 <![CDATA[
   <p> This class implements the <code>Serializable</code> interface
@@ -4110,6 +4293,18 @@ variable is null should have been a check to see if it was nonnull).
     </Details>
   </BugPattern>
 
+  <BugPattern type="NP_DEREFERENCE_OF_READLINE_VALUE">
+    <ShortDescription>Dereference of the result of readLine() without nullcheck</ShortDescription>
+    <LongDescription>Dereference of the result of readLine() without nullcheck in {1}</LongDescription>
+    <Details>
+<![CDATA[
+  <p> The result of invoking readLine() is dereferenced without checking to see if the result is null. If there are no more lines of text
+to read, readLine() will return null and dereferencing that will generate a null pointer exception.
+</p>
+]]>
+    </Details>
+  </BugPattern>
+
   <BugPattern type="NP_IMMEDIATE_DEREFERENCE_OF_READLINE">
     <ShortDescription>Immediate dereference of the result of readLine()</ShortDescription>
     <LongDescription>Immediate dereference of the result of readLine() in {1}</LongDescription>
@@ -4207,7 +4402,7 @@ inner object.&nbsp; This reference makes the instances
   made into a <em>static</em> inner class. Since the reference to the
    outer object is required during construction of the inner instance,
    the inner class will need to be refactored so as to
-   pass  a reference to the outer instance to the constructor
+   pass a reference to the outer instance to the constructor
    for the inner class.</p>
 ]]>
     </Details>
@@ -4331,7 +4526,7 @@ signals unexpected behavior by returning an atypical return value.
     <Details>
 <![CDATA[
    <p> This code creates an exception (or error) object, but doesn't do anything with it. For example,
-something like  </p>
+something like </p>
 <blockquote>
 <pre>
 if (x &lt; 0)
@@ -4415,6 +4610,18 @@ be an exception path, since the default case is often infeasible.</p>
     </Details>
   </BugPattern>
 
+  <BugPattern type="NP_PARAMETER_MUST_BE_NONNULL_BUT_MARKED_AS_NULLABLE">
+    <ShortDescription>Parameter must be nonnull but is marked as nullable</ShortDescription>
+    <LongDescription>{2} must be nonnull but is marked as nullable</LongDescription>
+    <Details>
+<![CDATA[
+<p> This parameter is always used in a way that requires it to be nonnull,
+but the parameter is explicitly annotated as being Nullable. Either the use
+of the parameter or the annotation is wrong.
+</p>
+]]>
+    </Details>
+  </BugPattern>
   <BugPattern type="NP_NULL_ON_SOME_PATH">
     <ShortDescription>Possible null pointer dereference</ShortDescription>
     <LongDescription>Possible null pointer dereference of {2.givenClass} in {1}</LongDescription>
@@ -4440,7 +4647,7 @@ a null value will be dereferenced, which
 would generate a <code>NullPointerException</code> when the code is executed.
 Of course, the problem might be that the branch or statement is infeasible and that
 the null pointer exception can't ever be executed; deciding that is beyond the ability of FindBugs.
-Due to the fact that this value had been previously tested for nullness, this is a definite possiblity.
+Due to the fact that this value had been previously tested for nullness, this is a definite possibility.
 </p>
 ]]>
     </Details>
@@ -4468,10 +4675,10 @@ be an exception path, since the default case is often infeasible.</p>
    <LongDescription>Possible null pointer dereference in {1} due to return value of called method</LongDescription>
    <Details>
       <![CDATA[
-<p> A reference value which is null on some exception control path is
-dereferenced here.&nbsp; This may lead to a <code>NullPointerException</code>
-when the code is executed.&nbsp; The value may be null because it
-was returned from a method which is known to return possibly-null values.</p>
+<p> The return value from a method is dereferenced without a null check,
+and the return value of that method is one that should generally be checked
+for null.  This may lead to a <code>NullPointerException</code> when the code is executed.
+</p>
       ]]>
    </Details>
   </BugPattern>
@@ -4672,7 +4879,7 @@ is not a directory.</p>
 control flow continues onto the same place regardless of whether or not
 the branch is taken. For example,
 this is caused by having an empty statement
-block fot an <code>if</code> statement:</p>
+block for an <code>if</code> statement:</p>
 <pre>
     if (argv.length == 0) {
 	// TODO: handle this case
@@ -4840,8 +5047,8 @@ not be compared by reference are java.lang.Integer, java.lang.Float, etc.</p>
   </BugPattern>
 
   <BugPattern type="EC_UNRELATED_TYPES_USING_POINTER_EQUALITY">
-    <ShortDescription>Using pointer equality  to compare  different types</ShortDescription>
-    <LongDescription>Using pointer equality  to compare a {2} with a {3} in {1}</LongDescription>
+    <ShortDescription>Using pointer equality to compare different types</ShortDescription>
+    <LongDescription>Using pointer equality to compare a {2.givenClass} with a {3.givenClass} in {1}</LongDescription>
     <Details>
 <![CDATA[
 <p> This method uses using pointer equality to compare two references that seem to be of
@@ -5020,7 +5227,7 @@ Such assignments are useless, and may indicate a logic error or typo.
     x = x = 17;
   }
 </pre>
-<p>Assigning the same value to  a variable twice is useless, and may indicate a logic error or typo.</p>
+<p>Assigning the same value to a variable twice is useless, and may indicate a logic error or typo.</p>
 ]]>
     </Details>
   </BugPattern>
@@ -5244,24 +5451,56 @@ that value. Values loaded from a byte array are sign extended to 32 bits
 before any any bitwise operations are performed on the value.
 Thus, if <code>b[0]</code> contains the value <code>0xff</code>, and
 <code>x</code> is initially 0, then the code 
-<code>((x << 8) | b[0])</code>  will sign extend <code>0xff</code>
+<code>((x &lt;&lt; 8) | b[0])</code>  will sign extend <code>0xff</code>
 to get <code>0xffffffff</code>, and thus give the value
 <code>0xffffffff</code> as the result.
 </p>
 
 <p>In particular, the following code for packing a byte array into an int is badly wrong: </p>
-<code>
+<pre>
 int result = 0;
 for(int i = 0; i &lt; 4; i++) 
   result = ((result &lt;&lt; 8) | b[i]);
-</code>
+</pre>
 
 <p>The following idiom will work instead: </p>
-<code>
+<pre>
 int result = 0;
 for(int i = 0; i &lt; 4; i++) 
-  result = ((result &lt;&lt; 8) | (b[i] &amps; 0xff));
-</code>
+  result = ((result &lt;&lt; 8) | (b[i] &amp; 0xff));
+</pre>
+
+]]>
+    </Details>
+  </BugPattern>
+  <BugPattern type="BIT_ADD_OF_SIGNED_BYTE">
+    <ShortDescription>Bitwise add of signed byte value</ShortDescription>
+    <LongDescription>Bitwise add of signed byte value computed in {1} </LongDescription>
+    <Details>
+<![CDATA[
+<p> Adds a byte value and a value which is known to the 8 lower bits clear.
+Values loaded from a byte array are sign extended to 32 bits
+before any any bitwise operations are performed on the value.
+Thus, if <code>b[0]</code> contains the value <code>0xff</code>, and
+<code>x</code> is initially 0, then the code 
+<code>((x &lt;&lt; 8) + b[0])</code>  will sign extend <code>0xff</code>
+to get <code>0xffffffff</code>, and thus give the value
+<code>0xffffffff</code> as the result.
+</p>
+
+<p>In particular, the following code for packing a byte array into an int is badly wrong: </p>
+<pre>
+int result = 0;
+for(int i = 0; i &lt; 4; i++) 
+  result = ((result &lt;&lt; 8) + b[i]);
+</pre>
+
+<p>The following idiom will work instead: </p>
+<pre>
+int result = 0;
+for(int i = 0; i &lt; 4; i++) 
+  result = ((result &lt;&lt; 8) + (b[i] &amp; 0xff));
+</pre>
 
 ]]>
     </Details>
@@ -5271,10 +5510,10 @@ for(int i = 0; i &lt; 4; i++)
 
   <BugPattern type="BIT_AND">
     <ShortDescription>Incompatible bit masks</ShortDescription>
-    <LongDescription>Incompatible bit masks yield a constant result in {1}</LongDescription>
+    <LongDescription>Incompatible bit masks in (e &amp; {2} == {3}) yields a constant result in {1}</LongDescription>
     <Details>
 <![CDATA[
-<p> This method compares an expression of the form (a &amp; C) to D,
+<p> This method compares an expression of the form (e &amp; C) to D,
 which will always compare unequal
 due to the specific values of constants C and D.
 This may indicate a logic error or typo.</p>
@@ -5329,7 +5568,7 @@ to use '!= 0' instead of '&gt; 0'.
     <LongDescription>Check to see if ((...) &amp; 0) == 0 in {1}</LongDescription>
     <Details>
 <![CDATA[
-<p> This method compares an expression of the form (a &amp; 0) to 0,
+<p> This method compares an expression of the form (e &amp; 0) to 0,
 which will always compare equal.
 This may indicate a logic error or typo.</p>
 ]]>
@@ -5338,10 +5577,10 @@ This may indicate a logic error or typo.</p>
 
   <BugPattern type="BIT_IOR">
     <ShortDescription>Incompatible bit masks</ShortDescription>
-    <LongDescription>Incompatible bit masks yield a constant result in {1}</LongDescription>
+    <LongDescription>Incompatible bit masks in (e | {2} == {3}) yields constant result in {1}</LongDescription>
     <Details>
 <![CDATA[
-<p> This method compares an expression of the form (a | C) to D.
+<p> This method compares an expression of the form (e | C) to D.
 which will always compare unequal
 due to the specific values of constants C and D.
 This may indicate a logic error or typo.</p>
@@ -6217,6 +6456,70 @@ If the object is, indeed, non-serializable, an error will result.
     </Details>
   </BugPattern>
 
+  <BugPattern type="VA_FORMAT_STRING_NO_PREVIOUS_ARGUMENT">
+    <ShortDescription>No previous argument for format string</ShortDescription>
+    <LongDescription>No previous argument for format string argument to {2} in {1}</LongDescription>
+    <Details>
+<![CDATA[
+<p>
+The format string specifies a relative index to request that the argument for the previous format specifier
+be reused. However, there is no previous argument.
+For example, 
+</p>
+<p><code>formatter.format("%&lt;s %s", "a", "b")</code>
+</p>
+<p>would throw a MissingFormatArgumentException when executed.
+</p>
+]]>
+ 	</Details>
+  </BugPattern>
+
+  <BugPattern type="VA_FORMAT_STRING_BAD_CONVERSION">
+    <ShortDescription>The type of a supplied argument doesn't match format specifier</ShortDescription>
+    <LongDescription>Argument of type {3} can't be handled by format specifier {4} in {1}</LongDescription>
+    <Details>
+<![CDATA[
+<p>
+One of the arguments is uncompatible with the corresponding format string specifier.
+As a result, this will generate a runtime exception when executed.
+For example, <code>String.format("%d", "1")</code> will generate an exception, since
+the String "1" is incompatible with the format specifier %d.
+</p>
+]]>
+ 	</Details>
+  </BugPattern>
+
+  <BugPattern type="VA_FORMAT_STRING_BAD_CONVERSION_TO_BOOLEAN">
+    <ShortDescription>Non-Boolean argument formatted using %b format specifier</ShortDescription>
+    <LongDescription>Non-Boolean argument formatted using %b format specifier in {1}</LongDescription>
+    <Details>
+<![CDATA[
+<p>
+An argument not of type Boolean is being formatted with a %b format specifier. This won't throw an
+exception; instead, it will print true for any nonnull value, and false for null.
+This feature of format strings is strange, and may not be what you intended.
+</p>
+]]>
+ 	</Details>
+  </BugPattern>
+
+  <BugPattern type="VA_FORMAT_STRING_BAD_CONVERSION_FROM_ARRAY">
+    <ShortDescription>Array formatted in useless way using format string</ShortDescription>
+    <LongDescription>Argument of type {3} formatted in useless way in {1}</LongDescription>
+    <Details>
+<![CDATA[
+<p>
+One of the arguments being formatted with a format string is an array. This will be formatted
+using a fairly useless format, such as [I@304282, which doesn't actually show the contents
+of the array.
+Consider wrapping the array using <code>Arrays.asList(...)</code> before handling it off to a formatted.
+</p>
+]]>
+ 	</Details>
+  </BugPattern>
+
+
+
   <BugPattern type="VA_FORMAT_STRING_ARG_MISMATCH">
     <ShortDescription>Number of format-string arguments does not correspond to number of placeholders</ShortDescription>
     <LongDescription>Format-string method {2} called with format string "{3}" wants {4} arguments but is given {5} in {1}</LongDescription>
@@ -6231,6 +6534,74 @@ author intended.
 ]]>
  	</Details>
   </BugPattern>
+
+  <BugPattern type="VA_FORMAT_STRING_EXTRA_ARGUMENTS_PASSED">
+    <ShortDescription>More arguments are passed that are actually used in the format string</ShortDescription>
+    <LongDescription>Format-string method {2} called with format string "{3}" wants {4} arguments but is given {5} in {1}</LongDescription>
+    <Details>
+<![CDATA[
+<p>
+A format-string method with a variable number of arguments is called,
+but more arguments are passed than are actually used by the format string.
+This won't cause a runtime exception, but the code may be silently omitting 
+information that was intended to be included in the formatted string.
+</p>
+]]>
+ 	</Details>
+  </BugPattern>
+
+  <BugPattern type="VA_FORMAT_STRING_ILLEGAL">
+    <ShortDescription>Illegal format string</ShortDescription>
+    <LongDescription>Illegal format string "{3}" in {1}</LongDescription>
+    <Details>
+<![CDATA[
+<p>
+The format string is syntactically invalid, 
+and a runtime exception will occur when 
+this statement is executed.
+</p>
+]]>
+ 	</Details>
+  </BugPattern>
+
+  <BugPattern type="VA_FORMAT_STRING_MISSING_ARGUMENT">
+    <ShortDescription>Format string references missing argument</ShortDescription>
+    <LongDescription>format string "{3}" needs argument {5} but only {6} are provided in {1}</LongDescription>
+    <Details>
+<![CDATA[
+<p>
+Not enough arguments are passed to satisfy a placeholder in the format string.
+A runtime exception will occur when 
+this statement is executed.
+</p>
+]]>
+ 	</Details>
+  </BugPattern>
+
+  <BugPattern type="VA_FORMAT_STRING_BAD_ARGUMENT">
+    <ShortDescription>Format string placeholder incompatible with passed argument</ShortDescription>
+    <LongDescription>The placeholder {4} is incompatible with 
+corresponding argument in {1}</LongDescription>
+    <Details>
+<![CDATA[
+<p>
+The format string placeholder is incompatible with the corresponding
+argument. For example,
+<code>
+  System.out.println("%d\n", "hello");
+</code>
+<p>The %d placeholder requires a numeric argument, but a string value is
+passed instead. 
+A runtime exception will occur when 
+this statement is executed.
+</p>
+]]>
+ 	</Details>
+  </BugPattern>
+
+
+
+
 
   <BugPattern type="VA_PRIMITIVE_ARRAY_PASSED_TO_OBJECT_VARARG">
     <ShortDescription>Primitive array passed to function expecting a variable number of object arguments</ShortDescription>
@@ -6347,8 +6718,11 @@ an indication of some misunderstanding or some other logic error.
     <Details>
 <![CDATA[
 <p>
-This instanceof test will always return true. Although this is safe, make sure it isn't
+This instanceof test will always return true (unless the value being tested is null). 
+Although this is safe, make sure it isn't
 an indication of some misunderstanding or some other logic error.
+If you really want to test the value for being null, perhaps it would be clearer to do
+better to do a null test rather than an instanceof test.
 </p>
 ]]>
     </Details>
@@ -6422,7 +6796,7 @@ executed.
 <p>
 The code here uses <code>File.separator</code> 
 where a regular expression is required. This will fail on Windows
-platforms, where the  <code>File.separator</code> is a backslash, which is interpreted in a
+platforms, where the <code>File.separator</code> is a backslash, which is interpreted in a
 regular expression as an escape character. Amoung other options, you can just use
 <code>File.separatorChar=='\\' &amp; "\\\\" : File.separator</code> instead of
 <code>File.separator</code>
@@ -6491,9 +6865,26 @@ i % 60 * 1000 is (i % 60) * 1000, not i % (60 * 1000).
   </BugPattern>
 
 
+  <BugPattern type="DMI_INVOKING_HASHCODE_ON_ARRAY">
+    <ShortDescription>Invocation of hashCode on an array</ShortDescription>
+    <LongDescription>Invocation of hashCode on array in {1}</LongDescription>
+    <Details>
+<![CDATA[
+<p>
+The code invokes hashCode on an array. Calling hashCode on
+an array returns the same value as System.identityHashCode, and ingores
+the contents and length of the array. If you need a hashCode that
+depends on the contents of an array <code>a</code>, 
+use <code>java.util.Arrays.hashCode(a)</code>.
+
+</p>
+]]>
+    </Details>
+    </BugPattern>
+
   <BugPattern type="DMI_INVOKING_TOSTRING_ON_ARRAY">
     <ShortDescription>Invocation of toString on an array</ShortDescription>
-    <LongDescription>Invocation of toString on {2} in {1}</LongDescription>
+    <LongDescription>Invocation of toString on {2.givenClass} in {1}</LongDescription>
     <Details>
 <![CDATA[
 <p>
@@ -6753,16 +7144,90 @@ and the next method is supposed to change the state of the iterator.
     </Details>
   </BugPattern>
 
-  <BugPattern type="GC_UNRELATED_TYPES">
-    <ShortDescription>No relationship between generic parameter and method argument</ShortDescription>
-    <LongDescription>{2} is incompatible with expected argument type {3} in {1}</LongDescription>
+  <BugPattern type="GC_UNCHECKED_TYPE_IN_GENERIC_CALL">
+    <ShortDescription>Unchecked type in generic call</ShortDescription>
+    <LongDescription>Unchecked argument of type Object provided where type {3.givenClass} is expected in {1}</LongDescription>
     <Details>
      <![CDATA[
-     <p> This call to a generic container's method contains an argument
-     with a different class type from that of the container's parameter. 
-     Therefore, it is unlikely that the container contains any objects 
-     with the same type as the method argument used here.
-     </p>
+     <p> This call to a generic collection method passes an argument
+	while compile type Object where a specific type from
+	the generic type parameters is expected.
+	Thus, neither the standard Java type system nor static analysis
+	can provide useful information on whether the
+	object being passed as a parameter is of an appropriate type.
+	</p>
+     ]]>
+    </Details>
+  </BugPattern>
+
+  <BugPattern type="GC_UNRELATED_TYPES">
+    <ShortDescription>No relationship between generic parameter and method argument</ShortDescription>
+    <LongDescription>{2.givenClass} is incompatible with expected argument type {3.givenClass} in {1}</LongDescription>
+    <Details>
+     <![CDATA[
+     <p> This call to a generic collection method contains an argument
+     with an incompatible class from that of the collection's parameter
+	(i.e., the type of the argument is neither a supertype nor a subtype 
+		of the corresponding generic type argument).
+     Therefore, it is unlikely that the collection contains any objects 
+	that are equal to the method argument used here.
+	Most likely, the wrong value is being passed to the method.</p>
+	<p>In general, instances of two unrelated classes are not equal. 
+	For example, if the <code>Foo</code> and <code>Bar</code> classes
+	are not related by subtyping, then an instance of <code>Foo</code>
+		should not be equal to an instance of <code>Bar</code>.
+	Among other issues, doing so will likely result in an equals method
+	that is not symmetrical. For example, if you define the <code>Foo</code> class
+	so that a <code>Foo</code> can be equal to a <code>String</code>,
+	your equals method isn't symmetrical since a <code>String</code> can only be equal
+	to a <code>String</code>.
+	</p>
+	<p>In rare cases, people do define nonsymmetrical equals methods and still manage to make 
+	their code work. Although none of the APIs document or guarantee it, it is typically
+	the case that if you check if a <code>Collection&lt;String&gt;</code> contains
+	a <code>Foo</code>, the equals method of argument (e.g., the equals method of the 
+	<code>Foo</code> class) used to perform the equality checks.
+	</p>
+     ]]>
+    </Details>
+  </BugPattern>
+
+
+
+
+  <BugPattern type="DMI_COLLECTIONS_SHOULD_NOT_CONTAIN_THEMSELVES">
+    <ShortDescription>Collections should not contain themselves</ShortDescription>
+    <LongDescription>Collections should not contain themselves in call to {2.givenClass}</LongDescription>
+    <Details>
+     <![CDATA[
+     <p> This call to a generic collection's method would only make sense if a collection contained 
+itself (e.g., if <code>s.contains(s)</code> were true). This is unlikely to be true and would cause
+problems if it were true (such as the computation of the hash code resulting in infinite recursion).
+It is likely that the wrong value is being passed as a parameter.
+	</p>
+     ]]>
+    </Details>
+  </BugPattern>
+  <BugPattern type="DMI_VACUOUS_SELF_COLLECTION_CALL">
+    <ShortDescription>Vacuous call to collections</ShortDescription>
+    <LongDescription>For any collection c, calling c.{2.name}(c) doesn't make sense </LongDescription>
+    <Details>
+     <![CDATA[
+     <p> This call doesn't make sense. For any collection <code>c</code>, calling <code>c.containsAll(c)</code> should
+always be true, and <code>c.retainAll(c)</code> should have no effect.
+	</p>
+     ]]>
+    </Details>
+  </BugPattern>
+
+  <BugPattern type="DMI_USING_REMOVEALL_TO_CLEAR_COLLECTION">
+    <ShortDescription>Don't use removeAll to clear a collection</ShortDescription>
+    <LongDescription>removeAll used to clear a collection in {1}</LongDescription>
+    <Details>
+     <![CDATA[
+     <p> If you want to remove all elements from a collection <code>c</code>, use <code>c.clear</code>,
+not <code>c.removeAll(c)</code>.
+	</p>
      ]]>
     </Details>
   </BugPattern>
@@ -6831,7 +7296,7 @@ and <a href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6178997">Sun Bug
 
   <BugPattern type="TQ_ALWAYS_VALUE_USED_WHERE_NEVER_REQUIRED">
     <ShortDescription>Value annotated as carrying a type qualifier used where a value that must not carry that qualifier is required</ShortDescription>
-    <LongDescription>Value annotated as carrying type qualifier @{2.excludingPackage} used where a value that must not carry that qualifier is required</LongDescription>
+    <LongDescription>Value annotated as carrying type qualifier {2} used where a value that must not carry that qualifier is required</LongDescription>
     <Details>
       <![CDATA[
         <p>
@@ -6865,7 +7330,7 @@ public @NonNegative Integer example(@Negative Integer value) {
 
   <BugPattern type="TQ_NEVER_VALUE_USED_WHERE_ALWAYS_REQUIRED">
     <ShortDescription>Value annotated as never carrying a type qualifier used where value carrying that qualifier is required</ShortDescription>
-    <LongDescription>Value annotated as never carrying type qualifier @{2.excludingPackage} used where value carrying that qualifier is required</LongDescription>
+    <LongDescription>Value annotated as never carrying type qualifier {2} used where value carrying that qualifier is required</LongDescription>
     <Details>
       <![CDATA[
         <p>
@@ -6887,50 +7352,62 @@ public @NonNegative Integer example(@Negative Integer value) {
   </BugPattern>
   
   <BugPattern type="TQ_MAYBE_SOURCE_VALUE_REACHES_ALWAYS_SINK">
-    <ShortDescription>Value that might not carry a type qualifier reaches a use requiring that type qualifier</ShortDescription>
-    <LongDescription>Value that might not carry the @{2.excludingPackage} annotation reaches a use requiring that annotation</LongDescription>
+    <ShortDescription>Value that might not carry a type qualifier is always used in a way requires that type qualifier</ShortDescription>
+    <LongDescription>Value that might not carry the {2} annotation is always used in a way that requires that type qualifier</LongDescription>
     <Details>
       <![CDATA[
       <p>
-      A value that might not carry a type qualifier annotation
-      reaches a use which requires that annotation.
+      A value that is annotated as possibility not being an instance of
+	the values denoted by the type qualifier, and the value is guaranteed to be used
+	in a way that requires values denoted by that type qualifier.
       </p>
-      
+      ]]>
+    </Details>
+  </BugPattern>
+  <BugPattern type="TQ_MAYBE_SOURCE_VALUE_REACHES_NEVER_SINK">
+    <ShortDescription>Value that might carry a type qualifier is always used in a way prohibits it from having that type qualifier</ShortDescription>
+    <LongDescription>Value that might carry the {2} annotation is always used in a way that prohibits it from having that type qualifier</LongDescription>
+    <Details>
+      <![CDATA[
       <p>
-      For example, consider the following method:
-      </p>
-      <blockquote>
-<pre>
-public @Untainted Object mustReturnUntainted(Object unknown) {
-    return unknown;
-}
-</pre>
-      </blockquote>
-      <p>
-      The <code>mustReturnUntainted</code> method is required to
-      return a value carrying the @Untainted annotation,
-      but a value not known to carry that annotation is returned.
+      A value that is annotated as possibility being an instance of
+	the values denoted by the type qualifier, and the value is guaranteed to be used
+	in a way that prohibits values denoted by that type qualifier.
       </p>
       ]]>
     </Details>
   </BugPattern>
   
-  <BugPattern type="TQ_MAYBE_SOURCE_VALUE_REACHES_NEVER_SINK">
-    <ShortDescription>Unknown value reaches a use which forbids values carrying type qualifier annotation</ShortDescription>
-    <LongDescription>Unknown value reaches a use which forbids values carrying the @{2.excludingPackage} annotation</LongDescription>
+  <BugPattern type="TQ_EXPLICIT_UNKNOWN_SOURCE_VALUE_REACHES_NEVER_SINK">
+    <ShortDescription>Explicit annotation inconsistent with use</ShortDescription>
+    <LongDescription>Value is required never be {2}, but is explicitly annotated as unknown with regards to {2}</LongDescription>
     <Details>
       <![CDATA[
       <p>
-      A value which might carry a type qualifier annotation reaches
-      a use which forbids values carrying that annotation.
-      </p> 
-      
-      <p>
-      TODO: example.
+      A value is used in a way that requires it to be never be a value denoted by a type qualifier, but
+	there is an explicit annotation stating that it is not known where the value is prohibited from having that type qualifier.
+	Either the usage or the annotation is incorrect.
       </p>
       ]]>
     </Details>
   </BugPattern>
+  <BugPattern type="TQ_EXPLICIT_UNKNOWN_SOURCE_VALUE_REACHES_ALWAYS_SINK">
+    <ShortDescription>Explicit annotation inconsistent with use</ShortDescription>
+    <LongDescription>Value is required to always be {2}, but is explicitly annotated as unknown with regards to {2}</LongDescription>
+    <Details>
+      <![CDATA[
+      <p>
+      A value is used in a way that requires it to be always be a value denoted by a type qualifier, but
+	there is an explicit annotation stating that it is not known where the value is required to have that type qualifier.
+	Either the usage or the annotation is incorrect.
+      </p>
+      ]]>
+    </Details>
+  </BugPattern>
+
+
+
+
   <BugPattern type="IO_APPENDING_TO_OBJECT_OUTPUT_STREAM">
     <ShortDescription>Doomed attempt to append to an object output stream</ShortDescription>
     <LongDescription>Doomed attempt to append to an object output stream in {1}</LongDescription>
@@ -6985,6 +7462,53 @@ public @Untainted Object mustReturnUntainted(Object unknown) {
       ]]>
     </Details>
   </BugPattern>
+
+  <BugPattern type="OBL_UNSATISFIED_OBLIGATION">
+	  <ShortDescription>Method may fail to clean up stream or resource</ShortDescription>
+	  <LongDescription>Method {1} may fail to clean up stream or resource of type {2}</LongDescription>
+	  <Details>
+		  <![CDATA[
+		  <p>
+		  This method may fail to clean up (close, dispose of) a stream,
+		  database object, or other
+		  resource requiring an explicit cleanup operation.
+		  </p>
+		  
+		  <p>
+		  In general, if a method opens a stream or other resource,
+		  the method should use a try/finally block to ensure that
+		  the stream or resource is cleaned up before the method
+		  returns.
+		  </p>
+		  
+		  <p>
+		  This bug pattern is essentially the same as the
+		  OS_OPEN_STREAM and ODR_OPEN_DATABASE_RESOURCE
+		  bug patterns, but is based on a different
+		  (and hopefully better) static analysis technique.
+		  We are interested is getting feedback about the
+		  usefulness of this bug pattern.
+		  To send feedback, either:
+		  </p>
+		  <ul>
+			<li>send email to findbugs@cs.umd.edu</li>
+			<li>file a bug report: <a href="http://findbugs.sourceforge.net/reportingBugs.html">http://findbugs.sourceforge.net/reportingBugs.html</a></li>
+		  </ul>
+		  
+		  <p>
+		  In particular,
+		  the false-positive suppression heuristics for this
+		  bug pattern have not been extensively tuned, so
+		  reports about false positives are helpful to us.
+		  </p>
+		  
+		  <p>
+		  See Weimer and Necula, <i>Finding and Preventing Run-Time Error Handling Mistakes</i>, for
+		  a description of the analysis technique.
+		  </p>
+		  ]]>
+	  </Details>
+  </BugPattern>
   
   <!--
   **********************************************************************
@@ -6992,6 +7516,7 @@ public @Untainted Object mustReturnUntainted(Object unknown) {
   **********************************************************************
    -->
 
+  <BugCode abbrev="FS" >Format string problem</BugCode>
   <BugCode abbrev="SKIPPED" >Analysis skipped</BugCode>
   <BugCode abbrev="IL" >Infinite Loop</BugCode>
   <BugCode abbrev="VO" >Use of volatile</BugCode>
@@ -7011,7 +7536,7 @@ public @Untainted Object mustReturnUntainted(Object unknown) {
   <BugCode abbrev="MSF" >Mutable servlet field</BugCode>
   <BugCode abbrev="IS" >Inconsistent synchronization</BugCode>
   <BugCode abbrev="Eq" >Problems with equals()</BugCode>
-  <BugCode abbrev="Co" >Problems with  compareTo()</BugCode>
+  <BugCode abbrev="Co" >Problems with compareTo()</BugCode>
   <BugCode abbrev="HE" >Equal objects must have equal hashcodes</BugCode>
   <BugCode abbrev="AM" >API misuse</BugCode>
   <BugCode abbrev="Dm" >Dubious method used</BugCode>
@@ -7045,8 +7570,9 @@ public @Untainted Object mustReturnUntainted(Object unknown) {
   <BugCode abbrev="IA" >Ambiguous invocation</BugCode>
   <BugCode abbrev="HSC" >Huge String constants</BugCode>
   <BugCode abbrev="HRS" >HTTP Response splitting vulnerability</BugCode>
-  <BugCode abbrev="XSS" >Cross site scripting vulnerabilitity</BugCode>
+  <BugCode abbrev="XSS" >Cross site scripting vulnerability</BugCode>
   <BugCode abbrev="NP" >Null pointer dereference</BugCode>
+  <BugCode abbrev="RpC" >Repeated conditional test</BugCode>
   <BugCode abbrev="OS">Stream not closed on all paths</BugCode>
   <BugCode abbrev="PZLA" >Prefer zero length arrays to null to indicate no results</BugCode>
   <BugCode abbrev="UCF">Useless control flow</BugCode>
@@ -7087,6 +7613,7 @@ public @Untainted Object mustReturnUntainted(Object unknown) {
   <BugCode abbrev="RI">Redundant Interfaces</BugCode>
   <BugCode abbrev="MTIA">Multithreaded Instance Access</BugCode>
   <BugCode abbrev="PS">Public Semaphores</BugCode>
+  <BugCode abbrev="BSHIFT">Bad shift</BugCode>
   <BugCode abbrev="ICAST">Casting from integer values</BugCode>
   <BugCode abbrev="RE">Regular expressions</BugCode>
   <BugCode abbrev="SQL">SQL Problem</BugCode>
@@ -7111,9 +7638,10 @@ public @Untainted Object mustReturnUntainted(Object unknown) {
   <BugCode abbrev="QBA">Questionable Boolean Assignment</BugCode>
   <BugCode abbrev="VR">Version compatibility issue</BugCode>
   <BugCode abbrev="DP">Use doPrivileged</BugCode>
-  <BugCode abbrev="GC">Suspicious calls to generic container methods</BugCode>
+  <BugCode abbrev="GC">Suspicious calls to generic collection methods</BugCode>
   <BugCode abbrev="STCAL">Static use of type Calendar or DateFormat</BugCode>
   <BugCode abbrev="TQ">Inconsistent use of type qualifier annotations</BugCode>
+  <BugCode abbrev="OBL">Unsatisfied obligation to clean up stream or resource</BugCode>
   </MessageCollection>
 
 
