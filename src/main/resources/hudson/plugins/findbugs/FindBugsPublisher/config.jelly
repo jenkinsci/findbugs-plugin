@@ -3,7 +3,7 @@
 	<f:entry title="${%FindBugs results}"
 		description="${%description.pattern}">
 		<f:textbox name="pattern" value="${instance.pattern}"
-			checkUrl="'${rootURL}/publisher/FindBugsPublisher/checkPattern?job=${it.fullName}&amp;value='+escape(this.value)" />
+			checkUrl="'descriptorByName/FindBugsPublisher/checkPattern?value='+escape(this.value)" />
 	</f:entry>
    <f:advanced>
     <u:thresholds id="findbugs"/>
