@@ -68,7 +68,7 @@ public class FindBugsReporter extends HealthAwareMavenReporter {
     @Override
     public boolean preExecute(final MavenBuildProxy build, final MavenProject pom, final MojoInfo mojo,
             final BuildListener listener) throws InterruptedException, IOException {
-        if (acceptGoal(mojo.getGoal())) {
+        if ("findbugs".equals(mojo.getGoal())) {
             activateProperty(mojo, "xmlOutput");
             activateProperty(mojo, "findbugsXmlOutput");
             activateProperty(mojo, "findbugsXmlWithMessages");
