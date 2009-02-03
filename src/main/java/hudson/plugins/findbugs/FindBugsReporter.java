@@ -11,6 +11,7 @@ import hudson.plugins.findbugs.parser.FindBugsParser;
 import hudson.plugins.findbugs.util.FilesParser;
 import hudson.plugins.findbugs.util.HealthAwareMavenReporter;
 import hudson.plugins.findbugs.util.ParserResult;
+import hudson.plugins.findbugs.util.model.Priority;
 
 import java.io.IOException;
 import java.io.PrintStream;
@@ -55,13 +56,13 @@ public class FindBugsReporter extends HealthAwareMavenReporter {
      *            than this value
      * @param height
      *            the height of the trend graph
-     * @param thresholdLimit
+     * @param minimumPriority
      *            determines which warning priorities should be considered when
      *            evaluating the build stability and health
      */
     @DataBoundConstructor
-    public FindBugsReporter(final String threshold, final String healthy, final String unHealthy, final String height, final String thresholdLimit) {
-        super(threshold, healthy, unHealthy, height, thresholdLimit, "FINDBUGS");
+    public FindBugsReporter(final String threshold, final String healthy, final String unHealthy, final String height, final Priority minimumPriority) {
+        super(threshold, healthy, unHealthy, height, minimumPriority, "FINDBUGS");
     }
 
     /** {@inheritDoc} */

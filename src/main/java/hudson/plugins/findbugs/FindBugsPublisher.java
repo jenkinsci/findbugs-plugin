@@ -9,6 +9,7 @@ import hudson.plugins.findbugs.util.FilesParser;
 import hudson.plugins.findbugs.util.HealthAwarePublisher;
 import hudson.plugins.findbugs.util.ParserResult;
 import hudson.plugins.findbugs.util.PluginDescriptor;
+import hudson.plugins.findbugs.util.model.Priority;
 import hudson.tasks.Publisher;
 
 import java.io.IOException;
@@ -48,7 +49,7 @@ public class FindBugsPublisher extends HealthAwarePublisher {
      *            than this value
      * @param height
      *            the height of the trend graph
-     * @param thresholdLimit
+     * @param minimumPriority
      *            determines which warning priorities should be considered when
      *            evaluating the build stability and health
      * @param defaultEncoding
@@ -58,8 +59,8 @@ public class FindBugsPublisher extends HealthAwarePublisher {
     @SuppressWarnings("PMD.ExcessiveParameterList")
     @DataBoundConstructor
     public FindBugsPublisher(final String pattern, final String threshold, final String healthy, final String unHealthy,
-            final String height, final String thresholdLimit, final String defaultEncoding) {
-        super(threshold, healthy, unHealthy, height, thresholdLimit, defaultEncoding, "FINDBUGS");
+            final String height, final Priority minimumPriority, final String defaultEncoding) {
+        super(threshold, healthy, unHealthy, height, minimumPriority, defaultEncoding, "FINDBUGS");
         this.pattern = pattern;
     }
     // CHECKSTYLE:ON
