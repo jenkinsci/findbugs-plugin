@@ -5,6 +5,7 @@ import hudson.model.AbstractProject;
 import hudson.model.Action;
 import hudson.model.Descriptor;
 import hudson.plugins.findbugs.parser.FindBugsParser;
+import hudson.plugins.findbugs.util.AnnotationsBuildResult;
 import hudson.plugins.findbugs.util.FilesParser;
 import hudson.plugins.findbugs.util.HealthAwarePublisher;
 import hudson.plugins.findbugs.util.ParserResult;
@@ -39,8 +40,11 @@ public class FindBugsPublisher extends HealthAwarePublisher {
      * @param pattern
      *            Ant file-set pattern to scan for FindBugs files
      * @param threshold
-     *            Bug threshold to be reached if a build should be considered as
+     *            Annotation threshold to be reached if a build should be considered as
      *            unstable.
+     * @param newThreshold
+     *            New annotations threshold to be reached if a build should be
+     *            considered as unstable.
      * @param healthy
      *            Report health as 100% when the number of warnings is less than
      *            this value
@@ -58,9 +62,10 @@ public class FindBugsPublisher extends HealthAwarePublisher {
     // CHECKSTYLE:OFF
     @SuppressWarnings("PMD.ExcessiveParameterList")
     @DataBoundConstructor
-    public FindBugsPublisher(final String pattern, final String threshold, final String healthy, final String unHealthy,
+    public FindBugsPublisher(final String pattern, final String threshold, final String newThreshold,
+            final String healthy, final String unHealthy,
             final String height, final Priority minimumPriority, final String defaultEncoding) {
-        super(threshold, healthy, unHealthy, height, minimumPriority, defaultEncoding, "FINDBUGS");
+        super(threshold, newThreshold, healthy, unHealthy, height, minimumPriority, defaultEncoding, "FINDBUGS");
         this.pattern = pattern;
     }
     // CHECKSTYLE:ON
@@ -82,7 +87,7 @@ public class FindBugsPublisher extends HealthAwarePublisher {
 
     /** {@inheritDoc} */
     @Override
-    public ParserResult perform(final AbstractBuild<?, ?> build, final PrintStream logger) throws InterruptedException, IOException {
+    public AnnotationsBuildResult perform(final AbstractBuild<?, ?> build, final PrintStream logger) throws InterruptedException, IOException {
         log(logger, "Collecting findbugs analysis files...");
         FilesParser collector = new FilesParser(logger, StringUtils.defaultIfEmpty(getPattern(), DEFAULT_PATTERN),
                 new FindBugsParser(build.getProject().getWorkspace()),
@@ -92,7 +97,7 @@ public class FindBugsPublisher extends HealthAwarePublisher {
 
         build.getActions().add(new FindBugsResultAction(build, this, result));
 
-        return project;
+        return result;
     }
 
     /** {@inheritDoc} */

@@ -8,6 +8,7 @@ import hudson.maven.MojoInfo;
 import hudson.model.Action;
 import hudson.model.BuildListener;
 import hudson.plugins.findbugs.parser.FindBugsParser;
+import hudson.plugins.findbugs.util.AnnotationsBuildResult;
 import hudson.plugins.findbugs.util.FilesParser;
 import hudson.plugins.findbugs.util.HealthAwareMavenReporter;
 import hudson.plugins.findbugs.util.ParserResult;
@@ -46,8 +47,11 @@ public class FindBugsReporter extends HealthAwareMavenReporter {
      * Creates a new instance of <code>FindBugsReporter</code>.
      *
      * @param threshold
-     *            Bug threshold to be reached if a build should be considered as
+     *            Annotation threshold to be reached if a build should be considered as
      *            unstable.
+     * @param newThreshold
+     *            New annotations threshold to be reached if a build should be
+     *            considered as unstable.
      * @param healthy
      *            Report health as 100% when the number of warnings is less than
      *            this value
@@ -61,8 +65,9 @@ public class FindBugsReporter extends HealthAwareMavenReporter {
      *            evaluating the build stability and health
      */
     @DataBoundConstructor
-    public FindBugsReporter(final String threshold, final String healthy, final String unHealthy, final String height, final Priority minimumPriority) {
-        super(threshold, healthy, unHealthy, height, minimumPriority, "FINDBUGS");
+    public FindBugsReporter(final String threshold, final String newThreshold,
+            final String healthy, final String unHealthy, final String height, final Priority minimumPriority) {
+        super(threshold, newThreshold, healthy, unHealthy, height, minimumPriority, "FINDBUGS");
     }
 
     /** {@inheritDoc} */
@@ -114,10 +119,12 @@ public class FindBugsReporter extends HealthAwareMavenReporter {
 
     /** {@inheritDoc} */
     @Override
-    protected void persistResult(final ParserResult project, final MavenBuild build) {
+    protected AnnotationsBuildResult persistResult(final ParserResult project, final MavenBuild build) {
         FindBugsResult result = new FindBugsResultBuilder().build(build, project, getDefaultEncoding());
         build.getActions().add(new MavenFindBugsResultAction(build, this, getHeight(), getDefaultEncoding(), result));
         build.registerAsProjectAction(FindBugsReporter.this);
+
+        return result;
     }
 
     /**
