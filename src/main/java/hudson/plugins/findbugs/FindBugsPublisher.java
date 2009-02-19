@@ -45,6 +45,12 @@ public class FindBugsPublisher extends HealthAwarePublisher {
      * @param newThreshold
      *            New annotations threshold to be reached if a build should be
      *            considered as unstable.
+     * @param failureThreshold
+     *            Annotation threshold to be reached if a build should be considered as
+     *            failure.
+     * @param newFailureThreshold
+     *            New annotations threshold to be reached if a build should be
+     *            considered as failure.
      * @param healthy
      *            Report health as 100% when the number of warnings is less than
      *            this value
@@ -63,9 +69,11 @@ public class FindBugsPublisher extends HealthAwarePublisher {
     @SuppressWarnings("PMD.ExcessiveParameterList")
     @DataBoundConstructor
     public FindBugsPublisher(final String pattern, final String threshold, final String newThreshold,
+            final String failureThreshold, final String newFailureThreshold,
             final String healthy, final String unHealthy,
             final String height, final Priority minimumPriority, final String defaultEncoding) {
-        super(threshold, newThreshold, healthy, unHealthy, height, minimumPriority, defaultEncoding, "FINDBUGS");
+        super(threshold, newThreshold, failureThreshold, newFailureThreshold,
+                healthy, unHealthy, height, minimumPriority, defaultEncoding, "FINDBUGS");
         this.pattern = pattern;
     }
     // CHECKSTYLE:ON
