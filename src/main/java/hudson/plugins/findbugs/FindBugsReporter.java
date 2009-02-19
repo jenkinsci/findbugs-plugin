@@ -12,10 +12,9 @@ import hudson.plugins.findbugs.util.AnnotationsBuildResult;
 import hudson.plugins.findbugs.util.FilesParser;
 import hudson.plugins.findbugs.util.HealthAwareMavenReporter;
 import hudson.plugins.findbugs.util.ParserResult;
-import hudson.plugins.findbugs.util.model.Priority;
+import hudson.plugins.findbugs.util.PluginLogger;
 
 import java.io.IOException;
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,7 +65,7 @@ public class FindBugsReporter extends HealthAwareMavenReporter {
      *            than this value
      * @param height
      *            the height of the trend graph
-     * @param minimumPriority
+     * @param thresholdLimit
      *            determines which warning priorities should be considered when
      *            evaluating the build stability and health
      */
@@ -76,9 +75,9 @@ public class FindBugsReporter extends HealthAwareMavenReporter {
     public FindBugsReporter(final String threshold, final String newThreshold,
             final String failureThreshold, final String newFailureThreshold,
             final String healthy, final String unHealthy,
-            final String height, final Priority minimumPriority) {
+            final String height, final String thresholdLimit) {
         super(threshold, newThreshold, failureThreshold, newFailureThreshold,
-                healthy, unHealthy, height, minimumPriority, "FINDBUGS");
+                healthy, unHealthy, height, thresholdLimit, "FINDBUGS");
     }
     // CHECKSTYLE:ON
 
@@ -119,7 +118,8 @@ public class FindBugsReporter extends HealthAwareMavenReporter {
     /** {@inheritDoc} */
     @SuppressWarnings("unchecked")
     @Override
-    public ParserResult perform(final MavenBuildProxy build, final MavenProject pom, final MojoInfo mojo, final PrintStream logger) throws InterruptedException, IOException {
+    public ParserResult perform(final MavenBuildProxy build, final MavenProject pom, final MojoInfo mojo,
+            final PluginLogger logger) throws InterruptedException, IOException {
         List<String> sources = new ArrayList<String>(pom.getCompileSourceRoots());
         sources.addAll(pom.getTestCompileSourceRoots());
 
