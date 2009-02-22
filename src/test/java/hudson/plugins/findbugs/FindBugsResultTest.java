@@ -2,14 +2,14 @@ package hudson.plugins.findbugs;
 
 import static junit.framework.Assert.*;
 import hudson.model.AbstractBuild;
-import hudson.plugins.findbugs.util.AbstractAnnotationsBuildResultTest;
-import hudson.plugins.findbugs.util.AnnotationsBuildResult;
+import hudson.plugins.findbugs.util.BuildResult;
+import hudson.plugins.findbugs.util.BuildResultTest;
 import hudson.plugins.findbugs.util.ParserResult;
 
 /**
  * Tests the class {@link FindBugsResult}.
  */
-public class FindBugsResultTest extends AbstractAnnotationsBuildResultTest<FindBugsResult> {
+public class FindBugsResultTest extends BuildResultTest<FindBugsResult> {
     /** {@inheritDoc} */
     @Override
     protected FindBugsResult createBuildResult(final AbstractBuild<?, ?> build, final ParserResult project) {
@@ -28,7 +28,7 @@ public class FindBugsResultTest extends AbstractAnnotationsBuildResultTest<FindB
         if (result.hasNoAnnotations() && result.getDelta() == 0) {
             assertTrue(result.getDetails().contains(Messages.FindBugs_ResultAction_NoWarningsSince(expectedZeroWarningsBuildNumber)));
             if (expectedIsNewHighScore) {
-                long days = AnnotationsBuildResult.getDays(expectedHighScore);
+                long days = BuildResult.getDays(expectedHighScore);
                 if (days == 1) {
                     assertTrue(result.getDetails().contains(Messages.FindBugs_ResultAction_OneHighScore()));
                 }
@@ -37,7 +37,7 @@ public class FindBugsResultTest extends AbstractAnnotationsBuildResultTest<FindB
                 }
             }
             else {
-                long days = AnnotationsBuildResult.getDays(gap);
+                long days = BuildResult.getDays(gap);
                 if (days == 1) {
                     assertTrue(result.getDetails().contains(Messages.FindBugs_ResultAction_OneNoHighScore()));
                 }

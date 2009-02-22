@@ -8,7 +8,7 @@ import hudson.maven.MojoInfo;
 import hudson.model.Action;
 import hudson.model.BuildListener;
 import hudson.plugins.findbugs.parser.FindBugsParser;
-import hudson.plugins.findbugs.util.AnnotationsBuildResult;
+import hudson.plugins.findbugs.util.BuildResult;
 import hudson.plugins.findbugs.util.FilesParser;
 import hudson.plugins.findbugs.util.HealthAwareMavenReporter;
 import hudson.plugins.findbugs.util.ParserResult;
@@ -131,7 +131,7 @@ public class FindBugsReporter extends HealthAwareMavenReporter {
 
     /** {@inheritDoc} */
     @Override
-    protected AnnotationsBuildResult persistResult(final ParserResult project, final MavenBuild build) {
+    protected BuildResult persistResult(final ParserResult project, final MavenBuild build) {
         FindBugsResult result = new FindBugsResultBuilder().build(build, project, getDefaultEncoding());
         build.getActions().add(new MavenFindBugsResultAction(build, this, getHeight(), getDefaultEncoding(), result));
         build.registerAsProjectAction(FindBugsReporter.this);

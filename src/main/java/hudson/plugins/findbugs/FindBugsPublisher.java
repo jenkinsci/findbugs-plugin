@@ -5,7 +5,7 @@ import hudson.model.AbstractProject;
 import hudson.model.Action;
 import hudson.model.Descriptor;
 import hudson.plugins.findbugs.parser.FindBugsParser;
-import hudson.plugins.findbugs.util.AnnotationsBuildResult;
+import hudson.plugins.findbugs.util.BuildResult;
 import hudson.plugins.findbugs.util.FilesParser;
 import hudson.plugins.findbugs.util.HealthAwarePublisher;
 import hudson.plugins.findbugs.util.ParserResult;
@@ -94,7 +94,7 @@ public class FindBugsPublisher extends HealthAwarePublisher {
 
     /** {@inheritDoc} */
     @Override
-    public AnnotationsBuildResult perform(final AbstractBuild<?, ?> build, final PluginLogger logger) throws InterruptedException, IOException {
+    public BuildResult perform(final AbstractBuild<?, ?> build, final PluginLogger logger) throws InterruptedException, IOException {
         logger.log("Collecting findbugs analysis files...");
         FilesParser collector = new FilesParser(logger, StringUtils.defaultIfEmpty(getPattern(), DEFAULT_PATTERN),
                 new FindBugsParser(build.getProject().getWorkspace()),
