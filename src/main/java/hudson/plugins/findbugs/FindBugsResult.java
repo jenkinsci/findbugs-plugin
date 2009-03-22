@@ -20,7 +20,7 @@ public class FindBugsResult extends BuildResult {
     }
 
     /**
-     * Creates a new instance of <code>FindBugsResult</code>.
+     * Creates a new instance of {@link FindBugsResult}.
      *
      * @param build
      *            the current build as owner of this action
@@ -29,12 +29,13 @@ public class FindBugsResult extends BuildResult {
      * @param result
      *            the parsed result with all annotations
      */
-    public FindBugsResult(final AbstractBuild<?, ?> build, final String defaultEncoding, final ParserResult result) {
+    public FindBugsResult(final AbstractBuild<?, ?> build, final String defaultEncoding,
+            final ParserResult result) {
         super(build, defaultEncoding, result);
     }
 
     /**
-     * Creates a new instance of <code>FindBugsResult</code>.
+     * Creates a new instance of {@link FindBugsResult}.
      *
      * @param build
      *            the current build as owner of this action
@@ -45,7 +46,8 @@ public class FindBugsResult extends BuildResult {
      * @param previous
      *            the result of the previous build
      */
-    public FindBugsResult(final AbstractBuild<?, ?> build, final String defaultEncoding, final ParserResult result, final FindBugsResult previous) {
+    public FindBugsResult(final AbstractBuild<?, ?> build, final String defaultEncoding,
+            final ParserResult result, final FindBugsResult previous) {
         super(build, defaultEncoding, result, previous);
     }
 

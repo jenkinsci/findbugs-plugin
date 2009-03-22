@@ -57,11 +57,6 @@ public class FindBugsParser implements AnnotationParser {
     }
 
     /** {@inheritDoc} */
-    public String getName() {
-        return "FINDBUGS";
-    }
-
-    /** {@inheritDoc} */
     public Collection<FileAnnotation> parse(final File file, final String moduleName) throws InvocationTargetException {
         try {
             MavenFindBugsParser mavenFindBugsParser = new MavenFindBugsParser();

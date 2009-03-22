@@ -2,7 +2,9 @@ package hudson.plugins.findbugs;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
-import hudson.plugins.findbugs.util.AbstractEnglishLocaleTest;
+import hudson.plugins.findbugs.util.AbstractHealthDescriptor;
+import hudson.plugins.findbugs.util.AbstractHealthDescriptorTest;
+import hudson.plugins.findbugs.util.HealthDescriptor;
 import hudson.plugins.findbugs.util.NullHealthDescriptor;
 import hudson.plugins.findbugs.util.model.AnnotationProvider;
 
@@ -14,7 +16,7 @@ import org.jvnet.localizer.Localizable;
  *
  * @author Ulli Hafner
  */
-public class FindBugsHealthDescriptorTest extends AbstractEnglishLocaleTest {
+public class FindBugsHealthDescriptorTest extends AbstractHealthDescriptorTest {
     /**
      * Verifies the different messages if the number of items are 0, 1, and 2.
      */
@@ -33,6 +35,12 @@ public class FindBugsHealthDescriptorTest extends AbstractEnglishLocaleTest {
         when(provider.getNumberOfAnnotations()).thenReturn(2);
         description = healthDescriptor.createDescription(provider);
         assertEquals(Messages.FindBugs_ResultAction_HealthReportMultipleItem(2), description.toString());
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    protected AbstractHealthDescriptor createHealthDescriptor(final HealthDescriptor healthDescriptor) {
+        return new FindBugsHealthDescriptor(healthDescriptor);
     }
 }
 
