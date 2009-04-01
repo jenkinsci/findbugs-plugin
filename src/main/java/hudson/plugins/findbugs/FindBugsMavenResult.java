@@ -1,8 +1,9 @@
 package hudson.plugins.findbugs;
 
 import hudson.model.AbstractBuild;
+import hudson.plugins.findbugs.util.BuildResult;
 import hudson.plugins.findbugs.util.ParserResult;
-import hudson.plugins.findbugs.util.model.JavaProject;
+import hudson.plugins.findbugs.util.ResultAction;
 
 /**
  * Represents the aggregated results of the PMD analysis in m2 jobs.
@@ -45,31 +46,10 @@ public class FindBugsMavenResult extends FindBugsResult {
         super(build, defaultEncoding, result, previous);
     }
 
-    /**
-     * Returns the results of the previous build.
-     *
-     * @return the result of the previous build, or <code>null</code> if no
-     *         such build exists
-     */
+    /** {@inheritDoc} */
     @Override
-    public JavaProject getPreviousResult() {
-        MavenFindBugsResultAction action = getOwner().getAction(MavenFindBugsResultAction.class);
-        if (action.hasPreviousResultAction()) {
-            return action.getPreviousResultAction().getResult().getProject();
-        }
-        else {
-            return null;
-        }
-    }
-
-    /**
-     * Returns whether a previous build result exists.
-     *
-     * @return <code>true</code> if a previous build result exists.
-     */
-    @Override
-    public boolean hasPreviousResult() {
-        return getOwner().getAction(MavenFindBugsResultAction.class).hasPreviousResultAction();
+    protected Class<? extends ResultAction<? extends BuildResult>> getResultActionType() {
+        return MavenFindBugsResultAction.class;
     }
 }
 
