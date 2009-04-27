@@ -7,7 +7,6 @@
 	</f:entry>
    <f:advanced>
     <u:thresholds id="findbugs"/>
-    <u:trendHeight/>
     <u:defaultEncoding id="findbugs"/>
   </f:advanced>
 </j:jelly>

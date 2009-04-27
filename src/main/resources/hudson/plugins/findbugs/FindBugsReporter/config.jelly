@@ -2,6 +2,5 @@
 	xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:u="/util">
   <f:advanced>
     <u:thresholds id="findbugs"/>
-    <u:trendHeight/>
   </f:advanced>
 </j:jelly>
