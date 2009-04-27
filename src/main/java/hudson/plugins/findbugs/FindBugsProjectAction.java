@@ -33,13 +33,6 @@ public class FindBugsProjectAction extends AbstractProjectAction<FindBugsResultA
 
     /** {@inheritDoc} */
     @Override
-    // TODO: if a new graph is added replace with a super-class method
-    public String getCookieName() {
-        return "FindBugs_displayMode";
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public String getTrendName() {
         return Messages.FindBugs_Trend_Name();
     }

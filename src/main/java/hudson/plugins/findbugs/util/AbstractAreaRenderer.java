@@ -3,12 +3,13 @@ package hudson.plugins.findbugs.util;
 import hudson.util.StackedAreaRenderer2;
 import hudson.util.ChartUtil.NumberOnlyBuildLabel;
 
+import org.jfree.chart.renderer.category.StackedAreaRenderer;
 import org.jfree.data.category.CategoryDataset;
 
 /**
- * Renderer that provides direct access to the individual results of a build via
- * links. This renderer does not render tooltips, these need to be defined in
- * sub-classes.
+ * {@link StackedAreaRenderer} that provides direct access to the individual
+ * results of a build via links. This renderer does not render tooltips, these
+ * need to be defined in sub-classes.
  *
  * @author Ulli Hafner
  */

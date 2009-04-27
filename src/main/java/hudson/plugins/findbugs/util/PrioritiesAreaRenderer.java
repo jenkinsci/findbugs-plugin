@@ -20,7 +20,7 @@ public class PrioritiesAreaRenderer extends AbstractAreaRenderer {
     private static final long serialVersionUID = -4683951507836348304L;
 
     /**
-     * Creates a new instance of <code>PrioritiesAreaRenderer</code>.
+     * Creates a new instance of {@link PrioritiesAreaRenderer}.
      *
      * @param url
      *            base URL of the graph links
