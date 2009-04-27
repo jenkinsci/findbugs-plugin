@@ -24,8 +24,6 @@ import java.util.Map;
 public class MavenFindBugsResultAction extends FindBugsResultAction implements AggregatableAction, MavenAggregatedReport {
     /** Unique identifier of this class. */
     private static final long serialVersionUID = 1273798369273225973L;
-    /** Determines the height of the trend graph. */
-    private final String height;
     /** The default encoding to be used when reading and parsing files. */
     private final String defaultEncoding;
 
@@ -36,15 +34,12 @@ public class MavenFindBugsResultAction extends FindBugsResultAction implements A
      *            the associated build of this action
      * @param healthDescriptor
      *            health descriptor to use
-     * @param height
-     *            the height of the trend graph
      * @param defaultEncoding
      *            the default encoding to be used when reading and parsing files
      */
     public MavenFindBugsResultAction(final MavenModuleSetBuild owner, final HealthDescriptor healthDescriptor,
-            final String height, final String defaultEncoding) {
+            final String defaultEncoding) {
         super(owner, healthDescriptor);
-        this.height = height;
         this.defaultEncoding = defaultEncoding;
     }
 
@@ -55,23 +50,20 @@ public class MavenFindBugsResultAction extends FindBugsResultAction implements A
      *            the associated build of this action
      * @param healthDescriptor
      *            health descriptor to use
-     * @param height
-     *            the height of the trend graph
      * @param defaultEncoding
      *            the default encoding to be used when reading and parsing files
      * @param result
      *            the result in this build
      */
     public MavenFindBugsResultAction(final AbstractBuild<?, ?> owner, final HealthDescriptor healthDescriptor,
-            final String height, final String defaultEncoding, final FindBugsResult result) {
+            final String defaultEncoding, final FindBugsResult result) {
         super(owner, healthDescriptor, result);
-        this.height = height;
         this.defaultEncoding = defaultEncoding;
     }
 
     /** {@inheritDoc} */
     public MavenAggregatedReport createAggregatedAction(final MavenModuleSetBuild build, final Map<MavenModule, List<MavenBuild>> moduleBuilds) {
-        return new MavenFindBugsResultAction(build, getHealthDescriptor(), height, defaultEncoding);
+        return new MavenFindBugsResultAction(build, getHealthDescriptor(), defaultEncoding);
     }
 
     /** {@inheritDoc} */
@@ -101,5 +93,10 @@ public class MavenFindBugsResultAction extends FindBugsResultAction implements A
         setResult(annotationsResult);
         updateBuildHealth(newBuild, annotationsResult);
     }
+
+    /** Backward compatibility. */
+    @SuppressWarnings("unused")
+    @Deprecated
+    private transient String height;
 }
 

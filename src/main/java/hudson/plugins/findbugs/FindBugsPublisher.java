@@ -56,8 +56,6 @@ public class FindBugsPublisher extends HealthAwarePublisher {
      * @param unHealthy
      *            Report health as 0% when the number of warnings is greater
      *            than this value
-     * @param height
-     *            the height of the trend graph
      * @param thresholdLimit
      *            determines which warning priorities should be considered when
      *            evaluating the build stability and health
@@ -70,9 +68,9 @@ public class FindBugsPublisher extends HealthAwarePublisher {
     public FindBugsPublisher(final String pattern, final String threshold, final String newThreshold,
             final String failureThreshold, final String newFailureThreshold,
             final String healthy, final String unHealthy,
-            final String height, final String thresholdLimit, final String defaultEncoding) {
+            final String thresholdLimit, final String defaultEncoding) {
         super(threshold, newThreshold, failureThreshold, newFailureThreshold,
-                healthy, unHealthy, height, thresholdLimit, defaultEncoding, "FINDBUGS");
+                healthy, unHealthy, thresholdLimit, defaultEncoding, "FINDBUGS");
         this.pattern = pattern;
     }
     // CHECKSTYLE:ON
@@ -108,6 +106,7 @@ public class FindBugsPublisher extends HealthAwarePublisher {
     }
 
     /** {@inheritDoc} */
+    @Override
     public Descriptor<Publisher> getDescriptor() {
         return FIND_BUGS_DESCRIPTOR;
     }

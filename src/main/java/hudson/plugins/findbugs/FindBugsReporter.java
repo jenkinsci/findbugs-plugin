@@ -63,8 +63,6 @@ public class FindBugsReporter extends HealthAwareMavenReporter {
      * @param unHealthy
      *            Report health as 0% when the number of warnings is greater
      *            than this value
-     * @param height
-     *            the height of the trend graph
      * @param thresholdLimit
      *            determines which warning priorities should be considered when
      *            evaluating the build stability and health
@@ -74,10 +72,9 @@ public class FindBugsReporter extends HealthAwareMavenReporter {
     @DataBoundConstructor
     public FindBugsReporter(final String threshold, final String newThreshold,
             final String failureThreshold, final String newFailureThreshold,
-            final String healthy, final String unHealthy,
-            final String height, final String thresholdLimit) {
+            final String healthy, final String unHealthy, final String thresholdLimit) {
         super(threshold, newThreshold, failureThreshold, newFailureThreshold,
-                healthy, unHealthy, height, thresholdLimit, "FINDBUGS");
+                healthy, unHealthy, thresholdLimit, "FINDBUGS");
     }
     // CHECKSTYLE:ON
 
@@ -133,7 +130,7 @@ public class FindBugsReporter extends HealthAwareMavenReporter {
     @Override
     protected BuildResult persistResult(final ParserResult project, final MavenBuild build) {
         FindBugsResult result = new FindBugsResultBuilder().build(build, project, getDefaultEncoding());
-        build.getActions().add(new MavenFindBugsResultAction(build, this, getHeight(), getDefaultEncoding(), result));
+        build.getActions().add(new MavenFindBugsResultAction(build, this, getDefaultEncoding(), result));
         build.registerAsProjectAction(FindBugsReporter.this);
 
         return result;
