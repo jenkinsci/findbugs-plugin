@@ -19,11 +19,9 @@ public class FindBugsProjectAction extends AbstractProjectAction<FindBugsResultA
      *
      * @param project
      *            the project that owns this action
-     * @param height
-     *            the height of the trend graph
      */
-    public FindBugsProjectAction(final AbstractProject<?, ?> project, final int height) {
-        super(project, FindBugsResultAction.class, FindBugsPublisher.FIND_BUGS_DESCRIPTOR, height);
+    public FindBugsProjectAction(final AbstractProject<?, ?> project) {
+        super(project, FindBugsResultAction.class, FindBugsPublisher.FIND_BUGS_DESCRIPTOR);
     }
 
     /** {@inheritDoc} */

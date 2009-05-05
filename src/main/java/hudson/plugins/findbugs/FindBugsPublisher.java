@@ -87,7 +87,7 @@ public class FindBugsPublisher extends HealthAwarePublisher {
     /** {@inheritDoc} */
     @Override
     public Action getProjectAction(final AbstractProject<?, ?> project) {
-        return new FindBugsProjectAction(project, getTrendHeight());
+        return new FindBugsProjectAction(project);
     }
 
     /** {@inheritDoc} */

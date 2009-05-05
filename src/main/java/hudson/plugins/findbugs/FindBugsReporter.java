@@ -159,7 +159,7 @@ public class FindBugsReporter extends HealthAwareMavenReporter {
     /** {@inheritDoc} */
     @Override
     public Action getProjectAction(final MavenModule module) {
-        return new FindBugsProjectAction(module, getTrendHeight());
+        return new FindBugsProjectAction(module);
     }
 
     /** {@inheritDoc} */
