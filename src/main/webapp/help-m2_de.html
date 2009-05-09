@@ -1,16 +1,15 @@
 <div>
-  <p>
-    Hudson kann <a href="http://findbugs.sourceforge.net/">FindBugs</a> Reports einlesen und darstellen.
-    Wenn dies aktiviert wird und der Build das Maven Goal <code>findbugs:findbugs</code> ausführt,
-    dann analysiert Hudson nach jedem Build die erzeugten FindBugs Dateien und
-    stellt deren Informationen in verschiedenen Ansichten dar: Trend Anzeige, Projekt Statistik und
-    Package Statistik. Zudem zeigt Hudson die jeweiligen Warnungen direkt in der betroffen Datei an.
-  </p>
-  Die besten Ergebnisse erhält man mit dem
-  <a href="http://mojo.codehaus.org/findbugs-maven-plugin/">findbugs-maven-plugin</a>
-  Version 1.2 oder neuer. Version 1.1.1 erzeugt ein altes Dateiformat das zu wenig Details enthält.
-  Der folgenden Abschnitt muss in die <code>pom.xml</code> Datei kopiert werden, damit FindBugs
-  während des Build korrekt läuft:
+<p>Hudson kann <a href="http://findbugs.sourceforge.net/">FindBugs</a>
+Reports einlesen und darstellen. Wenn dies aktiviert wird und der Build
+das Maven Goal <code>findbugs:findbugs</code> ausführt, dann analysiert
+Hudson nach jedem Build die erzeugten FindBugs Dateien und stellt deren
+Informationen in verschiedenen Ansichten dar: Trend Anzeige, Projekt
+Statistik und Package Statistik. Zudem zeigt Hudson die jeweiligen
+Warnungen direkt in der betroffen Datei an.</p>
+Die besten Ergebnisse erhält man mit dem <a
+  href="http://mojo.codehaus.org/findbugs-maven-plugin/">findbugs-maven-plugin</a>
+Version 1.2 oder neuer. Der folgenden Abschnitt muss in die <code>pom.xml</code>
+Datei kopiert werden, damit FindBugs während des Build korrekt läuft:
 <pre>
 &lt;plugin&gt;
    &lt;groupId&gt;org.codehaus.mojo&lt;/groupId&gt;
@@ -23,6 +22,4 @@
       [...]
    &lt;/configuration&gt;
 &lt;/plugin&gt;
-</pre>
-
-</div>
+</pre></div>

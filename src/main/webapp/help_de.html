@@ -1,18 +1,20 @@
 <div>
-  <p>
-    Hudson kann <a href="http://findbugs.sourceforge.net/">FindBugs</a> Reports einlesen und darstellen.
-    Wenn dies aktiviert wird, analysiert Hudson nach jedem Build die erzeugten FindBugs Dateien und
-    stellt deren Informationen in verschiedenen Ansichten dar: Trend Anzeige, Projekt Statistik und Package Statistik.
-    Zudem zeigt Hudson die jeweiligen Warnungen direkt in der betroffen Datei an. Damit das Plug-in korrekt funktioniert,
-    muss im Build das FindBugs Tool gestartet werden und die Dateinamen der erzeugten FindBugs Dateien in der Konfiguration
-    angegeben werden.
-  </p>
+<p>Hudson kann <a href="http://findbugs.sourceforge.net/">FindBugs</a>
+Reports einlesen und darstellen. Wenn dies aktiviert wird, analysiert
+Hudson nach jedem Build die erzeugten FindBugs Dateien und stellt deren
+Informationen in verschiedenen Ansichten dar: Trend Anzeige, Projekt
+Statistik und Package Statistik. Zudem zeigt Hudson die jeweiligen
+Warnungen direkt in der betroffen Datei an.</p>
+<p>Damit das Plug-in korrekt funktioniert, muss im Build
+FindBugs gestartet werden - das Hudson Plug-in selbst macht dies
+nicht! Das Plug-in wird nicht aufgerufen, wenn der Build fehlgeschlagen
+ist, sondern nur für stabile bzw. instabile Builds (mit fehlgeschlagenen
+Tests).</p>
 <h4>Maven Konfiguration</h4>
-  Die besten Ergebnisse erhält man mit dem
-  <a href="http://mojo.codehaus.org/findbugs-maven-plugin/">findbugs-maven-plugin</a>
-  Version 1.2 oder neuer. Version 1.1.1 erzeugt ein altes Dateiformat das zu wenig Details enthält.
-  Der folgenden Abschnitt muss in die <code>pom.xml</code> Datei kopiert werden, damit FindBugs
-  während des Build korrekt läuft:
+Die besten Ergebnisse erhÃ¤lt man mit dem <a
+  href="http://mojo.codehaus.org/findbugs-maven-plugin/">findbugs-maven-plugin</a>
+Version 1.2 oder neuer. Der folgenden Abschnitt muss in die <code>pom.xml</code>
+Datei kopiert werden, damit FindBugs während des Build korrekt läuft:
 <pre>
 &lt;plugin&gt;
    &lt;groupId&gt;org.codehaus.mojo&lt;/groupId&gt;
@@ -25,24 +27,17 @@
       [...]
    &lt;/configuration&gt;
 &lt;/plugin&gt;
-</pre>
-
-Anschließend muss das Suchmuster der FindBugs-Dateien noch auf <code>**/findbugsXml.xml</code>
- festgesetzt werden, um die korrekten Resultate zu erhalten.
+</pre> Anschließend muss das Suchmuster der FindBugs-Dateien noch auf <code>**/findbugsXml.xml</code>
+festgesetzt werden, um die korrekten Resultate zu erhalten.
 
 <h4>Ant Konfiguration</h4>
 
-Um <span class="application">FindBugs</span> in Ant zu nutzen, muss in der
-Datei <code class="filename">build.xml</code> die FindBugs Task referenziert werden:
-
-<pre class="screen">
+Um <span class="application">FindBugs</span> in Ant zu nutzen, muss in
+der Datei <code class="filename">build.xml</code> die FindBugs Task
+referenziert werden: <pre class="screen">
   &lt;taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask"/&gt;
-</pre>
-
-Danach definiert man ein Target, dass diese
- <code class="literal">findbugs</code> Task benutzt:
-
-<pre class="screen">
+</pre> Danach definiert man ein Target, dass diese <code class="literal">findbugs</code>
+Task benutzt: <pre class="screen">
   &lt;target name="findbugs" depends="jar"&gt;
 
     &lt;findbugs home="${findbugs.home}"
@@ -54,9 +49,5 @@ Danach definiert man ein Target, dass diese
     &lt;/findbugs&gt;
   &lt;/target&gt;
 
-</pre>
-
-Anschließend muss das Suchmuster der FindBugs-Dateien noch auf <code>**/findbugs.xml</code>
-festgesetzt werden, um die korrekten Resultate zu erhalten.
-
-</div>
+</pre> Anschließend muss das Suchmuster der FindBugs-Dateien noch auf <code>**/findbugs.xml</code>
+festgesetzt werden, um die korrekten Resultate zu erhalten.</div>

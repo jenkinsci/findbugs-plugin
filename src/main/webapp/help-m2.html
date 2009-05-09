@@ -1,18 +1,18 @@
 <div>
 <p>Hudson can visualize the results of the <a
-	href="http://findbugs.sourceforge.net/">FindBugs</a> analysis of your
+  href="http://findbugs.sourceforge.net/">FindBugs</a> analysis of your
 class files. When this option is configured and your build runs the
 maven goal <code>findbugs:findbugs</code> then Hudson provides useful
 information about analysis results, such as historical result trend,
 module and package statistics, web UI for viewing analysis reports and
 warnings, and so on.</p>
+<p>This plug-in is not invoked for failed builds, it is only called
+for stable or unstable builds (i.e., a build with failed tests).</p>
 You will achieve the best results with the <a
-	href="http://mojo.codehaus.org/findbugs-maven-plugin/">findbugs-maven-plugin</a>
-version 1.2 or newer. Version 1.1.1 produces an old file format that
-contains insufficient warning information. So if possible,
-upgrade to this version. If your <code>pom.xml</code> contains the following
-configuration then this plug-in will automatically pick up the correct
-results file: <pre>
+  href="http://mojo.codehaus.org/findbugs-maven-plugin/">findbugs-maven-plugin</a>
+version 1.2 or newer. If your <code>pom.xml</code> contains the
+following configuration then this plug-in will automatically pick up the
+correct results file: <pre>
 &lt;plugin&gt;
    &lt;groupId&gt;org.codehaus.mojo&lt;/groupId&gt;
    &lt;artifactId&gt;findbugs-maven-plugin&lt;/artifactId&gt;
