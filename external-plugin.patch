@@ -12531,7 +12531,7 @@ Index: src/main/java/hudson/plugins/findbugs/util/HealthAwareMavenReporter.java
 -        }
 -        PrintStream logger = listener.getLogger();
 -        if (hasResultAction(build)) {
--            log(logger, "Scipping maven reporter: there is already a result available.");
+-            log(logger, "Skipping maven reporter: there is already a result available.");
 -            return true;
 -        }
 -
