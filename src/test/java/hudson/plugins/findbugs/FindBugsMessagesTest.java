@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Locale;
 
 import org.junit.Test;
 import org.xml.sax.SAXException;
@@ -18,9 +19,9 @@ public class FindBugsMessagesTest {
     /** Error message. */
     private static final String WRONG_WARNING_MESSAGE = "Wrong warning message.";
     /** Expected number of patterns. */
-    private static final int EXPECTED_PATTERNS = 383;
+    private static final int EXPECTED_PATTERNS = 405;
     /** Expected number of patterns in fb-contrib. */
-    private static final int EXPECTED_CONTRIB_PATTERNS = 104;
+    private static final int EXPECTED_CONTRIB_PATTERNS = 113;
 
     /**
      * Checks the number of different FindBugs messages.
@@ -66,10 +67,27 @@ public class FindBugsMessagesTest {
     public void parse() throws IOException, SAXException {
         FindBugsMessages.getInstance().initialize();
 
-        assertTrue(WRONG_WARNING_MESSAGE, FindBugsMessages.getInstance().getMessage("NP_STORE_INTO_NONNULL_FIELD").contains("A value that could be null is stored into a field that has been annotated as NonNull."));
-        assertEquals(WRONG_WARNING_MESSAGE, "Store of null value into field annotated NonNull", FindBugsMessages.getInstance().getShortMessage("NP_STORE_INTO_NONNULL_FIELD"));
-        assertTrue(WRONG_WARNING_MESSAGE, FindBugsMessages.getInstance().getMessage("NMCS_NEEDLESS_MEMBER_COLLECTION_SYNCHRONIZATION").contains("This class defines a private collection member as synchronized. It appears however"));
-        assertEquals(WRONG_WARNING_MESSAGE, "Class defines unneeded synchronization on member collection", FindBugsMessages.getInstance().getShortMessage("NMCS_NEEDLESS_MEMBER_COLLECTION_SYNCHRONIZATION"));
+        assertTrue(WRONG_WARNING_MESSAGE, FindBugsMessages.getInstance().getMessage("NP_STORE_INTO_NONNULL_FIELD", Locale.ENGLISH).contains("A value that could be null is stored into a field that has been annotated as NonNull."));
+        assertTrue(WRONG_WARNING_MESSAGE, FindBugsMessages.getInstance().getMessage("NP_STORE_INTO_NONNULL_FIELD", Locale.GERMAN).contains("A value that could be null is stored into a field that has been annotated as NonNull."));
+        assertEquals(WRONG_WARNING_MESSAGE, "Store of null value into field annotated NonNull", FindBugsMessages.getInstance().getShortMessage("NP_STORE_INTO_NONNULL_FIELD", Locale.ENGLISH));
+        assertTrue(WRONG_WARNING_MESSAGE, FindBugsMessages.getInstance().getMessage("NMCS_NEEDLESS_MEMBER_COLLECTION_SYNCHRONIZATION", Locale.ENGLISH).contains("This class defines a private collection member as synchronized. It appears however"));
+        assertEquals(WRONG_WARNING_MESSAGE, "Class defines unneeded synchronization on member collection", FindBugsMessages.getInstance().getShortMessage("NMCS_NEEDLESS_MEMBER_COLLECTION_SYNCHRONIZATION", Locale.ENGLISH));
+    }
+
+    /**
+     * Checks that localized messages are loaded.
+     *
+     * @throws SAXException
+     *             if we can't read the file
+     * @throws IOException
+     *             if we can't read the file
+     */
+    @Test
+    public void parseLocalizations() throws IOException, SAXException {
+        FindBugsMessages.getInstance().initialize();
+
+        assertTrue(WRONG_WARNING_MESSAGE, FindBugsMessages.getInstance().getShortMessage("NP_STORE_INTO_NONNULL_FIELD", Locale.FRANCE).contains("Stocke une valeur null dans"));
+        assertTrue(WRONG_WARNING_MESSAGE, FindBugsMessages.getInstance().getMessage("NP_STORE_INTO_NONNULL_FIELD", Locale.FRANCE).contains("Une valeur qui pourrait être à <code>null</code>"));
     }
 }
 

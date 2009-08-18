@@ -14,6 +14,7 @@ import hudson.plugins.findbugs.util.model.WorkspaceFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Locale;
 
 import junit.framework.Assert;
 
@@ -127,7 +128,7 @@ public class MavenFindBugsParserTest {
         assertEquals(WRONG_BUG_PROPERTY_SET, "STYLE", bug.getCategory());
         assertEquals(WRONG_BUG_PROPERTY_SET, "PZLA_PREFER_ZERO_LENGTH_ARRAYS", bug.getType());
         assertEquals(WRONG_BUG_PROPERTY_SET, "PZLA: Should com.avaloq.adt.internal.ui.spell.SpellingContentAssistProcessor.computeContextInformation(ITextViewer, int) return a zero length array rather than null?", bug.getMessage());
-        assertEquals(WRONG_BUG_PROPERTY_SET, FindBugsMessages.getInstance().getMessage("PZLA_PREFER_ZERO_LENGTH_ARRAYS"), bug.getToolTip());
+        assertEquals(WRONG_BUG_PROPERTY_SET, FindBugsMessages.getInstance().getMessage("PZLA_PREFER_ZERO_LENGTH_ARRAYS", Locale.ENGLISH), bug.getToolTip());
 
         Collection<LineRange> lineRanges = bug.getLineRanges();
         assertEquals(WRONG_BUG_PROPERTY_SET, 1, lineRanges.size());

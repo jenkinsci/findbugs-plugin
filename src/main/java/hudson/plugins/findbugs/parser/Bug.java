@@ -5,6 +5,7 @@ import hudson.plugins.findbugs.util.model.AbstractAnnotation;
 import hudson.plugins.findbugs.util.model.Priority;
 
 import org.apache.commons.lang.StringUtils;
+import org.jvnet.localizer.LocaleProvider;
 
 /**
  * A serializable Java Bean class representing a warning.
@@ -118,7 +119,7 @@ public class Bug extends AbstractAnnotation {
 
     /** {@inheritDoc} */
     public String getToolTip() {
-        return StringUtils.defaultIfEmpty(tooltip, FindBugsMessages.getInstance().getMessage(getType()));
+        return StringUtils.defaultIfEmpty(tooltip, FindBugsMessages.getInstance().getMessage(getType(), LocaleProvider.getLocale()));
     }
 
     /**

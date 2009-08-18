@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.apache.commons.digester.Digester;
@@ -20,7 +21,15 @@ public final class FindBugsMessages {
     /** Maps a key to HTML description. */
     private final Map<String, String> messages = new HashMap<String, String>();
     /** Maps a key to HTML description. */
+    private final Map<String, String> jaMessages = new HashMap<String, String>();
+    /** Maps a key to HTML description. */
+    private final Map<String, String> frMessages = new HashMap<String, String>();
+    /** Maps a key to HTML description. */
     private final Map<String, String> shortMessages = new HashMap<String, String>();
+    /** Maps a key to HTML description. */
+    private final Map<String, String> jaShortMessages = new HashMap<String, String>();
+    /** Maps a key to HTML description. */
+    private final Map<String, String> frShortMessages = new HashMap<String, String>();
     /** Singleton instance. */
     private static final FindBugsMessages INSTANCE = new FindBugsMessages();
 
@@ -42,25 +51,32 @@ public final class FindBugsMessages {
      *             if we can't read a file
      */
     public synchronized void initialize() throws IOException, SAXException {
-        loadMessages("messages.xml");
-        loadMessages("fb-contrib-messages.xml");
+        loadMessages("messages.xml", messages, shortMessages);
+        loadMessages("messages_fr.xml", frMessages, frShortMessages);
+        loadMessages("messages_ja.xml", jaMessages, jaShortMessages);
+        loadMessages("fb-contrib-messages.xml", messages, shortMessages);
     }
 
     /**
      * Loads the message file and adds all messages to the mapping.
      *
-     * @param fileName the file to load
+     * @param fileName
+     *            the file to load
+     * @param messagesCache
+     *            the messages cache
+     * @param shortMessagesCache
+     *            the short messages cache
      * @throws SAXException
      *             if we can't parse the file
      * @throws IOException
      *             if we can't read the file
      */
-    private void loadMessages(final String fileName) throws IOException, SAXException {
+    private void loadMessages(final String fileName, final Map<String, String> messagesCache, final Map<String, String> shortMessagesCache) throws IOException, SAXException {
         InputStream file = FindBugsMessages.class.getResourceAsStream(fileName);
         List<Pattern> patterns = parse(file);
         for (Pattern pattern : patterns) {
-            messages.put(pattern.getType(), pattern.getDescription());
-            shortMessages.put(pattern.getType(), pattern.getShortDescription());
+            messagesCache.put(pattern.getType(), pattern.getDescription());
+            shortMessagesCache.put(pattern.getType(), pattern.getShortDescription());
         }
     }
 
@@ -97,10 +113,13 @@ public final class FindBugsMessages {
      *
      * @param name
      *            name of the bug
+     * @param locale
+     *            the locale of the user
      * @return a HTML description for the specified bug.
      */
-    public String getMessage(final String name)  {
-        return StringUtils.defaultIfEmpty(messages.get(name), Messages.FindBugs_Publisher_NoMessageFoundText());
+    public String getMessage(final String name, final Locale locale) {
+        String localizedMessage = getLocalizedMessage(name, locale, messages, jaMessages, frMessages);
+        return StringUtils.defaultIfEmpty(localizedMessage, Messages.FindBugs_Publisher_NoMessageFoundText());
     }
 
     /**
@@ -108,10 +127,43 @@ public final class FindBugsMessages {
      *
      * @param name
      *            name of the bug
+     * @param locale
+     *            the locale of the user
      * @return a HTML description for the specified bug.
      */
-    public String getShortMessage(final String name)  {
-        return StringUtils.defaultIfEmpty(shortMessages.get(name), Messages.FindBugs_Publisher_NoMessageFoundText());
+    public String getShortMessage(final String name, final Locale locale)  {
+        String localizedMessage = getLocalizedMessage(name, locale, shortMessages, jaShortMessages, frShortMessages);
+        return StringUtils.defaultIfEmpty(localizedMessage, Messages.FindBugs_Publisher_NoMessageFoundText());
+    }
+
+    /**
+     * Returns the localized message.
+     *
+     * @param name
+     *            the name of the bug
+     * @param locale
+     *            the locale of the user
+     * @param en
+     *            English mapping
+     * @param ja
+     *            Japanese mapping
+     * @param fr
+     *            French mapping
+     * @return a HTML description for the specified bug.
+     */
+    private String getLocalizedMessage(final String name, final Locale locale, final Map<String, String> en, final Map<String, String> ja, final Map<String, String> fr) {
+        String country = locale.getCountry();
+        String localizedMessage;
+        if ("ja".equalsIgnoreCase(country)) {
+            localizedMessage = ja.get(name);
+        }
+        else if ("fr".equalsIgnoreCase(country)) {
+            localizedMessage = fr.get(name);
+        }
+        else {
+            localizedMessage = en.get(name);
+        }
+        return localizedMessage;
     }
 
     /**

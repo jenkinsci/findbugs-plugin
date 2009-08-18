@@ -21,6 +21,7 @@ import java.util.logging.Logger;
 import org.apache.commons.digester.Digester;
 import org.apache.commons.lang.StringUtils;
 import org.dom4j.DocumentException;
+import org.jvnet.localizer.LocaleProvider;
 import org.xml.sax.SAXException;
 
 import edu.umd.cs.findbugs.BugAnnotation;
@@ -141,11 +142,12 @@ public class NativeFindBugsParser {
 
             String message = warning.getMessage();
             if (message.contains("TEST: Unknown warning")) {
-                message = FindBugsMessages.getInstance().getShortMessage(warning.getType());
+                message = FindBugsMessages.getInstance().getShortMessage(warning.getType(), LocaleProvider.getLocale());
             }
             Bug bug = new Bug(getPriority(warning),
-                    StringUtils.defaultIfEmpty(hashToMessageMapping.get(warning.getInstanceHash()), message), warning.getBugPattern().getCategory(),
-                        warning.getType(), sourceLine.getStartLine(), sourceLine.getEndLine());
+                    StringUtils.defaultIfEmpty(hashToMessageMapping.get(warning.getInstanceHash()), message),
+                    warning.getBugPattern().getCategory(),
+                    warning.getType(), sourceLine.getStartLine(), sourceLine.getEndLine());
             bug.setInstanceHash(warning.getInstanceHash());
 
             Iterator<BugAnnotation> annotationIterator = warning.annotationIterator();
