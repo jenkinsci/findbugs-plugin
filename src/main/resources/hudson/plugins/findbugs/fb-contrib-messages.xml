@@ -880,6 +880,61 @@
 		</Details>
 	</Detector>
 	
+	<Detector class="com.mebigfatguy.fbcontrib.detect.LoggerOddities">
+		<Details>
+			<![CDATA[
+			<p>looks for code that allocates a Logger object by passing a specification of a class that
+			is not related to the class in which the logger is used.</p>
+			<p>It is a fast detector</p>
+			]]>
+		</Details>
+	</Detector>
+	
+	<Detector class="com.mebigfatguy.fbcontrib.detect.IncorrectInternalClassUse">
+		<Details>
+			<![CDATA[
+			<p>looks for classes that rely on internal classes in the various apis or libraries. As these 
+			classes are not officially released from the api vendor, they are subject to change or removal, and thus,
+			should not be counted on.</p>
+			Packages that shouldn't be used are:
+			<ul>
+				<li>com.sun.xxx</li>
+				<li>org.apache.xerces.xxx</li>
+				<li>org.apache.xalan.xxx</li>
+			</ul>
+			<p>It is a fast detector</p>
+			]]>
+		</Details>
+	</Detector>
+	
+	<Detector class="com.mebigfatguy.fbcontrib.detect.DubiousSetOfCollections">
+		<Details>
+			<![CDATA[
+			<p>looks for sets or keySets of maps that contain other collections. As typically collections calculate
+			their hashCode, equals and compareTo methods by iterating the collection and evaluating the same function
+			on each item in the collection, this can be costly from a performance point of view.</p>
+			<p>In addition, using a set, or keySet of a map, infers that you will be looking for items based on 
+			the value of a collection, which seems dubious at best.</p>
+			<p>Finally, as collections are often modified, This may cause problems if the collection is modified,
+			thus changing hashCodes, etc, while the collection is in the set.</p>
+			<p>If you wish to keep a collection of collections, the outer collection should probably be a list
+			to avoid these problems</p>
+			<p>It is a moderately fast detector</p>
+			]]>
+		</Details>
+	</Detector>
+	
+	<Detector class="com.mebigfatguy.fbcontrib.detect.BogusExceptionDeclaration">
+		<Details>
+			<![CDATA[
+			<p>looks for constructors, static methods and private methods that declare that they throw 
+			checked exceptions that the actual code never throws. Since these methods can't be overridden,
+			there is no reason to add these exceptions to the method declaration.</p>
+			<p>It is a moderately fast detector</p>
+			]]>
+		</Details>
+	</Detector>
+	
 	<!-- BugPattern -->	
 	                
 	<BugPattern type="ISB_INEFFICIENT_STRING_BUFFERING">
@@ -1453,7 +1508,7 @@
 </pre>
 			could become
 <pre>
-	if (!date2.after( date1 ))
+	if (!date1.after( date2 ))
 </pre>
 			and
 <pre>
@@ -1994,6 +2049,54 @@
 		</Details>
 	</BugPattern>
 	
+	<BugPattern type="SPP_INVALID_CALENDAR_COMPARE">
+		<ShortDescription>Method passes a non calendar object to Calendar.before or Calendar.after</ShortDescription>
+		<LongDescription>Method {1} passes a non calendar object to Calendar.before or Calendar.after</LongDescription>
+		<Details>
+			<![CDATA[
+				<p>This method passes a non calendar object to the java.util.Calendar.after or java.util.Calendar.before methods.
+				Even though these methods take an Object as a parameter type, only Calendar type objects are supported, otherwise
+				false is returned</p>
+			]]>
+		</Details>
+	</BugPattern>
+	
+	<BugPattern type="SPP_USE_CONTAINSKEY">
+		<ShortDescription>Method calls keySet() just to call contains, use containsKey instead</ShortDescription>
+		<LongDescription>Method {1} calls keySet() just to call contains, use containsKey instead</LongDescription>
+		<Details>	
+			<![CDATA[
+				<p>This method calls mySet.keySet().contains("foo") when mySet.containsKey("foo") is simpler</p>
+			]]>
+		</Details>
+	</BugPattern>
+	
+	<BugPattern type="SPP_USE_ISEMPTY">
+		<ShortDescription>Method checks the size of a collection against zero rather than using isEmpty()</ShortDescription>
+		<LongDescription>Method {1} checks the size of a collection against zero rather than using isEmpty()</LongDescription>
+		<Details>
+			<![CDATA[
+				<p>This method calls the size() method on a collection and compares the result to zero to see if the collection
+				is empty. For better code clarity, it is better to just use col.isEmpty() or !col.isEmpty()</p>
+			]]>
+		</Details>
+	</BugPattern>
+	
+	<BugPattern type="SPP_USE_GETPROPERTY">
+		<ShortDescription>Method calls getProperties just to get one property, use getProperty instead</ShortDescription>
+		<LongDescription>Method {1} calls getProperties just to get one property, use getProperty instead</LongDescription>
+		<Details>
+			<![CDATA[
+				<table>
+					<tr><td>This method uses</td></tr>
+					<tr><td>String prop = System.getProperties().getProperty("foo");</td></tr
+					<tr><td>instead of simply using</td></tr>
+					<tr><td>String prop = System.getProperty("foo");</td></tr>
+				</table>
+			]]>	
+		</Details>				
+	</BugPattern>
+	
 	<BugPattern type="BAS_BLOATED_ASSIGNMENT_SCOPE">
 		<ShortDescription>Method assigns a variable in a larger scope then is needed</ShortDescription>
 		<LongDescription>Method {1} assigns a variable in a larger scope then is needed</LongDescription>
@@ -2218,6 +2321,18 @@
 		</Details>
 	</BugPattern>
 	
+	<BugPattern type="JAO_JUNIT_ASSERTION_ODITIES_IMPOSSIBLE_NULL">
+		<ShortDescription>method asserts that an auto-boxed value is not null</ShortDescription>
+		<LongDescription>method {1} asserts that an auto-boxed value is not null</LongDescription>
+		<Details>
+			<![CDATA[
+			<p>This method asserts that a primitive value that was autoboxed into a boxed primitive was not 
+			null. This will never happen, as primitives are never null, and thus the autoboxed value isn't 
+			either.</p>
+			]]>
+		</Details>
+	</BugPattern>
+	
 	<BugPattern type="SCA_SUSPICIOUS_CLONE_ALGORITHM">
 		<ShortDescription>clone method stores a new value to member field of source object</ShortDescription>
 		<LongDescription>clone method {1} stores a new value to member field of source object</LongDescription>
@@ -2251,6 +2366,67 @@
 			not call setAttribute, to inform the application server that this attribute has been changed. This will
 			cause this attribute not to be updated in other servers in a clustered environment, as only changes marked
 			by a call to setAttribute are replicated.</p>
+			]]>
+		</Details>
+	</BugPattern>
+	
+	<BugPattern type="LO_SUSPECT_LOG_CLASS">
+		<ShortDescription>method specifies an unrelated class when allocating a Logger</ShortDescription>
+		<LongDescription>method {1} specifies an unrelated class when allocating a Logger</LongDescription>
+		<Details>
+			<![CDATA[
+			<p>This method creates a Logger by passing in a specification for a class that is unrelated
+			to the class in which the logger is going to be used. This is likely caused by copy/paste code.
+			]]>
+		</Details>
+	</BugPattern>
+	
+	<BugPattern type="IICU_INCORRECT_INTERNAL_CLASS_USE">
+		<ShortDescription>class relies on internal api classes</ShortDescription>
+		<LongDescription>class {0} relies on internal api classes</LongDescription>
+		<Details>
+			<![CDATA[
+			<p>This class makes use of internal api classes. As these
+			classes are not documented, nor externally released as part of the api, they are subject
+			to change or removal. You should not be using these classes.</p>
+			Packages that shouldn't be used are:
+			<ul>
+				<li>com.sun.xxx</li>
+				<li>org.apache.xerces.xxx</li>
+				<li>org.apache.xalan.xxx</li>
+			</ul>
+			]]>
+		</Details>
+	</BugPattern>
+	
+	<BugPattern type="DSOC_DUBIOUS_SET_OF_COLLECTIONS">
+		<ShortDescription>method uses a set of collections</ShortDescription>
+		<LongDescription>method {1} uses a set of collections</LongDescription>
+		<Details>
+			<![CDATA[
+			<p>This method creates a set that contains other collections, or a Map who's keySet is
+			another collection. As collections tend to calculate hashCode, equals and compareTo by 
+			iterating the contents of the collection, this can perform poorly.</p>
+			<p>In addition, when a set is used, you typically are using it to do contains, or find
+			type functionality, which seems dubious when do so on a collection</p>
+			<p>Finally, As a collection is often modified, problems will occur if the collection is 
+			contained in a set, because the hashCode, equals or compareTo values will change while the
+			collection is in the set</p>
+			<p>If you wish to maintain a collection of collections, it is probably better to use a List
+			as the outer collection</p>
+			]]>
+		</Details>
+	</BugPattern>
+	
+	<BugPattern type="BED_BOGUS_EXCEPTION_DECLARATION">
+		<ShortDescription>non derivable method declares throwing an exception that isn't thrown</ShortDescription>
+		<LongDescription>non derivable method {1} declares throwing an exception that isn't thrown</LongDescription>
+		<Details>
+			<![CDATA[
+			<p>This method declares that it throws a checked exception that it does not throw. As this method is
+			either a constructor, static method or private method, there is no reason for this method to declare
+			the exception in it's throws clause, and just causes calling methods to unnecessarily handle an exception
+			that will never be thrown. The exception in question should be removed from the throws clause.</p>
 			]]>
 		</Details>
 	</BugPattern>
@@ -2329,4 +2505,8 @@
 	<BugCode abbrev="SCA">Suspicious Clone Algorithm</BugCode>
 	<BugCode abbrev="WEM">Weak Exception Messaging</BugCode>
 	<BugCode abbrev="SCSS">Suspicious Clustered Session Support</BugCode>
+	<BugCode abbrev="LO">Logger Oddities</BugCode>
+	<BugCode abbrev="IICU">Incorrect Internal Class use</BugCode>
+	<BugCode abbrev="DSOC">Dubious Set of Collections</BugCode>
+	<BugCode abbrev="BED">Bogus Exception Declaration</BugCode>
 </MessageCollection>
