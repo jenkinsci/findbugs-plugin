@@ -17,6 +17,7 @@ import org.xml.sax.SAXException;
  *
  * @author Ulli Hafner
  */
+// TODO: when there are more translations available we should generalize that approach into a map of maps
 public final class FindBugsMessages {
     /** Maps a key to HTML description. */
     private final Map<String, String> messages = new HashMap<String, String>();
