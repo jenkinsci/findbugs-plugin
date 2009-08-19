@@ -115,8 +115,7 @@ public final class FindBugsMessages {
      *            name of the bug
      * @param locale
      *            the locale of the user
-     * @return a HTML description for the specified bug.
-     */
+     * @return a HTML descripgeka    */
     public String getMessage(final String name, final Locale locale) {
         String localizedMessage = getLocalizedMessage(name, locale, messages, jaMessages, frMessages);
         return StringUtils.defaultIfEmpty(localizedMessage, Messages.FindBugs_Publisher_NoMessageFoundText());
@@ -152,7 +151,7 @@ public final class FindBugsMessages {
      * @return a HTML description for the specified bug.
      */
     private String getLocalizedMessage(final String name, final Locale locale, final Map<String, String> en, final Map<String, String> ja, final Map<String, String> fr) {
-        String country = locale.getCountry();
+        String country = locale.getLanguage();
         String localizedMessage;
         if ("ja".equalsIgnoreCase(country)) {
             localizedMessage = ja.get(name);
