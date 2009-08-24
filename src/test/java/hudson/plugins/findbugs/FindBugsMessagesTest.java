@@ -87,7 +87,7 @@ public class FindBugsMessagesTest {
         FindBugsMessages.getInstance().initialize();
 
         assertTrue(WRONG_WARNING_MESSAGE, FindBugsMessages.getInstance().getShortMessage("NP_STORE_INTO_NONNULL_FIELD", Locale.FRANCE).contains("Stocke une valeur null dans"));
-        assertTrue(WRONG_WARNING_MESSAGE, FindBugsMessages.getInstance().getMessage("NP_STORE_INTO_NONNULL_FIELD", Locale.FRANCE).contains("Une valeur qui pourrait être à <code>null</code>"));
+        assertTrue(WRONG_WARNING_MESSAGE, FindBugsMessages.getInstance().getMessage("NP_STORE_INTO_NONNULL_FIELD", Locale.FRANCE).contains("Une valeur qui pourrait"));
     }
 }
 
