@@ -1,10 +1,10 @@
 package hudson.plugins.findbugs;
 
 import hudson.model.AbstractBuild;
+import hudson.plugins.analysis.util.BuildResult;
+import hudson.plugins.analysis.util.ParserResult;
+import hudson.plugins.analysis.util.ResultAction;
 import hudson.plugins.findbugs.parser.Bug;
-import hudson.plugins.findbugs.util.BuildResult;
-import hudson.plugins.findbugs.util.ParserResult;
-import hudson.plugins.findbugs.util.ResultAction;
 
 /**
  * Represents the results of the FindBugs analysis. One instance of this class is persisted for

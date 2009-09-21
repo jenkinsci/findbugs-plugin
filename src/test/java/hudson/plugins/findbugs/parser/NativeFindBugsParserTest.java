@@ -1,14 +1,14 @@
 package hudson.plugins.findbugs.parser;
 
 import static org.junit.Assert.*;
+import hudson.plugins.analysis.test.AbstractEnglishLocaleTest;
+import hudson.plugins.analysis.util.model.FileAnnotation;
+import hudson.plugins.analysis.util.model.JavaPackage;
+import hudson.plugins.analysis.util.model.LineRange;
+import hudson.plugins.analysis.util.model.MavenModule;
+import hudson.plugins.analysis.util.model.Priority;
 import hudson.plugins.findbugs.FindBugsMessages;
 import hudson.plugins.findbugs.Messages;
-import hudson.plugins.findbugs.util.AbstractEnglishLocaleTest;
-import hudson.plugins.findbugs.util.model.FileAnnotation;
-import hudson.plugins.findbugs.util.model.JavaPackage;
-import hudson.plugins.findbugs.util.model.LineRange;
-import hudson.plugins.findbugs.util.model.MavenModule;
-import hudson.plugins.findbugs.util.model.Priority;
 
 import java.io.IOException;
 import java.util.ArrayList;

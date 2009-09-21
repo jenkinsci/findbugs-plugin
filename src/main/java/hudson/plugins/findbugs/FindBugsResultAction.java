@@ -1,9 +1,9 @@
 package hudson.plugins.findbugs;
 
 import hudson.model.AbstractBuild;
-import hudson.plugins.findbugs.util.AbstractResultAction;
-import hudson.plugins.findbugs.util.HealthDescriptor;
-import hudson.plugins.findbugs.util.PluginDescriptor;
+import hudson.plugins.analysis.util.AbstractResultAction;
+import hudson.plugins.analysis.util.HealthDescriptor;
+import hudson.plugins.analysis.util.PluginDescriptor;
 
 import java.util.NoSuchElementException;
 
@@ -75,11 +75,13 @@ public class FindBugsResultAction extends AbstractResultAction<FindBugsResult> {
     }
 
     /** {@inheritDoc} */
+    @Override
     public String getMultipleItemsTooltip(final int numberOfItems) {
         return Messages.FindBugs_ResultAction_MultipleWarnings(numberOfItems);
     }
 
     /** {@inheritDoc} */
+    @Override
     public String getSingleItemTooltip() {
         return Messages.FindBugs_ResultAction_OneWarning();
     }

@@ -1,9 +1,9 @@
 package hudson.plugins.findbugs.parser;
 
 import hudson.FilePath;
+import hudson.plugins.analysis.util.AnnotationParser;
+import hudson.plugins.analysis.util.model.FileAnnotation;
 import hudson.plugins.findbugs.parser.maven.MavenFindBugsParser;
-import hudson.plugins.findbugs.util.AnnotationParser;
-import hudson.plugins.findbugs.util.model.FileAnnotation;
 
 import java.io.File;
 import java.io.FileInputStream;

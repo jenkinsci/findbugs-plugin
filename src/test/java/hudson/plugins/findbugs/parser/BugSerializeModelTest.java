@@ -1,12 +1,12 @@
 package hudson.plugins.findbugs.parser;
 
 import hudson.XmlFile;
-import hudson.plugins.findbugs.util.model.AbstractAnnotation;
-import hudson.plugins.findbugs.util.model.AbstractSerializeModelTest;
-import hudson.plugins.findbugs.util.model.AnnotationStream;
-import hudson.plugins.findbugs.util.model.FileAnnotation;
-import hudson.plugins.findbugs.util.model.JavaProject;
-import hudson.plugins.findbugs.util.model.Priority;
+import hudson.plugins.analysis.test.AbstractSerializeModelTest;
+import hudson.plugins.analysis.util.model.AbstractAnnotation;
+import hudson.plugins.analysis.util.model.AnnotationStream;
+import hudson.plugins.analysis.util.model.FileAnnotation;
+import hudson.plugins.analysis.util.model.JavaProject;
+import hudson.plugins.analysis.util.model.Priority;
 
 import java.io.File;
 import java.io.IOException;

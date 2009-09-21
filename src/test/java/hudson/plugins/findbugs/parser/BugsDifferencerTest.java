@@ -1,9 +1,9 @@
 package hudson.plugins.findbugs.parser;
 
-import hudson.plugins.findbugs.util.AnnotationDifferencer;
-import hudson.plugins.findbugs.util.AnnotationDifferencerTest;
-import hudson.plugins.findbugs.util.model.FileAnnotation;
-import hudson.plugins.findbugs.util.model.Priority;
+import hudson.plugins.analysis.test.AnnotationDifferencerTest;
+import hudson.plugins.analysis.util.AnnotationDifferencer;
+import hudson.plugins.analysis.util.model.FileAnnotation;
+import hudson.plugins.analysis.util.model.Priority;
 
 import org.apache.commons.lang.builder.HashCodeBuilder;
 

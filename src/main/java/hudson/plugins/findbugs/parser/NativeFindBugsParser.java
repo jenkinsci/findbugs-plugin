@@ -1,9 +1,9 @@
 package hudson.plugins.findbugs.parser;
 
+import hudson.plugins.analysis.util.model.FileAnnotation;
+import hudson.plugins.analysis.util.model.LineRange;
+import hudson.plugins.analysis.util.model.Priority;
 import hudson.plugins.findbugs.FindBugsMessages;
-import hudson.plugins.findbugs.util.model.FileAnnotation;
-import hudson.plugins.findbugs.util.model.LineRange;
-import hudson.plugins.findbugs.util.model.Priority;
 
 import java.io.File;
 import java.io.FileInputStream;

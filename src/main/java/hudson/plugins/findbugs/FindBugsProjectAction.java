@@ -1,7 +1,7 @@
 package hudson.plugins.findbugs;
 
 import hudson.model.AbstractProject;
-import hudson.plugins.findbugs.util.AbstractProjectAction;
+import hudson.plugins.analysis.util.AbstractProjectAction;
 
 /**
  * Entry point to visualize the FindBugs trend graph in the project screen.

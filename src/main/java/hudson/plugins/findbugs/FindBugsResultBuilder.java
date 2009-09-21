@@ -1,7 +1,7 @@
 package hudson.plugins.findbugs;
 
 import hudson.model.AbstractBuild;
-import hudson.plugins.findbugs.util.ParserResult;
+import hudson.plugins.analysis.util.ParserResult;
 
 /**
  * Creates a new FindBugs result based on the values of a previous build and the

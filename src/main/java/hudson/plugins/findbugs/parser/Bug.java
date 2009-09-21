@@ -1,8 +1,8 @@
 package hudson.plugins.findbugs.parser;
 
+import hudson.plugins.analysis.util.model.AbstractAnnotation;
+import hudson.plugins.analysis.util.model.Priority;
 import hudson.plugins.findbugs.FindBugsMessages;
-import hudson.plugins.findbugs.util.model.AbstractAnnotation;
-import hudson.plugins.findbugs.util.model.Priority;
 
 import org.apache.commons.lang.StringUtils;
 import org.jvnet.localizer.LocaleProvider;

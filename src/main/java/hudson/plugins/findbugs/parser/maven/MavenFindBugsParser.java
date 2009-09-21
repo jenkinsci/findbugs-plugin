@@ -1,10 +1,10 @@
 package hudson.plugins.findbugs.parser.maven;
 
 import hudson.FilePath;
+import hudson.plugins.analysis.util.FileFinder;
+import hudson.plugins.analysis.util.model.FileAnnotation;
+import hudson.plugins.analysis.util.model.Priority;
 import hudson.plugins.findbugs.parser.Bug;
-import hudson.plugins.findbugs.util.FileFinder;
-import hudson.plugins.findbugs.util.model.FileAnnotation;
-import hudson.plugins.findbugs.util.model.Priority;
 
 import java.io.IOException;
 import java.io.InputStream;
