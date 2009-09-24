@@ -1,5 +1,6 @@
 package hudson.plugins.findbugs;
 
+import hudson.Extension;
 import hudson.maven.MavenBuild;
 import hudson.maven.MavenBuildProxy;
 import hudson.maven.MavenModule;
@@ -33,6 +34,7 @@ public class FindBugsReporter extends HealthAwareMavenReporter {
     /** Unique identifier of this class. */
     private static final long serialVersionUID = -288391908253344862L;
     /** Descriptor of this publisher. */
+    @Extension
     public static final FindBugsReporterDescriptor FINDBUGS_SCANNER_DESCRIPTOR = new FindBugsReporterDescriptor(FindBugsPublisher.FIND_BUGS_DESCRIPTOR);
     /** FindBugs filename if maven findbugsXmlOutput is activated. */
     private static final String FINDBUGS_XML_FILE = "findbugsXml.xml";

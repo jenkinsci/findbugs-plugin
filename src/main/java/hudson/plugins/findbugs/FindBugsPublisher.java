@@ -1,9 +1,9 @@
 package hudson.plugins.findbugs;
 
+import hudson.Extension;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.Action;
-import hudson.model.Descriptor;
 import hudson.plugins.findbugs.parser.FindBugsParser;
 import hudson.plugins.findbugs.util.BuildResult;
 import hudson.plugins.findbugs.util.FilesParser;
@@ -11,6 +11,8 @@ import hudson.plugins.findbugs.util.HealthAwarePublisher;
 import hudson.plugins.findbugs.util.ParserResult;
 import hudson.plugins.findbugs.util.PluginDescriptor;
 import hudson.plugins.findbugs.util.PluginLogger;
+import hudson.tasks.BuildStepDescriptor;
+import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
 
 import java.io.IOException;
@@ -29,6 +31,7 @@ public class FindBugsPublisher extends HealthAwarePublisher {
     /** Default FindBugs pattern. */
     private static final String DEFAULT_PATTERN = "**/findbugs.xml";
     /** Descriptor of this publisher. */
+    @Extension
     public static final PluginDescriptor FIND_BUGS_DESCRIPTOR = new FindBugsDescriptor();
     /** Ant file-set pattern of files to work with. */
     private final String pattern;
@@ -95,9 +98,9 @@ public class FindBugsPublisher extends HealthAwarePublisher {
     public BuildResult perform(final AbstractBuild<?, ?> build, final PluginLogger logger) throws InterruptedException, IOException {
         logger.log("Collecting findbugs analysis files...");
         FilesParser collector = new FilesParser(logger, StringUtils.defaultIfEmpty(getPattern(), DEFAULT_PATTERN),
-                new FindBugsParser(build.getProject().getWorkspace()),
+                new FindBugsParser(build.getWorkspace()),
                 isMavenBuild(build), isAntBuild(build));
-        ParserResult project = build.getProject().getWorkspace().act(collector);
+        ParserResult project = build.getWorkspace().act(collector);
         FindBugsResult result = new FindBugsResultBuilder().build(build, project, getDefaultEncoding());
 
         build.getActions().add(new FindBugsResultAction(build, this, result));
@@ -107,7 +110,11 @@ public class FindBugsPublisher extends HealthAwarePublisher {
 
     /** {@inheritDoc} */
     @Override
-    public Descriptor<Publisher> getDescriptor() {
+    public BuildStepDescriptor<Publisher> getDescriptor() {
         return FIND_BUGS_DESCRIPTOR;
+    }
+
+    public BuildStepMonitor getRequiredMonitorService() {
+        return BuildStepMonitor.BUILD;
     }
 }
