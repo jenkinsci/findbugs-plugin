@@ -1,5 +1,6 @@
 package hudson.plugins.findbugs;
 
+import hudson.Extension;
 import hudson.maven.MavenBuild;
 import hudson.maven.MavenBuildProxy;
 import hudson.maven.MavenModule;
@@ -32,15 +33,15 @@ import org.kohsuke.stapler.DataBoundConstructor;
 public class FindBugsReporter extends HealthAwareMavenReporter {
     /** Unique identifier of this class. */
     private static final long serialVersionUID = -288391908253344862L;
+
     /** Descriptor of this publisher. */
+    @Extension
     public static final FindBugsReporterDescriptor FINDBUGS_SCANNER_DESCRIPTOR = new FindBugsReporterDescriptor(FindBugsPublisher.FIND_BUGS_DESCRIPTOR);
+
     /** FindBugs filename if maven findbugsXmlOutput is activated. */
     private static final String FINDBUGS_XML_FILE = "findbugsXml.xml";
     /** FindBugs filename if maven findbugsXmlOutput is not activated. */
     private static final String MAVEN_FINDBUGS_XML_FILE = "findbugs.xml";
-    /** Ant file-set pattern of files to work with. */
-    @SuppressWarnings("unused")
-    private String pattern; // obsolete since release 2.5
 
     /**
      * Creates a new instance of <code>FindBugsReporter</code>.
@@ -173,5 +174,9 @@ public class FindBugsReporter extends HealthAwareMavenReporter {
     public MavenReporterDescriptor getDescriptor() {
         return FINDBUGS_SCANNER_DESCRIPTOR;
     }
+
+    /** Ant file-set pattern of files to work with. */
+    @SuppressWarnings("unused")
+    private transient String pattern; // obsolete since release 2.5
 }
 
