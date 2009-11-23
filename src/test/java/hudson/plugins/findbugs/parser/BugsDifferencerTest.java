@@ -1,7 +1,7 @@
 package hudson.plugins.findbugs.parser;
 
+import hudson.plugins.analysis.core.AnnotationDifferencer;
 import hudson.plugins.analysis.test.AnnotationDifferencerTest;
-import hudson.plugins.analysis.util.AnnotationDifferencer;
 import hudson.plugins.analysis.util.model.FileAnnotation;
 import hudson.plugins.analysis.util.model.Priority;
 

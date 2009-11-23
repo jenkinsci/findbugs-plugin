@@ -1,9 +1,9 @@
 package hudson.plugins.findbugs;
 
 import hudson.model.AbstractBuild;
-import hudson.plugins.analysis.util.BuildResult;
-import hudson.plugins.analysis.util.ParserResult;
-import hudson.plugins.analysis.util.ResultAction;
+import hudson.plugins.analysis.core.BuildResult;
+import hudson.plugins.analysis.core.ParserResult;
+import hudson.plugins.analysis.core.ResultAction;
 
 /**
  * Represents the aggregated results of the PMD analysis in m2 jobs.

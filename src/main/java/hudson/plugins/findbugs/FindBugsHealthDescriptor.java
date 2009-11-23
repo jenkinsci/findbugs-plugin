@@ -1,7 +1,7 @@
 package hudson.plugins.findbugs;
 
-import hudson.plugins.analysis.util.AbstractHealthDescriptor;
-import hudson.plugins.analysis.util.HealthDescriptor;
+import hudson.plugins.analysis.core.AbstractHealthDescriptor;
+import hudson.plugins.analysis.core.HealthDescriptor;
 import hudson.plugins.analysis.util.model.AnnotationProvider;
 
 import org.jvnet.localizer.Localizable;
