@@ -86,7 +86,6 @@ public class FindBugsReporter extends HealthAwareMavenReporter {
         if ("findbugs".equals(mojo.getGoal())) {
             activateProperty(mojo, "xmlOutput");
             activateProperty(mojo, "findbugsXmlOutput");
-            activateProperty(mojo, "findbugsXmlWithMessages");
         }
         return true;
     }
