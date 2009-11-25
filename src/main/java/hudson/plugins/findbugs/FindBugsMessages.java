@@ -53,8 +53,13 @@ public final class FindBugsMessages {
      */
     public synchronized void initialize() throws IOException, SAXException {
         loadMessages("messages.xml", messages, shortMessages);
-        loadMessages("messages_fr.xml", frMessages, frShortMessages);
-        loadMessages("messages_ja.xml", jaMessages, jaShortMessages);
+        try {
+            loadMessages("messages_fr.xml", frMessages, frShortMessages);
+            loadMessages("messages_ja.xml", jaMessages, jaShortMessages);
+        }
+        catch (Exception exception) {
+            // ignore failures on localized messages
+        }
         loadMessages("fb-contrib-messages.xml", messages, shortMessages);
     }
 
