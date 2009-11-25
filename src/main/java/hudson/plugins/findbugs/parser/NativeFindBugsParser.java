@@ -125,14 +125,15 @@ public class NativeFindBugsParser {
     public Collection<FileAnnotation> parse(final InputStream file, final Collection<String> sources,
             final String moduleName, final Map<String, String> hashToMessageMapping) throws IOException,
             DocumentException {
-        Project project = createMavenProject(sources);
-
         SortedBugCollection collection = new SortedBugCollection();
-        collection.readXML(file, project);
+        collection.readXML(file);
 
-        SourceFinder sourceFinder = new SourceFinder();
-        sourceFinder.setSourceBaseList(project.getSourceDirList());
+        Project project = collection.getProject();
+        for (String sourceFolder : sources) {
+            project.addSourceDir(sourceFolder);
+        }
 
+        SourceFinder sourceFinder = new SourceFinder(project);
         String actualName = extractModuleName(moduleName, project);
 
         ArrayList<FileAnnotation> annotations = new ArrayList<FileAnnotation>();
