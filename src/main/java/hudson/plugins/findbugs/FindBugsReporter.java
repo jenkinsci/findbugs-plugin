@@ -35,7 +35,7 @@ public class FindBugsReporter extends HealthAwareMavenReporter {
     private static final long serialVersionUID = -288391908253344862L;
 
     /** Descriptor of this publisher. */
-    @Extension
+    @Extension(ordinal = 100)
     public static final FindBugsReporterDescriptor FINDBUGS_SCANNER_DESCRIPTOR = new FindBugsReporterDescriptor(FindBugsPublisher.FIND_BUGS_DESCRIPTOR);
 
     /** FindBugs filename if maven findbugsXmlOutput is activated. */

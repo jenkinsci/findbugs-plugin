@@ -29,7 +29,7 @@ public class FindBugsPublisher extends HealthAwarePublisher {
     private static final long serialVersionUID = -5748362182226609649L;
 
     /** Descriptor of this publisher. */
-    @Extension
+    @Extension(ordinal = 100)
     public static final PluginDescriptor FIND_BUGS_DESCRIPTOR = new FindBugsDescriptor();
 
     /** Default FindBugs pattern. */
