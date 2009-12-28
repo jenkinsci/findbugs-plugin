@@ -1,4 +1,4 @@
 svn update
-mvn -B -Djava.net.id=drulli release:prepare release:perform 
+mvn -B -Djava.net.id=drulli -Dusername=drulli release:prepare release:perform 
 
 
