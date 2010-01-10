@@ -3,6 +3,7 @@ package hudson.plugins.findbugs.parser;
 import hudson.plugins.analysis.util.model.AbstractAnnotation;
 import hudson.plugins.analysis.util.model.Priority;
 import hudson.plugins.findbugs.FindBugsMessages;
+import hudson.plugins.findbugs.Messages;
 
 import org.apache.commons.lang.StringUtils;
 import org.jvnet.localizer.LocaleProvider;
@@ -43,6 +44,8 @@ public class Bug extends AbstractAnnotation {
     public Bug(final Priority priority, final String message, final String category, final String type,
             final int start, final int end) {
         super(priority, message, start, end, category, type);
+
+        setOrigin(Messages.FindBugs_Warning_Origin());
     }
 
     /**
