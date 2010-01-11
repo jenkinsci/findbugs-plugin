@@ -48,22 +48,23 @@ public class NativeFindBugsParser {
     /**
      * Returns the parsed FindBugs analysis file. This scanner accepts files in
      * the native FindBugs format.
+     *
      * @param file
      *            the FindBugs analysis file
      * @param sources
      *            a collection of folders to scan for source files
      * @param moduleName
      *            name of maven module
-     *
      * @return the parsed result (stored in the module instance)
      * @throws IOException
      *             if the file could not be parsed
      * @throws DocumentException
+     *             if the file could not be read
      * @throws SAXException
+     *             if the file could not be read
      */
     public Collection<FileAnnotation> parse(final File file, final Collection<String> sources, final String moduleName)
             throws IOException, DocumentException, SAXException {
-
         Map<String, String> hashToMessageMapping = createHashToMessageMapping(new FileInputStream(file));
 
         return parse(new FileInputStream(file), sources, moduleName, hashToMessageMapping);

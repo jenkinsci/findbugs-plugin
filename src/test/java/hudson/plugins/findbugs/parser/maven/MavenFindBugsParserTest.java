@@ -81,9 +81,12 @@ public class MavenFindBugsParserTest {
 
     /**
      * Checks whether we correctly detect that the file contains no bugs.
+     *
+     * @throws Exception
+     *             indicates a test failure
      */
     @Test
-    public void scanFileWithNoBugs() throws IOException, SAXException {
+    public void scanFileWithNoBugs() throws Exception {
         MavenModule module = parseFile("findbugs-no-errors.xml");
 
         assertEquals(ERROR_MESSAGE, 0, module.getNumberOfAnnotations());
@@ -91,6 +94,11 @@ public class MavenFindBugsParserTest {
 
     /**
      * Checks whether we correctly detect an other file.
+     *
+     * @throws IOException
+     *             indicates a failure
+     * @throws SAXException
+     *             expected exception
      */
     @Test(expected = SAXException.class)
     public void scanOtherFile() throws IOException, SAXException {
@@ -99,9 +107,12 @@ public class MavenFindBugsParserTest {
 
     /**
      * Checks whether we correctly detect all 8 bugs.
+     *
+     * @throws Exception
+     *             indicates a test failure
      */
     @Test
-    public void scanFileWithSomeBugs() throws IOException, SAXException {
+    public void scanFileWithSomeBugs() throws Exception {
         String fileName = "findbugs.xml";
         MavenModule module = parseFile(fileName);
 

@@ -93,7 +93,7 @@ public class MavenFindBugsResultAction extends FindBugsResultAction implements A
         updateBuildHealth(newBuild, annotationsResult);
     }
 
-    /** Backward compatibility. */
+    /** Backward compatibility. @deprecated */
     @SuppressWarnings("unused")
     @Deprecated
     private transient String height;

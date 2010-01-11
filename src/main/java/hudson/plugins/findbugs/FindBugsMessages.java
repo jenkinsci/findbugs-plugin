@@ -51,13 +51,14 @@ public final class FindBugsMessages {
      * @throws IOException
      *             if we can't read a file
      */
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings({"DE", "REC"})
     public synchronized void initialize() throws IOException, SAXException {
         loadMessages("messages.xml", messages, shortMessages);
         try {
             loadMessages("messages_fr.xml", frMessages, frShortMessages);
             loadMessages("messages_ja.xml", jaMessages, jaShortMessages);
         }
-        catch (Exception exception) {
+        catch (Exception exception) { // NOCHECKSTYLE
             // ignore failures on localized messages
         }
         loadMessages("fb-contrib-messages.xml", messages, shortMessages);
