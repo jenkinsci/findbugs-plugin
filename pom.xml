@@ -10,7 +10,7 @@
 
   <artifactId>findbugs</artifactId>
   <packaging>hpi</packaging>
-  <name>Hudson FindBugs Plug-in</name>
+  <name>FindBugs Plug-in</name>
   <version>4.2-SNAPSHOT</version>
   <url>http://wiki.hudson-ci.org/display/HUDSON/FindBugs+Plugin</url>
   <description>This plug-in generates the trend report for FindBugs,
