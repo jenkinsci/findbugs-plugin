@@ -21,7 +21,7 @@ public class FindBugsProjectAction extends AbstractProjectAction<FindBugsResultA
      *            the project that owns this action
      */
     public FindBugsProjectAction(final AbstractProject<?, ?> project) {
-        super(project, FindBugsResultAction.class, FindBugsPublisher.FIND_BUGS_DESCRIPTOR);
+        super(project, FindBugsResultAction.class, new FindBugsDescriptor());
     }
 
     /** {@inheritDoc} */

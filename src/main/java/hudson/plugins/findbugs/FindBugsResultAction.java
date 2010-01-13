@@ -56,7 +56,7 @@ public class FindBugsResultAction extends AbstractResultAction<FindBugsResult> {
     /** {@inheritDoc} */
     @Override
     protected PluginDescriptor getDescriptor() {
-        return FindBugsPublisher.FIND_BUGS_DESCRIPTOR;
+        return new FindBugsDescriptor();
     }
 
     /**

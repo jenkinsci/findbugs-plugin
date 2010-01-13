@@ -1,7 +1,7 @@
 package hudson.plugins.findbugs;
 
+import hudson.Extension;
 import hudson.maven.MavenReporter;
-import hudson.plugins.analysis.core.PluginDescriptor;
 import hudson.plugins.analysis.core.ReporterDescriptor;
 import net.sf.json.JSONObject;
 
@@ -14,15 +14,13 @@ import org.kohsuke.stapler.StaplerRequest;
  *
  * @author Ulli Hafner
  */
+@Extension(ordinal = 100)
 public class FindBugsReporterDescriptor extends ReporterDescriptor {
     /**
      * Creates a new instance of <code>FindBugsReporterDescriptor</code>.
-     *
-     * @param pluginDescriptor
-     *            the plug-in descriptor of the publisher
      */
-    public FindBugsReporterDescriptor(final PluginDescriptor pluginDescriptor) {
-        super(FindBugsReporter.class, pluginDescriptor);
+    public FindBugsReporterDescriptor() {
+        super(FindBugsReporter.class, new FindBugsDescriptor());
     }
 
     /** {@inheritDoc} */
