@@ -100,4 +100,11 @@ public class FindBugsPublisher extends HealthAwarePublisher {
 
         return result;
     }
+
+    /** {@inheritDoc} */
+    @Override
+    public FindBugsDescriptor getDescriptor() {
+        return (FindBugsDescriptor)super.getDescriptor();
+    }
+
 }
