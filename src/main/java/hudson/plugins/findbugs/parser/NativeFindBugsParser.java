@@ -216,20 +216,5 @@ public class NativeFindBugsParser {
             return project.getProjectName();
         }
     }
-
-    /**
-     * Creates a maven project with some predefined source paths.
-     *
-     * @param sources
-     *            a collection of folders to scan for source files
-     * @return the new project
-     */
-    private Project createMavenProject(final Collection<String> sources) {
-        Project project = new Project();
-        for (String sourceFolder : sources) {
-            project.addSourceDir(sourceFolder);
-        }
-        return project;
-    }
 }
 
