@@ -3,7 +3,6 @@ package hudson.plugins.findbugs.parser;
 import hudson.plugins.analysis.util.model.AbstractAnnotation;
 import hudson.plugins.analysis.util.model.Priority;
 import hudson.plugins.findbugs.FindBugsMessages;
-import hudson.plugins.findbugs.Messages;
 
 import org.apache.commons.lang.StringUtils;
 import org.jvnet.localizer.LocaleProvider;
@@ -20,6 +19,9 @@ import org.jvnet.localizer.LocaleProvider;
 public class Bug extends AbstractAnnotation {
     /** Unique identifier of this class. */
     private static final long serialVersionUID = 5171661552905752370L;
+    /** Origin of the annotation. */
+    public static final String ORIGIN = "findbugs";
+
     /** Bug HTML description. */
     private String tooltip = StringUtils.EMPTY;
     /** Unique hash code of this bug. */
@@ -45,7 +47,7 @@ public class Bug extends AbstractAnnotation {
             final int start, final int end) {
         super(priority, message, start, end, category, type);
 
-        setOrigin(Messages.FindBugs_Warning_Origin());
+        setOrigin(ORIGIN);
     }
 
     /**
