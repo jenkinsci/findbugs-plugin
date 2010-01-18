@@ -1,7 +1,6 @@
 package hudson.plugins.findbugs;
 
-import static org.easymock.EasyMock.*;
-import static org.easymock.classextension.EasyMock.*;
+import static org.mockito.Mockito.*;
 import hudson.plugins.analysis.test.AbstractEnglishLocaleTest;
 import junit.framework.Assert;
 
@@ -63,15 +62,11 @@ public class ResultSummaryTest extends AbstractEnglishLocaleTest {
      *            the expected message
      */
     private void checkSummaryText(final int numberOfWarnings, final int numberOfFiles, final String expectedMessage) {
-        FindBugsResult result = createMock(FindBugsResult.class);
-        expect(result.getNumberOfAnnotations()).andReturn(numberOfWarnings).anyTimes();
-        expect(result.getNumberOfModules()).andReturn(numberOfFiles).anyTimes();
-
-        replay(result);
+        FindBugsResult result = mock(FindBugsResult.class);
+        when(result.getNumberOfAnnotations()).thenReturn(numberOfWarnings);
+        when(result.getNumberOfModules()).thenReturn(numberOfFiles);
 
         Assert.assertEquals("Wrong summary message created.", expectedMessage, ResultSummary.createSummary(result));
-
-        verify(result);
     }
 
     /**
@@ -166,15 +161,11 @@ public class ResultSummaryTest extends AbstractEnglishLocaleTest {
      *            the expected message
      */
     private void checkDeltaText(final int numberOfFixedWarnings, final int numberOfNewWarnings, final String expectedMessage) {
-        FindBugsResult result = createMock(FindBugsResult.class);
-        expect(result.getNumberOfFixedWarnings()).andReturn(numberOfFixedWarnings).anyTimes();
-        expect(result.getNumberOfNewWarnings()).andReturn(numberOfNewWarnings).anyTimes();
-
-        replay(result);
+        FindBugsResult result = mock(FindBugsResult.class);
+        when(result.getNumberOfFixedWarnings()).thenReturn(numberOfFixedWarnings);
+        when(result.getNumberOfNewWarnings()).thenReturn(numberOfNewWarnings);
 
         Assert.assertEquals("Wrong delta message created.", expectedMessage, ResultSummary.createDeltaMessage(result));
-
-        verify(result);
     }
 }
 
