@@ -11,7 +11,7 @@
 
   <modules>
     <module>library</module>
-    <module>findbugs</module>
+    <module>plugin</module>
   </modules>
 
 </project>
