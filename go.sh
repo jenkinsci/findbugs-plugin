@@ -1,4 +1,4 @@
-rm -rf $HUDSON_HOME/plugins/analysis-collector*
+rm -rf $HUDSON_HOME/plugins/findbugs*
 
 mvn install
 cp -f target/*.hpi $HUDSON_HOME/plugins/
