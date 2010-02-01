@@ -1,0 +1,56 @@
+<div>
+<p>Hudson は <a href="http://findbugs.sourceforge.net/">FindBugs</a>
+によるclassファイルの検査結果を表示します。
+このオプションを設定すると、
+警告数の推移や、モジュール/パッケージ単位での表示、
+Web UIでの結果の参照など、FindBugsによる分析の結果に関する有益な情報が提供されるようになります。
+</p>
+<p>
+この機能を利用するには、
+ビルド時にFindBugsが実行されるよう設定する必要があります - このプラグイン自体は、実際の解析を行いません。
+このプラグインは、ビルドの失敗時には何もせず、
+stableないしunstable(テストが失敗)のビルドにのみ動作します。
+</p>
+<h4>Maven での設定</h4>
+<a href="http://mojo.codehaus.org/findbugs-maven-plugin/">findbugs-maven-plugin</a>の
+version 1.2以降を使用してください。
+以下を<code>pom.xml</code>に追加して、findbugsの分析を有効にしてください。
+<pre>
+&lt;plugin&gt;
+   &lt;groupId&gt;org.codehaus.mojo&lt;/groupId&gt;
+   &lt;artifactId&gt;findbugs-maven-plugin&lt;/artifactId&gt;
+   &lt;version&gt;1.2&lt;/version&gt;
+   &lt;configuration&gt;
+      &lt;findbugsXmlOutput&gt;true&lt;/findbugsXmlOutput&gt;
+      &lt;xmlOutput&gt;true&lt;/xmlOutput&gt;
+      [...]
+   &lt;/configuration&gt;
+&lt;/plugin&gt;
+</pre>
+そして最後に、集計するファイルとして<code>**/findbugsXml.xml</code>
+を指定してください。
+
+<h4>Ant での設定</h4>
+<span class="application">FindBugs</span>を<code class="filename">build.xml</code>に
+組込むには、まずタスクの定義を追加する必要があります。
+<pre class="screen">
+  &lt;taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask"/&gt;
+</pre>
+
+そして<code class="literal">findbugs</code>を使ったターゲットを指定します。
+<pre
+  class="screen">
+  &lt;target name="findbugs" depends="jar"&gt;
+
+    &lt;findbugs home="${findbugs.home}"
+              output="xml:withMessages"
+              outputFile="findbugs.xml" &gt;
+      &lt;auxClasspath path="${basedir}/lib/Regex.jar" /&gt;
+      &lt;sourcePath path="${basedir}/src/java" /&gt;
+      &lt;class location="${basedir}/bin/bcel.jar" /&gt;
+    &lt;/findbugs&gt;
+  &lt;/target&gt;
+
+</pre>
+
+最後に、収集するファイルとして、<code>**/findbugs.xml</code>を指定します。

@@ -1,0 +1,13 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define"
+	xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:u="/util">
+	<f:entry title="${%FindBugs results}"
+		description="${%description.pattern}">
+		<f:textbox name="pattern" value="${instance.pattern}"
+			checkUrl="'descriptorByName/FindBugsPublisher/checkPattern?value='+escape(this.value)" />
+	</f:entry>
+   <f:advanced>
+    <u:thresholds id="findbugs"/>
+    <u:defaultEncoding id="findbugs"/>
+    <u:trend id="findbugs"/>
+  </f:advanced>
+</j:jelly>
