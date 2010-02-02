@@ -61,4 +61,16 @@
     <url>https://hudson.dev.java.net/source/browse/hudson/trunk/hudson/plugins/findbugs/plugin</url>
   </scm>
 
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <configuration>
+          <configLocation>../findbugs/plugin/checkstyle-configuration.xml</configLocation>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
 </project>
