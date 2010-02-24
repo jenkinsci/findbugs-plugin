@@ -5,8 +5,6 @@ import hudson.plugins.analysis.core.AbstractResultAction;
 import hudson.plugins.analysis.core.HealthDescriptor;
 import hudson.plugins.analysis.core.PluginDescriptor;
 
-import java.util.NoSuchElementException;
-
 /**
  * Controls the live cycle of the FindBugs results. This action persists the
  * results of the FindBugs analysis of a build and displays the results on the
@@ -57,21 +55,6 @@ public class FindBugsResultAction extends AbstractResultAction<FindBugsResult> {
     @Override
     protected PluginDescriptor getDescriptor() {
         return new FindBugsDescriptor();
-    }
-
-    /**
-     * Gets the FindBugs result of the previous build.
-     *
-     * @return the FindBugs result of the previous build.
-     * @throws NoSuchElementException
-     *             if there is no previous build for this action
-     */
-    public FindBugsResultAction getPreviousResultAction() {
-        AbstractResultAction<FindBugsResult> previousBuild = getPreviousBuild();
-        if (previousBuild instanceof FindBugsResultAction) {
-            return (FindBugsResultAction)previousBuild;
-        }
-        throw new NoSuchElementException("There is no previous build for action " + this);
     }
 
     /** {@inheritDoc} */
