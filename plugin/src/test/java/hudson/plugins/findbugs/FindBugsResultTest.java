@@ -18,12 +18,6 @@ public class FindBugsResultTest extends BuildResultTest<FindBugsResult> {
 
     /** {@inheritDoc} */
     @Override
-    protected FindBugsResult createBuildResult(final AbstractBuild<?, ?> build, final ParserResult project, final FindBugsResult previous) {
-        return new FindBugsResult(build, null, project, previous);
-    }
-
-    /** {@inheritDoc} */
-    @Override
     protected void verifyHighScoreMessage(final int expectedZeroWarningsBuildNumber, final boolean expectedIsNewHighScore, final long expectedHighScore, final long gap, final FindBugsResult result) {
         if (result.hasNoAnnotations() && result.getDelta() == 0) {
             assertTrue(result.getDetails().contains(Messages.FindBugs_ResultAction_NoWarningsSince(expectedZeroWarningsBuildNumber)));

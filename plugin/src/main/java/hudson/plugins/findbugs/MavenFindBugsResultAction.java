@@ -88,7 +88,7 @@ public class MavenFindBugsResultAction extends FindBugsResultAction implements A
      *            Newly completed build.
      */
     public void update(final Map<MavenModule, List<MavenBuild>> moduleBuilds, final MavenBuild newBuild) {
-        FindBugsResult annotationsResult = new FindBugsResultBuilder().buildMaven(getOwner(), createAggregatedResult(moduleBuilds), defaultEncoding);
+        FindBugsResult annotationsResult = new FindBugsResult(getOwner(), defaultEncoding, createAggregatedResult(moduleBuilds));
         setResult(annotationsResult);
         updateBuildHealth(newBuild, annotationsResult);
     }
