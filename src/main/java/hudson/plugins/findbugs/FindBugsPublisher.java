@@ -93,7 +93,7 @@ public class FindBugsPublisher extends HealthAwarePublisher {
         FilesParser collector = new FilesParser(logger, StringUtils.defaultIfEmpty(getPattern(), DEFAULT_PATTERN),
                 new FindBugsParser(build.getWorkspace()), isMavenBuild(build), isAntBuild(build));
         ParserResult project = build.getWorkspace().act(collector);
-        FindBugsResult result = new FindBugsResultBuilder().build(build, project, getDefaultEncoding());
+        FindBugsResult result = new FindBugsResult(build, getDefaultEncoding(), project);
 
         build.getActions().add(new FindBugsResultAction(build, this, result));
 

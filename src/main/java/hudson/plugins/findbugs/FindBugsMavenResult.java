@@ -29,23 +29,6 @@ public class FindBugsMavenResult extends FindBugsResult {
         super(build, defaultEncoding, result);
     }
 
-    /**
-     * Creates a new instance of {@link FindBugsMavenResult}.
-     *
-     * @param build
-     *            the current build as owner of this action
-     * @param defaultEncoding
-     *            the default encoding to be used when reading and parsing files
-     * @param result
-     *            the parsed result with all annotations
-     * @param previous
-     *            the result of the previous build
-     */
-    public FindBugsMavenResult(final AbstractBuild<?, ?> build, final String defaultEncoding,
-            final ParserResult result, final FindBugsResult previous) {
-        super(build, defaultEncoding, result, previous);
-    }
-
     /** {@inheritDoc} */
     @Override
     protected Class<? extends ResultAction<? extends BuildResult>> getResultActionType() {
