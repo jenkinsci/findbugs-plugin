@@ -2,6 +2,7 @@ package hudson.plugins.findbugs;
 
 import static junit.framework.Assert.*;
 import hudson.model.AbstractBuild;
+import hudson.plugins.analysis.core.BuildHistory;
 import hudson.plugins.analysis.core.BuildResult;
 import hudson.plugins.analysis.core.ParserResult;
 import hudson.plugins.analysis.test.BuildResultTest;
@@ -12,8 +13,8 @@ import hudson.plugins.analysis.test.BuildResultTest;
 public class FindBugsResultTest extends BuildResultTest<FindBugsResult> {
     /** {@inheritDoc} */
     @Override
-    protected FindBugsResult createBuildResult(final AbstractBuild<?, ?> build, final ParserResult project) {
-        return new FindBugsResult(build, null, project);
+    protected FindBugsResult createBuildResult(final AbstractBuild<?, ?> build, final ParserResult project, final BuildHistory history) {
+        return new FindBugsResult(build, null, project, history);
     }
 
     /** {@inheritDoc} */
