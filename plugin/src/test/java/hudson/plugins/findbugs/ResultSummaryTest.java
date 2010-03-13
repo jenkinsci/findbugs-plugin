@@ -11,43 +11,43 @@ import org.junit.Test;
  */
 public class ResultSummaryTest extends AbstractEnglishLocaleTest {
     /**
-     * Checks the text for no warnings in 0 files.
+     * Checks the text for no warnings from 0 files.
      */
     @Test
     public void test0WarningsIn0File() {
-        checkSummaryText(0, 0, "FindBugs: 0 warnings in 0 FindBugs files.");
+        checkSummaryText(0, 0, "FindBugs: 0 warnings from 0 FindBugs files.");
     }
 
     /**
-     * Checks the text for no warnings in 1 file.
+     * Checks the text for no warnings from 1 file.
      */
     @Test
     public void test0WarningsIn1File() {
-        checkSummaryText(0, 1, "FindBugs: 0 warnings in 1 FindBugs file.");
+        checkSummaryText(0, 1, "FindBugs: 0 warnings from one FindBugs file.");
     }
 
     /**
-     * Checks the text for no warnings in 5 files.
+     * Checks the text for no warnings from 5 files.
      */
     @Test
     public void test0WarningsIn5Files() {
-        checkSummaryText(0, 5, "FindBugs: 0 warnings in 5 FindBugs files.");
+        checkSummaryText(0, 5, "FindBugs: 0 warnings from 5 FindBugs files.");
     }
 
     /**
-     * Checks the text for 1 warning in 2 files.
+     * Checks the text for 1 warning from 2 files.
      */
     @Test
     public void test1WarningIn2Files() {
-        checkSummaryText(1, 2, "FindBugs: <a href=\"findbugsResult\">1 warning</a> in 2 FindBugs files.");
+        checkSummaryText(1, 2, "FindBugs: <a href=\"findbugsResult\">1 warning</a> from 2 FindBugs files.");
     }
 
     /**
-     * Checks the text for 5 warnings in 1 file.
+     * Checks the text for 5 warnings from 1 file.
      */
     @Test
     public void test5WarningsIn1File() {
-        checkSummaryText(5, 1, "FindBugs: <a href=\"findbugsResult\">5 warnings</a> in 1 FindBugs file.");
+        checkSummaryText(5, 1, "FindBugs: <a href=\"findbugsResult\">5 warnings</a> from one FindBugs file.");
     }
 
     /**
