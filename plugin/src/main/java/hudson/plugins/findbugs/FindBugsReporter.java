@@ -1,9 +1,9 @@
 package hudson.plugins.findbugs;
 
-import hudson.maven.MavenBuild;
 import hudson.maven.MavenBuildProxy;
-import hudson.maven.MavenModule;
 import hudson.maven.MojoInfo;
+import hudson.maven.MavenBuild;
+import hudson.maven.MavenModule;
 import hudson.model.Action;
 import hudson.model.BuildListener;
 import hudson.plugins.analysis.core.BuildResult;
@@ -162,8 +162,10 @@ public class FindBugsReporter extends HealthAwareMavenReporter {
         return MavenFindBugsResultAction.class;
     }
 
-    /** Ant file-set pattern of files to work with. */
+    /** Ant file-set pattern of files to work with. @deprecated */
     @SuppressWarnings("unused")
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings("SE")
+    @Deprecated
     private transient String pattern; // obsolete since release 2.5
 }
 
