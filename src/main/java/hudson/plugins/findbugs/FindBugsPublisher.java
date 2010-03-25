@@ -1,8 +1,8 @@
 package hudson.plugins.findbugs;
 
+import hudson.model.Action;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
-import hudson.model.Action;
 import hudson.plugins.analysis.core.BuildResult;
 import hudson.plugins.analysis.core.FilesParser;
 import hudson.plugins.analysis.core.HealthAwarePublisher;
@@ -24,8 +24,10 @@ public class FindBugsPublisher extends HealthAwarePublisher {
     /** Unique ID of this class. */
     private static final long serialVersionUID = -5748362182226609649L;
 
-    /** Default FindBugs pattern. */
-    private static final String DEFAULT_PATTERN = "**/findbugs.xml";
+    /** Default Ant FindBugs pattern. */
+    private static final String ANT_DEFAULT_PATTERN = "**/findbugs.xml";
+    /** Default Maven FindBugs pattern. */
+    private static final String MAVEN_DEFAULT_PATTERN = "**/findbugsXml.xml";
     /** Ant file-set pattern of files to work with. */
     private final String pattern;
 
@@ -94,7 +96,9 @@ public class FindBugsPublisher extends HealthAwarePublisher {
     @Override
     public BuildResult perform(final AbstractBuild<?, ?> build, final PluginLogger logger) throws InterruptedException, IOException {
         logger.log("Collecting findbugs analysis files...");
-        FilesParser collector = new FilesParser(logger, StringUtils.defaultIfEmpty(getPattern(), DEFAULT_PATTERN),
+
+        String defaultPattern = isMavenBuild(build) ? MAVEN_DEFAULT_PATTERN : ANT_DEFAULT_PATTERN;
+        FilesParser collector = new FilesParser(logger, StringUtils.defaultIfEmpty(getPattern(), defaultPattern),
                 new FindBugsParser(build.getWorkspace()), isMavenBuild(build), isAntBuild(build));
         ParserResult project = build.getWorkspace().act(collector);
         FindBugsResult result = new FindBugsResult(build, getDefaultEncoding(), project);
