@@ -1,0 +1,28 @@
+<div>
+<p>
+Hudson は <a href="http://findbugs.sourceforge.net/">FindBugs</a>
+によるclassファイルの検査結果を表示します。
+このオプションを設定してmavenのゴールである<code>findbugs:findbugs</code>を実行すると、
+Hudsonによって、警告数の推移や、モジュール/パッケージ単位での表示、
+Web UIでの結果の参照など、有益な情報が提供されるようになります。
+</p>
+<p>
+このプラグインは、ビルドの失敗時には何もせず、
+stableないしunstable(テストが失敗)のビルドにのみ動作します。
+</p>
+<a href="http://mojo.codehaus.org/findbugs-maven-plugin/">findbugs-maven-plugin</a>の
+version 1.2以降を使用してください。
+<code>pom.xml</code>に以下の設定があれば、このプラグインは自動的に結果を収集します。
+
+<pre>
+&lt;plugin&gt;
+   &lt;groupId&gt;org.codehaus.mojo&lt;/groupId&gt;
+   &lt;artifactId&gt;findbugs-maven-plugin&lt;/artifactId&gt;
+   &lt;version&gt;1.2&lt;/version&gt;
+   &lt;configuration&gt;
+      &lt;findbugsXmlOutput&gt;true&lt;/findbugsXmlOutput&gt;
+      &lt;xmlOutput&gt;true&lt;/xmlOutput&gt;
+      [...]
+   &lt;/configuration&gt;
+&lt;/plugin&gt;
+</pre></div>

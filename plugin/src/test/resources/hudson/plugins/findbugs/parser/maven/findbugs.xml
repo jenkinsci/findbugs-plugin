@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<BugCollection version="1.2.0" threshold="Low" effort="Max" >
+<file classname="com.avaloq.adt.internal.ui.docu.DocuEditorInput" >
+<BugInstance type="HE_EQUALS_USE_HASHCODE" priority="High" category="BAD_PRACTICE" message="HE: com.avaloq.adt.env.internal.ui.docu.DocuEditorInput defines equals and uses Object.hashCode()" lineNumber="110-113" />
+<BugInstance type="HE_EQUALS_USE_HASHCODE" priority="High" category="BAD_PRACTICE" message="HE: com.avaloq.adt.env.internal.ui.docu.DocuEditorInput defines equals and uses Object.hashCode()" lineNumber="115-116" />
+</file>
+<file classname="com.avaloq.adt.internal.ui.spell.SpellingContentAssistProcessor" >
+<BugInstance type="PZLA_PREFER_ZERO_LENGTH_ARRAYS" priority="High" category="STYLE" message="PZLA: Should com.avaloq.adt.internal.ui.spell.SpellingContentAssistProcessor.computeContextInformation(ITextViewer, int) return a zero length array rather than null?" lineNumber="120" />
+<BugInstance type="PZLA_PREFER_ZERO_LENGTH_ARRAYS" priority="Low" category="STYLE" message="PZLA: Should com.avaloq.adt.internal.ui.spell.SpellingContentAssistProcessor.getCompletionProposalAutoActivationCharacters() return a zero length array rather than null?" lineNumber="127" />
+<BugInstance type="PZLA_PREFER_ZERO_LENGTH_ARRAYS" priority="Normal" category="STYLE" message="PZLA: Should com.avaloq.adt.internal.ui.spell.SpellingContentAssistProcessor.getContextInformationAutoActivationCharacters() return a zero length array rather than null?" lineNumber="135" />
+</file>
+</BugCollection>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<BugCollection version="1.2.0" threshold="Low" effort="Max" >
+<file classname="com.avaloq.adt.env.core.db.ChangeDBCore" >
+<BugInstance type="SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING" priority="Exp" category="BAD_PRACTICE" message="SQL: A prepared statement is generated from a nonconstant String at com.avaloq.adt.env.core.db.ChangeDBCore.setProperty(String, long, String, boolean, Connection) " lineNumber="332" />
+<BugInstance type="SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING" priority="Low" category="BAD_PRACTICE" message="SQL: A prepared statement is generated from a nonconstant String at com.avaloq.adt.env.core.db.ChangeDBCore.acknowledgeProject(long) " lineNumber="649" />
+<BugInstance type="SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING" priority="High" category="BAD_PRACTICE" message="SQL: A prepared statement is generated from a nonconstant String at com.avaloq.adt.env.core.db.ChangeDBCore.getNackComment(long, String, Connection) " lineNumber="1445" />
+<BugInstance type="SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING" priority="High" category="BAD_PRACTICE" message="SQL: A prepared statement is generated from a nonconstant String at com.avaloq.adt.env.core.db.ChangeDBCore.setChangeNotePublState(String[], int) " lineNumber="1475" />
+<BugInstance type="SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING" priority="Normal" category="BAD_PRACTICE" message="SQL: A prepared statement is generated from a nonconstant String at com.avaloq.adt.env.core.db.ChangeDBCore.getChangeDeliveries(long[]) " lineNumber="1570" />
+<BugInstance type="SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING" priority="Normal" category="BAD_PRACTICE" message="SQL: A prepared statement is generated from a nonconstant String at com.avaloq.adt.env.core.db.ChangeDBCore.getUsers(long[], String) " lineNumber="1614" />
+<BugInstance type="SBSC_USE_STRINGBUFFER_CONCATENATION" priority="Normal" category="PERFORMANCE" message="SBSC: Method com.avaloq.adt.env.core.db.ChangeDBCore.getChangeDeliveries(long[]) concatenates strings using + in a loop" lineNumber="1558" />
+</file>
+<Errors>
+<AnalysisError>Error analyzing com.avaloq.adt.core.text.Ranges.copy(org.eclipse.jface.viewers.ISelection) for unconditional deref training </AnalysisError>
+<AnalysisError>Error while for guaranteed derefs in copy </AnalysisError>
+<AnalysisError>error: </AnalysisError>
+<AnalysisError>Error analyzing public static com.avaloq.adt.core.text.Range copy(org.eclipse.jface.viewers.ISelection selection) </AnalysisError>
+<AnalysisError>Detector edu.umd.cs.findbugs.detect.FindBadCast2 caught exception while analyzing com.avaloq.adt.core.text.Ranges.copy : (Lorg/eclipse/jface/viewers/ISelection;)Lcom/avaloq/adt/core/text/Range; </AnalysisError>
+<AnalysisError>Detector edu.umd.cs.findbugs.detect.FindUnrelatedTypesInGenericContainer caught exception while analyzing com.avaloq.adt.core.text.Ranges.copy : (Lorg/eclipse/jface/viewers/ISelection;)Lcom/avaloq/adt/core/text/Range; </AnalysisError>
+<AnalysisError>Error analyzing com.avaloq.adt.core.model.AvaloqCore.getResource(org.eclipse.core.resources.IFile) for unconditional deref training </AnalysisError>
+<AnalysisError>Error while for guaranteed derefs in getResource </AnalysisError>
+<AnalysisError>error: </AnalysisError>
+<AnalysisError>Error analyzing public static org.eclipse.emf.ecore.resource.Resource getResource(org.eclipse.core.resources.IFile file)
+		throws com.avaloq.adt.core.AvaloqException </AnalysisError>
+<AnalysisError>Detector edu.umd.cs.findbugs.detect.FindBadCast2 caught exception while analyzing com.avaloq.adt.core.model.AvaloqCore.getResource : (Lorg/eclipse/core/resources/IFile;)Lorg/eclipse/emf/ecore/resource/Resource; </AnalysisError>
+<AnalysisError>Detector edu.umd.cs.findbugs.detect.FindUnrelatedTypesInGenericContainer caught exception while analyzing com.avaloq.adt.core.model.AvaloqCore.getResource : (Lorg/eclipse/core/resources/IFile;)Lorg/eclipse/emf/ecore/resource/Resource; </AnalysisError>
+<AnalysisError>Error analyzing com.avaloq.adt.emf.ADTResourceLocator.log(Object) for unconditional deref training </AnalysisError>
+<AnalysisError>Error while for guaranteed derefs in log </AnalysisError>
+<AnalysisError>error: </AnalysisError>
+<AnalysisError>Error analyzing public void log(Object entry) </AnalysisError>
+<AnalysisError>Detector edu.umd.cs.findbugs.detect.FindBadCast2 caught exception while analyzing com.avaloq.adt.emf.ADTResourceLocator.log : (Ljava/lang/Object;)V </AnalysisError>
+<AnalysisError>Detector edu.umd.cs.findbugs.detect.FindUnrelatedTypesInGenericContainer caught exception while analyzing com.avaloq.adt.emf.ADTResourceLocator.log : (Ljava/lang/Object;)V </AnalysisError>
+<AnalysisError>Error analyzing com.avaloq.adt.env.core.db.helpers.util.HelperDBObjectAdapterFactory.isFactoryForType(Object) for unconditional deref training </AnalysisError>
+<AnalysisError>Error while for guaranteed derefs in isFactoryForType </AnalysisError>
+<AnalysisError>error: </AnalysisError>
+<AnalysisError>Error analyzing public boolean isFactoryForType(Object object) </AnalysisError>
+<AnalysisError>Detector edu.umd.cs.findbugs.detect.FindBadCast2 caught exception while analyzing com.avaloq.adt.env.core.db.helpers.util.HelperDBObjectAdapterFactory.isFactoryForType : (Ljava/lang/Object;)Z </AnalysisError>
+<AnalysisError>Detector edu.umd.cs.findbugs.detect.FindUnrelatedTypesInGenericContainer caught exception while analyzing com.avaloq.adt.env.core.db.helpers.util.HelperDBObjectAdapterFactory.isFactoryForType : (Ljava/lang/Object;)Z </AnalysisError>
+<AnalysisError>Error analyzing com.avaloq.adt.env.core.db.workflow.impl.WorkflowAdapterFactory.isFactoryForType(Object) for unconditional deref training </AnalysisError>
+<AnalysisError>Error while for guaranteed derefs in isFactoryForType </AnalysisError>
+<AnalysisError>error: </AnalysisError>
+<AnalysisError>Error analyzing public boolean isFactoryForType(Object object) </AnalysisError>
+<AnalysisError>Detector edu.umd.cs.findbugs.detect.FindBadCast2 caught exception while analyzing com.avaloq.adt.env.core.db.workflow.impl.WorkflowAdapterFactory.isFactoryForType : (Ljava/lang/Object;)Z </AnalysisError>
+<AnalysisError>Detector edu.umd.cs.findbugs.detect.FindUnrelatedTypesInGenericContainer caught exception while analyzing com.avaloq.adt.env.core.db.workflow.impl.WorkflowAdapterFactory.isFactoryForType : (Ljava/lang/Object;)Z </AnalysisError>
+<AnalysisError>Error analyzing com.avaloq.adt.env.core.model.dbobjects.util.DBObjectsAdapterFactory.isFactoryForType(Object) for unconditional deref training </AnalysisError>
+<AnalysisError>Error while for guaranteed derefs in isFactoryForType </AnalysisError>
+<AnalysisError>error: </AnalysisError>
+<AnalysisError>Error analyzing public boolean isFactoryForType(Object object) </AnalysisError>
+<AnalysisError>Detector edu.umd.cs.findbugs.detect.FindBadCast2 caught exception while analyzing com.avaloq.adt.env.core.model.dbobjects.util.DBObjectsAdapterFactory.isFactoryForType : (Ljava/lang/Object;)Z </AnalysisError>
+<AnalysisError>Detector edu.umd.cs.findbugs.detect.FindUnrelatedTypesInGenericContainer caught exception while analyzing com.avaloq.adt.env.core.model.dbobjects.util.DBObjectsAdapterFactory.isFactoryForType : (Ljava/lang/Object;)Z </AnalysisError>
+<AnalysisError>Error analyzing com.avaloq.adt.internal.core.source.util.SourceAdapterFactory.isFactoryForType(Object) for unconditional deref training </AnalysisError>
+<AnalysisError>Error while for guaranteed derefs in isFactoryForType </AnalysisError>
+<AnalysisError>error: </AnalysisError>
+<AnalysisError>Error analyzing public boolean isFactoryForType(Object object) </AnalysisError>
+<AnalysisError>Detector edu.umd.cs.findbugs.detect.FindBadCast2 caught exception while analyzing com.avaloq.adt.internal.core.source.util.SourceAdapterFactory.isFactoryForType : (Ljava/lang/Object;)Z </AnalysisError>
+<AnalysisError>Detector edu.umd.cs.findbugs.detect.FindUnrelatedTypesInGenericContainer caught exception while analyzing com.avaloq.adt.internal.core.source.util.SourceAdapterFactory.isFactoryForType : (Ljava/lang/Object;)Z </AnalysisError>
+<MissingClass>org.eclipse.core.runtime.IStatus </MissingClass>
+<MissingClass>org.eclipse.emf.common.util.WrappedException </MissingClass>
+<MissingClass>org.eclipse.emf.ecore.EObject </MissingClass>
+<MissingClass>org.eclipse.jface.text.ITextSelection </MissingClass>
+</Errors>
+<Project>
+<SrcDir>C:\Build\Results\jobs\ADT-Base\workspace\com.avaloq.adt.core\src</SrcDir>
+</Project>
+</BugCollection>

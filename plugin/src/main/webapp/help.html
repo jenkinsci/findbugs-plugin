@@ -1,0 +1,52 @@
+<div>
+<p>Hudson can visualize the results of the <a
+  href="http://findbugs.sourceforge.net/">FindBugs</a> analysis of your
+class files. When this option is configured Hudson shows the FindBugs
+analysis results in different views: historical result trend, module and
+package statistics, web UI for viewing analysis reports and warnings,
+and so on.</p>
+<p>You need to set up your build to run FindBugs in order to use
+this feature - this Hudson plug-in does not perform the actual analysis!
+This plug-in is not invoked for failed builds, it is only called for
+stable or unstable builds (i.e., a build with failed tests).</p>
+<h4>Maven configuration</h4>
+You will achieve the best results with the <a
+  href="http://mojo.codehaus.org/findbugs-maven-plugin/">findbugs-maven-plugin</a>
+version 1.2 or newer. You need to add the following snippet to your <code>pom.xml</code>
+file to enable the findbugs analysis: <pre>
+&lt;plugin&gt;
+   &lt;groupId&gt;org.codehaus.mojo&lt;/groupId&gt;
+   &lt;artifactId&gt;findbugs-maven-plugin&lt;/artifactId&gt;
+   &lt;version&gt;1.2&lt;/version&gt;
+   &lt;configuration&gt;
+      &lt;findbugsXmlOutput&gt;true&lt;/findbugsXmlOutput&gt;
+      &lt;findbugsXmlWithMessages&gt;true&lt;/findbugsXmlWithMessages&gt;
+      &lt;xmlOutput&gt;true&lt;/xmlOutput&gt;
+      [...]
+   &lt;/configuration&gt;
+&lt;/plugin&gt;
+</pre> Finally you need to specify the pattern <code>**/findbugsXml.xml</code>
+in order to get the correct results.
+
+<h4>Ant configuration</h4>
+
+To incorporate <span class="application">FindBugs</span> into <code
+  class="filename">build.xml</code>, you first need to add a task
+definition. This should appear as follows: <pre class="screen">
+  &lt;taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask"/&gt;
+</pre> After you have added the task definition, you can define a target which
+uses the <code class="literal">findbugs</code> task, e.g.: <pre
+  class="screen">
+  &lt;target name="findbugs" depends="jar"&gt;
+
+    &lt;findbugs home="${findbugs.home}"
+              output="xml:withMessages"
+              outputFile="findbugs.xml" &gt;
+      &lt;auxClasspath path="${basedir}/lib/Regex.jar" /&gt;
+      &lt;sourcePath path="${basedir}/src/java" /&gt;
+      &lt;class location="${basedir}/bin/bcel.jar" /&gt;
+    &lt;/findbugs&gt;
+  &lt;/target&gt;
+
+</pre> Finally you need to specify the pattern <code>**/findbugs.xml</code> in
+order to get the correct results.</div>
