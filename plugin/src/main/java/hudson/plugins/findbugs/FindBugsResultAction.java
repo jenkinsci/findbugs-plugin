@@ -17,9 +17,6 @@ import hudson.plugins.analysis.core.PluginDescriptor;
  * @author Ulli Hafner
  */
 public class FindBugsResultAction extends AbstractResultAction<FindBugsResult> {
-    /** Unique identifier of this class. */
-    private static final long serialVersionUID = -5329651349674842873L;
-
     /**
      * Creates a new instance of <code>FindBugsBuildAction</code>.
      *
