@@ -2,6 +2,9 @@ package hudson.plugins.findbugs.dashboard;
 
 import hudson.Extension;
 import hudson.model.Descriptor;
+import hudson.plugins.analysis.core.AbstractProjectAction;
+import hudson.plugins.analysis.dashboard.AbstractWarningsTablePortlet;
+import hudson.plugins.findbugs.FindBugsProjectAction;
 import hudson.plugins.findbugs.Messages;
 import hudson.plugins.view.dashboard.DashboardPortlet;
 
@@ -12,7 +15,7 @@ import org.kohsuke.stapler.DataBoundConstructor;
  *
  * @author Ulli Hafner
  */
-public class WarningsTablePortlet extends FindBugsPortlet {
+public class WarningsTablePortlet extends AbstractWarningsTablePortlet {
     /**
      * Creates a new instance of {@link WarningsTablePortlet}.
      *
@@ -22,6 +25,18 @@ public class WarningsTablePortlet extends FindBugsPortlet {
     @DataBoundConstructor
     public WarningsTablePortlet(final String name) {
         super(name);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    protected Class<? extends AbstractProjectAction<?>> getAction() {
+        return FindBugsProjectAction.class;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    protected String getPluginName() {
+        return "findbugs";
     }
 
     /**
