@@ -61,15 +61,17 @@ public class FindBugsReporter extends HealthAwareMavenReporter {
      * @param thresholdLimit
      *            determines which warning priorities should be considered when
      *            evaluating the build stability and health
+     * @param canRunOnFailed
+     *            determines whether the plug-in can run for failed builds, too
      */
     // CHECKSTYLE:OFF
     @SuppressWarnings("PMD.ExcessiveParameterList")
     @DataBoundConstructor
     public FindBugsReporter(final String threshold, final String newThreshold,
             final String failureThreshold, final String newFailureThreshold,
-            final String healthy, final String unHealthy, final String thresholdLimit) {
+            final String healthy, final String unHealthy, final String thresholdLimit, final boolean canRunOnFailed) {
         super(threshold, newThreshold, failureThreshold, newFailureThreshold,
-                healthy, unHealthy, thresholdLimit, "FINDBUGS");
+                healthy, unHealthy, thresholdLimit, canRunOnFailed, "FINDBUGS");
     }
     // CHECKSTYLE:ON
 
