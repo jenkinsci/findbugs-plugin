@@ -6,6 +6,7 @@
 			checkUrl="'descriptorByName/FindBugsPublisher/checkPattern?value='+escape(this.value)" />
 	</f:entry>
    <f:advanced>
+    <u:failed/>
     <u:thresholds id="findbugs"/>
     <u:defaultEncoding id="findbugs"/>
     <u:trend id="findbugs"/>
