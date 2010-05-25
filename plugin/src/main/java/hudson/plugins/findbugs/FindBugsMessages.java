@@ -9,6 +9,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.apache.commons.digester.Digester;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.xml.sax.SAXException;
 
@@ -79,11 +80,17 @@ public final class FindBugsMessages {
      *             if we can't read the file
      */
     private void loadMessages(final String fileName, final Map<String, String> messagesCache, final Map<String, String> shortMessagesCache) throws IOException, SAXException {
-        InputStream file = FindBugsMessages.class.getResourceAsStream(fileName);
-        List<Pattern> patterns = parse(file);
-        for (Pattern pattern : patterns) {
-            messagesCache.put(pattern.getType(), pattern.getDescription());
-            shortMessagesCache.put(pattern.getType(), pattern.getShortDescription());
+        InputStream file = null;
+        try {
+            file = FindBugsMessages.class.getResourceAsStream(fileName);
+            List<Pattern> patterns = parse(file);
+            for (Pattern pattern : patterns) {
+                messagesCache.put(pattern.getType(), pattern.getDescription());
+                shortMessagesCache.put(pattern.getType(), pattern.getShortDescription());
+            }
+        }
+        finally {
+            IOUtils.closeQuietly(file);
         }
     }
 
