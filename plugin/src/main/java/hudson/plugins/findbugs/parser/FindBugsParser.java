@@ -3,10 +3,8 @@ package hudson.plugins.findbugs.parser;
 import hudson.FilePath;
 import hudson.plugins.analysis.core.AnnotationParser;
 import hudson.plugins.analysis.util.model.FileAnnotation;
-import hudson.plugins.findbugs.parser.maven.MavenFindBugsParser;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -59,20 +57,14 @@ public class FindBugsParser implements AnnotationParser {
     /** {@inheritDoc} */
     public Collection<FileAnnotation> parse(final File file, final String moduleName) throws InvocationTargetException {
         try {
-            MavenFindBugsParser mavenFindBugsParser = new MavenFindBugsParser();
-            if (mavenFindBugsParser.accepts(new FileInputStream(file))) {
-                return mavenFindBugsParser.parse(new FileInputStream(file), moduleName, workspace);
+            Collection<String> sources = new ArrayList<String>(mavenSources);
+            if (sources.isEmpty()) {
+                String moduleRoot = StringUtils.substringBefore(file.getAbsolutePath().replace('\\', '/'), "/target/");
+                sources.add(moduleRoot + "/src/main/java");
+                sources.add(moduleRoot + "/src/test/java");
+                sources.add(moduleRoot + "/src");
             }
-            else {
-                Collection<String> sources = new ArrayList<String>(mavenSources);
-                if (sources.isEmpty()) {
-                    String moduleRoot = StringUtils.substringBefore(file.getAbsolutePath().replace('\\', '/'), "/target/");
-                    sources.add(moduleRoot + "/src/main/java");
-                    sources.add(moduleRoot + "/src/test/java");
-                    sources.add(moduleRoot + "/src");
-                }
-                return new NativeFindBugsParser().parse(file, sources, moduleName);
-            }
+            return new NativeFindBugsParser().parse(file, sources, moduleName);
         }
         catch (IOException exception) {
             throw new InvocationTargetException(exception);

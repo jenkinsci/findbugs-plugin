@@ -7,10 +7,9 @@ package statistics, web UI for viewing analysis reports and warnings,
 and so on.</p>
 <p>You need to set up your build to run FindBugs in order to use
 this feature - this Hudson plug-in does not perform the actual analysis!
-This plug-in is not invoked for failed builds, it is only called for
-stable or unstable builds (i.e., a build with failed tests).</p>
+</p>
 <h4>Maven configuration</h4>
-You will achieve the best results with the <a
+This plug-in requires the  <a
   href="http://mojo.codehaus.org/findbugs-maven-plugin/">findbugs-maven-plugin</a>
 version 1.2 or newer. You need to add the following snippet to your <code>pom.xml</code>
 file to enable the findbugs analysis: <pre>
@@ -25,8 +24,7 @@ file to enable the findbugs analysis: <pre>
       [...]
    &lt;/configuration&gt;
 &lt;/plugin&gt;
-</pre> Finally you need to specify the pattern <code>**/findbugsXml.xml</code>
-in order to get the correct results.
+</pre>
 
 <h4>Ant configuration</h4>
 
@@ -47,6 +45,5 @@ uses the <code class="literal">findbugs</code> task, e.g.: <pre
       &lt;class location="${basedir}/bin/bcel.jar" /&gt;
     &lt;/findbugs&gt;
   &lt;/target&gt;
-
-</pre> Finally you need to specify the pattern <code>**/findbugs.xml</code> in
-order to get the correct results.</div>
+</pre>
+</div>
