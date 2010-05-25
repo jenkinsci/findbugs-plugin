@@ -70,6 +70,15 @@
           <configLocation>../findbugs/plugin/checkstyle-configuration.xml</configLocation>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>findbugs-maven-plugin</artifactId>
+        <configuration>
+          <excludeFilterFile>
+            ../findbugs/plugin/findbugs-exclusion-filter.xml
+          </excludeFilterFile>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 
