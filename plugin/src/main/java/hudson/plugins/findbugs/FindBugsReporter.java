@@ -15,6 +15,7 @@ import hudson.plugins.findbugs.parser.FindBugsParser;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.maven.project.MavenProject;
@@ -154,8 +155,8 @@ public class FindBugsReporter extends HealthAwareMavenReporter {
 
     /** {@inheritDoc} */
     @Override
-    public Action getProjectAction(final MavenModule module) {
-        return new FindBugsProjectAction(module);
+    public List<FindBugsProjectAction> getProjectActions(final MavenModule module) {
+        return Collections.singletonList(new FindBugsProjectAction(module));
     }
 
     /** {@inheritDoc} */
