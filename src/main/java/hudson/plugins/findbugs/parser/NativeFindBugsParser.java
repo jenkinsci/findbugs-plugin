@@ -68,6 +68,7 @@ public class NativeFindBugsParser {
             throws IOException, DocumentException, SAXException {
         FileInputStream input = null;
         try {
+            input = new FileInputStream(file);
             Map<String, String> hashToMessageMapping = createHashToMessageMapping(input);
             IOUtils.closeQuietly(input);
 

@@ -7,12 +7,9 @@ Statistik und Package Statistik. Zudem zeigt Hudson die jeweiligen
 Warnungen direkt in der betroffen Datei an.</p>
 <p>Damit das Plug-in korrekt funktioniert, muss im Build
 FindBugs gestartet werden - das Hudson Plug-in selbst macht dies
-nicht! Das Plug-in wird nicht aufgerufen, wenn der Build fehlgeschlagen
-ist, sondern nur für stabile bzw. instabile Builds (mit fehlgeschlagenen
-Tests).</p>
+nicht!</p>
 <h4>Maven Konfiguration</h4>
-Die besten Ergebnisse erhält man mit dem <a
-  href="http://mojo.codehaus.org/findbugs-maven-plugin/">findbugs-maven-plugin</a>
+Voraussetzung ist das <a href="http://mojo.codehaus.org/findbugs-maven-plugin/">findbugs-maven-plugin</a>
 Version 1.2 oder neuer. Der folgenden Abschnitt muss in die <code>pom.xml</code>
 Datei kopiert werden, damit FindBugs während des Build korrekt läuft:
 <pre>
@@ -26,8 +23,7 @@ Datei kopiert werden, damit FindBugs während des Build korrekt läuft:
       [...]
    &lt;/configuration&gt;
 &lt;/plugin&gt;
-</pre> Anschließend muss das Suchmuster der FindBugs-Dateien noch auf <code>**/findbugsXml.xml</code>
-festgesetzt werden, um die korrekten Resultate zu erhalten.
+</pre>
 
 <h4>Ant Konfiguration</h4>
 
@@ -48,5 +44,4 @@ Task benutzt: <pre class="screen">
     &lt;/findbugs&gt;
   &lt;/target&gt;
 
-</pre> Anschließend muss das Suchmuster der FindBugs-Dateien noch auf <code>**/findbugs.xml</code>
-festgesetzt werden, um die korrekten Resultate zu erhalten.</div>
+</pre>
