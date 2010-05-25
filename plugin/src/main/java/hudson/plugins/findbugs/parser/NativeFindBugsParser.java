@@ -19,6 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.digester.Digester;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.dom4j.DocumentException;
 import org.jvnet.localizer.LocaleProvider;
@@ -65,9 +66,17 @@ public class NativeFindBugsParser {
      */
     public Collection<FileAnnotation> parse(final File file, final Collection<String> sources, final String moduleName)
             throws IOException, DocumentException, SAXException {
-        Map<String, String> hashToMessageMapping = createHashToMessageMapping(new FileInputStream(file));
+        FileInputStream input = null;
+        try {
+            Map<String, String> hashToMessageMapping = createHashToMessageMapping(input);
+            IOUtils.closeQuietly(input);
 
-        return parse(new FileInputStream(file), sources, moduleName, hashToMessageMapping);
+            input = new FileInputStream(file);
+            return parse(input, sources, moduleName, hashToMessageMapping);
+        }
+        finally {
+            IOUtils.closeQuietly(input);
+        }
     }
 
     /**
