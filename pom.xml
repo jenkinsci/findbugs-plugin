@@ -75,7 +75,7 @@
         <artifactId>maven-pmd-plugin</artifactId>
         <configuration>
           <rulesets>
-            <ruleset>../findbugs/plugin/pmd-configuration.xml</ruleset>
+            <ruleset>pmd-configuration.xml</ruleset>
           </rulesets>
           <targetJdk>1.5</targetJdk>
         </configuration>
