@@ -118,7 +118,7 @@ public class FindBugsReporter extends HealthAwareMavenReporter {
         sources.addAll(pom.getTestCompileSourceRoots());
 
         FilesParser findBugsCollector = new FilesParser(logger, determineFileName(mojo),
-                    new FindBugsParser(build.getModuleSetRootDir(), sources), true, false);
+                    new FindBugsParser(sources), true, false);
 
         return getTargetPath(pom).act(findBugsCollector);
     }

@@ -24,7 +24,7 @@ import org.xml.sax.SAXException;
 /**
  *  Tests the extraction of FindBugs analysis results.
  */
-public class NativeFindBugsParserTest extends AbstractEnglishLocaleTest {
+public class FindBugsParserTest extends AbstractEnglishLocaleTest {
     /** Error message. */
     private static final String WRONG_MESSAGE_PARSED = "Wrong message parsed.";
     /** Error message. */
@@ -51,7 +51,7 @@ public class NativeFindBugsParserTest extends AbstractEnglishLocaleTest {
      *             in case of an error
      */
     private MavenModule parseFile(final String fileName) throws IOException, DocumentException {
-        Collection<FileAnnotation> annotations = new NativeFindBugsParser().parse(NativeFindBugsParserTest.class.getResourceAsStream(fileName), new ArrayList<String>(), fileName, new HashMap<String, String>());
+        Collection<FileAnnotation> annotations = new FindBugsParser().parse(FindBugsParserTest.class.getResourceAsStream(fileName), new ArrayList<String>(), fileName, new HashMap<String, String>());
         MavenModule module = new MavenModule(fileName);
         if (!annotations.isEmpty()) {
             module.setName(annotations.iterator().next().getModuleName());
@@ -71,7 +71,7 @@ public class NativeFindBugsParserTest extends AbstractEnglishLocaleTest {
      */
     @Test
     public void testMessageMapping() throws SAXException, IOException {
-        Map<String, String> mapping = new NativeFindBugsParser().createHashToMessageMapping(NativeFindBugsParserTest.class.getResourceAsStream(FINDBUGS_NATIVE_XML));
+        Map<String, String> mapping = new FindBugsParser().createHashToMessageMapping(FindBugsParserTest.class.getResourceAsStream(FINDBUGS_NATIVE_XML));
 
         assertEquals(WRONG_NUMBER_OF_WARNINGS_PARSED, 2, mapping.size());
         assertTrue(BUG_WITH_GIVEN_HASHCODE_NOT_FOUND, mapping.containsKey(FIRST_WARNING));
