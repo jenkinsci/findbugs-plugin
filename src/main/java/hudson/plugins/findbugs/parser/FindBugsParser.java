@@ -53,7 +53,8 @@ public class FindBugsParser implements AnnotationParser {
     }
 
     /** Collection of source folders. */
-    private final List<String> mavenSources;
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings("SE")
+    private final List<String> mavenSources = new ArrayList<String>();
 
     /**
      * Creates a new instance of {@link FindBugsParser}.
@@ -64,12 +65,13 @@ public class FindBugsParser implements AnnotationParser {
 
     /**
      * Creates a new instance of {@link FindBugsParser}.
-     * @param mavenSources
+     *
+     * @param sourceFolders
      *            a collection of folders to scan for source files. If empty,
      *            the source folders are guessed.
      */
-    public FindBugsParser(final Collection<String> mavenSources) {
-        this.mavenSources = new ArrayList<String>(mavenSources);
+    public FindBugsParser(final Collection<String> sourceFolders) {
+        mavenSources.addAll(sourceFolders);
     }
 
     /** {@inheritDoc} */
