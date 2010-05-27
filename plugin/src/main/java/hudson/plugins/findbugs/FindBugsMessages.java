@@ -53,16 +53,18 @@ public final class FindBugsMessages {
      *             if we can't read a file
      */
     @edu.umd.cs.findbugs.annotations.SuppressWarnings({"DE", "REC"})
-    public synchronized void initialize() throws IOException, SAXException {
-        loadMessages("messages.xml", messages, shortMessages);
-        try {
-            loadMessages("messages_fr.xml", frMessages, frShortMessages);
-            loadMessages("messages_ja.xml", jaMessages, jaShortMessages);
+    public void initialize() throws IOException, SAXException {
+        synchronized (messages) {
+            loadMessages("messages.xml", messages, shortMessages);
+            try {
+                loadMessages("messages_fr.xml", frMessages, frShortMessages);
+                loadMessages("messages_ja.xml", jaMessages, jaShortMessages);
+            }
+            catch (Exception exception) { // NOCHECKSTYLE
+                // ignore failures on localized messages
+            }
+            loadMessages("fb-contrib-messages.xml", messages, shortMessages);
         }
-        catch (Exception exception) { // NOCHECKSTYLE
-            // ignore failures on localized messages
-        }
-        loadMessages("fb-contrib-messages.xml", messages, shortMessages);
     }
 
     /**
@@ -111,11 +113,12 @@ public final class FindBugsMessages {
         List<Pattern> patterns = new ArrayList<Pattern>();
         digester.push(patterns);
 
-        digester.addObjectCreate("*/BugPattern", Pattern.class);
-        digester.addSetProperties("*/BugPattern");
+        String startPattern = "*/BugPattern";
+        digester.addObjectCreate(startPattern, Pattern.class);
+        digester.addSetProperties(startPattern);
         digester.addCallMethod("*/BugPattern/Details", "setDescription", 0);
         digester.addCallMethod("*/BugPattern/ShortDescription", "setShortDescription", 0);
-        digester.addSetNext("*/BugPattern", "add");
+        digester.addSetNext(startPattern, "add");
 
         digester.parse(file);
 
