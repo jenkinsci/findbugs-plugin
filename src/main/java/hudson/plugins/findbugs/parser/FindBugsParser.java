@@ -48,6 +48,8 @@ public class FindBugsParser implements AnnotationParser {
     /** Unique ID of this class. */
     private static final long serialVersionUID = 8306319007761954027L;
 
+    private static final String DOT = ".";
+    private static final String SLASH = "/";
     static {
         DetectorFactoryCollection.rawInstance().setPluginList(new URL[0]);
     }
@@ -230,7 +232,7 @@ public class FindBugsParser implements AnnotationParser {
                 Logger.getLogger(getClass().getName()).log(Level.WARNING,
                         "Can't resolve absolute file name for file " + sourceLine.getSourceFile()
                         + ", dir list = " + project.getSourceDirList().toString());
-                fileName = sourceLine.getPackageName().replace(".", "/") + "/" + sourceLine.getSourceFile();
+                fileName = sourceLine.getPackageName().replace(DOT, SLASH) + SLASH + sourceLine.getSourceFile();
             }
             bug.setFileName(fileName);
             bug.setPackageName(warning.getPrimaryClass().getPackageName());
@@ -242,7 +244,7 @@ public class FindBugsParser implements AnnotationParser {
     }
 
     /**
-     * Maps the FindBugs priority to our priority enumeration.
+     * Maps the FindBugs library priority to plug-in priority enumeration.
      *
      * @param warning
      *            the FindBugs warning

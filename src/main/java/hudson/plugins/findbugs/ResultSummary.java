@@ -48,6 +48,7 @@ public final class ResultSummary {
      *            the result
      * @return the message
      */
+    // CHECKSTYLE:CONSTANTS-OFF
     public static String createDeltaMessage(final FindBugsResult result) {
         StringBuilder summary = new StringBuilder();
         if (result.getNumberOfNewWarnings() > 0) {
@@ -73,6 +74,7 @@ public final class ResultSummary {
 
         return summary.toString();
     }
+    // CHECKSTYLE:CONSTANTS-ON
 
     /**
      * Instantiates a new result summary.
