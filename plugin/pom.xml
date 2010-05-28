@@ -68,6 +68,7 @@
         <artifactId>maven-checkstyle-plugin</artifactId>
         <configuration>
           <configLocation>../findbugs/plugin/checkstyle-configuration.xml</configLocation>
+            <propertiesLocation>../findbugs/plugin/target/checkstyle.properties</propertiesLocation>
         </configuration>
       </plugin>
       <plugin>
