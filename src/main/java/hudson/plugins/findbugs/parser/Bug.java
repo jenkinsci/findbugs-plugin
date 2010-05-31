@@ -139,10 +139,7 @@ public class Bug extends AbstractAnnotation {
     /** {@inheritDoc} */
     @Override
     public int hashCode() {
-        int prime = 31; // NOCHECKSTYLE
-        int result = super.hashCode();
-        result = prime * result + ((instanceHash == null) ? 0 : instanceHash.hashCode());
-        return result;
+        return 31 + ((instanceHash == null) ? 0 : instanceHash.hashCode()); // NOCHECKSTYLE
     }
 
     /** {@inheritDoc} */

@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<annotation-array>
+  <bug>
+    <message>foo.App.equals(Object) always returns true</message>
+    <priority>HIGH</priority>
+    <key>43</key>
+    <lineRanges>
+      <range>
+        <start>18</start>
+        <end>18</end>
+      </range>
+    </lineRanges>
+    <primaryLineNumber>18</primaryLineNumber>
+    <fileName>C:/Tools/hudson/jobs/XTest_Bruno/workspace/XTest_BrunoView/IN_Tools/Devsup_tools/MiscTools/eclipse/pdcc1/src/main/java/foo/App.java</fileName>
+    <moduleName>pdcc1</moduleName>
+    <packageName>foo</packageName>
+    <category>CORRECTNESS</category>
+    <type>EQ_ALWAYS_TRUE</type>
+    <contextHashCode>44</contextHashCode>
+    <origin>findbugs</origin>
+    <tooltip></tooltip>
+    <instanceHash>dcf21e143507216ad9b613f77ff64204</instanceHash>
+  </bug>
+  <bug>
+    <message>foo.App dÃ©finit equals() et utilise Object.hashCode()</message>
+    <priority>HIGH</priority>
+    <key>44</key>
+    <lineRanges>
+      <range>
+        <start>18</start>
+        <end>18</end>
+      </range>
+    </lineRanges>
+    <primaryLineNumber>18</primaryLineNumber>
+    <fileName>C:/Tools/hudson/jobs/XTest_Bruno/workspace/XTest_BrunoView/IN_Tools/Devsup_tools/MiscTools/eclipse/pdcc1/src/main/java/foo/App.java</fileName>
+    <moduleName>pdcc1</moduleName>
+    <packageName>foo</packageName>
+    <category>BAD_PRACTICE</category>
+    <type>HE_EQUALS_USE_HASHCODE</type>
+    <contextHashCode>45</contextHashCode>
+    <origin>findbugs</origin>
+    <tooltip></tooltip>
+    <instanceHash>e240bc5bb7db2d63fb833a35d61709c0</instanceHash>
+  </bug>
+</annotation-array>
