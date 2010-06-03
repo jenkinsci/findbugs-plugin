@@ -16,7 +16,6 @@ import com.thoughtworks.xstream.XStream;
  * @author Ulli Hafner
  */
 public class FindBugsResult extends BuildResult {
-    /** Unique identifier of this class. */
     private static final long serialVersionUID = 2768250056765266658L;
 
     /**

@@ -18,7 +18,7 @@ import hudson.plugins.analysis.core.PluginDescriptor;
  */
 public class FindBugsResultAction extends AbstractResultAction<FindBugsResult> {
     /**
-     * Creates a new instance of <code>FindBugsBuildAction</code>.
+     * Creates a new instance of {@link FindBugsResultAction}.
      *
      * @param owner
      *            the associated build of this action

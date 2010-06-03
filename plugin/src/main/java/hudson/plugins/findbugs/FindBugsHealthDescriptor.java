@@ -12,7 +12,6 @@ import org.jvnet.localizer.Localizable;
  * @author Ulli Hafner
  */
 public class FindBugsHealthDescriptor extends AbstractHealthDescriptor {
-    /** Unique ID of this class. */
     private static final long serialVersionUID = -3404826986876607396L;
 
     /**
