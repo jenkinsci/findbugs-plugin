@@ -11,7 +11,6 @@ import hudson.plugins.analysis.core.ResultAction;
  * @author Ulli Hafner
  */
 public class FindBugsMavenResult extends FindBugsResult {
-    /** Unique ID of this class. */
     private static final long serialVersionUID = -4913938782537266259L;
 
     /**

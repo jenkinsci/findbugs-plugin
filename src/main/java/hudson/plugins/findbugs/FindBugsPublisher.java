@@ -21,13 +21,11 @@ import org.kohsuke.stapler.DataBoundConstructor;
  * @author Ulli Hafner
  */
 public class FindBugsPublisher extends HealthAwarePublisher {
-    /** Unique ID of this class. */
     private static final long serialVersionUID = -5748362182226609649L;
 
-    /** Default Ant FindBugs pattern. */
     private static final String ANT_DEFAULT_PATTERN = "**/findbugs.xml";
-    /** Default Maven FindBugs pattern. */
     private static final String MAVEN_DEFAULT_PATTERN = "**/findbugsXml.xml";
+
     /** Ant file-set pattern of files to work with. */
     private final String pattern;
 

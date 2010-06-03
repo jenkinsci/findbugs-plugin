@@ -9,7 +9,6 @@ package hudson.plugins.findbugs.parser;
 public class XmlBugInstance {
     /** Unique ID of a bug. */
     private String instanceHash;
-    /** Message describing the bug. */
     private String message;
 
     /**
@@ -50,4 +49,3 @@ public class XmlBugInstance {
         this.message = message;
     }
 }
-

@@ -30,7 +30,6 @@ import org.kohsuke.stapler.DataBoundConstructor;
  */
 // CHECKSTYLE:COUPLING-OFF
 public class FindBugsReporter extends HealthAwareMavenReporter {
-    /** Unique identifier of this class. */
     private static final long serialVersionUID = -288391908253344862L;
 
     /** FindBugs filename if maven findbugsXmlOutput is activated. */
