@@ -132,6 +132,7 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
 
         boolean found = false;
         for (FileAnnotation annotation : javaPackage.getAnnotations()) {
+            assertFalse("Message is not resolved.", annotation.getMessage().contains("TEST:"));
             if (annotation.getFileName().contains("ResultSummary.java")) {
                 found = true;
                 assertFalse("Warning message could not be resolved.",
@@ -157,6 +158,8 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
 
         FileAnnotation next = module.getAnnotations().iterator().next();
         assertTrue("Warning has no message.", next.getMessage().contains("Redundant nullcheck of"));
+        assertEquals("Wrong category", "STYLE", next.getCategory());
+        assertEquals("Wrong category", "RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE", next.getType());
     }
 
     /**
