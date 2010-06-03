@@ -206,7 +206,7 @@ public class FindBugsParser implements AnnotationParser {
             SourceLineAnnotation sourceLine = warning.getPrimarySourceLineAnnotation();
 
             String message = warning.getMessage();
-            if (message.contains("TEST: Unknown warning")) {
+            if (message.contains("TEST: Unknown")) {
                 message = FindBugsMessages.getInstance().getShortMessage(warning.getType(), LocaleProvider.getLocale());
             }
             Bug bug = new Bug(getPriority(warning),
