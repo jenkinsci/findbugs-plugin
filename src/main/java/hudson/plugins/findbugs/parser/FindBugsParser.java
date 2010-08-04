@@ -1,10 +1,24 @@
 package hudson.plugins.findbugs.parser; // NOPMD
 
+import edu.umd.cs.findbugs.BugAnnotation;
+import edu.umd.cs.findbugs.BugInstance;
+import edu.umd.cs.findbugs.DetectorFactoryCollection;
+import edu.umd.cs.findbugs.Project;
+import edu.umd.cs.findbugs.SortedBugCollection;
+import edu.umd.cs.findbugs.SourceLineAnnotation;
+import edu.umd.cs.findbugs.ba.SourceFile;
+import edu.umd.cs.findbugs.ba.SourceFinder;
 import hudson.plugins.analysis.core.AnnotationParser;
 import hudson.plugins.analysis.util.model.FileAnnotation;
 import hudson.plugins.analysis.util.model.LineRange;
 import hudson.plugins.analysis.util.model.Priority;
 import hudson.plugins.findbugs.FindBugsMessages;
+import hudson.util.IOUtils;
+import org.apache.commons.digester.Digester;
+import org.apache.commons.lang.StringUtils;
+import org.dom4j.DocumentException;
+import org.jvnet.localizer.LocaleProvider;
+import org.xml.sax.SAXException;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -21,22 +35,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.commons.digester.Digester;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
-import org.dom4j.DocumentException;
-import org.jvnet.localizer.LocaleProvider;
-import org.xml.sax.SAXException;
-
-import edu.umd.cs.findbugs.BugAnnotation;
-import edu.umd.cs.findbugs.BugInstance;
-import edu.umd.cs.findbugs.DetectorFactoryCollection;
-import edu.umd.cs.findbugs.Project;
-import edu.umd.cs.findbugs.SortedBugCollection;
-import edu.umd.cs.findbugs.SourceLineAnnotation;
-import edu.umd.cs.findbugs.ba.SourceFile;
-import edu.umd.cs.findbugs.ba.SourceFinder;
-
 /**
  * A parser for the native FindBugs XML files (ant task, batch file or
  * maven-findbugs-plugin >= 1.2).
@@ -50,6 +48,10 @@ public class FindBugsParser implements AnnotationParser {
 
     private static final String DOT = ".";
     private static final String SLASH = "/";
+
+    private static final int HIGH_PRIORITY_LOWEST_RANK = 4;
+    private static final int NORMAL_PRIORITY_LOWEST_RANK = 9;
+
     static {
         DetectorFactoryCollection.rawInstance().setPluginList(new URL[0]);
     }
@@ -214,6 +216,15 @@ public class FindBugsParser implements AnnotationParser {
                     warning.getBugPattern().getCategory(),
                     warning.getType(), sourceLine.getStartLine(), sourceLine.getEndLine());
             bug.setInstanceHash(warning.getInstanceHash());
+            long firstSeen = collection.getCloud().getFirstSeen(warning);
+            bug.setFirstSeen(firstSeen);
+            int ageInDays = (int) ((System.currentTimeMillis() - firstSeen) / 1000 / 60 / 60 / 24);
+            bug.setAgeInDays(ageInDays);
+            bug.setReviewCount(collection.getCloud().getNumberReviewers(warning));
+            boolean notAProblem = collection.getCloud().overallClassificationIsNotAProblem(warning);
+            if (notAProblem)
+                continue;
+            bug.setNotAProblem(notAProblem);
 
             Iterator<BugAnnotation> annotationIterator = warning.annotationIterator();
             while (annotationIterator.hasNext()) {
@@ -244,21 +255,19 @@ public class FindBugsParser implements AnnotationParser {
     }
 
     /**
-     * Maps the FindBugs library priority to plug-in priority enumeration.
+     * Maps the FindBugs library rank to plug-in priority enumeration.
      *
      * @param warning
      *            the FindBugs warning
      * @return mapped priority enumeration
      */
     private Priority getPriority(final BugInstance warning) {
-        switch (warning.getPriority()) {
-            case 1:
-                return Priority.HIGH;
-            case 2:
-                return Priority.NORMAL;
-            default:
-                return Priority.LOW;
-        }
+        int rank = warning.getBugRank();
+        if (rank <= HIGH_PRIORITY_LOWEST_RANK)
+            return Priority.HIGH;
+        if (rank <= NORMAL_PRIORITY_LOWEST_RANK)
+            return Priority.NORMAL;
+        return Priority.LOW;
     }
 
     /**

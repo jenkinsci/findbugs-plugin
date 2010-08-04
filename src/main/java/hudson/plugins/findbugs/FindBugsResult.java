@@ -5,6 +5,7 @@ import hudson.plugins.analysis.core.BuildHistory;
 import hudson.plugins.analysis.core.BuildResult;
 import hudson.plugins.analysis.core.ParserResult;
 import hudson.plugins.analysis.core.ResultAction;
+import hudson.plugins.analysis.util.model.FileAnnotation;
 import hudson.plugins.findbugs.parser.Bug;
 
 import com.thoughtworks.xstream.XStream;
@@ -17,6 +18,9 @@ import com.thoughtworks.xstream.XStream;
  */
 public class FindBugsResult extends BuildResult {
     private static final long serialVersionUID = 2768250056765266658L;
+
+    private int newThisWeek = 0;
+    private int numberOfComments = 0;
 
     /**
      * Creates a new instance of {@link FindBugsResult}.
@@ -31,6 +35,7 @@ public class FindBugsResult extends BuildResult {
     public FindBugsResult(final AbstractBuild<?, ?> build, final String defaultEncoding,
             final ParserResult result) {
         super(build, defaultEncoding, result);
+        init();
     }
 
     /**
@@ -48,6 +53,26 @@ public class FindBugsResult extends BuildResult {
     public FindBugsResult(final AbstractBuild<?, ?> build, final String defaultEncoding,
             final ParserResult result, final BuildHistory history) {
         super(build, defaultEncoding, result, history);
+        init();
+    }
+
+    private void init() {
+        int newThisWeek = 0;
+        int reviewCount = 0;
+        for (FileAnnotation annotation : getAnnotations()) {
+            if (annotation instanceof Bug) {
+                Bug bug = (Bug) annotation;
+                if (bug.getAgeInDays() <= 6)
+                    newThisWeek++;
+                reviewCount += bug.getReviewCount();
+            }
+        }
+        this.newThisWeek = newThisWeek;
+        this.numberOfComments = reviewCount;
+    }
+
+    public int getNumberOfComments() {
+        return numberOfComments;
     }
 
     /** {@inheritDoc} */
@@ -63,6 +88,10 @@ public class FindBugsResult extends BuildResult {
      */
     public String getSummary() {
         return ResultSummary.createSummary(this);
+    }
+
+    public int getNewThisWeek() {
+        return newThisWeek;
     }
 
     /** {@inheritDoc} */

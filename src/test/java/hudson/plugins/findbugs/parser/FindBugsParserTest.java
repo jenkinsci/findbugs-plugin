@@ -1,6 +1,5 @@
 package hudson.plugins.findbugs.parser;
 
-import static org.junit.Assert.*;
 import hudson.plugins.analysis.test.AbstractEnglishLocaleTest;
 import hudson.plugins.analysis.util.model.FileAnnotation;
 import hudson.plugins.analysis.util.model.JavaPackage;
@@ -9,6 +8,9 @@ import hudson.plugins.analysis.util.model.MavenModule;
 import hudson.plugins.analysis.util.model.Priority;
 import hudson.plugins.findbugs.FindBugsMessages;
 import hudson.plugins.findbugs.Messages;
+import org.dom4j.DocumentException;
+import org.junit.Test;
+import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,9 +19,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.dom4j.DocumentException;
-import org.junit.Test;
-import org.xml.sax.SAXException;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  *  Tests the extraction of FindBugs analysis results.
@@ -94,7 +96,7 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
     @Test
     public void testFileWithMultipleLinesAndRanges() throws IOException, DocumentException, SAXException {
         scanNativeFile(FINDBUGS_NATIVE_XML, FINDBUGS_NATIVE_XML,
-                Priority.NORMAL, "org/apache/hadoop/dfs/BlockCrcUpgrade.java", "org.apache.hadoop.dfs", 1309, 1309,
+                Priority.LOW, "org/apache/hadoop/dfs/BlockCrcUpgrade.java", "org.apache.hadoop.dfs", 1309, 1309,
                 5, "org/apache/hadoop/streaming/StreamJob.java", "org.apache.hadoop.streaming", 935, 980, 1);
     }
 
@@ -112,7 +114,7 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
     @Test
     public void scanFileWarningsHaveMultipleClasses() throws IOException, DocumentException, SAXException {
         scanNativeFile("findbugs-multclass.xml", "FindBugs",
-                Priority.HIGH, "umd/cs/findbugs/PluginLoader.java", "edu.umd.cs.findbugs", 82, 82,
+                Priority.LOW, "umd/cs/findbugs/PluginLoader.java", "edu.umd.cs.findbugs", 82, 82,
                 1, "edu/umd/cs/findbugs/PluginLoader.java", "edu.umd.cs.findbugs", 93, 93, 1);
     }
 
@@ -160,6 +162,43 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
         assertTrue("Warning has no message.", next.getMessage().contains("Redundant nullcheck of"));
         assertEquals("Wrong category", "STYLE", next.getCategory());
         assertEquals("Wrong category", "RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE", next.getType());
+    }
+
+    @Test
+    public void handleFileWithNotABugConsensus() throws IOException, DocumentException {
+        MavenModule module = parseFile("findbugs-with-notAProblem-bug.xml");
+        assertEquals(WRONG_NUMBER_OF_WARNINGS_PARSED, 1, module.getNumberOfAnnotations());
+
+        FileAnnotation next = module.getAnnotations().iterator().next();
+        assertTrue("Warning has no message.", next.getMessage().contains("Redundant nullcheck of"));
+        assertEquals("Wrong category", "STYLE", next.getCategory());
+        assertEquals("Wrong category", "RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE", next.getType());
+    }
+
+    @Test
+    public void handleFileWithFirstSeenDate() throws IOException, DocumentException {
+        MavenModule module = parseFile("findbugs-with-firstSeen.xml");
+        assertEquals(WRONG_NUMBER_OF_WARNINGS_PARSED, 1, module.getNumberOfAnnotations());
+
+        FileAnnotation next = module.getAnnotations().iterator().next();
+        assertTrue("Warning has no message.", next.getMessage().contains("Redundant nullcheck of"));
+        assertEquals("Wrong category", "STYLE", next.getCategory());
+        assertEquals("Wrong category", "RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE", next.getType());
+        assertTrue("Should contain cloud info: " + next.getMessage(),
+                   next.getMessage().matches(".*Cloud info.*First seen .* at 4/11/10 11:24 AM"));
+    }
+
+    @Test
+    public void handleFileWithReviews() throws IOException, DocumentException {
+        MavenModule module = parseFile("findbugs-with-reviews.xml");
+        assertEquals(WRONG_NUMBER_OF_WARNINGS_PARSED, 1, module.getNumberOfAnnotations());
+
+        FileAnnotation next = module.getAnnotations().iterator().next();
+        assertTrue("Warning has no message.", next.getMessage().contains("Redundant nullcheck of"));
+        assertEquals("Wrong category", "STYLE", next.getCategory());
+        assertEquals("Wrong category", "RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE", next.getType());
+        assertTrue("Should contain cloud info: " + next.getMessage(),
+                   next.getMessage().matches(".*Cloud info.*Evaluated by 4 reviewers"));
     }
 
     /**

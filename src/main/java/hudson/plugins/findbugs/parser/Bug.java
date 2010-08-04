@@ -7,6 +7,9 @@ import hudson.plugins.findbugs.FindBugsMessages;
 import org.apache.commons.lang.StringUtils;
 import org.jvnet.localizer.LocaleProvider;
 
+import java.text.DateFormat;
+import java.util.Date;
+
 /**
  * A serializable Java Bean class representing a warning.
  * <p>
@@ -24,6 +27,12 @@ public class Bug extends AbstractAnnotation {
 
     /** Unique hash code of this bug. */
     private String instanceHash;
+    /** Computed from firstSeen */
+    private int ageInDays;
+    private long firstSeen;
+    private int reviewCount;
+    private boolean notAProblem;
+    private static final DateFormat FIRST_SEEN_FORMAT = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
 
     /**
      * Creates a new instance of <code>Bug</code>.
@@ -107,6 +116,38 @@ public class Bug extends AbstractAnnotation {
         this.tooltip = tooltip;
     }
 
+    public long getFirstSeen() {
+        return firstSeen;
+    }
+
+    public void setFirstSeen(long firstSeen) {
+        this.firstSeen = firstSeen; 
+    }
+
+    public void setAgeInDays(int ageInDays) {
+        this.ageInDays = ageInDays;
+    }
+
+    public int getAgeInDays() {
+        return ageInDays;
+    }
+
+    public int getReviewCount() {
+        return reviewCount;
+    }
+
+    public void setReviewCount(int reviewCount) {
+        this.reviewCount = reviewCount;
+    }
+
+    public boolean isNotAProblem() {
+        return notAProblem;
+    }
+
+    public void setNotAProblem(boolean notAProblem) {
+        this.notAProblem = notAProblem;
+    }
+
     /**
      * Rebuilds the priorities mapping.
      *
@@ -123,6 +164,36 @@ public class Bug extends AbstractAnnotation {
     /** {@inheritDoc} */
     public String getToolTip() {
         return StringUtils.defaultIfEmpty(tooltip, FindBugsMessages.getInstance().getMessage(getType(), LocaleProvider.getLocale()));
+    }
+
+    @Override
+    public String getMessage() {
+        String msg = "";
+
+        if (ageInDays != -1) {
+            String seenAt;
+            if (ageInDays > 0) {
+                seenAt = plural("day", ageInDays) + " ago";
+
+                msg += "First seen " + seenAt;
+                if (firstSeen > 0)
+                    msg += " at " + FIRST_SEEN_FORMAT.format(new Date(firstSeen));
+            }
+        }
+
+        if (reviewCount > 0) {
+            if (msg.length() > 0) msg += " - ";
+            msg += "Evaluated by " + plural("reviewer", reviewCount);
+        }
+
+        if (msg.length() > 0)
+            return super.getMessage() + "<br><br><u>Cloud info:</u><br>" + msg;
+        else
+            return super.getMessage();
+    }
+
+    private String plural(String singular, int number) {
+        return number + " " + (number == 1 ? singular : singular + "s");
     }
 
     /**
