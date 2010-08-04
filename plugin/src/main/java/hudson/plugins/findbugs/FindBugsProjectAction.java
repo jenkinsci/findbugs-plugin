@@ -2,6 +2,10 @@ package hudson.plugins.findbugs;
 
 import hudson.model.AbstractProject;
 import hudson.plugins.analysis.core.AbstractProjectAction;
+import hudson.plugins.analysis.graph.BuildResultGraph;
+import hudson.plugins.findbugs.dashboard.FindbugsEvaluationsGraph;
+
+import java.util.List;
 
 /**
  * Entry point to visualize the FindBugs trend graph in the project screen.
@@ -30,6 +34,13 @@ public class FindBugsProjectAction extends AbstractProjectAction<FindBugsResultA
     @Override
     public String getTrendName() {
         return Messages.FindBugs_Trend_Name();
+    }
+
+    @Override
+    protected List<BuildResultGraph> getAvailableGraphs() {
+        List<BuildResultGraph> list = super.getAvailableGraphs();
+        list.add(0, new FindbugsEvaluationsGraph());
+        return list;
     }
 }
 

@@ -12,7 +12,10 @@
 			<table class="pane" id="summary">
 				<tr>
 					<td class="pane-header">${%All Warnings}</td>
-					<td class="pane-header">${%New Warnings}</td>
+					<td class="pane-header">New this build</td>
+                    <j:if test="${it.newThisWeek != 0}">
+                        <td class="pane-header">New this week</td>
+                    </j:if>
 					<td class="pane-header">${%Fixed Warnings}</td>
 				</tr>
 				<tbody>
@@ -28,6 +31,11 @@
 								<a href="new">${it.numberOfNewWarnings}</a>
 							</j:if>
 						</td>
+                        <j:if test="${it.newThisWeek != 0}">
+						    <td class="pane">
+								${it.newThisWeek}
+						    </td>
+                        </j:if>
 						<td class="pane">
 							<j:if test="${it.numberOfFixedWarnings == 0}">
 								0
