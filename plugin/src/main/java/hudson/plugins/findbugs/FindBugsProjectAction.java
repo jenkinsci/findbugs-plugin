@@ -7,6 +7,8 @@ import hudson.plugins.findbugs.dashboard.FindbugsEvaluationsGraph;
 
 import java.util.List;
 
+import com.google.common.collect.Lists;
+
 /**
  * Entry point to visualize the FindBugs trend graph in the project screen.
  * Drawing of the graph is delegated to the associated
@@ -38,8 +40,9 @@ public class FindBugsProjectAction extends AbstractProjectAction<FindBugsResultA
 
     @Override
     protected List<BuildResultGraph> getAvailableGraphs() {
-        List<BuildResultGraph> list = super.getAvailableGraphs();
-        list.add(0, new FindbugsEvaluationsGraph());
+        List<BuildResultGraph> list = Lists.newArrayList();
+        list.add(new FindbugsEvaluationsGraph());
+        list.addAll(super.getAvailableGraphs());
         return list;
     }
 }
