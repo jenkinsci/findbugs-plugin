@@ -19,8 +19,10 @@ import com.thoughtworks.xstream.XStream;
 public class FindBugsResult extends BuildResult {
     private static final long serialVersionUID = 2768250056765266658L;
 
-    private int newThisWeek = 0;
-    private int numberOfComments = 0;
+    private static final int LESS_ONE_WEEK = 6;
+
+    private int newThisWeek;
+    private int numberOfComments;
 
     /**
      * Creates a new instance of {@link FindBugsResult}.
@@ -57,20 +59,22 @@ public class FindBugsResult extends BuildResult {
     }
 
     private void init() {
-        int newThisWeek = 0;
-        int reviewCount = 0;
         for (FileAnnotation annotation : getAnnotations()) {
             if (annotation instanceof Bug) {
                 Bug bug = (Bug) annotation;
-                if (bug.getAgeInDays() <= 6)
+                if (bug.getAgeInDays() <= LESS_ONE_WEEK) {
                     newThisWeek++;
-                reviewCount += bug.getReviewCount();
+                }
+                numberOfComments += bug.getReviewCount();
             }
         }
-        this.newThisWeek = newThisWeek;
-        this.numberOfComments = reviewCount;
     }
 
+    /**
+     * Gets the number of reviewer comments for all bugs.
+     *
+     * @return the number of comments
+     */
     public int getNumberOfComments() {
         return numberOfComments;
     }
@@ -90,6 +94,11 @@ public class FindBugsResult extends BuildResult {
         return ResultSummary.createSummary(this);
     }
 
+    /**
+     * Gets the number of new bugs new this week.
+     *
+     * @return the number of new bugs this week
+     */
     public int getNewThisWeek() {
         return newThisWeek;
     }
