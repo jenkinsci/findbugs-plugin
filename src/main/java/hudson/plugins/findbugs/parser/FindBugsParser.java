@@ -1,24 +1,10 @@
 package hudson.plugins.findbugs.parser; // NOPMD
 
-import edu.umd.cs.findbugs.BugAnnotation;
-import edu.umd.cs.findbugs.BugInstance;
-import edu.umd.cs.findbugs.DetectorFactoryCollection;
-import edu.umd.cs.findbugs.Project;
-import edu.umd.cs.findbugs.SortedBugCollection;
-import edu.umd.cs.findbugs.SourceLineAnnotation;
-import edu.umd.cs.findbugs.ba.SourceFile;
-import edu.umd.cs.findbugs.ba.SourceFinder;
 import hudson.plugins.analysis.core.AnnotationParser;
 import hudson.plugins.analysis.util.model.FileAnnotation;
 import hudson.plugins.analysis.util.model.LineRange;
 import hudson.plugins.analysis.util.model.Priority;
 import hudson.plugins.findbugs.FindBugsMessages;
-import hudson.util.IOUtils;
-import org.apache.commons.digester.Digester;
-import org.apache.commons.lang.StringUtils;
-import org.dom4j.DocumentException;
-import org.jvnet.localizer.LocaleProvider;
-import org.xml.sax.SAXException;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -35,6 +21,22 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.digester.Digester;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
+import org.dom4j.DocumentException;
+import org.jvnet.localizer.LocaleProvider;
+import org.xml.sax.SAXException;
+
+import edu.umd.cs.findbugs.BugAnnotation;
+import edu.umd.cs.findbugs.BugInstance;
+import edu.umd.cs.findbugs.DetectorFactoryCollection;
+import edu.umd.cs.findbugs.Project;
+import edu.umd.cs.findbugs.SortedBugCollection;
+import edu.umd.cs.findbugs.SourceLineAnnotation;
+import edu.umd.cs.findbugs.ba.SourceFile;
+import edu.umd.cs.findbugs.ba.SourceFinder;
+
 /**
  * A parser for the native FindBugs XML files (ant task, batch file or
  * maven-findbugs-plugin >= 1.2).
@@ -49,6 +51,7 @@ public class FindBugsParser implements AnnotationParser {
     private static final String DOT = ".";
     private static final String SLASH = "/";
 
+    private static final int DAY_IN_MSEC = 1000 * 60 * 60 * 24;
     private static final int HIGH_PRIORITY_LOWEST_RANK = 4;
     private static final int NORMAL_PRIORITY_LOWEST_RANK = 9;
 
@@ -216,42 +219,63 @@ public class FindBugsParser implements AnnotationParser {
                     warning.getBugPattern().getCategory(),
                     warning.getType(), sourceLine.getStartLine(), sourceLine.getEndLine());
             bug.setInstanceHash(warning.getInstanceHash());
-            long firstSeen = collection.getCloud().getFirstSeen(warning);
-            bug.setFirstSeen(firstSeen);
-            int ageInDays = (int) ((System.currentTimeMillis() - firstSeen) / 1000 / 60 / 60 / 24);
-            bug.setAgeInDays(ageInDays);
-            bug.setReviewCount(collection.getCloud().getNumberReviewers(warning));
-            boolean notAProblem = collection.getCloud().overallClassificationIsNotAProblem(warning);
-            if (notAProblem)
-                continue;
-            bug.setNotAProblem(notAProblem);
 
-            Iterator<BugAnnotation> annotationIterator = warning.annotationIterator();
-            while (annotationIterator.hasNext()) {
-                BugAnnotation bugAnnotation = annotationIterator.next();
-                if (bugAnnotation instanceof SourceLineAnnotation) {
-                    SourceLineAnnotation annotation = (SourceLineAnnotation)bugAnnotation;
-                    bug.addLineRange(new LineRange(annotation.getStartLine(), annotation.getEndLine()));
-                }
-            }
-            String fileName;
-            try {
-                SourceFile sourceFile = sourceFinder.findSourceFile(sourceLine);
-                fileName = sourceFile.getFullFileName();
-            }
-            catch (IOException exception) {
-                Logger.getLogger(getClass().getName()).log(Level.WARNING,
-                        "Can't resolve absolute file name for file " + sourceLine.getSourceFile()
-                        + ", dir list = " + project.getSourceDirList().toString());
-                fileName = sourceLine.getPackageName().replace(DOT, SLASH) + SLASH + sourceLine.getSourceFile();
-            }
-            bug.setFileName(fileName);
-            bug.setPackageName(warning.getPrimaryClass().getPackageName());
-            bug.setModuleName(actualName);
+            if (!setCloudInformation(collection, warning, bug)) {
+                bug.setNotAProblem(setCloudInformation(collection, warning, bug));
+                bug.setFileName(findSourceFile(project, sourceFinder, sourceLine));
+                bug.setPackageName(warning.getPrimaryClass().getPackageName());
+                bug.setModuleName(actualName);
+                setAffectedLines(warning, bug);
 
-            annotations.add(bug);
+                annotations.add(bug);
+            }
         }
         return annotations;
+    }
+
+    /**
+     * Sets the cloud information.
+     *
+     * @param collection
+     *            the warnings collection
+     * @param warning
+     *            the warning
+     * @param bug
+     *            the bug
+     * @return true, if this warning is not a bug and should be ignored
+     */
+    private boolean setCloudInformation(final SortedBugCollection collection, final BugInstance warning, final Bug bug) {
+        long firstSeen = collection.getCloud().getFirstSeen(warning);
+        bug.setFirstSeen(firstSeen);
+        int ageInDays = (int) ((System.currentTimeMillis() - firstSeen) / DAY_IN_MSEC);
+        bug.setAgeInDays(ageInDays);
+        bug.setReviewCount(collection.getCloud().getNumberReviewers(warning));
+
+        return collection.getCloud().overallClassificationIsNotAProblem(warning);
+    }
+
+    private void setAffectedLines(final BugInstance warning, final Bug bug) {
+        Iterator<BugAnnotation> annotationIterator = warning.annotationIterator();
+        while (annotationIterator.hasNext()) {
+            BugAnnotation bugAnnotation = annotationIterator.next();
+            if (bugAnnotation instanceof SourceLineAnnotation) {
+                SourceLineAnnotation annotation = (SourceLineAnnotation)bugAnnotation;
+                bug.addLineRange(new LineRange(annotation.getStartLine(), annotation.getEndLine()));
+            }
+        }
+    }
+
+    private String findSourceFile(final Project project, final SourceFinder sourceFinder, final SourceLineAnnotation sourceLine) {
+        try {
+            SourceFile sourceFile = sourceFinder.findSourceFile(sourceLine);
+            return sourceFile.getFullFileName();
+        }
+        catch (IOException exception) {
+            Logger.getLogger(getClass().getName()).log(Level.WARNING,
+                    "Can't resolve absolute file name for file " + sourceLine.getSourceFile()
+                    + ", dir list = " + project.getSourceDirList().toString());
+            return sourceLine.getPackageName().replace(DOT, SLASH) + SLASH + sourceLine.getSourceFile();
+        }
     }
 
     /**
@@ -263,10 +287,12 @@ public class FindBugsParser implements AnnotationParser {
      */
     private Priority getPriority(final BugInstance warning) {
         int rank = warning.getBugRank();
-        if (rank <= HIGH_PRIORITY_LOWEST_RANK)
+        if (rank <= HIGH_PRIORITY_LOWEST_RANK) {
             return Priority.HIGH;
-        if (rank <= NORMAL_PRIORITY_LOWEST_RANK)
+        }
+        if (rank <= NORMAL_PRIORITY_LOWEST_RANK) {
             return Priority.NORMAL;
+        }
         return Priority.LOW;
     }
 
