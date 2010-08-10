@@ -1,5 +1,6 @@
 package hudson.plugins.findbugs.parser;
 
+import static org.junit.Assert.*;
 import hudson.plugins.analysis.test.AbstractEnglishLocaleTest;
 import hudson.plugins.analysis.util.model.FileAnnotation;
 import hudson.plugins.analysis.util.model.JavaPackage;
@@ -8,9 +9,6 @@ import hudson.plugins.analysis.util.model.MavenModule;
 import hudson.plugins.analysis.util.model.Priority;
 import hudson.plugins.findbugs.FindBugsMessages;
 import hudson.plugins.findbugs.Messages;
-import org.dom4j.DocumentException;
-import org.junit.Test;
-import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,9 +17,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import org.dom4j.DocumentException;
+import org.junit.Test;
+import org.xml.sax.SAXException;
 
 /**
  *  Tests the extraction of FindBugs analysis results.
@@ -164,6 +162,15 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
         assertEquals("Wrong category", "RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE", next.getType());
     }
 
+    /**
+     * Tests that a file with 2 warnings (1 not a bug consensus) is handled
+     * correctly, i.e., only one warning is returned.
+     *
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     * @throws DocumentException
+     *             the document exception
+     */
     @Test
     public void handleFileWithNotABugConsensus() throws IOException, DocumentException {
         MavenModule module = parseFile("findbugs-with-notAProblem-bug.xml");
@@ -175,6 +182,12 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
         assertEquals("Wrong category", "RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE", next.getType());
     }
 
+    /**
+     * Shows that a file with first seen date is handled correctly.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws DocumentException the document exception
+     */
     @Test
     public void handleFileWithFirstSeenDate() throws IOException, DocumentException {
         MavenModule module = parseFile("findbugs-with-firstSeen.xml");
@@ -188,6 +201,12 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
                    next.getMessage().matches(".*Cloud info.*First seen .* at 4/11/10 11:24 AM"));
     }
 
+    /**
+     * Shows that a file with reviews is handled correctly.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws DocumentException the document exception
+     */
     @Test
     public void handleFileWithReviews() throws IOException, DocumentException {
         MavenModule module = parseFile("findbugs-with-reviews.xml");

@@ -199,7 +199,7 @@ public class Bug extends AbstractAnnotation {
                 cloudMessage.append(Messages.FindBugs_Bug_cloudInfo_reviewer_plural(reviewCount));
             }
         }
-        if (cloudMessage.length() > 0) {
+        if (cloudMessage.length() == 0) {
             return StringUtils.EMPTY;
         }
         return "<br/><br/><u>Cloud info:</u><br/>" + cloudMessage.toString();
