@@ -3,12 +3,13 @@ package hudson.plugins.findbugs.parser;
 import hudson.plugins.analysis.util.model.AbstractAnnotation;
 import hudson.plugins.analysis.util.model.Priority;
 import hudson.plugins.findbugs.FindBugsMessages;
-
-import org.apache.commons.lang.StringUtils;
-import org.jvnet.localizer.LocaleProvider;
+import hudson.plugins.findbugs.Messages;
 
 import java.text.DateFormat;
 import java.util.Date;
+
+import org.apache.commons.lang.StringUtils;
+import org.jvnet.localizer.LocaleProvider;
 
 /**
  * A serializable Java Bean class representing a warning.
@@ -21,18 +22,18 @@ import java.util.Date;
 @SuppressWarnings("PMD.CyclomaticComplexity")
 public class Bug extends AbstractAnnotation {
     private static final long serialVersionUID = 5171661552905752370L;
-    public static final String ORIGIN = "findbugs";
+    /** Origin of the annotation. */
+    private static final String ORIGIN = "findbugs";
 
     private String tooltip = StringUtils.EMPTY;
 
     /** Unique hash code of this bug. */
     private String instanceHash;
-    /** Computed from firstSeen */
+    /** Computed from firstSeen. */
     private int ageInDays;
     private long firstSeen;
     private int reviewCount;
     private boolean notAProblem;
-    private static final DateFormat FIRST_SEEN_FORMAT = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
 
     /**
      * Creates a new instance of <code>Bug</code>.
@@ -116,27 +117,28 @@ public class Bug extends AbstractAnnotation {
         this.tooltip = tooltip;
     }
 
+    // CHECKSTYLE:OFF Properties of FindBugs cloud
     public long getFirstSeen() {
         return firstSeen;
     }
 
-    public void setFirstSeen(long firstSeen) {
-        this.firstSeen = firstSeen; 
-    }
-
-    public void setAgeInDays(int ageInDays) {
-        this.ageInDays = ageInDays;
+    void setFirstSeen(final long firstSeen) {
+        this.firstSeen = firstSeen;
     }
 
     public int getAgeInDays() {
         return ageInDays;
     }
 
+    void setAgeInDays(final int ageInDays) {
+        this.ageInDays = ageInDays;
+    }
+
     public int getReviewCount() {
         return reviewCount;
     }
 
-    public void setReviewCount(int reviewCount) {
+    void setReviewCount(final int reviewCount) {
         this.reviewCount = reviewCount;
     }
 
@@ -144,9 +146,10 @@ public class Bug extends AbstractAnnotation {
         return notAProblem;
     }
 
-    public void setNotAProblem(boolean notAProblem) {
+    void setNotAProblem(final boolean notAProblem) {
         this.notAProblem = notAProblem;
     }
+    // CHECKSTYLE:ON
 
     /**
      * Rebuilds the priorities mapping.
@@ -168,32 +171,38 @@ public class Bug extends AbstractAnnotation {
 
     @Override
     public String getMessage() {
-        String msg = "";
+        return super.getMessage() + getCloudInformation();
+    }
 
-        if (ageInDays != -1) {
-            String seenAt;
-            if (ageInDays > 0) {
-                seenAt = plural("day", ageInDays) + " ago";
-
-                msg += "First seen " + seenAt;
-                if (firstSeen > 0)
-                    msg += " at " + FIRST_SEEN_FORMAT.format(new Date(firstSeen));
+    private String getCloudInformation() {
+        StringBuilder cloudMessage = new StringBuilder();
+        if (ageInDays == 1) {
+            cloudMessage.append(Messages.FindBugs_Bug_cloudInfo_seenAt_singular());
+        }
+        else if (ageInDays > 1) {
+            cloudMessage.append(Messages.FindBugs_Bug_cloudInfo_seenAt_plural(ageInDays));
+            if (firstSeen > 0) {
+                DateFormat format = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
+                cloudMessage.append(" ");
+                cloudMessage.append(Messages.FindBugs_Bug_cloudInfo_firstSeen(format.format(new Date(firstSeen))));
             }
         }
 
         if (reviewCount > 0) {
-            if (msg.length() > 0) msg += " - ";
-            msg += "Evaluated by " + plural("reviewer", reviewCount);
+            if (cloudMessage.length() > 0) {
+                cloudMessage.append(" - ");
+            }
+            if (reviewCount == 1) {
+                cloudMessage.append(Messages.FindBugs_Bug_cloudInfo_reviewer_singular());
+            }
+            else {
+                cloudMessage.append(Messages.FindBugs_Bug_cloudInfo_reviewer_plural(reviewCount));
+            }
         }
-
-        if (msg.length() > 0)
-            return super.getMessage() + "<br><br><u>Cloud info:</u><br>" + msg;
-        else
-            return super.getMessage();
-    }
-
-    private String plural(String singular, int number) {
-        return number + " " + (number == 1 ? singular : singular + "s");
+        if (cloudMessage.length() > 0) {
+            return StringUtils.EMPTY;
+        }
+        return "<br/><br/><u>Cloud info:</u><br/>" + cloudMessage.toString();
     }
 
     /**
