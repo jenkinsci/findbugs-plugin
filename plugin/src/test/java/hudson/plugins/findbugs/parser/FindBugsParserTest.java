@@ -62,6 +62,25 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
     }
 
     /**
+     * Parses fb-contrib messages.
+     *
+     * @throws IOException
+     *             in case of an error
+     * @throws SAXException
+     *             in case of an error
+     * @throws DocumentException
+     *             in case of an error
+     * @see <a href="http://issues.hudson-ci.org/browse/HUDSON-7238">Issue 7238</a>
+     */
+    @Test
+    public void issue7238() throws IOException, DocumentException, SAXException {
+        FindBugsMessages.getInstance().initialize();
+
+        MavenModule module = parseFile("issue7238.xml");
+        assertEquals("Wrong number of warnings", 1820, module.getNumberOfAnnotations());
+    }
+
+    /**
      * Tests the message mapping.
      *
      * @throws IOException
