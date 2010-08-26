@@ -95,6 +95,7 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
     public void issue7312() throws IOException, DocumentException, SAXException {
         FindBugsMessages.getInstance().initialize();
 
+        System.setProperty(FindBugsParser.SAX_DRIVER_PROPERTY, this.getClass().getName());
         MavenModule module = parseFile("issue7312.xml");
         assertEquals("Wrong number of warnings", 0, module.getNumberOfAnnotations());
     }
