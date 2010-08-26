@@ -24,6 +24,7 @@ import java.util.logging.Logger;
 import org.apache.commons.digester.Digester;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.xerces.parsers.SAXParser;
 import org.dom4j.DocumentException;
 import org.jvnet.localizer.LocaleProvider;
 import org.xml.sax.SAXException;
@@ -48,6 +49,9 @@ public class FindBugsParser implements AnnotationParser {
     /** Unique ID of this class. */
     private static final long serialVersionUID = 8306319007761954027L;
 
+    /** Property of SAX parser factory. */
+    static final String SAX_DRIVER_PROPERTY = "org.xml.sax.driver";
+
     private static final String DOT = ".";
     private static final String SLASH = "/";
 
@@ -68,6 +72,8 @@ public class FindBugsParser implements AnnotationParser {
      */
     public FindBugsParser() {
         this(new ArrayList<String>());
+
+        System.setProperty(SAX_DRIVER_PROPERTY, SAXParser.class.getName());
     }
 
     /**
