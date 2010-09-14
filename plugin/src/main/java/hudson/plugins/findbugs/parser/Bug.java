@@ -4,12 +4,11 @@ import hudson.plugins.analysis.util.model.AbstractAnnotation;
 import hudson.plugins.analysis.util.model.Priority;
 import hudson.plugins.findbugs.FindBugsMessages;
 import hudson.plugins.findbugs.Messages;
+import org.apache.commons.lang.StringUtils;
+import org.jvnet.localizer.LocaleProvider;
 
 import java.text.DateFormat;
 import java.util.Date;
-
-import org.apache.commons.lang.StringUtils;
-import org.jvnet.localizer.LocaleProvider;
 
 /**
  * A serializable Java Bean class representing a warning.
@@ -34,6 +33,7 @@ public class Bug extends AbstractAnnotation {
     private long firstSeen;
     private int reviewCount;
     private boolean notAProblem;
+    private boolean inCloud;
 
     /**
      * Creates a new instance of <code>Bug</code>.
@@ -126,6 +126,14 @@ public class Bug extends AbstractAnnotation {
         this.firstSeen = firstSeen;
     }
 
+    public void setInCloud(boolean inCloud) {
+        this.inCloud = inCloud;
+    }
+
+    public boolean isInCloud() {
+        return inCloud;
+    }
+
     public int getAgeInDays() {
         return ageInDays;
     }
@@ -202,7 +210,10 @@ public class Bug extends AbstractAnnotation {
         if (cloudMessage.length() == 0) {
             return StringUtils.EMPTY;
         }
-        return "<br/><br/><u>Cloud info:</u><br/>" + cloudMessage.toString();
+        return "<br/><br/>" +
+               "<img src='/plugin/findbugs/icons/fb-cloud-icon-small.png' " +
+               "title=\"" + Messages.FindBugs_Bug_cloudInfo_title() + "\"/> "
+               + cloudMessage.toString();
     }
 
     /**

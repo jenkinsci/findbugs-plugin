@@ -22,6 +22,7 @@ public class FindBugsResult extends BuildResult {
     private static final int LESS_ONE_WEEK = 6;
 
     private int newThisWeek;
+    private int notInCloud = 0;
     private int numberOfComments;
 
     /**
@@ -62,10 +63,14 @@ public class FindBugsResult extends BuildResult {
         for (FileAnnotation annotation : getAnnotations()) {
             if (annotation instanceof Bug) {
                 Bug bug = (Bug) annotation;
-                if (bug.getAgeInDays() <= LESS_ONE_WEEK) {
-                    newThisWeek++;
+                if (bug.isInCloud()) {
+                    if (bug.getAgeInDays() <= LESS_ONE_WEEK) {
+                        newThisWeek++;
+                    }
+                    numberOfComments += bug.getReviewCount();
+                } else {
+                    notInCloud++;
                 }
-                numberOfComments += bug.getReviewCount();
             }
         }
     }
@@ -101,6 +106,15 @@ public class FindBugsResult extends BuildResult {
      */
     public int getNewThisWeek() {
         return newThisWeek;
+    }
+
+    /**
+     * Gets the number of bugs which are not stored in the FindBugs Cloud.
+     *
+     * @return the number of bugs which are not stored in the FindBugs Cloud
+     */
+    public int getNotInCloud() {
+        return notInCloud;
     }
 
     /** {@inheritDoc} */

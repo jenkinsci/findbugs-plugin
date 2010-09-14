@@ -35,7 +35,7 @@ public class FindbugsEvaluationsGraph extends CategoryBuildResultGraph {
     /** {@inheritDoc} */
     @Override
     public String getLabel() {
-        return "FindBugs Cloud Comments";
+        return hudson.plugins.findbugs.Messages.FindBugs_EvaluationsGraph_title();
     }
 
     /** {@inheritDoc} */
