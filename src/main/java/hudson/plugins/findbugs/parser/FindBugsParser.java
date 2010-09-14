@@ -1,11 +1,27 @@
 package hudson.plugins.findbugs.parser; // NOPMD
 
+import edu.umd.cs.findbugs.BugAnnotation;
+import edu.umd.cs.findbugs.BugInstance;
+import edu.umd.cs.findbugs.DetectorFactoryCollection;
+import edu.umd.cs.findbugs.Project;
+import edu.umd.cs.findbugs.SortedBugCollection;
+import edu.umd.cs.findbugs.SourceLineAnnotation;
+import edu.umd.cs.findbugs.ba.SourceFile;
+import edu.umd.cs.findbugs.ba.SourceFinder;
+import edu.umd.cs.findbugs.cloud.Cloud;
 import hudson.plugins.analysis.core.AnnotationParser;
 import hudson.plugins.analysis.util.model.FileAnnotation;
 import hudson.plugins.analysis.util.model.LineRange;
 import hudson.plugins.analysis.util.model.Priority;
 import hudson.plugins.findbugs.FindBugsMessages;
+import org.apache.commons.digester.Digester;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
+import org.dom4j.DocumentException;
+import org.jvnet.localizer.LocaleProvider;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.SAXParser;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -20,23 +36,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import org.apache.commons.digester.Digester;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.xerces.parsers.SAXParser;
-import org.dom4j.DocumentException;
-import org.jvnet.localizer.LocaleProvider;
-import org.xml.sax.SAXException;
-
-import edu.umd.cs.findbugs.BugAnnotation;
-import edu.umd.cs.findbugs.BugInstance;
-import edu.umd.cs.findbugs.DetectorFactoryCollection;
-import edu.umd.cs.findbugs.Project;
-import edu.umd.cs.findbugs.SortedBugCollection;
-import edu.umd.cs.findbugs.SourceLineAnnotation;
-import edu.umd.cs.findbugs.ba.SourceFile;
-import edu.umd.cs.findbugs.ba.SourceFinder;
 
 /**
  * A parser for the native FindBugs XML files (ant task, batch file or
@@ -251,13 +250,15 @@ public class FindBugsParser implements AnnotationParser {
      * @return true, if this warning is not a bug and should be ignored
      */
     private boolean setCloudInformation(final SortedBugCollection collection, final BugInstance warning, final Bug bug) {
-        long firstSeen = collection.getCloud().getFirstSeen(warning);
+        Cloud cloud = collection.getCloud();
+        long firstSeen = cloud.getFirstSeen(warning);
+        bug.setInCloud(cloud.isInCloud(warning));
         bug.setFirstSeen(firstSeen);
         int ageInDays = (int) ((System.currentTimeMillis() - firstSeen) / DAY_IN_MSEC);
         bug.setAgeInDays(ageInDays);
-        bug.setReviewCount(collection.getCloud().getNumberReviewers(warning));
+        bug.setReviewCount(cloud.getNumberReviewers(warning));
 
-        return collection.getCloud().overallClassificationIsNotAProblem(warning);
+        return cloud.overallClassificationIsNotAProblem(warning);
     }
 
     private void setAffectedLines(final BugInstance warning, final Bug bug) {

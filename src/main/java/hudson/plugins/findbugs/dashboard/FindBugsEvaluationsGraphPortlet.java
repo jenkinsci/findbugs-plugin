@@ -59,7 +59,7 @@ public class FindBugsEvaluationsGraphPortlet extends AbstractWarningsGraphPortle
     public static class WarningsGraphDescriptor extends Descriptor<DashboardPortlet> {
         @Override
         public String getDisplayName() {
-            return "FindBugs Cloud Ccomments";
+            return hudson.plugins.findbugs.Messages.FindBugs_EvaluationsGraph_title();
         }
     }
 }

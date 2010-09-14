@@ -14,7 +14,14 @@
 					<td class="pane-header">${%All Warnings}</td>
 					<td class="pane-header">New this build</td>
                     <j:if test="${it.newThisWeek != 0}">
-                        <td class="pane-header">New this week</td>
+                        <td class="pane-header">
+                            <img src="/plugin/findbugs/icons/fb-cloud-icon-small.png" title="FindBugs Cloud"/>
+                            New this week</td>
+                    </j:if>
+                    <j:if test="${it.notInCloud != 0}">
+                        <td class="pane-header">
+                            <img src="/plugin/findbugs/icons/fb-cloud-icon-small.png" title="FindBugs Cloud"/>
+                            Not uploaded</td>
                     </j:if>
 					<td class="pane-header">${%Fixed Warnings}</td>
 				</tr>
@@ -34,6 +41,11 @@
                         <j:if test="${it.newThisWeek != 0}">
 						    <td class="pane">
 								${it.newThisWeek}
+						    </td>
+                        </j:if>
+                        <j:if test="${it.notInCloud != 0}">
+						    <td class="pane">
+								${it.notInCloud}
 						    </td>
                         </j:if>
 						<td class="pane">
