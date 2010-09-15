@@ -1,6 +1,5 @@
 package hudson.plugins.findbugs.parser;
 
-import static org.junit.Assert.*;
 import hudson.plugins.analysis.test.AbstractEnglishLocaleTest;
 import hudson.plugins.analysis.util.model.FileAnnotation;
 import hudson.plugins.analysis.util.model.JavaPackage;
@@ -9,6 +8,9 @@ import hudson.plugins.analysis.util.model.MavenModule;
 import hudson.plugins.analysis.util.model.Priority;
 import hudson.plugins.findbugs.FindBugsMessages;
 import hudson.plugins.findbugs.Messages;
+import org.dom4j.DocumentException;
+import org.junit.Test;
+import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,9 +19,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.dom4j.DocumentException;
-import org.junit.Test;
-import org.xml.sax.SAXException;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  *  Tests the extraction of FindBugs analysis results.
@@ -237,7 +239,7 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
         assertEquals("Wrong category", "STYLE", next.getCategory());
         assertEquals("Wrong category", "RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE", next.getType());
         assertTrue("Should contain cloud info: " + next.getMessage(),
-                   next.getMessage().matches(".*Cloud info.*First seen .* at 4/11/10 11:24 AM"));
+                   next.getMessage().matches(".*First seen .* at 4/11/10 11:24 AM"));
     }
 
     /**
@@ -256,7 +258,7 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
         assertEquals("Wrong category", "STYLE", next.getCategory());
         assertEquals("Wrong category", "RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE", next.getType());
         assertTrue("Should contain cloud info: " + next.getMessage(),
-                   next.getMessage().matches(".*Cloud info.*Evaluated by 4 reviewers"));
+                   next.getMessage().matches(".*Evaluated by 4 reviewers"));
     }
 
     /**
