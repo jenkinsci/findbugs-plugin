@@ -4,11 +4,12 @@ import hudson.plugins.analysis.util.model.AbstractAnnotation;
 import hudson.plugins.analysis.util.model.Priority;
 import hudson.plugins.findbugs.FindBugsMessages;
 import hudson.plugins.findbugs.Messages;
-import org.apache.commons.lang.StringUtils;
-import org.jvnet.localizer.LocaleProvider;
 
 import java.text.DateFormat;
 import java.util.Date;
+
+import org.apache.commons.lang.StringUtils;
+import org.jvnet.localizer.LocaleProvider;
 
 /**
  * A serializable Java Bean class representing a warning.
@@ -126,7 +127,7 @@ public class Bug extends AbstractAnnotation {
         this.firstSeen = firstSeen;
     }
 
-    public void setInCloud(boolean inCloud) {
+    public void setInCloud(final boolean inCloud) {
         this.inCloud = inCloud;
     }
 
@@ -210,10 +211,10 @@ public class Bug extends AbstractAnnotation {
         if (cloudMessage.length() == 0) {
             return StringUtils.EMPTY;
         }
-        return "<br/><br/>" +
-               "<img src='/plugin/findbugs/icons/fb-cloud-icon-small.png' " +
-               "title=\"" + Messages.FindBugs_Bug_cloudInfo_title() + "\"/> "
-               + cloudMessage.toString();
+        return "<br/><br/>"
+                + "<img src='/plugin/findbugs/icons/fb-cloud-icon-small.png' "
+                + "title=\"" + Messages.FindBugs_Bug_cloudInfo_title() + "\"/> "
+                + cloudMessage.toString();
     }
 
     /**
