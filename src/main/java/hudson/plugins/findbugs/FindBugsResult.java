@@ -22,7 +22,7 @@ public class FindBugsResult extends BuildResult {
     private static final int LESS_ONE_WEEK = 6;
 
     private int newThisWeek;
-    private int notInCloud = 0;
+    private int notInCloud;
     private int numberOfComments;
 
     /**
@@ -68,7 +68,8 @@ public class FindBugsResult extends BuildResult {
                         newThisWeek++;
                     }
                     numberOfComments += bug.getReviewCount();
-                } else {
+                }
+                else {
                     notInCloud++;
                 }
             }
