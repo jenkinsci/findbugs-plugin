@@ -73,8 +73,6 @@ public class FindBugsParser implements AnnotationParser {
      */
     public FindBugsParser() {
         this(new ArrayList<String>());
-
-        System.setProperty(SAX_DRIVER_PROPERTY, SAXParser.class.getName());
     }
 
     /**
@@ -201,8 +199,7 @@ public class FindBugsParser implements AnnotationParser {
     public Collection<FileAnnotation> parse(final InputStream file, final Collection<String> sources,
             final String moduleName, final Map<String, String> hashToMessageMapping) throws IOException,
             DocumentException {
-        SortedBugCollection collection = new SortedBugCollection();
-        collection.readXML(file);
+        SortedBugCollection collection = readXml(file);
 
         Project project = collection.getProject();
         for (String sourceFolder : sources) {
@@ -238,6 +235,16 @@ public class FindBugsParser implements AnnotationParser {
             }
         }
         return annotations;
+    }
+
+    private SortedBugCollection readXml(final InputStream file) throws IOException, DocumentException {
+        System.setProperty(SAX_DRIVER_PROPERTY, SAXParser.class.getName());
+        ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+        Thread.currentThread().setContextClassLoader(FindBugsParser.class.getClassLoader());
+        SortedBugCollection collection = new SortedBugCollection();
+        collection.readXML(file);
+        Thread.currentThread().setContextClassLoader(contextClassLoader);
+        return collection;
     }
 
     /**
