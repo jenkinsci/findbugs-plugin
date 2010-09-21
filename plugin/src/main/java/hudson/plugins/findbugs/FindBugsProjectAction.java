@@ -41,8 +41,8 @@ public class FindBugsProjectAction extends AbstractProjectAction<FindBugsResultA
     @Override
     protected List<BuildResultGraph> getAvailableGraphs() {
         List<BuildResultGraph> list = Lists.newArrayList();
-        list.add(new FindbugsEvaluationsGraph());
         list.addAll(super.getAvailableGraphs());
+        list.add(new FindbugsEvaluationsGraph());
         return list;
     }
 }
