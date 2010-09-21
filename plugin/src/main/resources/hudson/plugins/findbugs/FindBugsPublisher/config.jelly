@@ -5,6 +5,7 @@
 	</f:entry>
    <f:advanced>
     <u:failed/>
+    <u:health id="findbugs"/>
     <u:thresholds id="findbugs"/>
     <u:defaultEncoding id="findbugs"/>
     <u:trend id="findbugs"/>

@@ -2,7 +2,7 @@
 	xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:u="/util">
   <f:advanced>
     <u:failed/>
-    <u:thresholds id="findbugs"/>
+    <u:health id="findbugs"/>
     <u:trend id="findbugs"/>
   </f:advanced>
 </j:jelly>
