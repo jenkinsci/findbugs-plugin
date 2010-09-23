@@ -51,7 +51,7 @@
     <dependency>
         <groupId>org.jvnet.hudson.plugins.findbugs</groupId>
         <artifactId>library</artifactId>
-        <version>1.3.10-hudson3-SNAPSHOT</version>
+        <version>1.3.10-hudson3</version>
     </dependency>
     <dependency>
       <groupId>xerces</groupId>
