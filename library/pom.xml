@@ -10,7 +10,7 @@
   <groupId>org.jvnet.hudson.plugins.findbugs</groupId>
   <artifactId>library</artifactId>
   <packaging>jar</packaging>
-  <version>1.3.10-hudson3</version>
+  <version>1.3.10-hudson4-SNAPSHOT</version>
   <name>FindBugs Plug-in shaded libraries</name>
 
   <dependencies>
@@ -67,9 +67,9 @@
   </build>
 
   <scm>
-    <connection>scm:svn:https://guest@svn.dev.java.net/svn/hudson/tags/library-1.3.10-hudson3</connection>
-    <developerConnection>scm:svn:https://svn.dev.java.net/svn/hudson/tags/library-1.3.10-hudson3</developerConnection>
-    <url>https://hudson.dev.java.net/source/browse/hudson/tags/library-1.3.10-hudson3</url>
+    <connection>scm:svn:https://guest@svn.dev.java.net/svn/hudson/trunk/hudson/plugins/findbugs/library</connection>
+    <developerConnection>scm:svn:https://svn.dev.java.net/svn/hudson/trunk/hudson/plugins/findbugs/library</developerConnection>
+    <url>https://hudson.dev.java.net/source/browse/hudson/trunk/hudson/plugins/findbugs/library</url>
   </scm>
 
 </project>
