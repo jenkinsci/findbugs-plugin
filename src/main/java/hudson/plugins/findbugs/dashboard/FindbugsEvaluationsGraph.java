@@ -58,7 +58,7 @@ public class FindbugsEvaluationsGraph extends CategoryBuildResultGraph {
     /** {@inheritDoc} */
     @Override
     protected Color[] getColors() {
-        return new Color[] {ColorPalette.RED, ColorPalette.BLUE};
+        return new Color[] {ColorPalette.BLUE};
     }
 
     // CHECKSTYLE:OFF
