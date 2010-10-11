@@ -239,7 +239,7 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
         assertEquals("Wrong category", "STYLE", next.getCategory());
         assertEquals("Wrong category", "RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE", next.getType());
         assertTrue("Should contain cloud info: " + next.getMessage(),
-                   next.getMessage().matches(".*First seen .* at 4/11/10 11:24 AM"));
+                   next.getMessage().matches(".*First seen .* at 4/11/10 11:24 AM.*"));
     }
 
     /**
@@ -258,7 +258,7 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
         assertEquals("Wrong category", "STYLE", next.getCategory());
         assertEquals("Wrong category", "RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE", next.getType());
         assertTrue("Should contain cloud info: " + next.getMessage(),
-                   next.getMessage().matches(".*Evaluated by 4 reviewers"));
+                   next.getMessage().matches(".*4 comments.*"));
     }
 
     /**

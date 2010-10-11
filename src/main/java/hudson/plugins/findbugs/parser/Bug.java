@@ -4,12 +4,12 @@ import hudson.plugins.analysis.util.model.AbstractAnnotation;
 import hudson.plugins.analysis.util.model.Priority;
 import hudson.plugins.findbugs.FindBugsMessages;
 import hudson.plugins.findbugs.Messages;
+import org.apache.commons.lang.StringUtils;
+import org.jvnet.localizer.LocaleProvider;
 
 import java.text.DateFormat;
 import java.util.Date;
-
-import org.apache.commons.lang.StringUtils;
-import org.jvnet.localizer.LocaleProvider;
+import java.util.Random;
 
 /**
  * A serializable Java Bean class representing a warning.
@@ -22,6 +22,8 @@ import org.jvnet.localizer.LocaleProvider;
 @SuppressWarnings("PMD.CyclomaticComplexity")
 public class Bug extends AbstractAnnotation {
     private static final long serialVersionUID = 5171661552905752370L;
+    private static final Random RANDOM = new Random();
+
     /** Origin of the annotation. */
     private static final String ORIGIN = "findbugs";
 
@@ -184,6 +186,9 @@ public class Bug extends AbstractAnnotation {
     }
 
     private String getCloudInformation() {
+        if (!inCloud) {
+            return "";
+        }
         StringBuilder cloudMessage = new StringBuilder();
         if (ageInDays == 1) {
             cloudMessage.append(Messages.FindBugs_Bug_cloudInfo_seenAt_singular());
@@ -197,24 +202,37 @@ public class Bug extends AbstractAnnotation {
             }
         }
 
-        if (reviewCount > 0) {
-            if (cloudMessage.length() > 0) {
-                cloudMessage.append(" - ");
-            }
-            if (reviewCount == 1) {
-                cloudMessage.append(Messages.FindBugs_Bug_cloudInfo_reviewer_singular());
-            }
-            else {
-                cloudMessage.append(Messages.FindBugs_Bug_cloudInfo_reviewer_plural(reviewCount));
-            }
+        if (cloudMessage.length() > 0) {
+            cloudMessage.append(" - ");
         }
+        int id = RANDOM.nextInt();
+        String onclick = "o=document.getElementById('fb-comments-" + id + "'); " +
+                         "o.src='http://findbugs-cloud.appspot.com/issues/" + instanceHash + "?embed'; " +
+                         "o.style.display='block';" +
+                         "document.getElementById('fb-arrow-" + id + "').src='/plugin/findbugs/icons/arrow-down.gif';" +
+                         "return false";
+        cloudMessage.append("<a href='' onclick=\"").append(onclick).append("\">");
+        if (reviewCount == 1) {
+            cloudMessage.append(Messages.FindBugs_Bug_cloudInfo_reviewer_singular());
+        } else {
+            cloudMessage.append(Messages.FindBugs_Bug_cloudInfo_reviewer_plural(reviewCount));
+        }
+        cloudMessage.append("</a>");
         if (cloudMessage.length() == 0) {
             return StringUtils.EMPTY;
         }
         return "<br/><br/>"
-                + "<img src='/plugin/findbugs/icons/fb-cloud-icon-small.png' "
-                + "title=\"" + Messages.FindBugs_Bug_cloudInfo_title() + "\"/> "
-                + cloudMessage.toString();
+               + "<div onclick=\"\"><a href='' onclick=\"" + onclick + "\">" +
+               "<img src='/plugin/findbugs/icons/arrow-right.gif' id='fb-arrow-" + id + "'>" +
+               "</a> " +
+               "<img src='/plugin/findbugs/icons/fb-cloud-icon-small.png' "
+               + "title=\"" + Messages.FindBugs_Bug_cloudInfo_title() + "\"/> "
+               + cloudMessage.toString()
+               + "<br/>"
+               + "<iframe id='fb-comments-" + id + "' "
+               + "style='display:none;width:400px;height:150px;border=1px solid #BBB'></iframe>"
+               + "</div>"
+        ;
     }
 
     /**
