@@ -224,6 +224,7 @@ public class Bug extends AbstractAnnotation {
         if (cloudMessage.length() == 0) {
             return StringUtils.EMPTY;
         }
+        // CHECKSTYLE:OFF
         return "<br/><br/>"
                + "<div onclick=\"\"><a href='' onclick=\"" + onclick + "\">"
                + "<img src='" + getImage("arrow-right.gif") + "' id='fb-arrow-" + id + "'>"
@@ -235,10 +236,18 @@ public class Bug extends AbstractAnnotation {
                + "<iframe id='fb-comments-" + id + "' "
                + "style='display:none;width:400px;height:150px;border=1px solid #BBB'></iframe>"
                + "</div>";
+        // CHECKSTYLE:ON
     }
 
     private String getImage(final String image) {
-        String rootUrl = Hudson.getInstance().getRootUrlFromRequest();
+        Hudson hudson = Hudson.getInstance();
+        String rootUrl;
+        if (hudson == null) {
+            rootUrl = StringUtils.EMPTY;
+        }
+        else {
+            rootUrl = hudson.getRootUrlFromRequest();
+        }
 
         return rootUrl + "/plugin/findbugs/icons/" + image;
     }
