@@ -1,15 +1,17 @@
 package hudson.plugins.findbugs.parser;
 
+import hudson.model.Hudson;
 import hudson.plugins.analysis.util.model.AbstractAnnotation;
 import hudson.plugins.analysis.util.model.Priority;
 import hudson.plugins.findbugs.FindBugsMessages;
 import hudson.plugins.findbugs.Messages;
-import org.apache.commons.lang.StringUtils;
-import org.jvnet.localizer.LocaleProvider;
 
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.Random;
+
+import org.apache.commons.lang.StringUtils;
+import org.jvnet.localizer.LocaleProvider;
 
 /**
  * A serializable Java Bean class representing a warning.
@@ -206,15 +208,16 @@ public class Bug extends AbstractAnnotation {
             cloudMessage.append(" - ");
         }
         int id = RANDOM.nextInt();
-        String onclick = "o=document.getElementById('fb-comments-" + id + "'); " +
-                         "o.src='http://findbugs-cloud.appspot.com/issues/" + instanceHash + "?embed'; " +
-                         "o.style.display='block';" +
-                         "document.getElementById('fb-arrow-" + id + "').src='/plugin/findbugs/icons/arrow-down.gif';" +
-                         "return false";
+        String onclick = "o=document.getElementById('fb-comments-" + id + "'); "
+                + "o.src='http://findbugs-cloud.appspot.com/issues/" + instanceHash + "?embed'; "
+                + "o.style.display='block';"
+                + "document.getElementById('fb-arrow-" + id + "').src='/plugin/findbugs/icons/arrow-down.gif';"
+                + "return false";
         cloudMessage.append("<a href='' onclick=\"").append(onclick).append("\">");
         if (reviewCount == 1) {
             cloudMessage.append(Messages.FindBugs_Bug_cloudInfo_reviewer_singular());
-        } else {
+        }
+        else {
             cloudMessage.append(Messages.FindBugs_Bug_cloudInfo_reviewer_plural(reviewCount));
         }
         cloudMessage.append("</a>");
@@ -222,17 +225,22 @@ public class Bug extends AbstractAnnotation {
             return StringUtils.EMPTY;
         }
         return "<br/><br/>"
-               + "<div onclick=\"\"><a href='' onclick=\"" + onclick + "\">" +
-               "<img src='/plugin/findbugs/icons/arrow-right.gif' id='fb-arrow-" + id + "'>" +
-               "</a> " +
-               "<img src='/plugin/findbugs/icons/fb-cloud-icon-small.png' "
+               + "<div onclick=\"\"><a href='' onclick=\"" + onclick + "\">"
+               + "<img src='" + getImage("arrow-right.gif") + "' id='fb-arrow-" + id + "'>"
+               + "</a> "
+               + "<img src='" + getImage("fb-cloud-icon-small.png") + "' "
                + "title=\"" + Messages.FindBugs_Bug_cloudInfo_title() + "\"/> "
                + cloudMessage.toString()
                + "<br/>"
                + "<iframe id='fb-comments-" + id + "' "
                + "style='display:none;width:400px;height:150px;border=1px solid #BBB'></iframe>"
-               + "</div>"
-        ;
+               + "</div>";
+    }
+
+    private String getImage(final String image) {
+        String rootUrl = Hudson.getInstance().getRootUrlFromRequest();
+
+        return rootUrl + "/plugin/findbugs/icons/" + image;
     }
 
     /**
