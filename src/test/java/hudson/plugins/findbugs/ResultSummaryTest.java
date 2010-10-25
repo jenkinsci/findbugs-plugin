@@ -1,10 +1,11 @@
 package hudson.plugins.findbugs;
 
-import static org.mockito.Mockito.*;
 import hudson.plugins.analysis.test.AbstractEnglishLocaleTest;
 import junit.framework.Assert;
-
 import org.junit.Test;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Tests the class {@link ResultSummary}.
@@ -15,7 +16,7 @@ public class ResultSummaryTest extends AbstractEnglishLocaleTest {
      */
     @Test
     public void test0WarningsIn0File() {
-        checkSummaryText(0, 0, "FindBugs: 0 warnings from 0 FindBugs files.");
+        checkSummaryText(0, 0, "FindBugs: 0 warnings from 0 FindBugs analyses.");
     }
 
     /**
@@ -23,7 +24,7 @@ public class ResultSummaryTest extends AbstractEnglishLocaleTest {
      */
     @Test
     public void test0WarningsIn1File() {
-        checkSummaryText(0, 1, "FindBugs: 0 warnings from one FindBugs file.");
+        checkSummaryText(0, 1, "FindBugs: 0 warnings from one FindBugs analysis.");
     }
 
     /**
@@ -31,7 +32,7 @@ public class ResultSummaryTest extends AbstractEnglishLocaleTest {
      */
     @Test
     public void test0WarningsIn5Files() {
-        checkSummaryText(0, 5, "FindBugs: 0 warnings from 5 FindBugs files.");
+        checkSummaryText(0, 5, "FindBugs: 0 warnings from 5 FindBugs analyses.");
     }
 
     /**
@@ -39,7 +40,7 @@ public class ResultSummaryTest extends AbstractEnglishLocaleTest {
      */
     @Test
     public void test1WarningIn2Files() {
-        checkSummaryText(1, 2, "FindBugs: <a href=\"findbugsResult\">1 warning</a> from 2 FindBugs files.");
+        checkSummaryText(1, 2, "FindBugs: <a href=\"findbugsResult\">1 warning</a> from 2 FindBugs analyses.");
     }
 
     /**
@@ -47,7 +48,7 @@ public class ResultSummaryTest extends AbstractEnglishLocaleTest {
      */
     @Test
     public void test5WarningsIn1File() {
-        checkSummaryText(5, 1, "FindBugs: <a href=\"findbugsResult\">5 warnings</a> from one FindBugs file.");
+        checkSummaryText(5, 1, "FindBugs: <a href=\"findbugsResult\">5 warnings</a> from one FindBugs analysis.");
     }
 
     /**
