@@ -245,7 +245,9 @@ public class FindBugsParser implements AnnotationParser {
         SortedBugCollection collection = new SortedBugCollection();
         collection.readXML(file);
         Thread.currentThread().setContextClassLoader(contextClassLoader);
-        System.setProperty(SAX_DRIVER_PROPERTY, oldProperty);
+        if (oldProperty != null) {
+            System.setProperty(SAX_DRIVER_PROPERTY, oldProperty);
+        }
         return collection;
     }
 
