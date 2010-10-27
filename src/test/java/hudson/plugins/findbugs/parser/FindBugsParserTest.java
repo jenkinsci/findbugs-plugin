@@ -1,5 +1,6 @@
 package hudson.plugins.findbugs.parser;
 
+import static org.junit.Assert.*;
 import hudson.plugins.analysis.test.AbstractEnglishLocaleTest;
 import hudson.plugins.analysis.util.model.FileAnnotation;
 import hudson.plugins.analysis.util.model.JavaPackage;
@@ -8,9 +9,6 @@ import hudson.plugins.analysis.util.model.MavenModule;
 import hudson.plugins.analysis.util.model.Priority;
 import hudson.plugins.findbugs.FindBugsMessages;
 import hudson.plugins.findbugs.Messages;
-import org.dom4j.DocumentException;
-import org.junit.Test;
-import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,9 +17,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import org.dom4j.DocumentException;
+import org.junit.Test;
+import org.xml.sax.SAXException;
 
 /**
  *  Tests the extraction of FindBugs analysis results.
@@ -92,14 +90,17 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
      * @throws DocumentException
      *             in case of an error
      * @see <a href="http://issues.hudson-ci.org/browse/HUDSON-7312">Issue 7312</a>
+     * @see <a href="http://issues.hudson-ci.org/browse/HUDSON-7932">Issue 7932</a>
      */
     @Test
-    public void issue7312() throws IOException, DocumentException, SAXException {
+    public void issue7312and7932() throws IOException, DocumentException, SAXException {
         FindBugsMessages.getInstance().initialize();
 
-        System.setProperty(FindBugsParser.SAX_DRIVER_PROPERTY, this.getClass().getName());
+        String saxParser = this.getClass().getName();
+        System.setProperty(FindBugsParser.SAX_DRIVER_PROPERTY, saxParser);
         MavenModule module = parseFile("issue7312.xml");
         assertEquals("Wrong number of warnings", 0, module.getNumberOfAnnotations());
+        assertEquals("Wrong sax parser property", saxParser, System.getProperty(FindBugsParser.SAX_DRIVER_PROPERTY));
     }
 
     /**
