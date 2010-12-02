@@ -81,7 +81,7 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
     }
 
     /**
-     * Parses some messages.
+     * Checks that the SAX property is overwritten with Xerces if it has been set to another value.
      *
      * @throws IOException
      *             in case of an error
@@ -101,6 +101,27 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
         MavenModule module = parseFile("issue7312.xml");
         assertEquals("Wrong number of warnings", 0, module.getNumberOfAnnotations());
         assertEquals("Wrong sax parser property", saxParser, System.getProperty(FindBugsParser.SAX_DRIVER_PROPERTY));
+    }
+
+    /**
+     * Checks that the SAX property is not touched if it is null.
+     *
+     * @throws IOException
+     *             in case of an error
+     * @throws SAXException
+     *             in case of an error
+     * @throws DocumentException
+     *             in case of an error
+     * @see <a href="http://issues.hudson-ci.org/browse/HUDSON-7932">Issue 7932</a>
+     */
+    @Test
+    public void issue7932OOnNull() throws IOException, DocumentException, SAXException {
+        FindBugsMessages.getInstance().initialize();
+
+        System.clearProperty(FindBugsParser.SAX_DRIVER_PROPERTY);
+        MavenModule module = parseFile("issue7312.xml");
+        assertEquals("Wrong number of warnings", 0, module.getNumberOfAnnotations());
+        assertNull("Wrong sax parser property", System.getProperty(FindBugsParser.SAX_DRIVER_PROPERTY));
     }
 
     /**
