@@ -1,26 +1,18 @@
 package hudson.plugins.findbugs.parser; // NOPMD
 
+import edu.umd.cs.findbugs.BugAnnotation;
+import edu.umd.cs.findbugs.BugInstance;
+import edu.umd.cs.findbugs.Project;
+import edu.umd.cs.findbugs.SortedBugCollection;
+import edu.umd.cs.findbugs.SourceLineAnnotation;
+import edu.umd.cs.findbugs.ba.SourceFile;
+import edu.umd.cs.findbugs.ba.SourceFinder;
+import edu.umd.cs.findbugs.cloud.Cloud;
 import hudson.plugins.analysis.core.AnnotationParser;
 import hudson.plugins.analysis.util.model.FileAnnotation;
 import hudson.plugins.analysis.util.model.LineRange;
 import hudson.plugins.analysis.util.model.Priority;
 import hudson.plugins.findbugs.FindBugsMessages;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import org.apache.commons.digester.Digester;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -29,15 +21,19 @@ import org.dom4j.DocumentException;
 import org.jvnet.localizer.LocaleProvider;
 import org.xml.sax.SAXException;
 
-import edu.umd.cs.findbugs.BugAnnotation;
-import edu.umd.cs.findbugs.BugInstance;
-import edu.umd.cs.findbugs.DetectorFactoryCollection;
-import edu.umd.cs.findbugs.Project;
-import edu.umd.cs.findbugs.SortedBugCollection;
-import edu.umd.cs.findbugs.SourceLineAnnotation;
-import edu.umd.cs.findbugs.ba.SourceFile;
-import edu.umd.cs.findbugs.ba.SourceFinder;
-import edu.umd.cs.findbugs.cloud.Cloud;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * A parser for the native FindBugs XML files (ant task, batch file or
@@ -61,7 +57,7 @@ public class FindBugsParser implements AnnotationParser {
     private static final int NORMAL_PRIORITY_LOWEST_RANK = 9;
 
     static {
-        DetectorFactoryCollection.rawInstance().setPluginList(new URL[0]);
+//        DetectorFactoryCollection.instance().setPluginList(new URL[0]);
     }
 
     /** Collection of source folders. */
@@ -224,8 +220,9 @@ public class FindBugsParser implements AnnotationParser {
                     warning.getType(), sourceLine.getStartLine(), sourceLine.getEndLine());
             bug.setInstanceHash(warning.getInstanceHash());
 
-            if (!setCloudInformation(collection, warning, bug)) {
-                bug.setNotAProblem(setCloudInformation(collection, warning, bug));
+            boolean ignore = setCloudInformation(collection, warning, bug);
+            if (!ignore) {
+                bug.setNotAProblem(ignore);
                 bug.setFileName(findSourceFile(project, sourceFinder, sourceLine));
                 bug.setPackageName(warning.getPrimaryClass().getPackageName());
                 bug.setModuleName(actualName);
@@ -266,10 +263,12 @@ public class FindBugsParser implements AnnotationParser {
      */
     private boolean setCloudInformation(final SortedBugCollection collection, final BugInstance warning, final Bug bug) {
         Cloud cloud = collection.getCloud();
+        bug.setShouldBeInCloud(cloud.isOnlineCloud());
+        bug.setDetailsUrlTemplate(cloud.getBugDetailsUrlTemplate());
         long firstSeen = cloud.getFirstSeen(warning);
         bug.setInCloud(cloud.isInCloud(warning));
         bug.setFirstSeen(firstSeen);
-        int ageInDays = (int) ((System.currentTimeMillis() - firstSeen) / DAY_IN_MSEC);
+        int ageInDays = (int) ((collection.getAnalysisTimestamp() - firstSeen) / DAY_IN_MSEC);
         bug.setAgeInDays(ageInDays);
         bug.setReviewCount(cloud.getNumberReviewers(warning));
 

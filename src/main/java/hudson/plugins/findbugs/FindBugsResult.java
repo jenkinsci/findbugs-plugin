@@ -64,12 +64,12 @@ public class FindBugsResult extends BuildResult {
             if (annotation instanceof Bug) {
                 Bug bug = (Bug) annotation;
                 if (bug.isInCloud()) {
-                    if (bug.getAgeInDays() <= LESS_ONE_WEEK) {
+                    if (bug.isShouldBeInCloud() && bug.getAgeInDays() <= LESS_ONE_WEEK) {
                         newThisWeek++;
                     }
                     numberOfComments += bug.getReviewCount();
                 }
-                else {
+                else if (bug.isShouldBeInCloud()) {
                     notInCloud++;
                 }
             }
