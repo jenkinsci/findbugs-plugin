@@ -5,12 +5,13 @@ import hudson.plugins.analysis.util.model.AbstractAnnotation;
 import hudson.plugins.analysis.util.model.Priority;
 import hudson.plugins.findbugs.FindBugsMessages;
 import hudson.plugins.findbugs.Messages;
-import org.apache.commons.lang.StringUtils;
-import org.jvnet.localizer.LocaleProvider;
 
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.Random;
+
+import org.apache.commons.lang.StringUtils;
+import org.jvnet.localizer.LocaleProvider;
 
 /**
  * A serializable Java Bean class representing a warning.
@@ -164,7 +165,7 @@ public class Bug extends AbstractAnnotation {
         this.notAProblem = notAProblem;
     }
 
-    public void setShouldBeInCloud(boolean shouldBeInCloud) {
+    public void setShouldBeInCloud(final boolean shouldBeInCloud) {
         this.shouldBeInCloud = shouldBeInCloud;
     }
 
@@ -172,7 +173,7 @@ public class Bug extends AbstractAnnotation {
         return shouldBeInCloud;
     }
 
-    public void setDetailsUrlTemplate(String detailsUrl) {
+    public void setDetailsUrlTemplate(final String detailsUrl) {
         this.detailsUrl = detailsUrl;
     }
     // CHECKSTYLE:ON
@@ -202,9 +203,40 @@ public class Bug extends AbstractAnnotation {
 
     private String getCloudInformation() {
         if (!inCloud && detailsUrl == null) {
-            return "";
+            return StringUtils.EMPTY;
         }
+
         StringBuilder cloudMessage = new StringBuilder();
+
+        appendFirstSeenMessage(cloudMessage);
+
+        int id = RANDOM.nextInt();
+        String onclick = "";
+        if (detailsUrl != null) {
+            onclick = "o=document.getElementById('fb-comments-" + id + "'); "
+                    + "o.src='" + String.format(detailsUrl, instanceHash) + "'; "
+                    + "o.style.display='block';"
+                    + "document.getElementById('fb-arrow-" + id + "').src='/plugin/findbugs/icons/arrow-down.gif';"
+                    + "return false";
+            cloudMessage.append("<a href='' onclick=\"").append(onclick).append("\">");
+        }
+        cloudMessage.append(getReviewerMessage());
+        if (detailsUrl != null) {
+            cloudMessage.append("</a>");
+
+            return String.format("<br/><br/><div onclick=\"%s\">"
+                    + "<a href='' onclick=\"%s\"><img src='%s' id='fb-arrow-%s'></a>"
+                    + "<img src='%s' title=\"%s\"/>"
+                    + "%s<br/>"
+                    + "<iframe id='fb-comments-%s' style='display:none;width:400px;height:150px;border=1px solid #BBB'></iframe>"
+                    + "</div>",
+                    onclick, onclick, getImage("arrow-right.gif"), id, getImage("fb-cloud-icon-small.png"),
+                    Messages.FindBugs_Bug_cloudInfo_title(), cloudMessage.toString(), id);
+        }
+        return cloudMessage.toString();
+    }
+
+    private void appendFirstSeenMessage(final StringBuilder cloudMessage) {
         if (ageInDays == 1) {
             cloudMessage.append(Messages.FindBugs_Bug_cloudInfo_seenAt_singular());
         }
@@ -216,43 +248,18 @@ public class Bug extends AbstractAnnotation {
                 cloudMessage.append(Messages.FindBugs_Bug_cloudInfo_firstSeen(format.format(new Date(firstSeen))));
             }
         }
-
         if (cloudMessage.length() > 0) {
             cloudMessage.append(" - ");
         }
-        int id = RANDOM.nextInt();
-        String onclick = "";
-        if (detailsUrl != null) {
-            onclick = "o=document.getElementById('fb-comments-" + id + "'); "
-                    + "o.src='" + String.format(detailsUrl, instanceHash) + "'; "
-                    + "o.style.display='block';"
-                    + "document.getElementById('fb-arrow-" + id + "').src='/plugin/findbugs/icons/arrow-down.gif';"
-                    + "return false";
-            cloudMessage.append("<a href='' onclick=\"").append(onclick).append("\">");
-        }
+    }
+
+    private String getReviewerMessage() {
         if (reviewCount == 1) {
-            cloudMessage.append(Messages.FindBugs_Bug_cloudInfo_reviewer_singular());
+            return Messages.FindBugs_Bug_cloudInfo_reviewer_singular();
         }
         else {
-            cloudMessage.append(Messages.FindBugs_Bug_cloudInfo_reviewer_plural(reviewCount));
+            return Messages.FindBugs_Bug_cloudInfo_reviewer_plural(reviewCount);
         }
-        if (cloudMessage.length() == 0) {
-            return StringUtils.EMPTY;
-        }
-        if (detailsUrl != null) {
-            cloudMessage.append("</a>");
-        }
-        if (detailsUrl != null) {
-            return String.format(
-                    "<br/><br/><div onclick=\"%s\">" +
-                    "<a href='' onclick=\"%s\"><img src='%s' id='fb-arrow-%s'></a>" +
-                    "<img src='%s' title=\"%s\"/>" +
-                    "%s<br/>" +
-                    "<iframe id='fb-comments-%s' style='display:none;width:400px;height:150px;border=1px solid #BBB'></iframe>" +
-                    "</div>", onclick, onclick, getImage("arrow-right.gif"), id, getImage("fb-cloud-icon-small.png"),
-                    Messages.FindBugs_Bug_cloudInfo_title(), cloudMessage.toString(), id);
-        }
-        return cloudMessage.toString();
     }
 
     private String getImage(final String image) {
