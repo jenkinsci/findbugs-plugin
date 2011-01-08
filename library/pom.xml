@@ -4,13 +4,13 @@
   <parent>
     <groupId>org.jvnet.hudson</groupId>
     <artifactId>hudson</artifactId>
-    <version>1.7</version>
+    <version>1.8</version>
   </parent>
 
   <groupId>org.jvnet.hudson.plugins.findbugs</groupId>
   <artifactId>library</artifactId>
   <packaging>jar</packaging>
-  <version>2.0.0-hudson2</version>
+  <version>2.0.0-hudson3</version>
   <name>FindBugs Plug-in shaded libraries</name>
 
   <dependencies>
@@ -65,6 +65,20 @@
       </plugin>
     </plugins>
   </build>
+
+  <repositories>
+    <repository>
+      <id>m.g.o-public</id>
+      <url>http://maven.glassfish.org/content/groups/public/</url>
+
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
 
   <scm>
     <connection>scm:svn:https://guest@svn.java.net/svn/hudson~svn/trunk/hudson/plugins/findbugs/library</connection>

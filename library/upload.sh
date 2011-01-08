@@ -1,2 +1,2 @@
-mvn deploy:deploy-file -Durl=java-net:/maven2-repository/trunk/repository/ -DrepositoryId=maven2-repository.dev.java.net -Dfile=findbugs-full-2.0.0-dev-20101211.jar -DpomFile=upload-pom.xml
+mvn deploy:deploy-file -Durl=http://maven.hudson-labs.org:8081/content/repositories/releases/ -DrepositoryId=java.net-m2-repository -Dfile=findbugs-full-2.0.0-dev-20101217.jar -DpomFile=upload-pom.xml
 
