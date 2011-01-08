@@ -70,7 +70,6 @@
     <repository>
       <id>m.g.o-public</id>
       <url>http://maven.glassfish.org/content/groups/public/</url>
-
       <releases>
         <enabled>true</enabled>
       </releases>
