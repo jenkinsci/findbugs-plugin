@@ -66,38 +66,6 @@
     <url>http://fisheye.hudson-ci.org/browse/Hudson/trunk/hudson/plugins/findbugs/plugin</url>
   </scm>
 
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-checkstyle-plugin</artifactId>
-        <configuration>
-          <configLocation>../findbugs/plugin/checkstyle-configuration.xml</configLocation>
-            <propertiesLocation>../findbugs/plugin/target/checkstyle.properties</propertiesLocation>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-pmd-plugin</artifactId>
-        <configuration>
-          <rulesets>
-            <ruleset>pmd-configuration.xml</ruleset>
-          </rulesets>
-          <targetJdk>1.5</targetJdk>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>findbugs-maven-plugin</artifactId>
-        <configuration>
-          <excludeFilterFile>
-            ../findbugs/plugin/findbugs-exclusion-filter.xml
-          </excludeFilterFile>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
-
   <repositories>
     <repository>
       <id>java.net2</id>
