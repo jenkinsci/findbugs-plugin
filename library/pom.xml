@@ -13,6 +13,10 @@
   <version>2.0.0-hudson4-SNAPSHOT</version>
   <name>FindBugs Plug-in shaded libraries</name>
 
+  <properties>
+    <project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>org.jvnet.hudson.plugins.findbugs</groupId>
