@@ -11,12 +11,14 @@ import hudson.plugins.findbugs.FindBugsMessages;
 import hudson.plugins.findbugs.Messages;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.apache.commons.io.IOUtils;
 import org.dom4j.DocumentException;
 import org.junit.Test;
 import org.xml.sax.SAXException;
@@ -51,14 +53,21 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
      *             in case of an error
      */
     private MavenModule parseFile(final String fileName) throws IOException, DocumentException {
-        Collection<FileAnnotation> annotations = new FindBugsParser().parse(FindBugsParserTest.class.getResourceAsStream(fileName), new ArrayList<String>(), fileName, new HashMap<String, String>());
-        MavenModule module = new MavenModule(fileName);
-        if (!annotations.isEmpty()) {
-            module.setName(annotations.iterator().next().getModuleName());
-        }
-        module.addAnnotations(annotations);
+        InputStream stream = FindBugsParserTest.class.getResourceAsStream(fileName);
+        try {
+            Collection<FileAnnotation> annotations = new FindBugsParser().parse(
+                    stream, new ArrayList<String>(), fileName, new HashMap<String, String>());
+            MavenModule module = new MavenModule(fileName);
+            if (!annotations.isEmpty()) {
+                module.setName(annotations.iterator().next().getModuleName());
+            }
+            module.addAnnotations(annotations);
 
-        return module;
+            return module;
+        }
+        finally {
+            IOUtils.closeQuietly(stream);
+        }
     }
 
     /**
@@ -134,14 +143,24 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
      */
     @Test
     public void testMessageMapping() throws SAXException, IOException {
-        Map<String, String> mapping = new FindBugsParser().createHashToMessageMapping(FindBugsParserTest.class.getResourceAsStream(FINDBUGS_NATIVE_XML));
-
-        assertEquals(WRONG_NUMBER_OF_WARNINGS_PARSED, 2, mapping.size());
-        assertTrue(BUG_WITH_GIVEN_HASHCODE_NOT_FOUND, mapping.containsKey(FIRST_WARNING));
-        assertTrue(BUG_WITH_GIVEN_HASHCODE_NOT_FOUND, mapping.containsKey(SECOND_WARNING));
-
-        assertEquals(WRONG_MESSAGE_PARSED, "Inconsistent synchronization of org.apache.hadoop.dfs.BlockCrcUpgradeObjectDatanode.blocksPreviouslyUpgraded; locked 85% of time", mapping.get(FIRST_WARNING));
-        assertEquals(WRONG_MESSAGE_PARSED, "Should org.apache.hadoop.streaming.StreamJob$MultiPropertyOption be a _static_ inner class?", mapping.get(SECOND_WARNING));
+        InputStream stream = FindBugsParserTest.class.getResourceAsStream(FINDBUGS_NATIVE_XML);
+        try {
+            Map<String, String> mapping = new FindBugsParser().createHashToMessageMapping(stream);
+            assertEquals(WRONG_NUMBER_OF_WARNINGS_PARSED, 2, mapping.size());
+            assertTrue(BUG_WITH_GIVEN_HASHCODE_NOT_FOUND, mapping.containsKey(FIRST_WARNING));
+            assertTrue(BUG_WITH_GIVEN_HASHCODE_NOT_FOUND, mapping.containsKey(SECOND_WARNING));
+            assertEquals(
+                    WRONG_MESSAGE_PARSED,
+                    "Inconsistent synchronization of org.apache.hadoop.dfs.BlockCrcUpgradeObjectDatanode.blocksPreviouslyUpgraded; locked 85% of time",
+                    mapping.get(FIRST_WARNING));
+            assertEquals(
+                    WRONG_MESSAGE_PARSED,
+                    "Should org.apache.hadoop.streaming.StreamJob$MultiPropertyOption be a _static_ inner class?",
+                    mapping.get(SECOND_WARNING));
+        }
+        finally {
+            IOUtils.closeQuietly(stream);
+        }
     }
 
     /**
