@@ -109,7 +109,6 @@ public class FindBugsReporter extends HealthAwareMavenReporter {
     }
 
     /** {@inheritDoc} */
-    @SuppressWarnings("unchecked")
     @Override
     public ParserResult perform(final MavenBuildProxy build, final MavenProject pom, final MojoInfo mojo,
             final PluginLogger logger) throws InterruptedException, IOException {

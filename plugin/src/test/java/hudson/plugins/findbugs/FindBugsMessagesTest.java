@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Locale;
 
+import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
@@ -36,9 +37,13 @@ public class FindBugsMessagesTest {
     @Test
     public void parseFindbugsMessages() throws IOException, SAXException {
         InputStream file = FindBugsMessages.class.getResourceAsStream("messages.xml");
-        List<Pattern> patterns = FindBugsMessages.getInstance().parse(file);
-
-        assertEquals(WRONG_NUMBER_OF_WARNINGS_DETECTED, EXPECTED_PATTERNS, patterns.size());
+        try {
+            List<Pattern> patterns = FindBugsMessages.getInstance().parse(file);
+            assertEquals(WRONG_NUMBER_OF_WARNINGS_DETECTED, EXPECTED_PATTERNS, patterns.size());
+        }
+        finally {
+            IOUtils.closeQuietly(file);
+        }
     }
 
     /**
@@ -52,9 +57,14 @@ public class FindBugsMessagesTest {
     @Test
     public void parseFindbugsContribMessages() throws IOException, SAXException {
         InputStream file = FindBugsMessages.class.getResourceAsStream("fb-contrib-messages.xml");
-        List<Pattern> patterns = FindBugsMessages.getInstance().parse(file);
-
-        assertEquals(WRONG_NUMBER_OF_WARNINGS_DETECTED, EXPECTED_CONTRIB_PATTERNS, patterns.size());
+        try {
+            List<Pattern> patterns = FindBugsMessages.getInstance().parse(file);
+            assertEquals(WRONG_NUMBER_OF_WARNINGS_DETECTED, EXPECTED_CONTRIB_PATTERNS,
+                    patterns.size());
+        }
+        finally {
+            IOUtils.closeQuietly(file);
+        }
     }
 
     /**

@@ -7,9 +7,11 @@ import hudson.plugins.analysis.util.model.AnnotationStream;
 import hudson.plugins.analysis.util.model.FileAnnotation;
 import hudson.plugins.analysis.util.model.Priority;
 
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.HashSet;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.junit.Test;
 
@@ -37,11 +39,25 @@ public class BugsDifferencerTest extends AnnotationDifferencerTest {
         AnnotationStream xstream = new AnnotationStream();
         xstream.alias("bug", Bug.class);
 
-        FileAnnotation[] current = (FileAnnotation[])xstream.fromXML(BugsDifferencerTest.class.getResourceAsStream("issue-6669-1.xml"));
-        assertEquals("Wrong number of bugs", 2, current.length);
+        InputStream stream = BugsDifferencerTest.class.getResourceAsStream("issue-6669-1.xml");
+        FileAnnotation[] current;
+        try {
+            current = (FileAnnotation[])xstream.fromXML(stream);
+            assertEquals("Wrong number of bugs", 2, current.length);
+        }
+        finally {
+            IOUtils.closeQuietly(stream);
+        }
+        stream = BugsDifferencerTest.class.getResourceAsStream("issue-6669-2.xml");
 
-        FileAnnotation[] previous = (FileAnnotation[])xstream.fromXML(BugsDifferencerTest.class.getResourceAsStream("issue-6669-2.xml"));
-        assertEquals("Wrong number of bugs", 2, previous.length);
+        FileAnnotation[] previous;
+        try {
+            previous = (FileAnnotation[])xstream.fromXML(stream);
+            assertEquals("Wrong number of bugs", 2, previous.length);
+        }
+        finally {
+            IOUtils.closeQuietly(stream);
+        }
 
         HashSet<FileAnnotation> currentSet = Sets.newHashSet(Arrays.asList(current));
         HashSet<FileAnnotation> previousSet = Sets.newHashSet(Arrays.asList(previous));
