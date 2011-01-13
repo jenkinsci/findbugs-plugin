@@ -23,11 +23,11 @@ import org.jvnet.localizer.LocaleProvider;
  */
 @SuppressWarnings("PMD.CyclomaticComplexity")
 public class Bug extends AbstractAnnotation {
+    /** Origin of the annotation. */
+    public static final String ORIGIN = "findbugs";
+
     private static final long serialVersionUID = 5171661552905752370L;
     private static final Random RANDOM = new Random();
-
-    /** Origin of the annotation. */
-    private static final String ORIGIN = "findbugs";
 
     private String tooltip = StringUtils.EMPTY;
 
