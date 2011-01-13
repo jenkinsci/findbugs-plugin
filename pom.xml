@@ -11,7 +11,7 @@
   <artifactId>findbugs</artifactId>
   <packaging>hpi</packaging>
   <name>FindBugs Plug-in</name>
-  <version>4.18</version>
+  <version>4.19-SNAPSHOT</version>
   <url>http://wiki.hudson-ci.org/display/HUDSON/FindBugs+Plugin</url>
   <description>This plug-in generates the trend report for FindBugs,
     an open source program which uses static analysis to look for bugs
@@ -61,9 +61,9 @@
   </dependencies>
 
   <scm>
-    <connection>scm:svn:https://guest@svn.java.net/svn/hudson~svn/tags/findbugs-4.18</connection>
-    <developerConnection>scm:svn:https://svn.java.net/svn/hudson~svn/tags/findbugs-4.18</developerConnection>
-    <url>http://fisheye.hudson-ci.org/browse/Hudson/tags/findbugs-4.18</url>
+    <connection>scm:svn:https://guest@svn.java.net/svn/hudson~svn/trunk/hudson/plugins/findbugs/plugin</connection>
+    <developerConnection>scm:svn:https://svn.java.net/svn/hudson~svn/trunk/hudson/plugins/findbugs/plugin</developerConnection>
+    <url>http://fisheye.hudson-ci.org/browse/Hudson/trunk/hudson/plugins/findbugs/plugin</url>
   </scm>
 
   <repositories>
