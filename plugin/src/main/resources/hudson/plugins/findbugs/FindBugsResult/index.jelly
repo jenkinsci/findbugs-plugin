@@ -1,6 +1,6 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler"
 	xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson"
-	xmlns:f="/lib/form" xmlns:i="jelly:fmt">
+	xmlns:f="/lib/form" xmlns:i="jelly:fmt" xmlns:tab="/tab">
 	<l:layout norefresh="true">
 		<st:include it="${it.owner}" page="sidepanel.jelly" />
 		<l:main-panel>
@@ -60,9 +60,9 @@
 				</tbody>
 			</table>
 
-	        <st:include page="/summaryTable.jelly" />
+	        <tab:summaryTable />
 
-	        <st:include page="/tabview/main.jelly" />
+	        <tab:main />
 
 		</l:main-panel>
 	</l:layout>
