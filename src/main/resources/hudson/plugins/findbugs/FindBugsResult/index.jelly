@@ -60,7 +60,7 @@
 				</tbody>
 			</table>
 
-	        <tab:summaryTable />
+            <tab:priorities-summary />
 
 	        <tab:main />
 
