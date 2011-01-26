@@ -1,6 +1,10 @@
 package hudson.plugins.findbugs;
 
+import hudson.Launcher;
+import hudson.matrix.MatrixAggregator;
+import hudson.matrix.MatrixBuild;
 import hudson.model.Action;
+import hudson.model.BuildListener;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.plugins.analysis.core.BuildResult;
@@ -142,4 +146,9 @@ public class FindBugsPublisher extends HealthAwarePublisher {
         return (FindBugsDescriptor)super.getDescriptor();
     }
 
+    /** {@inheritDoc} */
+    public MatrixAggregator createAggregator(final MatrixBuild build, final Launcher launcher,
+            final BuildListener listener) {
+        return new FindBugsAnnotationsAggregator(build, launcher, listener, this, getDefaultEncoding());
+    }
 }
