@@ -8,9 +8,6 @@ import hudson.model.BuildListener;
 import hudson.plugins.analysis.core.AnnotationsAggregator;
 import hudson.plugins.analysis.core.HealthDescriptor;
 import hudson.plugins.analysis.core.ParserResult;
-import hudson.plugins.analysis.util.model.FileAnnotation;
-
-import java.util.Collection;
 
 /**
  * Aggregates {@link FindBugsResultAction}s of {@link MatrixRun}s into
@@ -18,7 +15,6 @@ import java.util.Collection;
  *
  * @author Ulli Hafner
  */
-
 public class FindBugsAnnotationsAggregator extends AnnotationsAggregator {
     /**
      * Creates a new instance of {@link FindBugsAnnotationsAggregator}.
@@ -48,10 +44,10 @@ public class FindBugsAnnotationsAggregator extends AnnotationsAggregator {
 
     /** {@inheritDoc} */
     @Override
-    protected Collection<? extends FileAnnotation> getAnnotations(final MatrixRun run) {
+    protected FindBugsResult getResult(final MatrixRun run) {
         FindBugsResultAction action = run.getAction(FindBugsResultAction.class);
 
-        return action.getResult().getAnnotations();
+        return action.getResult();
     }
 }
 
