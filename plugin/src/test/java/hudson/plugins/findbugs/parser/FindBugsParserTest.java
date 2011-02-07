@@ -79,7 +79,7 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
      *             in case of an error
      * @throws DocumentException
      *             in case of an error
-     * @see <a href="http://issues.hudson-ci.org/browse/HUDSON-7238">Issue 7238</a>
+     * @see <a href="http://issues.jenkins-ci.org/browse/JENKINS-7238">Issue 7238</a>
      */
     @Test
     public void issue7238() throws IOException, DocumentException, SAXException {
@@ -98,8 +98,8 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
      *             in case of an error
      * @throws DocumentException
      *             in case of an error
-     * @see <a href="http://issues.hudson-ci.org/browse/HUDSON-7312">Issue 7312</a>
-     * @see <a href="http://issues.hudson-ci.org/browse/HUDSON-7932">Issue 7932</a>
+     * @see <a href="http://issues.jenkins-ci.org/browse/JENKINS-7312">Issue 7312</a>
+     * @see <a href="http://issues.jenkins-ci.org/browse/JENKINS-7932">Issue 7932</a>
      */
     @Test
     public void issue7312and7932() throws IOException, DocumentException, SAXException {
@@ -121,7 +121,7 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
      *             in case of an error
      * @throws DocumentException
      *             in case of an error
-     * @see <a href="http://issues.hudson-ci.org/browse/HUDSON-7932">Issue 7932</a>
+     * @see <a href="http://issues.jenkins-ci.org/browse/JENKINS-7932">Issue 7932</a>
      */
     @Test
     public void issue7932OOnNull() throws IOException, DocumentException, SAXException {
