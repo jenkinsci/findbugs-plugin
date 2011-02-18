@@ -1,4 +1,0 @@
-<div>
-  This plug-in collects the <a href="http://findbugs.sourceforge.net/">FindBugs</a> analysis
-  results of the project modules and visualizes the found warnings.
-</div>

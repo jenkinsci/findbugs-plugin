@@ -1,1 +1,0 @@
-The findbugs logo is a trademark by The University of Maryland. These icons are a courtesy of the FindBugs team.
