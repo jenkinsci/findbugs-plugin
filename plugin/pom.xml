@@ -61,8 +61,8 @@
   </dependencies>
 
   <scm>
-    <connection>scm:git:git://github.com/jenkinsci/findbugs-plugin.git/plugin</connection>
-    <developerConnection>scm:git:git@github.com:jenkinsci/findbugs-plugin.git/plugin</developerConnection>
+    <connection>scm:git:git://github.com/jenkinsci/findbugs-plugin.git</connection>
+    <developerConnection>scm:git:git@github.com:jenkinsci/findbugs-plugin.git</developerConnection>
     <url>https://github.com/jenkinsci/findbugs-plugin</url>
   </scm>
 
