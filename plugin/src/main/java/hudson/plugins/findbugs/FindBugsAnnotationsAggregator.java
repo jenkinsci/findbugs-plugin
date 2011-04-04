@@ -42,12 +42,18 @@ public class FindBugsAnnotationsAggregator extends AnnotationsAggregator {
                 new FindBugsResult(build, defaultEncoding, aggregatedResult));
     }
 
-    /** {@inheritDoc} */
+    @Override
+    protected boolean hasResult(final MatrixRun run) {
+        return getAction(run) != null;
+    }
+
     @Override
     protected FindBugsResult getResult(final MatrixRun run) {
-        FindBugsResultAction action = run.getAction(FindBugsResultAction.class);
+        return getAction(run).getResult();
+    }
 
-        return action.getResult();
+    private FindBugsResultAction getAction(final MatrixRun run) {
+        return run.getAction(FindBugsResultAction.class);
     }
 }
 
