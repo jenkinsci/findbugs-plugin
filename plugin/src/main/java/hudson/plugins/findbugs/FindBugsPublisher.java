@@ -135,7 +135,7 @@ public class FindBugsPublisher extends HealthAwarePublisher {
         FilesParser collector;
         if (shouldDetectModules()) {
             collector = new FilesParser(logger, StringUtils.defaultIfEmpty(getPattern(),
-                    defaultPattern), new FindBugsParser(), isMavenBuild(build), isAntBuild(build));
+                    defaultPattern), new FindBugsParser(), isMavenBuild(build));
         }
         else {
             collector = new FilesParser(logger, StringUtils.defaultIfEmpty(getPattern(),
