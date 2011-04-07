@@ -85,6 +85,8 @@ public class FindBugsPublisher extends HealthAwarePublisher {
      *            annotation threshold
      * @param canRunOnFailed
      *            determines whether the plug-in can run for failed builds, too
+     * @param shouldDetectModules
+     *            determines whether module names should be derived from Maven POM or Ant build files
      * @param pattern
      *            Ant file-set pattern to scan for FindBugs files
      */
@@ -97,14 +99,14 @@ public class FindBugsPublisher extends HealthAwarePublisher {
             final String unstableNewAll, final String unstableNewHigh, final String unstableNewNormal, final String unstableNewLow,
             final String failedTotalAll, final String failedTotalHigh, final String failedTotalNormal, final String failedTotalLow,
             final String failedNewAll, final String failedNewHigh, final String failedNewNormal, final String failedNewLow,
-            final boolean canRunOnFailed,
+            final boolean canRunOnFailed, final boolean shouldDetectModules,
             final String pattern) {
         super(healthy, unHealthy, thresholdLimit, defaultEncoding, useDeltaValues,
                 unstableTotalAll, unstableTotalHigh, unstableTotalNormal, unstableTotalLow,
                 unstableNewAll, unstableNewHigh, unstableNewNormal, unstableNewLow,
                 failedTotalAll, failedTotalHigh, failedTotalNormal, failedTotalLow,
                 failedNewAll, failedNewHigh, failedNewNormal, failedNewLow,
-                canRunOnFailed, "FINDBUGS");
+                canRunOnFailed, shouldDetectModules, "FINDBUGS");
         this.pattern = pattern;
     }
     // CHECKSTYLE:ON
@@ -130,8 +132,15 @@ public class FindBugsPublisher extends HealthAwarePublisher {
         logger.log("Collecting findbugs analysis files...");
 
         String defaultPattern = isMavenBuild(build) ? MAVEN_DEFAULT_PATTERN : ANT_DEFAULT_PATTERN;
-        FilesParser collector = new FilesParser(logger, StringUtils.defaultIfEmpty(getPattern(), defaultPattern),
-                new FindBugsParser(), isMavenBuild(build), isAntBuild(build));
+        FilesParser collector;
+        if (shouldDetectModules()) {
+            collector = new FilesParser(logger, StringUtils.defaultIfEmpty(getPattern(),
+                    defaultPattern), new FindBugsParser(), isMavenBuild(build), isAntBuild(build));
+        }
+        else {
+            collector = new FilesParser(logger, StringUtils.defaultIfEmpty(getPattern(),
+                    defaultPattern), new FindBugsParser());
+        }
         ParserResult project = build.getWorkspace().act(collector);
         FindBugsResult result = new FindBugsResult(build, getDefaultEncoding(), project);
 
