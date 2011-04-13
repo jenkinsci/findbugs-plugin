@@ -1,0 +1,8 @@
+<j:jelly xmlns:j="jelly:core">
+
+  <dt>$${FINDBUGS_RESULT}</dt>
+  <dd>
+    Expands to the build result of the FindBugs plug-in.
+  </dd>
+
+</j:jelly>
