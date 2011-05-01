@@ -40,18 +40,6 @@ public class FindBugsReporter extends HealthAwareMavenReporter {
     /**
      * Creates a new instance of <code>FindBugsReporter</code>.
      *
-     * @param threshold
-     *            Annotation threshold to be reached if a build should be considered as
-     *            unstable.
-     * @param newThreshold
-     *            New annotations threshold to be reached if a build should be
-     *            considered as unstable.
-     * @param failureThreshold
-     *            Annotation threshold to be reached if a build should be considered as
-     *            failure.
-     * @param newFailureThreshold
-     *            New annotations threshold to be reached if a build should be
-     *            considered as failure.
      * @param healthy
      *            Report health as 100% when the number of warnings is less than
      *            this value
@@ -61,17 +49,56 @@ public class FindBugsReporter extends HealthAwareMavenReporter {
      * @param thresholdLimit
      *            determines which warning priorities should be considered when
      *            evaluating the build stability and health
+     * @param unstableTotalAll
+     *            annotation threshold
+     * @param unstableTotalHigh
+     *            annotation threshold
+     * @param unstableTotalNormal
+     *            annotation threshold
+     * @param unstableTotalLow
+     *            annotation threshold
+     * @param unstableNewAll
+     *            annotation threshold
+     * @param unstableNewHigh
+     *            annotation threshold
+     * @param unstableNewNormal
+     *            annotation threshold
+     * @param unstableNewLow
+     *            annotation threshold
+     * @param failedTotalAll
+     *            annotation threshold
+     * @param failedTotalHigh
+     *            annotation threshold
+     * @param failedTotalNormal
+     *            annotation threshold
+     * @param failedTotalLow
+     *            annotation threshold
+     * @param failedNewAll
+     *            annotation threshold
+     * @param failedNewHigh
+     *            annotation threshold
+     * @param failedNewNormal
+     *            annotation threshold
+     * @param failedNewLow
+     *            annotation threshold
      * @param canRunOnFailed
      *            determines whether the plug-in can run for failed builds, too
      */
     // CHECKSTYLE:OFF
     @SuppressWarnings("PMD.ExcessiveParameterList")
     @DataBoundConstructor
-    public FindBugsReporter(final String threshold, final String newThreshold,
-            final String failureThreshold, final String newFailureThreshold,
-            final String healthy, final String unHealthy, final String thresholdLimit, final boolean canRunOnFailed) {
-        super(threshold, newThreshold, failureThreshold, newFailureThreshold,
-                healthy, unHealthy, thresholdLimit, canRunOnFailed, "FINDBUGS");
+    public FindBugsReporter(final String healthy, final String unHealthy, final String thresholdLimit,
+            final String unstableTotalAll, final String unstableTotalHigh, final String unstableTotalNormal, final String unstableTotalLow,
+            final String unstableNewAll, final String unstableNewHigh, final String unstableNewNormal, final String unstableNewLow,
+            final String failedTotalAll, final String failedTotalHigh, final String failedTotalNormal, final String failedTotalLow,
+            final String failedNewAll, final String failedNewHigh, final String failedNewNormal, final String failedNewLow,
+            final boolean canRunOnFailed) {
+        super(healthy, unHealthy, thresholdLimit,
+                unstableTotalAll, unstableTotalHigh, unstableTotalNormal, unstableTotalLow,
+                unstableNewAll, unstableNewHigh, unstableNewNormal, unstableNewLow,
+                failedTotalAll, failedTotalHigh, failedTotalNormal, failedTotalLow,
+                failedNewAll, failedNewHigh, failedNewNormal, failedNewLow,
+                canRunOnFailed, "FINDBUGS");
     }
     // CHECKSTYLE:ON
 
