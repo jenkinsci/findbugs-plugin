@@ -1,14 +1,13 @@
 package hudson.plugins.findbugs;
 
+import hudson.maven.MavenAggregatedReport;
 import hudson.maven.MavenBuildProxy;
 import hudson.maven.MojoInfo;
 import hudson.maven.MavenBuild;
 import hudson.maven.MavenModule;
-import hudson.model.Action;
 import hudson.model.BuildListener;
-import hudson.plugins.analysis.core.BuildResult;
 import hudson.plugins.analysis.core.FilesParser;
-import hudson.plugins.analysis.core.HealthAwareMavenReporter;
+import hudson.plugins.analysis.core.HealthAwareReporter;
 import hudson.plugins.analysis.core.ParserResult;
 import hudson.plugins.analysis.util.PluginLogger;
 import hudson.plugins.findbugs.parser.FindBugsParser;
@@ -29,7 +28,7 @@ import org.kohsuke.stapler.DataBoundConstructor;
  * @author Ulli Hafner
  */
 // CHECKSTYLE:COUPLING-OFF
-public class FindBugsReporter extends HealthAwareMavenReporter {
+public class FindBugsReporter extends HealthAwareReporter<FindBugsResult> {
     private static final long serialVersionUID = -288391908253344862L;
 
     /** FindBugs filename if maven findbugsXmlOutput is activated. */
@@ -49,6 +48,10 @@ public class FindBugsReporter extends HealthAwareMavenReporter {
      * @param thresholdLimit
      *            determines which warning priorities should be considered when
      *            evaluating the build stability and health
+     * @param useDeltaValues
+     *            determines whether the absolute annotations delta or the
+     *            actual annotations set difference should be used to evaluate
+     *            the build stability
      * @param unstableTotalAll
      *            annotation threshold
      * @param unstableTotalHigh
@@ -87,13 +90,13 @@ public class FindBugsReporter extends HealthAwareMavenReporter {
     // CHECKSTYLE:OFF
     @SuppressWarnings("PMD.ExcessiveParameterList")
     @DataBoundConstructor
-    public FindBugsReporter(final String healthy, final String unHealthy, final String thresholdLimit,
+    public FindBugsReporter(final String healthy, final String unHealthy, final String thresholdLimit, final boolean useDeltaValues,
             final String unstableTotalAll, final String unstableTotalHigh, final String unstableTotalNormal, final String unstableTotalLow,
             final String unstableNewAll, final String unstableNewHigh, final String unstableNewNormal, final String unstableNewLow,
             final String failedTotalAll, final String failedTotalHigh, final String failedTotalNormal, final String failedTotalLow,
             final String failedNewAll, final String failedNewHigh, final String failedNewNormal, final String failedNewLow,
             final boolean canRunOnFailed) {
-        super(healthy, unHealthy, thresholdLimit,
+        super(healthy, unHealthy, thresholdLimit, useDeltaValues,
                 unstableTotalAll, unstableTotalHigh, unstableTotalNormal, unstableTotalLow,
                 unstableNewAll, unstableNewHigh, unstableNewNormal, unstableNewLow,
                 failedTotalAll, failedTotalHigh, failedTotalNormal, failedTotalLow,
@@ -129,13 +132,11 @@ public class FindBugsReporter extends HealthAwareMavenReporter {
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     protected boolean acceptGoal(final String goal) {
         return "findbugs".equals(goal) || "site".equals(goal);
     }
 
-    /** {@inheritDoc} */
     @Override
     public ParserResult perform(final MavenBuildProxy build, final MavenProject pom, final MojoInfo mojo,
             final PluginLogger logger) throws InterruptedException, IOException {
@@ -148,14 +149,14 @@ public class FindBugsReporter extends HealthAwareMavenReporter {
         return getTargetPath(pom).act(findBugsCollector);
     }
 
-    /** {@inheritDoc} */
     @Override
-    protected BuildResult persistResult(final ParserResult project, final MavenBuild build) {
-        FindBugsResult result = new FindBugsResult(build, getDefaultEncoding(), project);
-        build.getActions().add(new MavenFindBugsResultAction(build, this, getDefaultEncoding(), result));
-        build.registerAsProjectAction(FindBugsReporter.this);
+    protected FindBugsResult createResult(final MavenBuild build, final ParserResult project) {
+        return new FindBugsResult(build, getDefaultEncoding(), project);
+    }
 
-        return result;
+    @Override
+    protected MavenAggregatedReport createMavenAggregatedReport(final MavenBuild build, final FindBugsResult result) {
+        return new MavenFindBugsResultAction(build, this, getDefaultEncoding(), result);
     }
 
     /**
@@ -178,15 +179,13 @@ public class FindBugsReporter extends HealthAwareMavenReporter {
         return fileName;
     }
 
-    /** {@inheritDoc} */
     @Override
     public List<FindBugsProjectAction> getProjectActions(final MavenModule module) {
         return Collections.singletonList(new FindBugsProjectAction(module));
     }
 
-    /** {@inheritDoc} */
     @Override
-    protected Class<? extends Action> getResultActionClass() {
+    protected Class<MavenFindBugsResultAction> getResultActionClass() {
         return MavenFindBugsResultAction.class;
     }
 
