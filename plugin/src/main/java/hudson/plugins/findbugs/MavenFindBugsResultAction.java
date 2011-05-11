@@ -8,10 +8,7 @@ import hudson.maven.MavenModuleSet;
 import hudson.maven.MavenModuleSetBuild;
 import hudson.model.Action;
 import hudson.model.AbstractBuild;
-import hudson.plugins.analysis.core.BuildResult;
 import hudson.plugins.analysis.core.HealthDescriptor;
-import hudson.plugins.analysis.core.ParserResult;
-import hudson.plugins.analysis.util.PluginLogger;
 
 import java.util.List;
 import java.util.Map;
@@ -23,6 +20,7 @@ import java.util.Map;
  *
  * @author Ulli Hafner
  */
+@Deprecated
 public class MavenFindBugsResultAction extends FindBugsResultAction implements AggregatableAction, MavenAggregatedReport {
     /** The default encoding to be used when reading and parsing files. */
     private final String defaultEncoding;
@@ -89,43 +87,7 @@ public class MavenFindBugsResultAction extends FindBugsResultAction implements A
      *            Newly completed build.
      */
     public void update(final Map<MavenModule, List<MavenBuild>> moduleBuilds, final MavenBuild newBuild) {
-        MavenFindBugsResultAction additionalAction = newBuild.getAction(MavenFindBugsResultAction.class);
-        if (additionalAction != null) {
-            FindBugsResult existingResult = getResult();
-            FindBugsResult additionalResult = additionalAction.getResult();
-
-            log("Aggregating results of " + newBuild.getProject().getDisplayName());
-
-            if (existingResult == null) {
-                setResult(additionalResult);
-                getOwner().setResult(additionalResult.getPluginResult());
-            }
-            else {
-                setResult(aggregate(existingResult, additionalResult, getLogger()));
-            }
-        }
-    }
-
-    /**
-     * Creates a new instance of {@link BuildResult} that contains the aggregated
-     * results of this result and the provided additional result.
-     *
-     * @param existingResult
-     *            the existing result
-     * @param additionalResult
-     *            the result that will be added to the existing result
-     * @param logger
-     *            the plug-in logger
-     * @return the aggregated result
-     */
-    public FindBugsResult aggregate(final FindBugsResult existingResult, final FindBugsResult additionalResult, final PluginLogger logger) {
-        ParserResult aggregatedAnnotations = new ParserResult();
-        aggregatedAnnotations.addAnnotations(existingResult.getAnnotations());
-        aggregatedAnnotations.addAnnotations(additionalResult.getAnnotations());
-
-        FindBugsResult createdResult = new FindBugsResult(getOwner(), existingResult.getDefaultEncoding(), aggregatedAnnotations);
-        createdResult.evaluateStatus(existingResult.getThresholds(), existingResult.canUseDeltaValues(), logger);
-        return createdResult;
+        // not used anymore
     }
 
     /** Backward compatibility. @deprecated */

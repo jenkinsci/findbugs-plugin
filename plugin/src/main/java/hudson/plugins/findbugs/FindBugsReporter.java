@@ -156,7 +156,7 @@ public class FindBugsReporter extends HealthAwareReporter<FindBugsResult> {
 
     @Override
     protected MavenAggregatedReport createMavenAggregatedReport(final MavenBuild build, final FindBugsResult result) {
-        return new MavenFindBugsResultAction(build, this, getDefaultEncoding(), result);
+        return new FindBugsMavenResultAction(build, this, getDefaultEncoding(), result);
     }
 
     /**
@@ -185,8 +185,8 @@ public class FindBugsReporter extends HealthAwareReporter<FindBugsResult> {
     }
 
     @Override
-    protected Class<MavenFindBugsResultAction> getResultActionClass() {
-        return MavenFindBugsResultAction.class;
+    protected Class<FindBugsMavenResultAction> getResultActionClass() {
+        return FindBugsMavenResultAction.class;
     }
 
     /** Ant file-set pattern of files to work with. @deprecated */
