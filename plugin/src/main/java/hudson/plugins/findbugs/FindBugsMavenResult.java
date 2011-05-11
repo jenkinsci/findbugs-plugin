@@ -9,6 +9,7 @@ import hudson.plugins.analysis.core.ResultAction;
  * Represents the aggregated results of the PMD analysis in m2 jobs.
  *
  * @author Ulli Hafner
+ * @deprecated not used anymore
  */
 @Deprecated
 public class FindBugsMavenResult extends FindBugsResult {
