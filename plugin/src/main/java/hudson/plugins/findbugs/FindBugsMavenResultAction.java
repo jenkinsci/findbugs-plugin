@@ -35,7 +35,7 @@ public class FindBugsMavenResultAction extends MavenResultAction<FindBugsResult>
      */
     public FindBugsMavenResultAction(final MavenModuleSetBuild owner, final HealthDescriptor healthDescriptor,
             final String defaultEncoding) {
-        super(new FindBugsResultAction(owner, healthDescriptor), defaultEncoding);
+        super(new FindBugsResultAction(owner, healthDescriptor), defaultEncoding, "FINDBUGS");
     }
 
     /**
@@ -52,7 +52,7 @@ public class FindBugsMavenResultAction extends MavenResultAction<FindBugsResult>
      */
     public FindBugsMavenResultAction(final MavenBuild owner, final HealthDescriptor healthDescriptor,
             final String defaultEncoding, final FindBugsResult result) {
-        super(new FindBugsResultAction(owner, healthDescriptor, result), defaultEncoding);
+        super(new FindBugsResultAction(owner, healthDescriptor, result), defaultEncoding, "FINDBUGS");
     }
 
     /** {@inheritDoc} */
