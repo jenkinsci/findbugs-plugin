@@ -8,7 +8,6 @@ import hudson.maven.MavenModuleSetBuild;
 import hudson.model.Action;
 import hudson.plugins.analysis.core.HealthDescriptor;
 import hudson.plugins.analysis.core.MavenResultAction;
-import hudson.plugins.analysis.core.ParserResult;
 
 import java.util.List;
 import java.util.Map;
@@ -71,8 +70,8 @@ public class FindBugsMavenResultAction extends MavenResultAction<FindBugsResult>
     }
 
     @Override
-    protected FindBugsResult createResult(final FindBugsResult existingResult, final ParserResult aggregatedAnnotations) {
-        return new FindBugsResult(getOwner(), existingResult.getDefaultEncoding(), aggregatedAnnotations);
+    protected FindBugsResult createResult(final FindBugsResult existingResult, final FindBugsResult additionResult) {
+        return new FindBugsResult(getOwner(), existingResult.getDefaultEncoding(), aggregate(existingResult, additionResult));
     }
 }
 
