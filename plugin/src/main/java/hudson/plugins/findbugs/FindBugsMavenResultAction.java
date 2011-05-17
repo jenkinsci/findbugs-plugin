@@ -1,3 +1,6 @@
+/*
+ *
+ */
 package hudson.plugins.findbugs;
 
 import hudson.maven.MavenAggregatedReport;
@@ -70,8 +73,8 @@ public class FindBugsMavenResultAction extends MavenResultAction<FindBugsResult>
     }
 
     @Override
-    protected FindBugsResult createResult(final FindBugsResult... results) {
-        return new FindBugsResult(getOwner(), results[0].getDefaultEncoding(), aggregate(results));
+    protected FindBugsResult createResult(final FindBugsResult existingResult, final FindBugsResult additionalResult) {
+        return new FindBugsResult(getOwner(), additionalResult.getDefaultEncoding(), aggregate(existingResult, additionalResult));
     }
 }
 
