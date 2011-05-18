@@ -10,6 +10,7 @@ import hudson.plugins.analysis.core.FilesParser;
 import hudson.plugins.analysis.core.HealthAwareReporter;
 import hudson.plugins.analysis.core.ParserResult;
 import hudson.plugins.analysis.util.PluginLogger;
+import hudson.plugins.analysis.util.StringPluginLogger;
 import hudson.plugins.findbugs.parser.FindBugsParser;
 
 import java.io.IOException;
@@ -30,6 +31,8 @@ import org.kohsuke.stapler.DataBoundConstructor;
 // CHECKSTYLE:COUPLING-OFF
 public class FindBugsReporter extends HealthAwareReporter<FindBugsResult> {
     private static final long serialVersionUID = -288391908253344862L;
+
+    private static final String PLUGIN_NAME = "FINDBUGS";
 
     /** FindBugs filename if maven findbugsXmlOutput is activated. */
     private static final String FINDBUGS_XML_FILE = "findbugsXml.xml";
@@ -101,7 +104,7 @@ public class FindBugsReporter extends HealthAwareReporter<FindBugsResult> {
                 unstableNewAll, unstableNewHigh, unstableNewNormal, unstableNewLow,
                 failedTotalAll, failedTotalHigh, failedTotalNormal, failedTotalLow,
                 failedNewAll, failedNewHigh, failedNewNormal, failedNewLow,
-                canRunOnFailed, "FINDBUGS");
+                canRunOnFailed, PLUGIN_NAME);
     }
     // CHECKSTYLE:ON
 
@@ -143,8 +146,8 @@ public class FindBugsReporter extends HealthAwareReporter<FindBugsResult> {
         List<String> sources = new ArrayList<String>(pom.getCompileSourceRoots());
         sources.addAll(pom.getTestCompileSourceRoots());
 
-        FilesParser findBugsCollector = new FilesParser(logger, determineFileName(mojo),
-                    new FindBugsParser(sources), getModuleName(pom));
+        FilesParser findBugsCollector = new FilesParser(new StringPluginLogger(PLUGIN_NAME),
+                determineFileName(mojo), new FindBugsParser(sources), getModuleName(pom));
 
         return getTargetPath(pom).act(findBugsCollector);
     }

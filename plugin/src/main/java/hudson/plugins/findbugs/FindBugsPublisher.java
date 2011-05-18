@@ -12,6 +12,7 @@ import hudson.plugins.analysis.core.FilesParser;
 import hudson.plugins.analysis.core.HealthAwarePublisher;
 import hudson.plugins.analysis.core.ParserResult;
 import hudson.plugins.analysis.util.PluginLogger;
+import hudson.plugins.analysis.util.StringPluginLogger;
 import hudson.plugins.findbugs.parser.FindBugsParser;
 
 import java.io.IOException;
@@ -26,6 +27,8 @@ import org.kohsuke.stapler.DataBoundConstructor;
  */
 public class FindBugsPublisher extends HealthAwarePublisher {
     private static final long serialVersionUID = -5748362182226609649L;
+
+    private static final String PLUGIN_NAME = "FINDBUGS";
 
     private static final String ANT_DEFAULT_PATTERN = "**/findbugs.xml";
     private static final String MAVEN_DEFAULT_PATTERN = "**/findbugsXml.xml";
@@ -106,7 +109,7 @@ public class FindBugsPublisher extends HealthAwarePublisher {
                 unstableNewAll, unstableNewHigh, unstableNewNormal, unstableNewLow,
                 failedTotalAll, failedTotalHigh, failedTotalNormal, failedTotalLow,
                 failedNewAll, failedNewHigh, failedNewNormal, failedNewLow,
-                canRunOnFailed, shouldDetectModules, "FINDBUGS");
+                canRunOnFailed, shouldDetectModules, PLUGIN_NAME);
         this.pattern = pattern;
     }
     // CHECKSTYLE:ON
@@ -132,16 +135,11 @@ public class FindBugsPublisher extends HealthAwarePublisher {
         logger.log("Collecting findbugs analysis files...");
 
         String defaultPattern = isMavenBuild(build) ? MAVEN_DEFAULT_PATTERN : ANT_DEFAULT_PATTERN;
-        FilesParser collector;
-        if (shouldDetectModules()) {
-            collector = new FilesParser(logger, StringUtils.defaultIfEmpty(getPattern(),
-                    defaultPattern), new FindBugsParser(), isMavenBuild(build));
-        }
-        else {
-            collector = new FilesParser(logger, StringUtils.defaultIfEmpty(getPattern(),
-                    defaultPattern), new FindBugsParser());
-        }
+        FilesParser collector = new FilesParser(new StringPluginLogger(PLUGIN_NAME),
+                StringUtils.defaultIfEmpty(getPattern(), defaultPattern),
+                new FindBugsParser(), shouldDetectModules(), isMavenBuild(build));
         ParserResult project = build.getWorkspace().act(collector);
+        logger.logLines(project.getLogMessages());
         FindBugsResult result = new FindBugsResult(build, getDefaultEncoding(), project);
 
         build.getActions().add(new FindBugsResultAction(build, this, result));
