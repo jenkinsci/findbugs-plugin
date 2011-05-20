@@ -13,6 +13,8 @@ import java.util.Random;
 import org.apache.commons.lang.StringUtils;
 import org.jvnet.localizer.LocaleProvider;
 
+import edu.umd.cs.findbugs.annotations.CheckForNull;
+
 /**
  * A serializable Java Bean class representing a warning.
  * <p>
@@ -173,7 +175,7 @@ public class Bug extends AbstractAnnotation {
         return shouldBeInCloud;
     }
 
-    public void setDetailsUrlTemplate(final String detailsUrl) {
+    public void setDetailsUrlTemplate(@CheckForNull final String detailsUrl) {
         this.detailsUrl = detailsUrl;
     }
     // CHECKSTYLE:ON
