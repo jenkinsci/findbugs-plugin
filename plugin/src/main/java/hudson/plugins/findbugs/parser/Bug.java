@@ -202,7 +202,7 @@ public class Bug extends AbstractAnnotation {
     }
 
     private String getCloudInformation() {
-        if (!shouldBeInCloud || (!inCloud && detailsUrl == null)) {
+        if (!inCloud && detailsUrl == null) {
             return StringUtils.EMPTY;
         }
 
@@ -255,7 +255,10 @@ public class Bug extends AbstractAnnotation {
 
     private String getReviewerMessage() {
         String prefix = ", ";
-        if (reviewCount == 1) {
+        if (reviewCount == 0) {
+            return StringUtils.EMPTY;
+        }
+        else if (reviewCount == 1) {
             return prefix + Messages.FindBugs_Bug_cloudInfo_reviewer_singular();
         }
         else {
