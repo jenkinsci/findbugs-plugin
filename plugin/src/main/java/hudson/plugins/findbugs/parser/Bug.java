@@ -10,10 +10,10 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.Random;
 
+import javax.annotation.CheckForNull;
+
 import org.apache.commons.lang.StringUtils;
 import org.jvnet.localizer.LocaleProvider;
-
-import edu.umd.cs.findbugs.annotations.CheckForNull;
 
 /**
  * A serializable Java Bean class representing a warning.
