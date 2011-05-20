@@ -202,7 +202,7 @@ public class Bug extends AbstractAnnotation {
     }
 
     private String getCloudInformation() {
-        if (!shouldBeInCloud && !inCloud && detailsUrl == null) {
+        if (!shouldBeInCloud || (!inCloud && detailsUrl == null)) {
             return StringUtils.EMPTY;
         }
 
