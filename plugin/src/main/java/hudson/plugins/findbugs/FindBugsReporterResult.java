@@ -9,14 +9,12 @@ import hudson.plugins.analysis.core.ResultAction;
  * Represents the aggregated results of the FindBugs analysis in m2 jobs.
  *
  * @author Ulli Hafner
- * @deprecated not used anymore
  */
-@Deprecated
-public class FindBugsMavenResult extends FindBugsResult {
-    private static final long serialVersionUID = -4913938782537266259L;
+public class FindBugsReporterResult extends FindBugsResult {
+    private static final long serialVersionUID = -1964303936149388262L;
 
     /**
-     * Creates a new instance of {@link FindBugsMavenResult}.
+     * Creates a new instance of {@link FindBugsReporterResult}.
      *
      * @param build
      *            the current build as owner of this action
@@ -25,15 +23,14 @@ public class FindBugsMavenResult extends FindBugsResult {
      * @param result
      *            the parsed result with all annotations
      */
-    public FindBugsMavenResult(final AbstractBuild<?, ?> build, final String defaultEncoding,
+    public FindBugsReporterResult(final AbstractBuild<?, ?> build, final String defaultEncoding,
             final ParserResult result) {
         super(build, defaultEncoding, result);
     }
 
-    /** {@inheritDoc} */
     @Override
     protected Class<? extends ResultAction<? extends BuildResult>> getResultActionType() {
-        return MavenFindBugsResultAction.class;
+        return FindBugsMavenResultAction.class;
     }
 }
 

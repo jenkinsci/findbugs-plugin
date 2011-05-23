@@ -154,7 +154,7 @@ public class FindBugsReporter extends HealthAwareReporter<FindBugsResult> {
 
     @Override
     protected FindBugsResult createResult(final MavenBuild build, final ParserResult project) {
-        return new FindBugsResult(build, getDefaultEncoding(), project);
+        return new FindBugsReporterResult(build, getDefaultEncoding(), project);
     }
 
     @Override

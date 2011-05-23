@@ -74,7 +74,7 @@ public class FindBugsMavenResultAction extends MavenResultAction<FindBugsResult>
 
     @Override
     protected FindBugsResult createResult(final FindBugsResult existingResult, final FindBugsResult additionalResult) {
-        return new FindBugsResult(getOwner(), additionalResult.getDefaultEncoding(), aggregate(existingResult, additionalResult));
+        return new FindBugsReporterResult(getOwner(), additionalResult.getDefaultEncoding(), aggregate(existingResult, additionalResult));
     }
 }
 
