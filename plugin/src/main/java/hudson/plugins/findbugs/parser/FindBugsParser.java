@@ -217,6 +217,7 @@ public class FindBugsParser implements AnnotationParser {
                     warning.getBugPattern().getCategory(),
                     warning.getType(), sourceLine.getStartLine(), sourceLine.getEndLine());
             bug.setInstanceHash(warning.getInstanceHash());
+            bug.setRank(warning.getBugRank());
 
             boolean ignore = setCloudInformation(collection, warning, bug);
             if (!ignore) {

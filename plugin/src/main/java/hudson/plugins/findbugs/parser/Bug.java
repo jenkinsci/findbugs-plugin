@@ -35,6 +35,7 @@ public class Bug extends AbstractAnnotation {
 
     /** Unique hash code of this bug. */
     private String instanceHash;
+
     /** Computed from firstSeen. */
     private int ageInDays;
     private long firstSeen;
@@ -43,6 +44,9 @@ public class Bug extends AbstractAnnotation {
     private boolean inCloud;
     private boolean shouldBeInCloud;
     private String detailsUrl;
+
+    /** Bug rank that is a replacement for the priority. @since 4.25. */
+    private int rank;
 
     /**
      * Creates a new instance of <code>Bug</code>.
@@ -124,6 +128,24 @@ public class Bug extends AbstractAnnotation {
         this(priority, message, category, type, start, end);
 
         this.tooltip = tooltip;
+    }
+
+    /**
+     * Sets the rank of this bug.
+     *
+     * @param bugRank the rank of this bug
+     */
+    public void setRank(final int bugRank) {
+        rank = bugRank;
+    }
+
+    /**
+     * Returns the rank of this bug.
+     *
+     * @return the rank
+     */
+    public int getRank() {
+        return rank;
     }
 
     // CHECKSTYLE:OFF Properties of FindBugs cloud
