@@ -184,7 +184,7 @@ public class FindBugsReporter extends HealthAwareReporter<FindBugsResult> {
 
     @Override
     public List<FindBugsProjectAction> getProjectActions(final MavenModule module) {
-        return Collections.singletonList(new FindBugsProjectAction(module));
+        return Collections.singletonList(new FindBugsProjectAction(module, getResultActionClass()));
     }
 
     @Override

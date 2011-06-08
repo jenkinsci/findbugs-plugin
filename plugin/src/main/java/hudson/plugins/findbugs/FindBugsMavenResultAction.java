@@ -64,7 +64,7 @@ public class FindBugsMavenResultAction extends MavenResultAction<FindBugsResult>
 
     /** {@inheritDoc} */
     public Action getProjectAction(final MavenModuleSet moduleSet) {
-        return new FindBugsProjectAction(moduleSet);
+        return new FindBugsProjectAction(moduleSet, FindBugsMavenResultAction.class);
     }
 
     @Override

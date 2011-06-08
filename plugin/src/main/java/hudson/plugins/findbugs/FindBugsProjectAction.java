@@ -1,6 +1,7 @@
 package hudson.plugins.findbugs;
 
 import hudson.model.AbstractProject;
+import hudson.plugins.analysis.core.ResultAction;
 import hudson.plugins.analysis.core.AbstractProjectAction;
 import hudson.plugins.analysis.graph.BuildResultGraph;
 import hudson.plugins.findbugs.dashboard.FindbugsEvaluationsGraph;
@@ -11,20 +12,32 @@ import com.google.common.collect.Lists;
 
 /**
  * Entry point to visualize the FindBugs trend graph in the project screen.
- * Drawing of the graph is delegated to the associated
- * {@link FindBugsResultAction}.
+ * Drawing of the graph is delegated to the associated {@link ResultAction}.
  *
  * @author Ulli Hafner
  */
-public class FindBugsProjectAction extends AbstractProjectAction<FindBugsResultAction> {
+public class FindBugsProjectAction extends AbstractProjectAction<ResultAction<FindBugsResult>> {
     /**
-     * Instantiates a new find bugs project action.
+     * Instantiates a new {@link FindBugsProjectAction}.
      *
      * @param project
      *            the project that owns this action
      */
     public FindBugsProjectAction(final AbstractProject<?, ?> project) {
-        super(project, FindBugsResultAction.class, new FindBugsDescriptor());
+        this(project, FindBugsResultAction.class);
+    }
+
+    /**
+     * Instantiates a new {@link FindBugsProjectAction}.
+     *
+     * @param project
+     *            the project that owns this action
+     * @param type
+     *            the result action type
+     */
+    public FindBugsProjectAction(final AbstractProject<?, ?> project,
+            final Class<? extends ResultAction<FindBugsResult>> type) {
+        super(project, type, new FindBugsDescriptor());
     }
 
     /** {@inheritDoc} */
