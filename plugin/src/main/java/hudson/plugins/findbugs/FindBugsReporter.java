@@ -39,6 +39,9 @@ public class FindBugsReporter extends HealthAwareReporter<FindBugsResult> {
     /** FindBugs filename if maven findbugsXmlOutput is not activated. */
     private static final String MAVEN_FINDBUGS_XML_FILE = "findbugs.xml";
 
+    /** Determines whether to use the rank when evaluation the priority. @since 4.26 */
+    private final boolean isRankActivated;
+
     /**
      * Creates a new instance of <code>FindBugsReporter</code>.
      *
@@ -98,13 +101,14 @@ public class FindBugsReporter extends HealthAwareReporter<FindBugsResult> {
             final String unstableNewAll, final String unstableNewHigh, final String unstableNewNormal, final String unstableNewLow,
             final String failedTotalAll, final String failedTotalHigh, final String failedTotalNormal, final String failedTotalLow,
             final String failedNewAll, final String failedNewHigh, final String failedNewNormal, final String failedNewLow,
-            final boolean canRunOnFailed) {
+            final boolean canRunOnFailed, final boolean isRankActivated) {
         super(healthy, unHealthy, thresholdLimit, useDeltaValues,
                 unstableTotalAll, unstableTotalHigh, unstableTotalNormal, unstableTotalLow,
                 unstableNewAll, unstableNewHigh, unstableNewNormal, unstableNewLow,
                 failedTotalAll, failedTotalHigh, failedTotalNormal, failedTotalLow,
                 failedNewAll, failedNewHigh, failedNewNormal, failedNewLow,
                 canRunOnFailed, PLUGIN_NAME);
+        this.isRankActivated = isRankActivated;
     }
     // CHECKSTYLE:ON
 
@@ -147,7 +151,7 @@ public class FindBugsReporter extends HealthAwareReporter<FindBugsResult> {
         sources.addAll(pom.getTestCompileSourceRoots());
 
         FilesParser findBugsCollector = new FilesParser(new StringPluginLogger(PLUGIN_NAME),
-                determineFileName(mojo), new FindBugsParser(sources), getModuleName(pom));
+                determineFileName(mojo), new FindBugsParser(sources, isRankActivated), getModuleName(pom));
 
         return getTargetPath(pom).act(findBugsCollector);
     }

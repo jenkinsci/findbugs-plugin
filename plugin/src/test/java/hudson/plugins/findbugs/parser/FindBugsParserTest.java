@@ -42,20 +42,10 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
     /** Error message. */
     private static final String WRONG_NUMBER_OF_WARNINGS_PARSED = "Wrong number of bugs parsed.";
 
-    /**
-     * Parses the specified file.
-     *
-     * @param fileName the file to read
-     * @return the parsed module
-     * @throws IOException
-     *             in case of an error
-     * @throws DocumentException
-     *             in case of an error
-     */
-    private MavenModule parseFile(final String fileName) throws IOException, DocumentException {
+    private MavenModule parseFile(final String fileName, final boolean isRankActivated) throws IOException, DocumentException {
         InputStream stream = FindBugsParserTest.class.getResourceAsStream(fileName);
         try {
-            Collection<FileAnnotation> annotations = new FindBugsParser().parse(
+            Collection<FileAnnotation> annotations = new FindBugsParser(isRankActivated).parse(
                     stream, new ArrayList<String>(), fileName, new HashMap<String, String>());
             MavenModule module = new MavenModule(fileName);
             if (!annotations.isEmpty()) {
@@ -85,7 +75,7 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
     public void issue7238() throws IOException, DocumentException, SAXException {
         FindBugsMessages.getInstance().initialize();
 
-        MavenModule module = parseFile("issue7238.xml");
+        MavenModule module = parseFile("issue7238.xml", false);
         assertEquals("Wrong number of warnings", 1820, module.getNumberOfAnnotations());
     }
 
@@ -107,7 +97,7 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
 
         String saxParser = this.getClass().getName();
         System.setProperty(FindBugsParser.SAX_DRIVER_PROPERTY, saxParser);
-        MavenModule module = parseFile("issue7312.xml");
+        MavenModule module = parseFile("issue7312.xml", false);
         assertEquals("Wrong number of warnings", 0, module.getNumberOfAnnotations());
         assertEquals("Wrong sax parser property", saxParser, System.getProperty(FindBugsParser.SAX_DRIVER_PROPERTY));
     }
@@ -128,7 +118,7 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
         FindBugsMessages.getInstance().initialize();
 
         System.clearProperty(FindBugsParser.SAX_DRIVER_PROPERTY);
-        MavenModule module = parseFile("issue7312.xml");
+        MavenModule module = parseFile("issue7312.xml", false);
         assertEquals("Wrong number of warnings", 0, module.getNumberOfAnnotations());
         assertNull("Wrong sax parser property", System.getProperty(FindBugsParser.SAX_DRIVER_PROPERTY));
     }
@@ -145,7 +135,7 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
     public void testMessageMapping() throws SAXException, IOException {
         InputStream stream = FindBugsParserTest.class.getResourceAsStream(FINDBUGS_NATIVE_XML);
         try {
-            Map<String, String> mapping = new FindBugsParser().createHashToMessageMapping(stream);
+            Map<String, String> mapping = new FindBugsParser(false).createHashToMessageMapping(stream);
             assertEquals(WRONG_NUMBER_OF_WARNINGS_PARSED, 2, mapping.size());
             assertTrue(BUG_WITH_GIVEN_HASHCODE_NOT_FOUND, mapping.containsKey(FIRST_WARNING));
             assertTrue(BUG_WITH_GIVEN_HASHCODE_NOT_FOUND, mapping.containsKey(SECOND_WARNING));
@@ -176,8 +166,11 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
     @Test
     public void testFileWithMultipleLinesAndRanges() throws IOException, DocumentException, SAXException {
         scanNativeFile(FINDBUGS_NATIVE_XML, FINDBUGS_NATIVE_XML,
+                Priority.NORMAL, "org/apache/hadoop/dfs/BlockCrcUpgrade.java", "org.apache.hadoop.dfs", 1309, 1309,
+                5, "org/apache/hadoop/streaming/StreamJob.java", "org.apache.hadoop.streaming", 935, 980, 1, false);
+        scanNativeFile(FINDBUGS_NATIVE_XML, FINDBUGS_NATIVE_XML,
                 Priority.LOW, "org/apache/hadoop/dfs/BlockCrcUpgrade.java", "org.apache.hadoop.dfs", 1309, 1309,
-                5, "org/apache/hadoop/streaming/StreamJob.java", "org.apache.hadoop.streaming", 935, 980, 1);
+                5, "org/apache/hadoop/streaming/StreamJob.java", "org.apache.hadoop.streaming", 935, 980, 1, true);
     }
 
     /**
@@ -194,8 +187,11 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
     @Test
     public void scanFileWarningsHaveMultipleClasses() throws IOException, DocumentException, SAXException {
         scanNativeFile("findbugs-multclass.xml", "FindBugs",
+                Priority.HIGH, "umd/cs/findbugs/PluginLoader.java", "edu.umd.cs.findbugs", 82, 82,
+                1, "edu/umd/cs/findbugs/PluginLoader.java", "edu.umd.cs.findbugs", 93, 93, 1, false);
+        scanNativeFile("findbugs-multclass.xml", "FindBugs",
                 Priority.LOW, "umd/cs/findbugs/PluginLoader.java", "edu.umd.cs.findbugs", 82, 82,
-                1, "edu/umd/cs/findbugs/PluginLoader.java", "edu.umd.cs.findbugs", 93, 93, 1);
+                1, "edu/umd/cs/findbugs/PluginLoader.java", "edu.umd.cs.findbugs", 93, 93, 1, true);
     }
 
     /**
@@ -208,7 +204,7 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
      */
     @Test
     public void scanFbContribFile() throws IOException, DocumentException {
-        MavenModule parseFile = parseFile("fbcontrib.xml");
+        MavenModule parseFile = parseFile("fbcontrib.xml", false);
         JavaPackage javaPackage = parseFile.getPackage("hudson.plugins.tasks");
         assertEquals(WRONG_NUMBER_OF_WARNINGS_PARSED, 16, javaPackage.getNumberOfAnnotations());
 
@@ -235,7 +231,7 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
      */
     @Test
     public void handleFilesWithoutMessages() throws IOException, DocumentException {
-        MavenModule module = parseFile("findbugs-nomessage.xml");
+        MavenModule module = parseFile("findbugs-nomessage.xml", false);
         assertEquals(WRONG_NUMBER_OF_WARNINGS_PARSED, 1, module.getNumberOfAnnotations());
 
         FileAnnotation next = module.getAnnotations().iterator().next();
@@ -255,7 +251,7 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
      */
     @Test
     public void handleFileWithNotABugConsensus() throws IOException, DocumentException {
-        MavenModule module = parseFile("findbugs-with-notAProblem-bug.xml");
+        MavenModule module = parseFile("findbugs-with-notAProblem-bug.xml", false);
         assertEquals(WRONG_NUMBER_OF_WARNINGS_PARSED, 1, module.getNumberOfAnnotations());
 
         FileAnnotation next = module.getAnnotations().iterator().next();
@@ -272,7 +268,7 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
      */
     @Test
     public void handleFileWithFirstSeenDate() throws IOException, DocumentException {
-        MavenModule module = parseFile("findbugs-with-firstSeen.xml");
+        MavenModule module = parseFile("findbugs-with-firstSeen.xml", false);
         assertEquals(WRONG_NUMBER_OF_WARNINGS_PARSED, 1, module.getNumberOfAnnotations());
 
         FileAnnotation next = module.getAnnotations().iterator().next();
@@ -291,7 +287,7 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
      */
     @Test
     public void handleFileWithReviews() throws IOException, DocumentException {
-        MavenModule module = parseFile("findbugs-with-reviews.xml");
+        MavenModule module = parseFile("findbugs-with-reviews.xml", false);
         assertEquals(WRONG_NUMBER_OF_WARNINGS_PARSED, 1, module.getNumberOfAnnotations());
 
         FileAnnotation next = module.getAnnotations().iterator().next();
@@ -302,50 +298,16 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
                    next.getMessage().matches(".*4 comments.*"));
     }
 
-    /**
-     * Checks whether we correctly detect a file in FindBugs native format.
-     *
-     * @param findbugsFile
-     *            name of the file to read
-     * @param projectName
-     *            name of the project
-     * @param priority
-     *            priority
-     * @param fileName1
-     *            first class filename
-     * @param packageName1
-     *            first class package name
-     * @param start1
-     *            start line of first class
-     * @param end1
-     *            end line of first class
-     * @param ranges1
-     *            number of line ranges for first class
-     * @param fileName2
-     *            second class filename
-     * @param packageName2
-     *            second class package name
-     * @param start2
-     *            start line of second class
-     * @param end2
-     *            end line of second class
-     * @param ranges2
-     *            number of line ranges for second class
-     * @throws DocumentException
-     *             on a parse error
-     * @throws SAXException
-     *             on a parse error
-     */
     // CHECKSTYLE:OFF
     @SuppressWarnings("PMD.ExcessiveParameterList")
-    public void scanNativeFile(final String findbugsFile, final String projectName,
+    private void scanNativeFile(final String findbugsFile, final String projectName,
             final Priority priority, final String fileName1, final String packageName1, final int start1, final int end1,
-            final int ranges1, final String fileName2, final String packageName2, final int start2, final int end2, final int ranges2)
+            final int ranges1, final String fileName2, final String packageName2, final int start2, final int end2, final int ranges2, final boolean isRankActivated)
             throws IOException, DocumentException, SAXException {
    // CHECKSTYLE:ON
         FindBugsMessages.getInstance().initialize();
 
-        MavenModule module = parseFile(findbugsFile);
+        MavenModule module = parseFile(findbugsFile, isRankActivated);
         assertEquals("Wrong project name guessed", projectName, module.getName());
 
         assertEquals(WRONG_NUMBER_OF_WARNINGS_PARSED, NUMBER_OF_WARNINGS, module.getNumberOfAnnotations());

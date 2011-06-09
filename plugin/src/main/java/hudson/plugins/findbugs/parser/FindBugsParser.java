@@ -62,11 +62,17 @@ public class FindBugsParser implements AnnotationParser {
     @edu.umd.cs.findbugs.annotations.SuppressWarnings("SE")
     private final List<String> mavenSources = new ArrayList<String>();
 
+    private final boolean isRankActivated;
+
     /**
      * Creates a new instance of {@link FindBugsParser}.
+     *
+     * @param isRankActivated
+     *            determines whether to use the rank when evaluation the
+     *            priority
      */
-    public FindBugsParser() {
-        this(new ArrayList<String>());
+    public FindBugsParser(final boolean isRankActivated) {
+        this(new ArrayList<String>(), isRankActivated);
     }
 
     /**
@@ -75,9 +81,13 @@ public class FindBugsParser implements AnnotationParser {
      * @param sourceFolders
      *            a collection of folders to scan for source files. If empty,
      *            the source folders are guessed.
+     * @param isRankActivated
+     *            determines whether to use the rank when evaluation the
+     *            priority
      */
-    public FindBugsParser(final Collection<String> sourceFolders) {
+    public FindBugsParser(final Collection<String> sourceFolders, final boolean isRankActivated) {
         mavenSources.addAll(sourceFolders);
+        this.isRankActivated = isRankActivated;
     }
 
     /** {@inheritDoc} */
@@ -233,6 +243,15 @@ public class FindBugsParser implements AnnotationParser {
         return annotations;
     }
 
+    private Priority getPriority(final BugInstance warning) {
+        if (isRankActivated) {
+            return getPriorityByRank(warning);
+        }
+        else {
+            return getPriorityByPriority(warning);
+        }
+    }
+
     private SortedBugCollection readXml(final InputStream file) throws IOException, DocumentException {
         String oldProperty = System.getProperty(SAX_DRIVER_PROPERTY);
         if (oldProperty != null) {
@@ -305,7 +324,7 @@ public class FindBugsParser implements AnnotationParser {
      *            the FindBugs warning
      * @return mapped priority enumeration
      */
-    private Priority getPriority(final BugInstance warning) {
+    private Priority getPriorityByRank(final BugInstance warning) {
         int rank = warning.getBugRank();
         if (rank <= HIGH_PRIORITY_LOWEST_RANK) {
             return Priority.HIGH;
@@ -314,6 +333,24 @@ public class FindBugsParser implements AnnotationParser {
             return Priority.NORMAL;
         }
         return Priority.LOW;
+    }
+
+    /**
+     * Maps the FindBugs library priority to plug-in priority enumeration.
+     *
+     * @param warning
+     *            the FindBugs warning
+     * @return mapped priority enumeration
+     */
+    private Priority getPriorityByPriority(final BugInstance warning) {
+        switch (warning.getPriority()) {
+            case 1:
+                return Priority.HIGH;
+            case 2:
+                return Priority.NORMAL;
+            default:
+                return Priority.LOW;
+        }
     }
 
     /**

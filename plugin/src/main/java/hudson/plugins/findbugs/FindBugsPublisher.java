@@ -36,6 +36,9 @@ public class FindBugsPublisher extends HealthAwarePublisher {
     /** Ant file-set pattern of files to work with. */
     private final String pattern;
 
+    /** Determines whether to use the rank when evaluation the priority. @since 4.26 */
+    private final boolean isRankActivated;
+
     /**
      * Creates a new instance of {@link FindBugsPublisher}.
      *
@@ -89,9 +92,13 @@ public class FindBugsPublisher extends HealthAwarePublisher {
      * @param canRunOnFailed
      *            determines whether the plug-in can run for failed builds, too
      * @param shouldDetectModules
-     *            determines whether module names should be derived from Maven POM or Ant build files
+     *            determines whether module names should be derived from Maven
+     *            POM or Ant build files
      * @param pattern
      *            Ant file-set pattern to scan for FindBugs files
+     * @param isRankActivated
+     *            determines whether to use the rank when evaluation the
+     *            priority
      */
     // CHECKSTYLE:OFF
     @SuppressWarnings("PMD.ExcessiveParameterList")
@@ -103,7 +110,7 @@ public class FindBugsPublisher extends HealthAwarePublisher {
             final String failedTotalAll, final String failedTotalHigh, final String failedTotalNormal, final String failedTotalLow,
             final String failedNewAll, final String failedNewHigh, final String failedNewNormal, final String failedNewLow,
             final boolean canRunOnFailed, final boolean shouldDetectModules,
-            final String pattern) {
+            final String pattern, final boolean isRankActivated) {
         super(healthy, unHealthy, thresholdLimit, defaultEncoding, useDeltaValues,
                 unstableTotalAll, unstableTotalHigh, unstableTotalNormal, unstableTotalLow,
                 unstableNewAll, unstableNewHigh, unstableNewNormal, unstableNewLow,
@@ -111,6 +118,7 @@ public class FindBugsPublisher extends HealthAwarePublisher {
                 failedNewAll, failedNewHigh, failedNewNormal, failedNewLow,
                 canRunOnFailed, shouldDetectModules, PLUGIN_NAME);
         this.pattern = pattern;
+        this.isRankActivated = isRankActivated;
     }
     // CHECKSTYLE:ON
 
@@ -137,7 +145,7 @@ public class FindBugsPublisher extends HealthAwarePublisher {
         String defaultPattern = isMavenBuild(build) ? MAVEN_DEFAULT_PATTERN : ANT_DEFAULT_PATTERN;
         FilesParser collector = new FilesParser(new StringPluginLogger(PLUGIN_NAME),
                 StringUtils.defaultIfEmpty(getPattern(), defaultPattern),
-                new FindBugsParser(), shouldDetectModules(), isMavenBuild(build));
+                new FindBugsParser(isRankActivated), shouldDetectModules(), isMavenBuild(build));
         ParserResult project = build.getWorkspace().act(collector);
         logger.logLines(project.getLogMessages());
         FindBugsResult result = new FindBugsResult(build, getDefaultEncoding(), project);
