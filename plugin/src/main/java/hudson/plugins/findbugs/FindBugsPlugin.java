@@ -17,6 +17,8 @@ public class FindBugsPlugin extends Plugin {
     @Override
     public void start() throws IOException, SAXException {
         FindBugsMessages.getInstance().initialize();
-        DetailFactory.addDetailBuilder(FindBugsResultAction.class, new FindBugsDetailFactory());
+        FindBugsDetailFactory detailBuilder = new FindBugsDetailFactory();
+        DetailFactory.addDetailBuilder(FindBugsResultAction.class, detailBuilder);
+        DetailFactory.addDetailBuilder(FindBugsMavenResultAction.class, detailBuilder);
     }
 }
