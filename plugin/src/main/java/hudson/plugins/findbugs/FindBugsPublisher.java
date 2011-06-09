@@ -123,6 +123,17 @@ public class FindBugsPublisher extends HealthAwarePublisher {
     // CHECKSTYLE:ON
 
     /**
+     * Returns whether to use the rank when evaluation the priority
+     *
+     * @return <code>true</code> if the rank should uses when evaluation the
+     *         priority, <code>false</code> if the FindBugs priority should be
+     *         used
+     */
+    public boolean isRankActivated() {
+        return isRankActivated;
+    }
+
+    /**
      * Returns the Ant file-set pattern of files to work with.
      *
      * @return Ant file-set pattern of files to work with

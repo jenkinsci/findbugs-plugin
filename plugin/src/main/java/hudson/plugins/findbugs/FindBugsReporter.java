@@ -92,6 +92,9 @@ public class FindBugsReporter extends HealthAwareReporter<FindBugsResult> {
      *            annotation threshold
      * @param canRunOnFailed
      *            determines whether the plug-in can run for failed builds, too
+     * @param isRankActivated
+     *            determines whether to use the rank when evaluation the
+     *            priority
      */
     // CHECKSTYLE:OFF
     @SuppressWarnings("PMD.ExcessiveParameterList")
@@ -111,6 +114,17 @@ public class FindBugsReporter extends HealthAwareReporter<FindBugsResult> {
         this.isRankActivated = isRankActivated;
     }
     // CHECKSTYLE:ON
+
+    /**
+     * Returns whether to use the rank when evaluation the priority
+     *
+     * @return <code>true</code> if the rank should uses when evaluation the
+     *         priority, <code>false</code> if the FindBugs priority should be
+     *         used
+     */
+    public boolean isRankActivated() {
+        return isRankActivated;
+    }
 
     /** {@inheritDoc} */
     @Override
