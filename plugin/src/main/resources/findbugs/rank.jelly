@@ -6,7 +6,7 @@
   xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
 
   <f:entry title="${%rank.title}" description="${%rank.description}">
-    <f:checkbox name="isRankActivated" checked="${h.defaultToTrue(instance.isRankActivated)}"/>
+    <f:checkbox name="isRankActivated" checked="${instance.isRankActivated()}"/>
   </f:entry>
 
 </j:jelly>
