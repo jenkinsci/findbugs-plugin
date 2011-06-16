@@ -297,7 +297,7 @@ public class Bug extends AbstractAnnotation {
             rootUrl = StringUtils.EMPTY;
         }
         else {
-            rootUrl = hudson.getRootUrlFromRequest();
+            rootUrl = hudson.getRootUrl();
         }
 
         return rootUrl + "/plugin/findbugs/icons/" + image;
