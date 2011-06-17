@@ -7,6 +7,7 @@ import hudson.plugins.analysis.dashboard.AbstractWarningsGraphPortlet;
 import hudson.plugins.analysis.graph.BuildResultGraph;
 import hudson.plugins.findbugs.FindBugsProjectAction;
 import hudson.plugins.view.dashboard.DashboardPortlet;
+
 import org.kohsuke.stapler.DataBoundConstructor;
 
 /**
@@ -30,6 +31,8 @@ public class FindBugsEvaluationsGraphPortlet extends AbstractWarningsGraphPortle
     @DataBoundConstructor
     public FindBugsEvaluationsGraphPortlet(final String name, final String width, final String height, final String dayCountString) {
         super(name, width, height, dayCountString);
+
+        configureGraph(getGraphType());
     }
 
     /** {@inheritDoc} */
