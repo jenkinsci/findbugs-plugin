@@ -116,7 +116,7 @@ public class FindBugsReporter extends HealthAwareReporter<FindBugsResult> {
     // CHECKSTYLE:ON
 
     /**
-     * Returns whether to use the rank when evaluation the priority
+     * Returns whether to use the rank when evaluation the priority.
      *
      * @return <code>true</code> if the rank should uses when evaluation the
      *         priority, <code>false</code> if the FindBugs priority should be
