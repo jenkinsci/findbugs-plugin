@@ -279,6 +279,7 @@ public class FindBugsParser implements AnnotationParser {
      *            the bug
      * @return true, if this warning is not a bug and should be ignored
      */
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings("NP")
     private boolean setCloudInformation(final SortedBugCollection collection, final BugInstance warning, final Bug bug) {
         Cloud cloud = collection.getCloud();
         bug.setShouldBeInCloud(cloud.isOnlineCloud());

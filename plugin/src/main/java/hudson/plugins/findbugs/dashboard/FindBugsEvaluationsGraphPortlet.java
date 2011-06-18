@@ -15,7 +15,7 @@ import org.kohsuke.stapler.DataBoundConstructor;
  *
  * @author Keith Lea
  */
-public class FindBugsEvaluationsGraphPortlet extends AbstractWarningsGraphPortlet {
+public final class FindBugsEvaluationsGraphPortlet extends AbstractWarningsGraphPortlet {
     /**
      * Creates a new instance of {@link hudson.plugins.findbugs.dashboard.FindBugsEvaluationsGraphPortlet}.
      *
