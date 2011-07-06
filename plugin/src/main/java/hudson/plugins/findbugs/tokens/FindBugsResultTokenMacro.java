@@ -2,6 +2,7 @@ package hudson.plugins.findbugs.tokens;
 
 import hudson.Extension;
 import hudson.plugins.analysis.tokens.AbstractResultTokenMacro;
+import hudson.plugins.findbugs.FindBugsMavenResultAction;
 import hudson.plugins.findbugs.FindBugsResultAction;
 
 /**
@@ -14,8 +15,9 @@ public class FindBugsResultTokenMacro extends AbstractResultTokenMacro {
     /**
      * Creates a new instance of {@link FindBugsResultTokenMacro}.
      */
+    @SuppressWarnings("unchecked")
     public FindBugsResultTokenMacro() {
-        super(FindBugsResultAction.class, "FINDBUGS_RESULT");
+        super("FINDBUGS_RESULT", FindBugsResultAction.class, FindBugsMavenResultAction.class);
     }
 }
 
