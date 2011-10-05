@@ -10,7 +10,6 @@ import hudson.plugins.analysis.core.FilesParser;
 import hudson.plugins.analysis.core.HealthAwareReporter;
 import hudson.plugins.analysis.core.ParserResult;
 import hudson.plugins.analysis.util.PluginLogger;
-import hudson.plugins.analysis.util.StringPluginLogger;
 import hudson.plugins.findbugs.parser.FindBugsParser;
 
 import java.io.IOException;
@@ -164,8 +163,8 @@ public class FindBugsReporter extends HealthAwareReporter<FindBugsResult> {
         List<String> sources = new ArrayList<String>(pom.getCompileSourceRoots());
         sources.addAll(pom.getTestCompileSourceRoots());
 
-        FilesParser findBugsCollector = new FilesParser(new StringPluginLogger(PLUGIN_NAME),
-                determineFileName(mojo), new FindBugsParser(sources, isRankActivated), getModuleName(pom));
+        FilesParser findBugsCollector = new FilesParser(PLUGIN_NAME, determineFileName(mojo),
+                new FindBugsParser(sources, isRankActivated), getModuleName(pom));
 
         return getTargetPath(pom).act(findBugsCollector);
     }

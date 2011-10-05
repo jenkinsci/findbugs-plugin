@@ -12,7 +12,6 @@ import hudson.plugins.analysis.core.FilesParser;
 import hudson.plugins.analysis.core.HealthAwarePublisher;
 import hudson.plugins.analysis.core.ParserResult;
 import hudson.plugins.analysis.util.PluginLogger;
-import hudson.plugins.analysis.util.StringPluginLogger;
 import hudson.plugins.findbugs.parser.FindBugsParser;
 
 import java.io.IOException;
@@ -154,8 +153,7 @@ public class FindBugsPublisher extends HealthAwarePublisher {
         logger.log("Collecting findbugs analysis files...");
 
         String defaultPattern = isMavenBuild(build) ? MAVEN_DEFAULT_PATTERN : ANT_DEFAULT_PATTERN;
-        FilesParser collector = new FilesParser(new StringPluginLogger(PLUGIN_NAME),
-                StringUtils.defaultIfEmpty(getPattern(), defaultPattern),
+        FilesParser collector = new FilesParser(PLUGIN_NAME, StringUtils.defaultIfEmpty(getPattern(), defaultPattern),
                 new FindBugsParser(isRankActivated), shouldDetectModules(), isMavenBuild(build));
         ParserResult project = build.getWorkspace().act(collector);
         logger.logLines(project.getLogMessages());
