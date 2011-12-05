@@ -109,13 +109,13 @@ public class FindBugsPublisher extends HealthAwarePublisher {
             final String failedTotalAll, final String failedTotalHigh, final String failedTotalNormal, final String failedTotalLow,
             final String failedNewAll, final String failedNewHigh, final String failedNewNormal, final String failedNewLow,
             final boolean canRunOnFailed, final boolean shouldDetectModules,
-            final String pattern, final boolean isRankActivated) {
+            final String pattern, final boolean isRankActivated, final boolean canComputeNew) {
         super(healthy, unHealthy, thresholdLimit, defaultEncoding, useDeltaValues,
                 unstableTotalAll, unstableTotalHigh, unstableTotalNormal, unstableTotalLow,
                 unstableNewAll, unstableNewHigh, unstableNewNormal, unstableNewLow,
                 failedTotalAll, failedTotalHigh, failedTotalNormal, failedTotalLow,
                 failedNewAll, failedNewHigh, failedNewNormal, failedNewLow,
-                canRunOnFailed, shouldDetectModules, PLUGIN_NAME);
+                canRunOnFailed, shouldDetectModules, canComputeNew, PLUGIN_NAME);
         this.pattern = pattern;
         this.isRankActivated = isRankActivated;
     }
