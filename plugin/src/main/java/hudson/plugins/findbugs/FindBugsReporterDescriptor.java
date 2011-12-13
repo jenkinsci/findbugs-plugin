@@ -1,11 +1,7 @@
 package hudson.plugins.findbugs;
 
 import hudson.Extension;
-import hudson.maven.MavenReporter;
 import hudson.plugins.analysis.core.ReporterDescriptor;
-import net.sf.json.JSONObject;
-
-import org.kohsuke.stapler.StaplerRequest;
 
 
 /**
@@ -21,11 +17,5 @@ public class FindBugsReporterDescriptor extends ReporterDescriptor {
      */
     public FindBugsReporterDescriptor() {
         super(FindBugsReporter.class, new FindBugsDescriptor());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public MavenReporter newInstance(final StaplerRequest request, final JSONObject formData) throws FormException {
-        return request.bindJSON(FindBugsReporter.class, formData);
     }
 }
