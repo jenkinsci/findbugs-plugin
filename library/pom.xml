@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>org.jenkinsci</groupId>
+    <groupId>org.jenkins-ci</groupId>
     <artifactId>jenkins</artifactId>
     <version>1.23</version>
   </parent>
