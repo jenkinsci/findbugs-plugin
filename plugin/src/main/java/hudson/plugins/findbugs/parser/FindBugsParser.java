@@ -283,7 +283,8 @@ public class FindBugsParser implements AnnotationParser {
     private boolean setCloudInformation(final SortedBugCollection collection, final BugInstance warning, final Bug bug) {
         Cloud cloud = collection.getCloud();
         bug.setShouldBeInCloud(cloud.isOnlineCloud());
-        bug.setDetailsUrlTemplate(cloud.getBugDetailsUrlTemplate());
+        // FIXME: This method has been removed in findbugs 2.0.0
+        // bug.setDetailsUrlTemplate(cloud.getBugDetailsUrlTemplate());
         long firstSeen = cloud.getFirstSeen(warning);
         bug.setInCloud(cloud.isInCloud(warning));
         bug.setFirstSeen(firstSeen);

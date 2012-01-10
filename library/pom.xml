@@ -10,7 +10,7 @@
   <groupId>org.jvnet.hudson.plugins.findbugs</groupId>
   <artifactId>library</artifactId>
   <packaging>jar</packaging>
-  <version>2.0.0-hudson4-SNAPSHOT</version>
+  <version>2.0.0</version>
   <name>FindBugs Plug-in shaded libraries</name>
 
   <properties>
@@ -19,9 +19,9 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.jvnet.hudson.plugins.findbugs</groupId>
-      <artifactId>findbugs-snapshot</artifactId>
-      <version>2.0.0-hudson3</version>
+      <groupId>com.google.code.findbugs</groupId>
+      <artifactId>findbugs</artifactId>
+      <version>2.0.0</version>
       <exclusions>
         <exclusion>
          <groupId>jaxen</groupId>
