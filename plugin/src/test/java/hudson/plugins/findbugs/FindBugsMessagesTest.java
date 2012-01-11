@@ -22,7 +22,7 @@ public class FindBugsMessagesTest {
     /** Error message. */
     private static final String WRONG_WARNING_MESSAGE = "Wrong warning message.";
     /** Expected number of patterns. */
-    private static final int EXPECTED_PATTERNS = 405;
+    private static final int EXPECTED_PATTERNS = 425;
     /** Expected number of patterns in fb-contrib. */
     private static final int EXPECTED_CONTRIB_PATTERNS = 113;
 

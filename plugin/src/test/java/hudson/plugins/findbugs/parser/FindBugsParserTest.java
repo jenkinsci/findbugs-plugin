@@ -80,6 +80,30 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
     }
 
     /**
+     * Parses fb-contrib messages.
+     *
+     * @throws IOException
+     *             in case of an error
+     * @throws SAXException
+     *             in case of an error
+     * @throws DocumentException
+     *             in case of an error
+     * @see <a href="http://issues.jenkins-ci.org/browse/JENKINS-12314">Issue 12314</a>
+     */
+    @Test
+    public void issue12314() throws IOException, DocumentException, SAXException {
+        FindBugsMessages.getInstance().initialize();
+
+        MavenModule module = parseFile("issue12314.xml", false);
+        assertEquals("Wrong number of warnings", 1, module.getNumberOfAnnotations());
+
+        checkAnnotation(module.getAnnotations().iterator().next(),
+                "issue12314.xml", Priority.NORMAL,
+                "com/sedsystems/core/valid/Transformers.java", "com.sedsystems.core.valid",
+                60, 60, 1);
+    }
+
+    /**
      * Checks that the SAX property is overwritten with Xerces if it has been set to another value.
      *
      * @throws IOException

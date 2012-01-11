@@ -112,14 +112,7 @@
 ]]>
   </Details>
  </Detector>
- <Detector class="edu.umd.cs.findbugs.detect.NoteCheckReturnValue">
-  <Details>
-<![CDATA[
-<p>Recherche les annotations permettant la vérification de la valeur renvoyée par une méthode.</p>
-]]>
-  </Details>
- </Detector>
- <Detector class="edu.umd.cs.findbugs.detect.NoteCheckReturnValueAnnotations">
+  <Detector class="edu.umd.cs.findbugs.detect.NoteCheckReturnValueAnnotations">
   <Details>
 <![CDATA[
 <p>Recherche les annotations permettant la vérification de la valeur renvoyée par une méthode.</p>
@@ -172,15 +165,7 @@
 ]]>
   </Details>
  </Detector>
- <Detector class="edu.umd.cs.findbugs.detect.InfiniteRecursiveLoop2">
-  <Details>
-<![CDATA[
-<p>Recherche les boucles infinies récursives.</p>
-<p>C'est un détecteur lent.</p>
-]]>
-  </Details>
- </Detector>
- <Detector class="edu.umd.cs.findbugs.detect.VolatileUsage">
+  <Detector class="edu.umd.cs.findbugs.detect.VolatileUsage">
   <Details>
 <![CDATA[
 <p>Détecte l'utilisation erronée de champs volatiles.</p>
@@ -496,14 +481,6 @@
 <![CDATA[
 <p>Ce détecteur détecte les appels à <code>wait()</code> qui ne sont pas dans une boucle.</p>
 <p>C'est un détecteur rapide.</p>
-]]>
-  </Details>
- </Detector>
- <Detector class="edu.umd.cs.findbugs.detect.BCPMethodReturnCheck">
-  <Details>
-<![CDATA[
-<p>Ce détecteur recherche les appels de méthodes qui ignorent la valeur de retour de façon suspecte.</p>
-<p>C'est un détecteur lent.</p>
 ]]>
   </Details>
  </Detector>
@@ -2240,29 +2217,7 @@ dateString = dateString.trim();
 ]]>
   </Details>
  </BugPattern>
- <BugPattern type="RV_RETURN_VALUE_IGNORED2">
-  <ShortDescription>Méthode ignorant une valeur de retour</ShortDescription>
-  <LongDescription>La méthode {1} ignore la valeur renvoyée par {2}</LongDescription>
-  <Details>
-<![CDATA[
-<p>Le valeur renvoyée par cette méthode devrait être vérifiée. Une origine fréquente de cette alarme est l'invocation d'une méthode sur un objet immuable en croyant que cela mettra à jour l'objet. Par exemple, le bout de code suivant :</p>
-<blockquote>
-<pre>
-String dateString = getHeaderField(name);
-dateString.trim();
-</pre>
-</blockquote>
-<p>Le programmeur semble croire que la méthode <code>trim()</code> mettra à jour l'objet <code>String</code> référencé par <code>dateString</code>. Mais, puisque les objets <code>String</code> sont immuables, la fonction <code>trim()</code> renvoie une nouvelle instance de <code>String</code>, qui sera ignorée dans ce cas. Le code devrait être corrigé en :</p>
-<blockquote>
-<pre>
-String dateString = getHeaderField(name);
-dateString = dateString.trim();
-</pre>
-</blockquote>
-]]>
-  </Details>
- </BugPattern>
- <BugPattern type="NP_ALWAYS_NULL">
+  <BugPattern type="NP_ALWAYS_NULL">
   <ShortDescription>Déréférencement d'un pointeur null dans la méthode</ShortDescription>
   <LongDescription>Déréférencement d'un pointeur null dans la méthode {1}</LongDescription>
   <Details>
@@ -2892,17 +2847,7 @@ String s = buf.toString();
 ]]>
   </Details>
  </BugPattern>
- <BugPattern type="UOE_USE_OBJECT_EQUALS">
-  <ShortDescription>Appel de equals sur une classe finale qui ne surcharge pas la version d'Object</ShortDescription>
-  <LongDescription>Appels de equals sur une classe finale qui ne surcharge pas la version d'Object</LongDescription>
-  <Details>
-<![CDATA[
-<p>Cette méthode invoque la méthode <code>equals(Object o)</code> d'une classe finale qui ne surcharge pas la méthode de la classe <code>Object</code>, et donc qui agit comme le test d'identité <code>==</code>. Il est correcte d'utiliser la méthode <code>equals()</code>, mais vous devriez envisager de surcharger cette méthode dans la classe.</p>
-<p>[Bill Pugh] : désolé, je ne pense pas que cela doive déclencher une alarme et le code est bon. Les utilisateurs du code ne doivent pas avoir à s'intéresser à la façon dont est implémentée <code>equals()</code> et ne devrait jamais dépendre de <code>==</code> pour comparer des instances puisque ça court-circuite la capacité des librairies à contrôler la façon dont les objets sont comparés.</p>
-]]>
-  </Details>
- </BugPattern>
- <BugPattern type="STI_INTERRUPTED_ON_CURRENTTHREAD">
+  <BugPattern type="STI_INTERRUPTED_ON_CURRENTTHREAD">
   <ShortDescription>Utilisation superflue d'un appel à currentThread() pour appeler interrupted()</ShortDescription>
   <LongDescription>La méthode {1} invoque inutilement currentThread() juste pour appeler interrupted()</LongDescription>
   <Details>
@@ -3497,7 +3442,7 @@ double value2 =  x / (double) y;
  <BugCode abbrev="IA">Appel ambiguë</BugCode>
  <BugCode abbrev="NP">Déréférencement d'un pointeur à null</BugCode>
  <BugCode abbrev="OS">Flux pas toujours fermé dans les différents chemins d'éxécution</BugCode>
- <BugCode abbrev="PZLA">Renvoyer un tableau de longueur nulle plutôt que la valeur "null"</BugCode>
+ <BugCode abbrev="PZLA">Renvoyer un tableau de longueur nulle plutôt que la valeur null</BugCode>
  <BugCode abbrev="UCF">Contrôle de flux d'éxécution inutile</BugCode>
  <BugCode abbrev="RCN">Comparaison à null redondante</BugCode>
  <BugCode abbrev="UL">Verrou pas toujours relaché dans les différents chemins d'éxécution</BugCode>
@@ -3519,7 +3464,7 @@ double value2 =  x / (double) y;
  <BugCode abbrev="SW">Règles de codage de Swing</BugCode>
  <BugCode abbrev="IJU">Jeu d'essai JUnit incorrectement implémenté</BugCode>
  <BugCode abbrev="BOA">Erreur dans la surcharge d'un Adapter</BugCode>
- <BugCode abbrev="SF">"switch" dont un cas déborde</BugCode>
+ <BugCode abbrev="SF">switch dont un cas déborde</BugCode>
  <BugCode abbrev="SIO">Opérateur instanceof superflu</BugCode>
  <BugCode abbrev="BAC">Constructeur d'Applet erroné</BugCode>
  <BugCode abbrev="UOE">Utiliser Object.equals()</BugCode>
