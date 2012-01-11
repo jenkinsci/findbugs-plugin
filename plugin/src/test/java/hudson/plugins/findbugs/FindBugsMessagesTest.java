@@ -24,7 +24,7 @@ public class FindBugsMessagesTest {
     /** Expected number of patterns. */
     private static final int EXPECTED_PATTERNS = 425;
     /** Expected number of patterns in fb-contrib. */
-    private static final int EXPECTED_CONTRIB_PATTERNS = 113;
+    private static final int EXPECTED_CONTRIB_PATTERNS = 163;
 
     /**
      * Checks the number of different FindBugs messages.

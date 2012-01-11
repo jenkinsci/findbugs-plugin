@@ -1,31 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<MessageCollection xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                  xsi:noNamespaceSchemaLocation="messagecollection.xsd">
-                  
+<MessageCollection xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="messagecollection.xsd">
+
 	<Plugin>
-	    <ShortDescription>fb-contrib plugin</ShortDescription>
-	    <Details>
+		<ShortDescription>fb-contrib plugin</ShortDescription>
+		<Details>
 			<![CDATA[
 			<p>
 			This plugin contains FindBugs detectors from the fb-contrib project
 			</p>
 			]]>
 	    </Details>
-	</Plugin>                  
-	
+	</Plugin>
+
 	<!-- Detectors -->
 
-    <Detector class="com.mebigfatguy.fbcontrib.collect.CollectStatistics">
-    	<Details>
+	<Detector class="com.mebigfatguy.fbcontrib.collect.CollectStatistics">
+		<Details>
 			<![CDATA[
 			<p>Collects statistics for other detectors</p>
 			]]>
     	</Details>
 	</Detector>
-  
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.InefficientStringBuffering">
-	    <Details>
+		<Details>
 			<![CDATA[
 			<p> Looks for appending strings inside of calls to StringBuffer or StringBuilder append.</p>
 			<p> <pre>
@@ -37,9 +36,9 @@
 			]]>
 	    </Details>
 	</Detector>
-	  
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.SyncCollectionIterators">
-	    <Details>
+		<Details>
 			<![CDATA[
 			<p> Looks for use of iterators on synchronized collections built from the Collections class</p>
 			<p> As the collection in question was built thru Collections.synchronizedXXX, an assumption
@@ -49,9 +48,9 @@
 			]]>
 	    </Details>
 	</Detector>
-	
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.CyclomaticComplexity">
-	    <Details>
+		<Details>
 			<![CDATA[
 			<p> Calculates the McCabe Cyclomatic Complexity measure and reports methods that have an
 			excessive value. This report value can be set with system property 'fb-contrib.cc.limit'.</p>
@@ -59,9 +58,9 @@
 			]]>
 	    </Details>
 	</Detector>
-	
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.OverlyConcreteParameter">
-	    <Details>
+		<Details>
 			<![CDATA[
 			<p> Looks for parameters that are defined by classes, but only use methods defined by an
 			implemented interface or super class. Relying on concrete classes in public signatures causes cohesion,
@@ -70,7 +69,7 @@
 			]]>
 	    </Details>
 	</Detector>
-	
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.ListIndexedIterating">
 		<Details>
 			<![CDATA[
@@ -81,7 +80,7 @@
 			]]>
 		</Details>
 	</Detector>
-		
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.UnrelatedCollectionContents">
 		<Details>
 			<![CDATA[
@@ -95,7 +94,7 @@
 			]]>
 		</Details>
 	</Detector>
-	
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.DeclaredRuntimeException">
 		<Details>
 			<![CDATA[
@@ -107,11 +106,11 @@
 			]]>
 		</Details>
 	</Detector>
-	
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.ClassEnvy">
 		<Details>
 			<![CDATA[
-			<p><b>THIS DETECTOR IS HIGHLY EXPERIMENTAL AND IS LIKELY TO CREATE A LOT OF FUD</b></p>
+			<p><em>THIS DETECTOR IS HIGHLY EXPERIMENTAL AND IS LIKELY TO CREATE A LOT OF FUD</em></p>
 			<p> Looks for methods that use a high percentage of methods from another class over it's own
 			methods. When this is the case, it is often better to implement this method in that other class,
 			by refactoring the class to accept parameters it needs from the source class.
@@ -120,7 +119,7 @@
 			]]>
 		</Details>
 	</Detector>
-	
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.LiteralStringComparison">
 		<Details>
 			<![CDATA[
@@ -131,7 +130,7 @@
 			]]>
 		</Details>
 	</Detector>
-	
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.PartiallyConstructedObjectAccess">
 		<Details>
 			<![CDATA[
@@ -142,7 +141,7 @@
 			]]>
 		</Details>
 	</Detector>
-	
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.DubiousListCollection">
 		<Details>
 			<![CDATA[
@@ -153,7 +152,7 @@
 			]]>
 		</Details>
 	</Detector>
-	
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.ParallelLists">
 		<Details>
 			<![CDATA[
@@ -164,7 +163,7 @@
 			]]>
 		</Details>
 	</Detector>
-	
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.FinalParameters">
 		<Details>
 			<![CDATA[
@@ -252,7 +251,7 @@
 			]]>
 		</Details>
 	</Detector>
-	
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.AbnormalFinallyBlockReturn">
 		<Details>
 			<![CDATA[
@@ -264,7 +263,7 @@
 			]]>
 		</Details>
 	</Detector>
-		
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.StaticMethodInstanceInvocation">
 		<Details>
 			<![CDATA[
@@ -276,7 +275,7 @@
 			]]>
 		</Details>
 	</Detector>
-	
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.SpuriousThreadStates">
 		<Details>
 			<![CDATA[
@@ -314,7 +313,7 @@
 			]]>
 		</Details>
 	</Detector>
-	
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.UnnecessaryStoreBeforeReturn">
 		<Details>
 			<![CDATA[
@@ -325,7 +324,7 @@
 			]]>
 		</Details>
 	</Detector>
-	
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.CopiedOverriddenMethod">
 		<Details>
 			<![CDATA[
@@ -335,7 +334,7 @@
 			]]>
 		</Details>
 	</Detector>
-	
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.ArrayBasedCollections">
 		<Details>
 			<![CDATA[
@@ -348,8 +347,8 @@
 			<p>It is a fast detector</p>			
 			]]>
 		</Details>
-	</Detector>	
-	
+	</Detector>
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.OrphanedDOMNode">
 		<Details>
 			<![CDATA[
@@ -358,7 +357,7 @@
 			]]>
 		</Details>
 	</Detector>
-	
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.AbstractOverriddenMethod">
 		<Details>
 			<![CDATA[
@@ -369,7 +368,7 @@
 			]]>
 		</Details>
 	</Detector>
-	
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.CustomBuiltXML">
 		<Details>
 			<![CDATA[
@@ -381,7 +380,7 @@
 			]]>
 		</Details>
 	</Detector>
-	
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.BloatedSynchronizedBlock">
 		<Details>
 			<![CDATA[
@@ -392,7 +391,7 @@
 			]]>
 		</Details>
 	</Detector>
-	
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.ConstantListIndex">
 		<Details>
 			<![CDATA[
@@ -404,7 +403,7 @@
 			]]>
 		</Details>
 	</Detector>
-	
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.SloppyClassReflection">
 		<Details>
 			<![CDATA[
@@ -417,7 +416,7 @@
 			]]>
 		</Details>
 	</Detector>
-	
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.ArrayWrappedCallByReference">
 		<Details>
 			<![CDATA[
@@ -441,7 +440,7 @@
 			]]>
 		</Details>
 	</Detector>
-	
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.NeedlessInstanceRetrieval">
 		<Details>
 			<![CDATA[
@@ -452,16 +451,16 @@
 			]]>
 		</Details>
 	</Detector>
-	
-    <Detector class="com.mebigfatguy.fbcontrib.detect.DateComparison">
-	   <Details>
+
+	<Detector class="com.mebigfatguy.fbcontrib.detect.DateComparison">
+		<Details>
 			<![CDATA[
 			<p> Looks for inefficient comparison of Date objects using two comparisons when one would do.</p>
 			<p>It is a fast detector</p>
 			]]>
 		</Details>
 	</Detector>
-	
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.SuspiciousWaitOnConcurrentObject">
 		<Details>
 			<![CDATA[
@@ -471,7 +470,7 @@
 			]]>
 		</Details>
 	</Detector>
-	
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.JDBCVendorReliance">
 		<Details>
 			<![CDATA[
@@ -485,7 +484,7 @@
 	<Detector class="com.mebigfatguy.fbcontrib.detect.PossibleMemoryBloat">
 		<Details>
 			<![CDATA[
-			<p>looks for classes that maintain collections or StringBuffer/StringBuilders in 
+			<p>Looks for classes that maintain collections or StringBuffer/StringBuilders in 
 			static member variables, and that do not appear to provide a way to clear or remove 
 			items from these members. Such class fields are likely causes of memory bloat.</p>
 			<p>It is a fast detector</p>
@@ -496,7 +495,7 @@
 	<Detector class="com.mebigfatguy.fbcontrib.detect.LocalSynchronizedCollection">
 		<Details>
 			<![CDATA[
-			<p>looks for allocations of synchronized collections that are stored in local 
+			<p>Looks for allocations of synchronized collections that are stored in local 
 			variables, and never stored in fields or returned from methods. As local variables 
 			are by definition thread safe, using synchronized collections in this context 
 			makes no sense.</p>
@@ -508,18 +507,18 @@
 	<Detector class="com.mebigfatguy.fbcontrib.detect.FieldCouldBeLocal">
 		<Details>
 			<![CDATA[
-			<p>looks for classes that define fields that are used in a locals only fashion, 
+			<p>Looks for classes that define fields that are used in a locals only fashion, 
 			specifically private fields that are accessed first in each method with a 
 			store vs. a load.</p>
 			<p>It is a slow detector</p>
 			]]>
 		</Details>
 	</Detector>
-	
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.NonOwnedSynchronization">
 		<Details>
 			<![CDATA[
-			<p>looks for methods that synchronize on variables that are not owned by the
+			<p>Looks for methods that synchronize on variables that are not owned by the
 			current class. Doing this causes confusion when two classes use the same variable
 			for their own synchronization purposes. For cleanest separation of interests, only
 			synchronize on private fields of the class. Note that 'this' is not owned by
@@ -528,138 +527,138 @@
 			]]>
 		</Details>
 	</Detector>
-	
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.NonRecycleableTaglibs">
 		<Details>
 			<![CDATA[
-			<p>looks for tag libraries that are not recycleable because backing members 
+			<p>Looks for tag libraries that are not recycleable because backing members 
 			of taglib attributes are set in areas besides the setter method for the attribute.</p>
 			<p>It is a fast detector</p>
 			]]>
 		</Details>
 	</Detector>
-	
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.Section508Compliance">
 		<Details>
 			<![CDATA[
-				<p>looks for violation of Section 508, Accessibility for People with disabilities Act.
+				<p>Looks for violation of Section 508, Accessibility for People with disabilities Act.
 				</p>
 				<p>It is a fast detector</p>
 			]]>
 		</Details>
 	</Detector>
-	
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.UseEnumCollections">
 		<Details>
 			<![CDATA[
-			<p>looks for use of sets and maps using enums. It is more efficient to use EnumSet or EnumMap</p>
+			<p>Looks for use of sets and maps using enums. It is more efficient to use EnumSet or EnumMap</p>
 			<p>It is a fast detector</p>
 			]]>
 		</Details>
 	</Detector>
-	
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.SQLInLoop">
 		<Details>
 			<![CDATA[
-			<p>looks for the execution of sql queries inside a loop. This pattern tends to be inefficient,
+			<p>Looks for the execution of sql queries inside a loop. This pattern tends to be inefficient,
 			and often can be improved upon, by collecting all the keys needed for the query and issuing just
 			one query using an in clause with all the keys for all the queries previously needed in the loop.</p>
 			<p>It is a fast detector</p>
 			]]>
 		</Details>
 	</Detector>
-	
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.NeedlessMemberCollectionSynchronization">
 		<Details>
 			<![CDATA[
-			<p>looks for classes that define private synchronized collections as static or instance 
+			<p>Looks for classes that define private synchronized collections as static or instance 
 			members, that are only altered in a static initializer or constructor. Since the multithreaded
 			use of this collection is read-only, the use of synchronization is unnecessary.</p>
 			<p>It is a moderately fast detector</p>
 			]]>
 		</Details>
 	</Detector>
-	
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.InheritanceTypeChecking">
 		<Details>
 			<![CDATA[
-			<p>looks for if/else blocks where a series of them use instanceof on the same 
+			<p>Looks for if/else blocks where a series of them use instanceof on the same 
 			variable to determine what to do. If these classes are related by inheritance,
 			this often is better handled through calling a single overridden method.</p>
 			<p>It is a moderately fast detector</p>
 			]]>
 		</Details>
 	</Detector>
-	
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.StaticArrayCreatedInMethod">
 		<Details>
 			<![CDATA[
-			<p>looks for creation of arrays in methods using constant values. These arrays
+			<p>Looks for creation of arrays in methods using constant values. These arrays
 			will need to be recreated each time the method is called. These arrays should probably
 			be defined as static fields, instead</p>
 			<p>It is a fast detector</p>
 			]]>
 		</Details>
 	</Detector>
-	
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.PossiblyRedundantMethodCalls">
 		<Details>
 			<![CDATA[
-			<p>looks for calls of the same method on the same object when that object hasn't changed.
+			<p>Looks for calls of the same method on the same object when that object hasn't changed.
 			This often is redundant, and the second call can be removed, or combined.</p>
 			<p>It is a fast detector</p>
 			]]>
 		</Details>
 	</Detector>
-	
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.UseToArray">
 		<Details>
 			<![CDATA[
-			<p>looks for code that builds an array of values from a collection, by manually looping
+			<p>Looks for code that builds an array of values from a collection, by manually looping
 			over the elements of the collection, and adding them to the array. It is simpler and
 			cleaner to use mycollection.toArray(new type[mycollection.size()].</p>
 			<p>It is a fast detector</p>
 			]]>
 		</Details>
 	</Detector>
-	
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.LostExceptionStackTrace">
 		<Details>
 			<![CDATA[
-			<p>looks for methods that catch exceptions, and then throw a different exception,
+			<p>Looks for methods that catch exceptions, and then throw a different exception,
 			without embedding the original exception in the thrown one. Doing so, hides the real
 			source of the exception, making debugging and fixing these problems difficult.</p>
 			<p>It is a moderately fast detector</p>
 			]]>
 		</Details>
 	</Detector>
-	
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.UseCharacterParameterizedMethod">
 		<Details>
 			<![CDATA[
-			<p>looks for methods that pass single character string constants as parameters to 
+			<p>Looks for methods that pass single character string constants as parameters to 
 			methods that alternatively have an overridden method that accepts a character instead.
 			It is easier for the method to handle a single character than a String.</p>
 			<p>It is a fast detector.</p>
 			]]>
 		</Details>
 	</Detector>
-	
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.TailRecursion">
 		<Details>
 			<![CDATA[
-			<p>looks for methods that make a recursive call to itself as the last statement in the
+			<p>Looks for methods that make a recursive call to itself as the last statement in the
 			method. This tail recursion could be converted into a simple loop which would improve
 			the performance and stack requirements.</p>
 			<p>It is a fast detector.</p>
 			]]>
 		</Details>
 	</Detector>
-	
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.UnrelatedReturnValues">
 		<Details>
 			<![CDATA[
-			<p>looks for methods that are defined to return Object, and return different types of
+			<p>Looks for methods that are defined to return Object, and return different types of
 			objects based on different code paths. If this method is not based on a interface or
 			superclass, it is suggested to change the return type to a type that would accomodate
 			all kinds of return types.</p>
@@ -667,22 +666,22 @@
 			]]>
 		</Details>
 	</Detector>
-	
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.PossibleIncompleteSerialization">
 		<Details>
 			<![CDATA[
-			<p>looks for classes that don't handle serialization of parent class member fields 
+			<p>Looks for classes that don't handle serialization of parent class member fields 
 			when the class in question is serializable but is derived from a non serializable 
 			classes.</p> 
 			<p>It is a fast detector.</p>
 			]]>
 		</Details>
 	</Detector>
-	
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.SuspiciousComparatorReturnValues">
 		<Details>
 			<![CDATA[
-			<p>looks for class that implement Comparator or Comparable, and whose compare or compareTo
+			<p>Looks for class that implement Comparator or Comparable, and whose compare or compareTo
  			methods return constant values only, but that don't represent the three possible choice
 			(a negative number, 0, and a positive number).</p>
 			<p>It is a fast detector.</p>
@@ -693,38 +692,38 @@
 	<Detector class="com.mebigfatguy.fbcontrib.detect.SillynessPotPourri">
 		<Details>
 			<![CDATA[
-			<p>looks for a potpourri of small problems that do not fit into a common pattern.</p>
+			<p>Looks for a potpourri of small problems that do not fit into a common pattern.</p>
 			<p>It is a fast detector.</p>
 			]]>
 		</Details>
 	</Detector>
-	
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.BloatedAssignmentScope">
 		<Details>
 			<![CDATA[
-			<p><b>THIS DETECTOR IS HIGHLY EXPERIMENTAL AND IS LIKELY TO CREATE A LOT OF FUD</b>
+			<p><em>THIS DETECTOR IS HIGHLY EXPERIMENTAL AND IS LIKELY TO CREATE A LOT OF FUD</em>
 			Looks for assignments to variables in a scope larger than it's use. As long as the evaluation of the assignment
 			does not have side effects, the assignment can be moved into the inner scope where it is used.</p>
 			<p>It is a fast detector.</p>
 			]]>
 		</Details>
 	</Detector>
-	
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.SpoiledChildInterfaceImplementor">
 		<Details>
 			<![CDATA[
-			<p>looks for classes that implement interfaces by relying on methods being 
+			<p>Looks for classes that implement interfaces by relying on methods being 
 			implemented in superclasses, even tho the superclass knows nothing about
 			the interface being implemented by the child.</p>
 			<p>It is a fast detector.</p>
 			]]>
 		</Details>
 	</Detector>
-	
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.DeletingWhileIterating">
 		<Details>
 			<![CDATA[
-			<p>looks for deletion of items from a collection using the remove method
+			<p>Looks for deletion of items from a collection using the remove method
 			of the collection at the same time that the collection is being iterated on. If
 			this occurs the iterator will become invalid and throw a ConcurrentModificationException.
 			Instead, the remove should be called on the iterator itself.</p>
@@ -732,33 +731,33 @@
 			]]>
 		</Details>
 	</Detector>
-	
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.UseSplit">
 		<Details>
 			<![CDATA[
-			<p>looks for code that builds an array by using a StringTokenizer to break up
+			<p>Looks for code that builds an array by using a StringTokenizer to break up
 			a string and place individual elements into an array. It is simpler to use
 			String.split instead.</p>
 			<p>It is a fast detector.</p>
 			]]>
 		</Details>
 	</Detector>
-	
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.SuspiciousJDKVersionUse">
 		<Details>
 			<![CDATA[
-			<p>looks for calls to classes and methods that do not exist in the JDK for which this class is
+			<p>Looks for calls to classes and methods that do not exist in the JDK for which this class is
 			compiled. This can happen if you specify the -source and -target options of the javac compiler, and
 			specify a target that is less than the jdk version of the javac compiler.</p>
 			<p>It is a slow detector.</p>
 			]]>
 		</Details>
 	</Detector>
-	
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.UseAddAll">
 		<Details>
 			<![CDATA[
-			<p>looks for loops that transfers the contents of one collection to another. These collection sources might
+			<p>Looks for loops that transfers the contents of one collection to another. These collection sources might
 			be local variables or member fields, including sets, maps key/values, lists, or arrays. It is simpler to 
 			just use the addAll method of the collection class. In the case where the source is an array, you can use
 			Arrays.asList(array), and use that as the source to addAll.</p>
@@ -770,18 +769,18 @@
 	<Detector class="com.mebigfatguy.fbcontrib.detect.MethodReturnsConstant">
 		<Details>
 			<![CDATA[
-			<p>looks for private or static methods that only return one constant value. Since there is no
+			<p>Looks for private or static methods that only return one constant value. Since there is no
 			chance for derived classes overriding this behavior, the return of a constant value 
 			seems dubious.</p>
 			<p>It is a fast detector</p>
 			]]>
 		</Details>
 	</Detector>
-	
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.NeedlessCustomSerialization">
 		<Details>
 			<![CDATA[
-			<p>looks for classes that implement the Serializable interface and implement the
+			<p>Looks for classes that implement the Serializable interface and implement the
 			standard readObject and writeObject methods by simply deferring to the Stream 
 			parameter's defaultReadObject or defaultWriteObject and nothing else. As this is the
 			built in behavior, these methods are not needed.</p>
@@ -789,22 +788,22 @@
 			]]>
 		</Details>
 	</Detector>
-	
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.MisleadingOverloadModel">
 		<Details>
 			<![CDATA[
-			<p>looks for classes that define both static and instance methods with the same name.
+			<p>Looks for classes that define both static and instance methods with the same name.
 			As each type represents a different use model, it doesn't make sense that this name
 			would be overloaded, and will confuse users of the class.</p>
 			<p>It is a fast detector</p>
 			]]>
 		</Details>
 	</Detector>
-	
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.ExceptionSoftening">
 		<Details>
 			<![CDATA[
-			<p>looks for methods that catch checked exceptions, and throw unchecked
+			<p>Looks for methods that catch checked exceptions, and throw unchecked
 			exceptions in their place. There are several levels of concern. Least
 			concerning are methods constrained by interface or super class contracts
 			not to throw checked exceptions but appear owned by the same author. Next
@@ -815,11 +814,11 @@
 			]]>
 		</Details>
 	</Detector>
-	
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.ConfusingFunctionSemantics">
 		<Details>
 			<![CDATA[
-			<p>looks for methods that return a parameter after modifying that parameter.
+			<p>Looks for methods that return a parameter after modifying that parameter.
 			Doing this will confuse the user of this method, as it will be assumed that the 
 			passed in argument is different than the output, or at least won't be changed.
 			If the purpose of this method is just to modify the parameter, this method should
@@ -830,11 +829,11 @@
 			]]>
 		</Details>
 	</Detector>
-	
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.JUnitAssertionOddities">
 		<Details>
 			<![CDATA[
-			<p>looks for junit test case methods that use assertions with odd parameters.
+			<p>Looks for junit test case methods that use assertions with odd parameters.
 			Including in this is:
 			<ul>
 				<li>Passing a constant as the second (actual) parameter</li>
@@ -846,54 +845,53 @@
 			]]>
 		</Details>
 	</Detector>
-	
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.SuspiciousCloneAlgorithm">
 		<Details>
 			<![CDATA[
-			<p>looks for implementations of clone where an assignment is made to a field of the
+			<p>Looks for implementations of clone where an assignment is made to a field of the
 			source object. It is likely that that store should have occurred on the cloned object, as
 			the clone operation is almost always considered read only.</p>
 			<p>It is a fast detector</p>
 			]]>
 		</Details>
 	</Detector>
-	
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.WeakExceptionMessaging">
 		<Details>
 			<![CDATA[
-			<p>looks for exceptions that are thrown with static strings as messages. Using static strings
+			<p>Looks for exceptions that are thrown with static strings as messages. Using static strings
 			doesn't differentiate one use of this method versus another, and so it may be difficult
 			to determine how this exception occurred without showing context.</p>
 			<p>It is a fast detector</p>
 			]]>
 		</Details>
 	</Detector>
-				
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.SuspiciousClusteredSessionSupport">
 		<Details>
 			<![CDATA[
-			<p>looks for code that fetches a complex object from an HttpSession attribute, modifies the
+			<p>Looks for code that fetches a complex object from an HttpSession attribute, modifies the
 			object, but does not call setAttribute again on this object. This will not inform the application server
 			that this object has changed, and thus will not correctly replicate these changes across the cluster.</p>
 			<p>It is a fast detector</p>
 			]]>
 		</Details>
 	</Detector>
-	
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.LoggerOddities">
 		<Details>
 			<![CDATA[
-			<p>looks for code that allocates a Logger object by passing a specification of a class that
-			is not related to the class in which the logger is used.</p>
+			<p>Looks for odd patterns of use of Logger classes from either log4j, slf4j or commons logging.</p>
 			<p>It is a fast detector</p>
 			]]>
 		</Details>
 	</Detector>
-	
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.IncorrectInternalClassUse">
 		<Details>
 			<![CDATA[
-			<p>looks for classes that rely on internal classes in the various apis or libraries. As these 
+			<p>Looks for classes that rely on internal classes in the various apis or libraries. As these 
 			classes are not officially released from the api vendor, they are subject to change or removal, and thus,
 			should not be counted on.</p>
 			Packages that shouldn't be used are:
@@ -906,11 +904,11 @@
 			]]>
 		</Details>
 	</Detector>
-	
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.DubiousSetOfCollections">
 		<Details>
 			<![CDATA[
-			<p>looks for sets or keySets of maps that contain other collections. As typically collections calculate
+			<p>Looks for sets or keySets of maps that contain other collections. As typically collections calculate
 			their hashCode, equals and compareTo methods by iterating the collection and evaluating the same function
 			on each item in the collection, this can be costly from a performance point of view.</p>
 			<p>In addition, using a set, or keySet of a map, infers that you will be looking for items based on 
@@ -923,24 +921,296 @@
 			]]>
 		</Details>
 	</Detector>
-	
+
 	<Detector class="com.mebigfatguy.fbcontrib.detect.BogusExceptionDeclaration">
 		<Details>
 			<![CDATA[
-			<p>looks for constructors, static methods and private methods that declare that they throw 
+			<p>Looks for constructors, static methods and private methods that declare that they throw 
 			checked exceptions that the actual code never throws. Since these methods can't be overridden,
 			there is no reason to add these exceptions to the method declaration.</p>
 			<p>It is a moderately fast detector</p>
 			]]>
 		</Details>
 	</Detector>
+
+	<Detector class="com.mebigfatguy.fbcontrib.detect.UnnecessaryNewNullCheck">
+		<Details>
+			<![CDATA[
+			<p>Looks for allocations of objects, and then immediately checking to see if the
+			object is null, or non null. As the new operator is guaranteed to eiher succeed, or throw
+			an exception, this null check is useless, and denotes a misunderstanding as to how
+			the jvm works. You can remove this guard.</p>
+			<p>It is a fast detector</p>
+			]]>
+		</Details>
+	</Detector>
+
+	<Detector class="com.mebigfatguy.fbcontrib.detect.DeprecatedTypesafeEnumPattern">
+		<Details>
+			<![CDATA[
+			<p>Looks for classes that appear to implement the old style type safe enum pattern 
+			that was used before java added Enum support to the language. Since this class is 
+			compiled with java 1.5 or later, it would be simpler to just use java enums</p>
+			<p>It is a fast detector</p>
+			]]>
+		</Details>
+	</Detector>
+
+	<Detector class="com.mebigfatguy.fbcontrib.detect.StutteredMethodArguments">
+		<Details> experimental="true"
+			<![CDATA[
+			<p>Looks for method calls that pass the same value for two separate parameters, where
+			those arguments are not constants. Often this is a cut/paste mistake, but if not, it is
+			confusing why you would pass the same value for two arguments.</p>
+			<p>It is a fast detector</p>
+			]]>
+		</Details>
+	</Detector>
+
+	<Detector class="com.mebigfatguy.fbcontrib.detect.TristateBooleanPattern">
+		<Details>
+			<![CDATA[
+			<p>Looks for methods that are declared to return a Boolean, but return a null
+			value. As this now allows the method to return 3 values, the use of Boolean is
+			dubious. It would be better to just define a new enumeration with three values,
+			and return that.</p>
+			<p>It is a fast detector</p>
+			]]>	
+		</Details>
+	</Detector>
+
+	<Detector class="com.mebigfatguy.fbcontrib.detect.SuspiciousUninitializedArray">
+		<Details>
+			<![CDATA[
+				<p>Looks for methods that return arrays that are allocated but not initialized
+				in this method. While it's possible that the calling method will do the work of
+				initializing the array, it is not a usual pattern, and it suspected that this array
+				was just forgotten to be initialized.</p>
+				<p>It is a fast detector</p>
+			]]>
+		</Details>
+	</Detector>
+
+	<Detector class="com.mebigfatguy.fbcontrib.detect.InappropriateToStringUse">
+		<Details>
+			<![CDATA[
+				<p>Looks for methods that perform algorithmic operations on Strings that are returned
+				from a toString() method. As toString should only be used for debug/trace purposes, it
+				shouldn't be used for algorithm use.</p>
+				<p>It is a fast detector</p>
+			]]>
+		</Details>
+	</Detector>
+
+	<Detector class="com.mebigfatguy.fbcontrib.detect.InconsistentKeyNameCasing">
+		<Details>
+			<![CDATA[
+				<p>Looks for methods that use the same name with different casing to access objects in HttpRequest parameters
+				and attributes. As these parameter names are case sensitive this will lead to confusion.</p>
+				<p>It is a fast detector</p>
+			]]>
+		</Details>
+	</Detector>
+
+	<Detector class="com.mebigfatguy.fbcontrib.detect.OverzealousCasting">
+		<Details>
+			<![CDATA[
+			<p>Looks for manual casts of objects that are more specific then needed as the value is assigned
+			to a class or interface higher up in the inheritance chain. You only need to cast to that class
+			or interface.</p>
+			<p>It is a fast detector</p>
+			]]>	
+		</Details>
+	</Detector>
+
+	<Detector class="com.mebigfatguy.fbcontrib.detect.PoorlyDefinedParameter">
+		<Details>
+			<![CDATA[
+			<p>Looks for non derivable methods that declare parameters and then cast those
+			parameters to more specific types in the method. This is misleading and dangerous
+			as you are not documenting through parameter types what is necessary for these
+			parameters to function correctly.</p>
+			<p>It is a fast detector</p>
+			]]>
+		</Details>
+	</Detector>
+
+	<Detector class="com.mebigfatguy.fbcontrib.detect.NonSymmetricEquals">
+		<Details>
+			<![CDATA[
+			<p>Looks for classes that break the fundamental rule of equivalence, which is
+			symmetry. If a equals b, then b equals a. While it is usually wrong to allow
+			equals to compare different types, at the very least you should make sure that
+			each class knows about each other and is able to compare themselves with each other.</p>
+			<p>It is a fast detector</p>
+			]]>
+		</Details>
+	</Detector>
+
+	<Detector class="com.mebigfatguy.fbcontrib.detect.ContraVariantArrayAssignment">
+		<Details>
+			<![CDATA[
+			<p>Finds contravariant array assignments. Since arrays are mutable data structures, their use 
+			must be restricted to covariant or invariant usage</p>
+			
+			<pre>
+			class A {}
+			class B extends A {}
+			
+			 B[] b = new B[2];
+			 A[] a = b;
+			 a[0] = new A(); // results in ArrayStoreException (Runtime)
+			</pre>
+			<p>It is a fast detector</p>            
+			]]>
+		</Details>
+	</Detector>
+
+	<Detector class="com.mebigfatguy.fbcontrib.detect.NonFunctionalField">
+		<Details>
+			<![CDATA[
+		 	<p>Looks for fields in serializable classes that are defined as both final and
+			transient. As a transient field is not initialized when streamed, and is not 
+			initialized in a constructor, it will remain null because it is defined final.</p>
+			<p>It is a fast detector</p>
+			]]>
+		</Details>
+	</Detector>
+
+	<Detector class="com.mebigfatguy.fbcontrib.detect.SuspiciousNullGuard">
+		<Details>
+	 		<![CDATA[
+ 			<p>Looks for code that checks to see if a field or local variable is not null,
+ 			before entering a code block either an if, or while statement, and then reassigns that 
+ 			field or local variable. It is likely that guard should have been to see if that
+ 			field or local variable is null, not, not null</p>
+ 			<p>It is a fast detector</p>
+	 		]]>
+	 	</Details>
+	</Detector>
+
+	<Detector class="com.mebigfatguy.fbcontrib.detect.MoreDumbMethods">
+		<Details>
+	            	<![CDATA[
+	            	<p>This detector looks for calls to more pointless or deprecated methods.</p>
+	            	<p>It is a fast detector</p>
+	            	]]>
+	          </Details>
+	</Detector>
+
+	<Detector class="com.mebigfatguy.fbcontrib.detect.ReflectionOnObjectMethods">
+		<Details>
+	 		<![CDATA[
+	 		<p>This detector looks for reflective calls on methods that are found java.lang.Object.
+	 		As these methods are always available, there is no reason to use reflection to call them.
+	 		</p>
+	 		<p>It is a fast detector</p>
+	 		]]>
+	 	</Details>
+	</Detector>
+
+	<Detector class="com.mebigfatguy.fbcontrib.detect.ImproperPropertiesUse">
+		<Details>
+	 		<![CDATA[
+	 		<p>This detector looks for java.util.Properties use where values other than String
+	 		are placed in the properties object. As the Properties object was intended to be a 
+	 		String to String only collection, putting other types in the Properties object is 
+	 		incorrect, and takes advantage of a poor design decision by the original Properties class
+	 		designers to derive from Hashtable, rather than using aggregation.</p>
+	 		<p>It is a fast detector</p>
+	 		]]>
+	 	</Details>
+	</Detector>
+
+	<Detector class="com.mebigfatguy.fbcontrib.detect.PossibleConstantAllocationInLoop">
+		<Details>
+	 		<![CDATA[
+	 		<p>This detector looks for allocations of objects using the default constructor in a loop, where
+	 		the object allocated is never assigned to any object that is used outside the loop.
+	 		It is possible that this allocation can be done outside the loop to avoid excessive garbage.</p>
+	 		<p>It is a fast detector</p>
+	 		]]>
+	 	</Details>
+	</Detector>
+
+	<Detector class="com.mebigfatguy.fbcontrib.detect.WriteOnlyCollection">
+		<Details>
+	 		<![CDATA[
+	 		<p>This detector looks for allocations and initializations of java collections, but that are never
+	 		read from or accessed to gain information. This represents a collection of no use, and most probably
+	 		can be removed. It is similar to a dead local store.</p>
+	 		<p>It is a fast detector</p>
+	 		]]>
+	 	</Details>
+	</Detector>
+
+	<Detector class="com.mebigfatguy.fbcontrib.detect.UseVarArgs">
+		<Details>
+	 		<![CDATA[
+	 		<p>This detector looks for definitions of methods that have an array as the last parameter.
+	 		Since this class is compiled with java 1.5 or better, it would be more flexible for clients of this
+	 		method to define this parameter as a vararg parameter</p>
+	 		<p>It is a fast detector</p>
+	 		]]>
+	 	</Details>
+	</Detector>
+
+	<Detector class="com.mebigfatguy.fbcontrib.detect.PossibleUnsuspectedSerialization">
+		<Details>
+	 		<![CDATA[
+	 		<p>This detector looks for code that serializes objects that are non-static inner
+	 		classes of other classes. Since there is a reference to the containing class, this class will be serialized as well.
+	 		It is often the case that this is not what is wanted, and will cause much more data to be serialized
+	 		than is necessary.</p>
+	 		<p>It is a fast detector</p>
+	 		]]>
+	 	</Details>
+	</Detector>
 	
-	<!-- BugPattern -->	
-	                
+	<Detector class="com.mebigfatguy.fbcontrib.detect.SideEffectConstructor">
+		<Details>
+			<![CDATA[
+			<p>This detector looks for object creation where the object isn't assigned to any variable or
+			field. This implies that the class operates through side effects in the constructor, which makes
+			for difficult to maintain code.</p>
+			<p>It is a fast detector</p>
+			]]>
+		</Details>
+	</Detector>
+	
+	<Detector class="com.mebigfatguy.fbcontrib.detect.SuspiciousGetterSetterUse">
+		<Details>
+			<![CDATA[
+			<p>This detector looks for java bean getter-setter use where the value of a property is set
+			with the value retrieved from the same bean's correllary getter, like this:</p>
+			<pre>
+				person.setAge(person.getAge());
+			</pre>
+			<p>Typically this is a copy paste typo.</p>
+			<p>It is a fast detector</p>
+			]]>
+		</Details>
+	</Detector>
+	
+	<Detector class="com.mebigfatguy.fbcontrib.detect.LingeringGraphicsObjects">
+		<Details>
+			<![CDATA[
+			<p>This detector looks for creation of java.awt.Graphics object that do not have the
+			.dispose() method called on them when finished. These objects will be cleaned up by 
+			the Garbage collector, bug given the likelyhood that large numbers of these objects can
+			be created in a short period of time, it is better to dispose them as soon as possible
+			</p>
+			<p>It is a fast detector</p>
+			]]>
+		</Details>
+	</Detector>
+
+	<!-- BugPattern -->
+
 	<BugPattern type="ISB_INEFFICIENT_STRING_BUFFERING">
-	    <ShortDescription>method passes simple concatenating string in StringBuffer or StringBuilder append</ShortDescription>
-	    <LongDescription>method {1} passes simple concatenating string in StringBuffer or StringBuilder append</LongDescription>
-	    <Details>
+		<ShortDescription>Method passes simple concatenating string in StringBuffer or StringBuilder append</ShortDescription>
+		<LongDescription>Method {1} passes simple concatenating string in StringBuffer or StringBuilder append</LongDescription>
+		<Details>
 			<![CDATA[
 			<p> This method uses StringBuffer or StringBuilder append to concatenate strings. However, it passes the result
 			of doing a simple String concatenation to one of these append calls, thus removing any performance gains
@@ -948,11 +1218,11 @@
 			]]>
 	    </Details>
 	</BugPattern>
-	
+
 	<BugPattern type="ISB_EMPTY_STRING_APPENDING">
-	    <ShortDescription>method concatenates an empty string to effect type conversion</ShortDescription>
-	    <LongDescription>method {1} concatenates an empty string to effect type conversion</LongDescription>
-	    <Details>
+		<ShortDescription>Method concatenates an empty string to effect type conversion</ShortDescription>
+		<LongDescription>Method {1} concatenates an empty string to effect type conversion</LongDescription>
+		<Details>
 			<![CDATA[
 			<p> This method concatenates an empty string with a literal value, in order to convert
 			the literal value into a string. It is more efficient to use String.valueOf() to do the same
@@ -961,11 +1231,11 @@
 			]]>
 	    </Details>
 	</BugPattern>
-	
+
 	<BugPattern type="SCI_SYNCHRONIZED_COLLECTION_ITERATORS">
-	    <ShortDescription>method creates iterators on synchronized collections</ShortDescription>
-	    <LongDescription>method {1} creates iterators on synchronized collections</LongDescription>
-	    <Details>
+		<ShortDescription>Method creates iterators on synchronized collections</ShortDescription>
+		<LongDescription>Method {1} creates iterators on synchronized collections</LongDescription>
+		<Details>
 			<![CDATA[
 			<p> This method uses a synchronized collection, built from Collections.synchronizedXXXX, but accesses it 
 			through an iterator. Since an iterator is by definition, multithreaded unsafe, this is a conflict in
@@ -975,9 +1245,9 @@
 	</BugPattern>
 
 	<BugPattern type="CC_CYCLOMATIC_COMPLEXITY">
-	    <ShortDescription>method is excessively complex</ShortDescription>
-	    <LongDescription>method {1} is excessively complex</LongDescription>
-	    <Details>
+		<ShortDescription>Method is excessively complex</ShortDescription>
+		<LongDescription>Method {1} is excessively complex</LongDescription>
+		<Details>
 			<![CDATA[
 			<p> This method has a high cyclomatic complexity figure, which calculates the number of branch
 			points. It is likely difficult to test, and is brittle to change. Consider refactoring this 
@@ -985,11 +1255,11 @@
 			]]>
 	    </Details>
 	</BugPattern>
-	
+
 	<BugPattern type="OCP_OVERLY_CONCRETE_PARAMETER">
-	    <ShortDescription>method needlessly defines parameter with concrete classes</ShortDescription>
-	    <LongDescription>method {1} needlessly defines parameter with concrete classes</LongDescription>
-	    <Details>
+		<ShortDescription>Method needlessly defines parameter with concrete classes</ShortDescription>
+		<LongDescription>Method {1} needlessly defines parameter with concrete classes</LongDescription>
+		<Details>
 			<![CDATA[
 			<p> This method uses concrete classes for parameters when only methods defined in an implemented
 			interface or super class are used. Consider increasing the abstraction of the interface to
@@ -997,10 +1267,10 @@
 			]]>
 	    </Details>
 	</BugPattern>
-	
+
 	<BugPattern type="LII_LIST_INDEXED_ITERATING">
-		<ShortDescription>method uses integer based for loops to iterate over a List</ShortDescription>
-		<LongDescription>method {1} uses integer based for loops to iterate over a List</LongDescription>
+		<ShortDescription>Method uses integer based for loops to iterate over a List</ShortDescription>
+		<LongDescription>Method {1} uses integer based for loops to iterate over a List</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>This method uses an integer based for loop to iterator over a java.util.List, by calling
@@ -1010,10 +1280,10 @@
 			]]>
 		</Details>
 	</BugPattern>
-		
+
 	<BugPattern type="UCC_UNRELATED_COLLECTION_CONTENTS">
-		<ShortDescription>method adds unrelated types to collection or array</ShortDescription>
-		<LongDescription>method {1} adds unrelated types to collection or array</LongDescription>
+		<ShortDescription>Method adds unrelated types to collection or array</ShortDescription>
+		<LongDescription>Method {1} adds unrelated types to collection or array</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>This method adds unrelated objects to a collection or array, requiring careful and brittle
@@ -1024,8 +1294,8 @@
 	</BugPattern>
 
 	<BugPattern type="DRE_DECLARED_RUNTIME_EXCEPTION">
-		<ShortDescription>method declares RuntimeException in throws clause</ShortDescription>
-		<LongDescription>method {1} declares RuntimeException in throws clause</LongDescription>
+		<ShortDescription>Method declares RuntimeException in throws clause</ShortDescription>
+		<LongDescription>Method {1} declares RuntimeException in throws clause</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>This method declares a RuntimeException derived class in it's throws clause.
@@ -1037,11 +1307,11 @@
 	</BugPattern>
 
 	<BugPattern type="CE_CLASS_ENVY">
-		<ShortDescription>method excessively uses methods of another class</ShortDescription>
-		<LongDescription>method {1} excessively uses methods of another class</LongDescription>
+		<ShortDescription>Method excessively uses methods of another class</ShortDescription>
+		<LongDescription>Method {1} excessively uses methods of another class</LongDescription>
 		<Details>
 			<![CDATA[
-			<p><b>THIS DETECTOR IS HIGHLY EXPERIMENTAL AND IS LIKELY TO CREATE A LOT OF FUD</b></p>
+			<p><em>THIS DETECTOR IS HIGHLY EXPERIMENTAL AND IS LIKELY TO CREATE A LOT OF FUD</em></p>
 			<p>This method makes extensive use of methods from another class over methods of it's own
 			class. Typically this means that the functionality that is accomplished by this method
 			most likely belongs with the class that is being used so liberally. Consider refactoring this
@@ -1049,10 +1319,10 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="LSC_LITERAL_STRING_COMPARISON">
-		<ShortDescription>method makes literal string comparisons passing the literal as an argument</ShortDescription>
-		<LongDescription>method {1} makes literal string comparisons passing the literal as an argument</LongDescription>
+		<ShortDescription>Method makes literal string comparisons passing the literal as an argument</ShortDescription>
+		<LongDescription>Method {1} makes literal string comparisons passing the literal as an argument</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>This method calls the equals or compareTo methods on a String variable passing in a String literal.
@@ -1063,8 +1333,8 @@
 	</BugPattern>
 
 	<BugPattern type="PCOA_PARTIALLY_CONSTRUCTED_OBJECT_ACCESS">
-		<ShortDescription>constructor makes call to non-final method</ShortDescription>
-		<LongDescription>constructor {1} makes call to non-final method</LongDescription>
+		<ShortDescription>Constructor makes call to non-final method</ShortDescription>
+		<LongDescription>Constructor {1} makes call to non-final method</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>This constructor makes a call to a non-final method. Since this method can be overriden, a subclasses
@@ -1075,8 +1345,8 @@
 	</BugPattern>
 
 	<BugPattern type="DLC_DUBIOUS_LIST_COLLECTION">
-		<ShortDescription>class defines List based fields but uses them like Sets</ShortDescription>
-		<LongDescription>class {0} defines List based fields but uses them like Sets</LongDescription>
+		<ShortDescription>Class defines List based fields but uses them like Sets</ShortDescription>
+		<LongDescription>Class {0} defines List based fields but uses them like Sets</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>This class defines a field based on java.util.List, but uses it to some extent like a Set. Since
@@ -1086,22 +1356,23 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="PL_PARALLEL_LISTS">
-		<ShortDescription>class defines two or more one for one associated lists or arrays</ShortDescription>
-		<LongDescription>class {0} defines two or more one for one associated lists or arrays</LongDescription>
+		<ShortDescription>Class defines two or more one for one associated lists or arrays</ShortDescription>
+		<LongDescription>Class {0} defines two or more one for one associated lists or arrays</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>This class appears to maintain two or more lists or arrays who's contains is related one-for-one
 			through the index of the list or array. Consider creating a separate class to hold all the related 
-			pieces of information, and adding instances of this class to just one list or array.</p>
+			pieces of information, and adding instances of this class to just one list or array, or if just two values, use
+			a Map to associate one value with the other.</p>
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="FP_FINAL_PARAMETERS">
-		<ShortDescription>method does not define a parameter as final, but could</ShortDescription>
-		<LongDescription>method {1} does not define a parameter as final, but could</LongDescription>
+		<ShortDescription>Method does not define a parameter as final, but could</ShortDescription>
+		<LongDescription>Method {1} does not define a parameter as final, but could</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>This method correctly does not write to a parameter. To help document this, and to perhaps
@@ -1110,10 +1381,10 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="ACEM_ABSTRACT_CLASS_EMPTY_METHODS">
-		<ShortDescription>empty method could be declared abstract</ShortDescription>
-		<LongDescription>empty method {1} could be declared abstract</LongDescription>
+		<ShortDescription>Empty method could be declared abstract</ShortDescription>
+		<LongDescription>Empty method {1} could be declared abstract</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>This method is empty or merely throws an exception. Since the class it is defined in is 
@@ -1122,10 +1393,10 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="MAC_MANUAL_ARRAY_COPY">
-		<ShortDescription>method copies arrays manually</ShortDescription>
-		<LongDescription>method {1} copies arrays manually</LongDescription>
+		<ShortDescription>Method copies arrays manually</ShortDescription>
+		<LongDescription>Method {1} copies arrays manually</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>This method copies data from one array to another manually using a loop.
@@ -1133,10 +1404,10 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="FPL_FLOATING_POINT_LOOPS">
-		<ShortDescription>method uses floating point indexed loops</ShortDescription>
-		<LongDescription>method {1} uses floating point indexed loops</LongDescription>
+		<ShortDescription>Method uses floating point indexed loops</ShortDescription>
+		<LongDescription>Method {1} uses floating point indexed loops</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>This method uses floating point variables to index a loop. Since floating point
@@ -1146,10 +1417,10 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="NCMU_NON_COLLECTION_METHOD_USE">
-		<ShortDescription>method uses old non collections interface methods</ShortDescription>
-		<LongDescription>method {1} uses old non collections interface methods</LongDescription>
+		<ShortDescription>Method uses old non collections interface methods</ShortDescription>
+		<LongDescription>Method {1} uses old non collections interface methods</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>This method makes calls to collection classes where the method is not defined by the Collections
@@ -1158,10 +1429,10 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="CAO_CONFUSING_AUTOBOXED_OVERLOADING">
-		<ShortDescription>class defines methods which confuse Character with int parameters</ShortDescription>
-		<LongDescription>class {0} defines methods which confuse Character with int parameters</LongDescription>
+		<ShortDescription>Class defines methods which confuse Character with int parameters</ShortDescription>
+		<LongDescription>Class {0} defines methods which confuse Character with int parameters</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>This class defines two methods that differ only by a parameter being defined
@@ -1170,10 +1441,10 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="AFBR_ABNORMAL_FINALLY_BLOCK_RETURN">
-		<ShortDescription>class has abnormal exit from finally block</ShortDescription>
-		<LongDescription>class {0} has abnormal exit from finally block</LongDescription>
+		<ShortDescription>Class has abnormal exit from finally block</ShortDescription>
+		<LongDescription>Class {0} has abnormal exit from finally block</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>This class returns or throws exceptions from a finally block. This will
@@ -1182,10 +1453,10 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="SMII_STATIC_METHOD_INSTANCE_INVOCATION">
-		<ShortDescription>method calls static method on instance reference</ShortDescription>
-		<LongDescription>method {1} calls static method on instance reference</LongDescription>
+		<ShortDescription>Method calls static method on instance reference</ShortDescription>
+		<LongDescription>Method {1} calls static method on instance reference</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>This method makes a static method call on an instance reference. For
@@ -1196,10 +1467,10 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="STS_SPURIOUS_THREAD_STATES">
-		<ShortDescription>method calls wait, notify or notifyAll on a Thread instance</ShortDescription>
-		<LongDescription>method {1} calls wait, notify or notifyAll on a Thread instance</LongDescription>
+		<ShortDescription>Method calls wait, notify or notifyAll on a Thread instance</ShortDescription>
+		<LongDescription>Method {1} calls wait, notify or notifyAll on a Thread instance</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>This method invokes the methods wait, notify or notifyAll on a Thread instance.
@@ -1212,8 +1483,8 @@
 	</BugPattern>
 
 	<BugPattern type="NAB_NEEDLESS_AUTOBOXING_CTOR">
-		<ShortDescription>method passes primitive wrapper to same primitive wrapper constructor</ShortDescription>
-		<LongDescription>method {1} passes primitive wrapper to same primitive wrapper constructor</LongDescription>
+		<ShortDescription>Method passes primitive wrapper to same primitive wrapper constructor</ShortDescription>
+		<LongDescription>Method {1} passes primitive wrapper to same primitive wrapper constructor</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>This method passes a wrapped primitive object to the same class's constructor.
@@ -1223,10 +1494,10 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="NAB_NEEDLESS_BOXING_STRING_CTOR">
-		<ShortDescription>method passes parsed string to primitive wrapper constructor</ShortDescription>
-		<LongDescription>method {1} passes parsed string to primitive wrapper constructor</LongDescription>
+		<ShortDescription>Method passes parsed string to primitive wrapper constructor</ShortDescription>
+		<LongDescription>Method {1} passes parsed string to primitive wrapper constructor</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>This method passes a primitive value retrieved from a BoxedPrimitive.parseBoxedPrimitive("1") call  to 
@@ -1237,8 +1508,8 @@
 	</BugPattern>
 
 	<BugPattern type="NAB_NEEDLESS_AUTOBOXING_VALUEOF">
-		<ShortDescription>method passes primitive wrapper to Wrapper class valueOf method</ShortDescription>
-		<LongDescription>method {1} passes primitive wrapper to Wrapper class valueOf method</LongDescription>
+		<ShortDescription>Method passes primitive wrapper to Wrapper class valueOf method</ShortDescription>
+		<LongDescription>Method {1} passes primitive wrapper to Wrapper class valueOf method</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>This method passes a wrapped primitive object to the same class's .valueOf method.
@@ -1250,8 +1521,8 @@
 	</BugPattern>
 
 	<BugPattern type="NAB_NEEDLESS_BOXING_PARSE">
-		<ShortDescription>method converts String to primitive using excessive boxing</ShortDescription>
-		<LongDescription>method {1} converts String to primitive using excessive boxing</LongDescription>
+		<ShortDescription>Method converts String to primitive using excessive boxing</ShortDescription>
+		<LongDescription>Method {1} converts String to primitive using excessive boxing</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>This method passes a String to a wrapped primitive object's valueOf method, which in turn calls
@@ -1261,10 +1532,10 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="NAB_NEEDLESS_BOXING_VALUEOF">
-		<ShortDescription>method converts String to boxed primitive using excessive boxing</ShortDescription>
-		<LongDescription>method {1} converts String to boxed primitive using excessive boxing</LongDescription>
+		<ShortDescription>Method converts String to boxed primitive using excessive boxing</ShortDescription>
+		<LongDescription>Method {1} converts String to boxed primitive using excessive boxing</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>This method passes a String to a wrapped primitive object's parse method, which in turn calls
@@ -1274,10 +1545,10 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="NAB_NEEDLESS_BOX_TO_UNBOX">
-		<ShortDescription>method creates Boxed primitive from primitive only to get primitive value</ShortDescription>
-		<LongDescription>method {1} creates Boxed primitive from primitive only to get primitive value</LongDescription>
+		<ShortDescription>Method creates Boxed primitive from primitive only to get primitive value</ShortDescription>
+		<LongDescription>Method {1} creates Boxed primitive from primitive only to get primitive value</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>This method constructs a Boxed Primitive from a primitive only to call the primitiveValue() method to
@@ -1293,10 +1564,10 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="NAB_NEEDLESS_BOX_TO_CAST">
-		<ShortDescription>method creates Boxed primitive from primitive only to cast to another primitive type</ShortDescription>
-		<LongDescription>method {1} creates Boxed primitive from primitive only to cast to another primitive type</LongDescription>
+		<ShortDescription>Method creates Boxed primitive from primitive only to cast to another primitive type</ShortDescription>
+		<LongDescription>Method {1} creates Boxed primitive from primitive only to cast to another primitive type</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>This method constructs a Boxed Primitive from a primitive only to call the primitiveValue() method to
@@ -1312,10 +1583,10 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="NAB_NEEDLESS_BOOLEAN_CONSTANT_CONVERSION">
-		<ShortDescription>method needlessly boxes a boolean constant</ShortDescription>
-		<LongDescription>method {1} needlessly boxes a boolean constant</LongDescription>
+		<ShortDescription>Method needlessly boxes a boolean constant</ShortDescription>
+		<LongDescription>Method {1} needlessly boxes a boolean constant</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>This method assigns a Boxed boolean constant to a primitive boolean variable, or assigns a primitive boolean
@@ -1332,10 +1603,10 @@
 			]]>
 		</Details>
 	</BugPattern>
-			
+
 	<BugPattern type="USBR_UNNECESSARY_STORE_BEFORE_RETURN">
-		<ShortDescription>method stores return result in local before immediately returning it</ShortDescription>
-		<LongDescription>method {1} stores return result in local before immediately returning it</LongDescription>
+		<ShortDescription>Method stores return result in local before immediately returning it</ShortDescription>
+		<LongDescription>Method {1} stores return result in local before immediately returning it</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>This method stores the return result in a local variable, and then immediately
@@ -1345,10 +1616,10 @@
 			]]>
 		</Details>
 	</BugPattern>
-			
+
 	<BugPattern type="COM_COPIED_OVERRIDDEN_METHOD">
-		<ShortDescription>method is implemented with an exact copy of it's superclass's method</ShortDescription>
-		<LongDescription>method {1} is implemented with an exact copy of it's superclass's method</LongDescription>
+		<ShortDescription>Method is implemented with an exact copy of it's superclass's method</ShortDescription>
+		<LongDescription>Method {1} is implemented with an exact copy of it's superclass's method</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>This method is implemented using an exact copy of it's super class method's 
@@ -1357,10 +1628,10 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="ABC_ARRAY_BASED_COLLECTIONS">
-		<ShortDescription>method uses array as basis of collection</ShortDescription>
-		<LongDescription>method {1} uses array as basis of collection</LongDescription>
+		<ShortDescription>Method uses array as basis of collection</ShortDescription>
+		<LongDescription>Method {1} uses array as basis of collection</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>This method passes an array as the key to a Map, element in a Set, or item in a List when
@@ -1372,33 +1643,33 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="ODN_ORPHANED_DOM_NODE">
-		<ShortDescription>method creates DOM node but doesn't attach it to a document</ShortDescription>
-		<LongDescription>method {1} creates DOM node but doesn't attach it to a document</LongDescription>
+		<ShortDescription>Method creates DOM node but doesn't attach it to a document</ShortDescription>
+		<LongDescription>Method {1} creates DOM node but doesn't attach it to a document</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>This method creates a DOM node but does not attach it to a DOM document.
 			</p>
 			]]>
-		</Details>	
+		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="AOM_ABSTRACT_OVERRIDDEN_METHOD">
-		<ShortDescription>abstract method overrides a concrete implementation</ShortDescription>
-		<LongDescription>abstract method {1} overrides a concrete implementation</LongDescription>
+		<ShortDescription>Abstract method overrides a concrete implementation</ShortDescription>
+		<LongDescription>Abstract method {1} overrides a concrete implementation</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>This abstract method is derived from a concrete method implementation. It is highly
 			suspect that the super class method's implementation would be cast away. 
 			</p>
 			]]>
-		</Details>		
+		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="CBX_CUSTOM_BUILT_XML">
-		<ShortDescription>method builds xml strings through adhoc concatenation</ShortDescription>
-		<LongDescription>method {1} builds xml strings through adhoc concatenation</LongDescription>
+		<ShortDescription>Method builds xml strings through adhoc concatenation</ShortDescription>
+		<LongDescription>Method {1} builds xml strings through adhoc concatenation</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>This method generates an xml based string by concatenating together various 
@@ -1407,12 +1678,12 @@
 			read in and transformed into the final product, thru modification by Transformer.setParameter.
 			</p>
 			]]>
-		</Details>		
+		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="BSB_BLOATED_SYNCHRONIZED_BLOCK">
-		<ShortDescription>method overly synchronizes a block of code</ShortDescription>
-		<LongDescription>method {1} overly synchronizes a block of code</LongDescription>
+		<ShortDescription>Method overly synchronizes a block of code</ShortDescription>
+		<LongDescription>Method {1} overly synchronizes a block of code</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>This methods implements a synchronized block, but the code found at the beginning
@@ -1421,12 +1692,12 @@
 			synchronized block, and leave the synchronized block only for field accesses, or access
 			to this object.</p>
 			]]>
-		</Details>	
+		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="CLI_CONSTANT_LIST_INDEX">
-		<ShortDescription>method accesses list or array with constant index</ShortDescription>
-		<LongDescription>method {1} accesses list or array with constant index</LongDescription>
+		<ShortDescription>Method accesses list or array with constant index</ShortDescription>
+		<LongDescription>Method {1} accesses list or array with constant index</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>This method accesses an array or list using a constant integer index. Often,
@@ -1434,12 +1705,12 @@
 			list indices mean different specific things, then perhaps replacing the list with
 			a first-class object with meaningful accessors would make the code less brittle.</p>
 			]]>
-		</Details>	
+		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="SCR_SLOPPY_CLASS_REFLECTION">
-		<ShortDescription>method accesses statically bound class with Class.forName</ShortDescription>
-		<LongDescription>method {1} accesses statically bound class with Class.forName</LongDescription>
+		<ShortDescription>Method accesses statically bound class with Class.forName</ShortDescription>
+		<LongDescription>Method {1} accesses statically bound class with Class.forName</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>This method accesses the class object of a class that is already statically bound
@@ -1447,24 +1718,24 @@
 			in regards to code transformations such as obfuscation, and is unneeded here, since 
 			the class in question is already 'linked' to this class.</p>
 			]]>
-		</Details>	
+		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="AWCBR_ARRAY_WRAPPED_CALL_BY_REFERENCE">
-		<ShortDescription>method uses 1 element array to simulate call by reference</ShortDescription>
-		<LongDescription>method {1} uses 1 element array to simulate call by reference</LongDescription>
+		<ShortDescription>Method uses 1 element array to simulate call by reference</ShortDescription>
+		<LongDescription>Method {1} uses 1 element array to simulate call by reference</LongDescription>
 		<Details>
 			<![CDATA[
-			<p>This method uses a one element array to wrap an object that is to be past to a method as an argument
+			<p>This method uses a one element array to wrap an object that is to be passed to a method as an argument
 			to simulate call by pointer ala C++. It is better to define a proper return class type that holds all
 			the relevant information retrieved from the called method.</p>
 			]]>
-		</Details>	
+		</Details>
 	</BugPattern>
 
 	<BugPattern type="SG_SLUGGISH_GUI">
-		<ShortDescription>method performs time consuming operation in gui thread</ShortDescription>
-		<LongDescription>method {1} performs time consuming operation in gui thread</LongDescription>
+		<ShortDescription>Method performs time consuming operation in gui thread</ShortDescription>
+		<LongDescription>Method {1} performs time consuming operation in gui thread</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>This method implements an awt or swing listener and performs time 
@@ -1473,19 +1744,19 @@
 			using a separate thread to do the time consuming work so that the user
 			has a better experience.</p>
 			]]>
-		</Details>	
+		</Details>
 	</BugPattern>
 
 	<BugPattern type="NIR_NEEDLESS_INSTANCE_RETRIEVAL">
-		<ShortDescription>method retrieves instance to load static member</ShortDescription>
-		<LongDescription>method {1} retrieves instance to load static member</LongDescription>
+		<ShortDescription>Method retrieves instance to load static member</ShortDescription>
+		<LongDescription>Method {1} retrieves instance to load static member</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>This method calls a method to load a reference to an object, and then only
 			uses it to load a static member of that instance's class. It is simpler and
 			better performant to just load the static field from the class itself.</p>
 			]]>
-		</Details>	
+		</Details>
 	</BugPattern>
 
 	<BugPattern type="DDC_DOUBLE_DATE_COMPARISON">
@@ -1500,7 +1771,7 @@
 </pre>
 			could become
 <pre>
-	if (!date2.before( date1 ))
+	if (date1.compareTo( date2 ) >= 0)
 </pre>
 			and
 <pre>
@@ -1508,7 +1779,7 @@
 </pre>
 			could become
 <pre>
-	if (!date1.after( date2 ))
+	if (date1.compareTo( date2 ) <= 0)
 </pre>
 			and
 <pre>
@@ -1523,43 +1794,43 @@
 	</BugPattern>
 
 	<BugPattern type="SWCO_SUSPICIOUS_WAIT_ON_CONCURRENT_OBJECT">
-		<ShortDescription>method calls wait when await was probably intended</ShortDescription>
-		<LongDescription>method {1} calls wait when await was probably intended</LongDescription>
+		<ShortDescription>Method calls wait when await was probably intended</ShortDescription>
+		<LongDescription>Method {1} calls wait when await was probably intended</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>This method calls wait() on a on mutex defined in the java.util.concurrent package.
 			These classes, define await, instead of wait, and it is most likely that await
 			was intended.</p>
 			]]>
-		</Details>	
+		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="JVR_JDBC_VENDOR_RELIANCE">
-		<ShortDescription>method uses jdbc vendor specific classes and methods</ShortDescription>
-		<LongDescription>method {1} uses jdbc vendor specific classes and methods</LongDescription>
+		<ShortDescription>Method uses jdbc vendor specific classes and methods</ShortDescription>
+		<LongDescription>Method {1} uses jdbc vendor specific classes and methods</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>This method uses jdbc vendor specific classes and method to perform database work.
 			This makes the code specific to this vendor, and unable to run on other databases.</p>
 			]]>
-		</Details>	
+		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="PMB_POSSIBLE_MEMORY_BLOAT">
-		<ShortDescription>class defines static field that appears to allow memory bloat</ShortDescription>
-		<LongDescription>class {0} defines static field that appears to allow memory bloat</LongDescription>
+		<ShortDescription>Class defines static field that appears to allow memory bloat</ShortDescription>
+		<LongDescription>Class {0} defines static field that appears to allow memory bloat</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>This class defines static fields that are collections or StringBuffers that do not
 			appear to have any way to clear or reduce their size. This is a potential cause of 
 			memory bloat.</p>
 			]]>
-		</Details>	
+		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="LSYC_LOCAL_SYNCHRONIZED_COLLECTION">
-		<ShortDescription>method creates local variable-based synchronized collection</ShortDescription>
-		<LongDescription>method {1} creates local variable-based synchronized collection</LongDescription>
+		<ShortDescription>Method creates local variable-based synchronized collection</ShortDescription>
+		<LongDescription>Method {1} creates local variable-based synchronized collection</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>This method creates a synchronized collection and store the reference to it
@@ -1574,12 +1845,12 @@
 			</table>
 			</p>
 			]]>
-		</Details>	
+		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="FCBL_FIELD_COULD_BE_LOCAL">
-		<ShortDescription>class defines fields that are used only as locals</ShortDescription>
-		<LongDescription>class {0} defines fields that are used only as locals</LongDescription>
+		<ShortDescription>Class defines fields that are used only as locals</ShortDescription>
+		<LongDescription>Class {0} defines fields that are used only as locals</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>This class defines fields that are used in a locals only fashion, 
@@ -1587,12 +1858,12 @@
 			first in each method with a store vs. a load. This field could be replaced by one
 			or more local variables.</p>
 			]]>
-		</Details>	
+		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="NOS_NON_OWNED_SYNCHRONIZATION">
-		<ShortDescription>class uses non owned variables to synchronize on</ShortDescription>
-		<LongDescription>class {0} uses non owned variables to synchronize on</LongDescription>
+		<ShortDescription>Class uses non owned variables to synchronize on</ShortDescription>
+		<LongDescription>Class {0} uses non owned variables to synchronize on</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>This method uses a synchronize block where the object that is being synchronized on,
@@ -1604,7 +1875,7 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="NRTL_NON_RECYCLEABLE_TAG_LIB">
 		<ShortDescription>Tag library is not recycleable</ShortDescription>
 		<LongDescription>Tag library {0} is not recycleable</LongDescription>
@@ -1618,7 +1889,7 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="S508C_NULL_LAYOUT">
 		<ShortDescription>Gui uses absolute layout</ShortDescription>
 		<LongDescription>Gui {0} uses absolute layout</LongDescription>
@@ -1630,8 +1901,8 @@
 				</p>
 			]]>
 		</Details>
-	</BugPattern> 
-	
+	</BugPattern>
+
 	<BugPattern type="S508C_NO_SETLABELFOR">
 		<ShortDescription>JLabel doesn't specify what it's labeling</ShortDescription>
 		<LongDescription>JLabel in method {1} doesn't specify what it's labeling</LongDescription>
@@ -1643,8 +1914,8 @@
 				</p>
 			]]>
 		</Details>
-	</BugPattern> 
-	
+	</BugPattern>
+
 	<BugPattern type="S508C_NO_SETSIZE">
 		<ShortDescription>Window sets size manually, and doesn't use pack</ShortDescription>
 		<LongDescription>Window {0} sets size manually, and doesn't use pack</LongDescription>
@@ -1655,8 +1926,8 @@
 				</p>
 			]]>
 		</Details>
-	</BugPattern> 
-	
+	</BugPattern>
+
 	<BugPattern type="S508C_NON_ACCESSIBLE_JCOMPONENT">
 		<ShortDescription>Class extends JComponent but does not implement Accessible interface</ShortDescription>
 		<LongDescription>Class {0} extends JComponent but does not implement Accessible interface</LongDescription>
@@ -1668,7 +1939,7 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="S508C_SET_COMP_COLOR">
 		<ShortDescription>Method explicitly sets the color of a Component</ShortDescription>
 		<LongDescription>Method {1} Method explicitly sets the color of a Component</LongDescription>
@@ -1680,7 +1951,19 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
+	<BugPattern type="S508C_NON_TRANSLATABLE_STRING">
+		<ShortDescription>Method passes constant string to title/label of component</ShortDescription>
+		<LongDescription>Method {1} passes constant string to title/label of component</LongDescription>
+		<Details>
+			<![CDATA[
+				<p>This method creates a component and passes a string literal to the title or label
+				of the component. As this string will be shown to users, it should be internationalizable
+				through the use of a resource bundle.</p>
+			]]>
+		</Details>
+	</BugPattern>
+
 	<BugPattern type="UEC_USE_ENUM_COLLECTIONS">
 		<ShortDescription>Class uses an ordinary set or map with an enum class as the key</ShortDescription>
 		<LongDescription>Class {0} uses an ordinary set or map with an enum class as the key</LongDescription>
@@ -1691,7 +1974,7 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="SIL_SQL_IN_LOOP">
 		<ShortDescription>Method executes sql queries inside of loops</ShortDescription>
 		<LongDescription>Method {1} executes sql queries inside of loops</LongDescription>
@@ -1705,7 +1988,7 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="NMCS_NEEDLESS_MEMBER_COLLECTION_SYNCHRONIZATION">
 		<ShortDescription>Class defines unneeded synchronization on member collection</ShortDescription>
 		<LongDescription>Class {0} defines unneeded synchronization on member collection</LongDescription>
@@ -1718,7 +2001,7 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="ITC_INHERITANCE_TYPE_CHECKING">
 		<ShortDescription>Method uses instanceof on multiple types to arbitrate logic</ShortDescription>
 		<LongDescription>Method {1} uses instanceof on multiple types to arbitrate logic</LongDescription>
@@ -1731,7 +2014,7 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="SACM_STATIC_ARRAY_CREATED_IN_METHOD">
 		<ShortDescription>Method creates array using constants</ShortDescription>
 		<LongDescription>Method {1} creates array using constants</LongDescription>
@@ -1743,7 +2026,7 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="PRMC_POSSIBLY_REDUNDANT_METHOD_CALLS">
 		<ShortDescription>Method appears to call the same method on the same object redundantly</ShortDescription>
 		<LongDescription>Method {1} appears to call the same method on the same object redundantly</LongDescription>
@@ -1757,7 +2040,7 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="UTA_USE_TO_ARRAY">
 		<ShortDescription>Method manually creates array from collection</ShortDescription>
 		<LongDescription>Method {1} manually creates array from collection</LongDescription>
@@ -1770,7 +2053,7 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="LEST_LOST_EXCEPTION_STACK_TRACE">
 		<ShortDescription>Method throws alternative exception from catch block without history</ShortDescription>
 		<LongDescription>Method {1} throws alternative exception from catch block without history</LongDescription>
@@ -1783,7 +2066,7 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="UCPM_USE_CHARACTER_PARAMETERIZED_METHOD">
 		<ShortDescription>Method passes constant String of length 1 to character overridden method</ShortDescription>
 		<LongDescription>Method {1} passes constant String of length 1 to character overridden method</LongDescription>
@@ -1795,7 +2078,7 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="TR_TAIL_RECURSION">
 		<ShortDescription>Method employs tail recursion</ShortDescription>
 		<LongDescription>Method {1} employs tail recursion</LongDescription>
@@ -1807,7 +2090,7 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="URV_UNRELATED_RETURN_VALUES">
 		<ShortDescription>Method returns different types of unrelated Objects</ShortDescription>
 		<LongDescription>Method {1} returns different types of unrelated Objects</LongDescription>
@@ -1818,7 +2101,7 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="URV_CHANGE_RETURN_TYPE">
 		<ShortDescription>Method returns more specific type of object than declared</ShortDescription>
 		<LongDescription>Method {1} returns more specific type of object than declared</LongDescription>
@@ -1830,8 +2113,8 @@
 				change the return type of this method.</p>
 			]]>
 		</Details>
-	</BugPattern>	
-	
+	</BugPattern>
+
 	<BugPattern type="URV_INHERITED_METHOD_WITH_RELATED_TYPES">
 		<ShortDescription>Inherited method returns more specific type of object than declared</ShortDescription>
 		<LongDescription>Inherited method {1} returns more specific type of object than declared</LongDescription>
@@ -1844,7 +2127,7 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="PIS_POSSIBLE_INCOMPLETE_SERIALIZATION">
 		<ShortDescription>Class doesn't serialize superclass fields</ShortDescription>
 		<LongDescription>Class {0} doesn't serialize superclass fields</LongDescription>
@@ -1861,7 +2144,7 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="SC_SUSPICIOUS_COMPARATOR_RETURN_VALUES">
 		<ShortDescription>Comparator method doesn't seem to return all ordering values</ShortDescription>
 		<LongDescription>Comparator method {1} doesn't seem to return all ordering values</LongDescription>
@@ -1873,7 +2156,7 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="SPP_NEGATIVE_BITSET_ITEM">
 		<ShortDescription>Method passes a negative number as a bit to a BitSet which isn't supported</ShortDescription>
 		<LongDescription>Method {1} passes a negative number as a bit to a BitSet which isn't supported</LongDescription>
@@ -1884,7 +2167,7 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="SPP_INTERN_ON_CONSTANT">
 		<ShortDescription>Method calls intern on a string constant</ShortDescription>
 		<LongDescription>Method {1} calls intern on a string constant</LongDescription>
@@ -1895,7 +2178,7 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="SPP_NO_CHAR_SB_CTOR">
 		<ShortDescription>Method appears to pass character to StringBuffer or StringBuilder integer constructor</ShortDescription>
 		<LongDescription>Method {1} appears to pass character to StringBuffer or StringBuilder integer constructor</LongDescription>
@@ -1908,18 +2191,18 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="SPP_USE_MATH_CONSTANT">
 		<ShortDescription>Method uses non standard math constant</ShortDescription>
 		<LongDescription>Method {1} uses non standard math constant</LongDescription>
 		<Details>
 			<![CDATA[
-			<p>This method defines its own version of <b>PI</b> or <b>e</b> and the value is not as precise as the
+			<p>This method defines its own version of <em>PI</em> or <em>e</em> and the value is not as precise as the
 			one defined in the constants Math.PI or Math.E. Use these constants instead.</p>
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="SPP_STUTTERED_ASSIGNMENT">
 		<ShortDescription>Method assigns a value to a local twice in a row</ShortDescription>
 		<LongDescription>Method {1} assigns a value to a local twice in a row</LongDescription>
@@ -1931,7 +2214,7 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="SPP_USE_ISNAN">
 		<ShortDescription>Method compares a double to Double.NAN</ShortDescription>
 		<LongDescription>Method {1} compares a double to Double.NAN</LongDescription>
@@ -1942,7 +2225,7 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="SPP_USE_BIGDECIMAL_STRING_CTOR">
 		<ShortDescription>Method passes double value to BigDecimal Constructor</ShortDescription>
 		<LongDescription>Method {1} passes double value to BigDecimal Constructor</LongDescription>
@@ -1953,8 +2236,8 @@
 			space. To take advantage of the BigDecimal space, pass the number as a string. </p>
 			]]>
 		</Details>
-	</BugPattern>	
-	
+	</BugPattern>
+
 	<BugPattern type="SPP_STRINGBUFFER_WITH_EMPTY_STRING">
 		<ShortDescription>Method passes empty string to StringBuffer of StringBuilder constructor</ShortDescription>
 		<LongDescription>Method {1} passes empty string to StringBuffer of StringBuilder constructor</LongDescription>
@@ -1966,7 +2249,7 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="SPP_EQUALS_ON_ENUM">
 		<ShortDescription>Method calls equals on an enum instance</ShortDescription>
 		<LongDescription>Method {1} calls equals on an enum instance</LongDescription>
@@ -1978,7 +2261,7 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="SPP_INVALID_BOOLEAN_NULL_CHECK">
 		<ShortDescription>Method uses invalid C++ style null check on Boolean</ShortDescription>
 		<LongDescription>Method {1} uses invalid C++ style null check on Boolean</LongDescription>
@@ -1995,7 +2278,7 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="SPP_USE_CHARAT">
 		<ShortDescription>Method fetches character array just to do the equivalent of the charAt method</ShortDescription>
 		<LongDescription>Method {1} fetches character array just to do the equivalent of the charAt method</LongDescription>
@@ -2007,7 +2290,7 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="SPP_USELESS_TRINARY">
 		<ShortDescription>Method uses a trinary operator to cast a boolean to true or false</ShortDescription>
 		<LongDescription>Method {1} uses a trinary operator to cast a boolean to true or false</LongDescription>
@@ -2018,7 +2301,7 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="SPP_SUSPECT_STRING_TEST">
 		<ShortDescription>Method treats null and normal strings differently than an empty strings</ShortDescription>
 		<LongDescription>Method {1} treats null and normal strings differently than an empty strings</LongDescription>
@@ -2036,7 +2319,7 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="SPP_USE_STRINGBUILDER_LENGTH">
 		<ShortDescription>Method converts StringBuffer or Builder to String just to get it's length</ShortDescription>
 		<LongDescription>Method {1} converts StringBuffer or Builder to String just to get it's length</LongDescription>
@@ -2048,7 +2331,7 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="SPP_INVALID_CALENDAR_COMPARE">
 		<ShortDescription>Method passes a non calendar object to Calendar.before or Calendar.after</ShortDescription>
 		<LongDescription>Method {1} passes a non calendar object to Calendar.before or Calendar.after</LongDescription>
@@ -2060,7 +2343,7 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="SPP_USE_CONTAINSKEY">
 		<ShortDescription>Method calls keySet() just to call contains, use containsKey instead</ShortDescription>
 		<LongDescription>Method {1} calls keySet() just to call contains, use containsKey instead</LongDescription>
@@ -2070,7 +2353,7 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="SPP_USE_ISEMPTY">
 		<ShortDescription>Method checks the size of a collection against zero rather than using isEmpty()</ShortDescription>
 		<LongDescription>Method {1} checks the size of a collection against zero rather than using isEmpty()</LongDescription>
@@ -2081,7 +2364,7 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="SPP_USE_GETPROPERTY">
 		<ShortDescription>Method calls getProperties just to get one property, use getProperty instead</ShortDescription>
 		<LongDescription>Method {1} calls getProperties just to get one property, use getProperty instead</LongDescription>
@@ -2094,7 +2377,69 @@
 					<tr><td>String prop = System.getProperty("foo");</td></tr>
 				</table>
 			]]>	
-		</Details>				
+		</Details>
+	</BugPattern>
+
+	<BugPattern type="SPP_SERIALVER_SHOULD_BE_PRIVATE">
+		<ShortDescription>Class defines a serialVersionUID as non private</ShortDescription>
+		<LongDescription>Class {0} defines a serialVersionUID as non private</LongDescription>
+		<Details>
+			<![CDATA[
+				This class defines a static field 'serialVersionUID' to define the serialization
+				version for this class. This field is marked as non private. As the serialVersionUID only
+				controls the current class, and doesn't effect any derived classes, defining it as non
+				private is confusing. It is suggested you change this variable to be private.
+			]]>
+		</Details>
+	</BugPattern>
+
+	<BugPattern type="SPP_USELESS_CASING">
+		<ShortDescription>Method compares string without case after enforcing a case</ShortDescription>
+		<LongDescription>Method {1} compares string without case after enforcing a case</LongDescription>
+		<Details>
+			<![CDATA[
+				This method compares two strings with compareToIgnoreCase or equalsIgnoreCase, after having
+				called toUpperCase or toLowerCase on the string in question. As you are comparing with out
+				concern to case, the toUpperCase or toLowerCase calls are pointless and can be removed.
+			]]>
+		</Details>
+	</BugPattern>
+
+	<BugPattern type="SPP_NON_ARRAY_PARM">
+		<ShortDescription>Method passes a non array object to a parameter that expects an array</ShortDescription>
+		<LongDescription>Method {1} passes a non array object to a parameter that expects an array</LongDescription>
+		<Details>
+			<![CDATA[
+				This method expects an array to be passed as one of its parameters, but unfortunately defines
+				the parameter as Object. This invocation of this method does not pass an array and will throw
+				an exception when run.
+			]]>
+		</Details>
+	</BugPattern>
+	
+		<BugPattern type="SPP_EMPTY_CASING">
+		<ShortDescription>Method passes an empty string to equalsIgnoreCase or compareToIgnoreCase</ShortDescription>
+		<LongDescription>Method {1} passes an empty string to equalsIgnoreCase or compareToIgnoreCase</LongDescription>
+		<Details>
+			<![CDATA[
+				This method passes the empty string "" to equalsIgnoreCase or compareToIgnoreCase, as the empty string
+				is not case sensitive using equals is simpler. It would be even simpler to do a length() == 0 test.
+			]]>
+		</Details>
+	</BugPattern>
+	
+	<BugPattern type="SPP_TEMPORARY_TRIM">
+		<ShortDescription>Method trims a String temporarily</ShortDescription>
+		<LongDescription>Method {1} trims a String temporarily</LongDescription>
+		<Details>
+			<![CDATA[
+				This method calls trim() on a String without assigning the new string to another variable.
+				It then calls length() or equals on this trimmed string. If trimming the string was important
+				for determining it's length of it's equality, it should be trimmed when you actually go to use it.
+				It would make more sense to first trim the String, store the trimmed value in a variable, and then
+				continue to test and use that trimmed string.
+			]]>
+		</Details>
 	</BugPattern>
 	
 	<BugPattern type="BAS_BLOATED_ASSIGNMENT_SCOPE">
@@ -2102,7 +2447,7 @@
 		<LongDescription>Method {1} assigns a variable in a larger scope then is needed</LongDescription>
 		<Details>
 			<![CDATA[
-			<p><b>THIS DETECTOR IS HIGHLY EXPERIMENTAL AND IS LIKELY TO CREATE A LOT OF FUD</b>
+			<p><em>THIS DETECTOR IS HIGHLY EXPERIMENTAL AND IS LIKELY TO CREATE A LOT OF FUD</em>
 			This method assigns a value to a variable in an outer scope compared to where the variable is actually used. 
 			Assuming this evaluation does not have side effects, the assignment can be moved into the inner scope (if block)
 			so that its execution time isn't taken up if the if guard is false. Care should be
@@ -2112,7 +2457,7 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="SCII_SPOILED_CHILD_INTERFACE_IMPLEMENTATOR">
 		<ShortDescription>Class implements interface by relying on unknowing superclass methods</ShortDescription>
 		<LongDescription>Class {0} implements interface by relying on unknowing superclass methods</LongDescription>
@@ -2126,7 +2471,7 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="DWI_DELETING_WHILE_ITERATING">
 		<ShortDescription>Method deletes collection element while iterating</ShortDescription>
 		<LongDescription>Method {1} deletes collection element while iterating</LongDescription>
@@ -2140,7 +2485,7 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="DWI_MODIFYING_WHILE_ITERATING">
 		<ShortDescription>Method modifies collection element while iterating</ShortDescription>
 		<LongDescription>Method {1} modifies collection element while iterating</LongDescription>
@@ -2173,10 +2518,10 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="SJVU_SUSPICIOUS_JDK_VERSION_USE">
-		<ShortDescription>method uses rt.jar class or method that does not exist</ShortDescription>
-		<LongDescription>method {1} uses rt.jar class or method that does not exist for the version the class is compiled for</LongDescription>
+		<ShortDescription>Method uses rt.jar class or method that does not exist</ShortDescription>
+		<LongDescription>Method {1} uses rt.jar class or method that does not exist for the version the class is compiled for</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>This method calls a method that does not exist, on a class that does not exist in the jdk that
@@ -2185,10 +2530,10 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="UAA_USE_ADD_ALL">
-		<ShortDescription>method uses simple loop to copy contents of one collection to another</ShortDescription>
-		<LongDescription>method {1} uses simple loop to copy contents of one colleciton to another</LongDescription>
+		<ShortDescription>Method uses simple loop to copy contents of one collection to another</ShortDescription>
+		<LongDescription>Method {1} uses simple loop to copy contents of one collection to another</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>This method uses a simple for loop to copy the contents of a set, list, map key/value, array or other collection
@@ -2198,10 +2543,10 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="MRC_METHOD_RETURNS_CONSTANT">
-		<ShortDescription>private method only returns one constant value</ShortDescription>
-		<LongDescription>private method {1} only returns one constant value</LongDescription>
+		<ShortDescription>Private method only returns one constant value</ShortDescription>
+		<LongDescription>Private method {1} only returns one constant value</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>This private or static method only returns one constant value. As this method is private or static,
@@ -2211,10 +2556,10 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="NCS_NEEDLESS_CUSTOM_SERIALIZATION">
-		<ShortDescription>method needlessly implements what is default streaming behavior</ShortDescription>
-		<LongDescription>method {1} needlessly implements what is default streaming behavior</LongDescription>
+		<ShortDescription>Method needlessly implements what is default streaming behavior</ShortDescription>
+		<LongDescription>Method {1} needlessly implements what is default streaming behavior</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>This method implements the Serializable interface by performing the same operations that
@@ -2222,10 +2567,10 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="MOM_MISLEADING_OVERLOAD_MODEL">
-		<ShortDescription>class 'overloads' a method with both instance and static versions</ShortDescription>
-		<LongDescription>class {0} 'overloads' a method with both instance and static versions</LongDescription>
+		<ShortDescription>Class 'overloads' a method with both instance and static versions</ShortDescription>
+		<LongDescription>Class {0} 'overloads' a method with both instance and static versions</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>This class 'overloads' the same method with both an instance and static version. As the use
@@ -2233,10 +2578,10 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="EXS_EXCEPTION_SOFTENING_NO_CONSTRAINTS">
-		<ShortDescription>unconstrained method converts checked exception to unchecked</ShortDescription>
-		<LongDescription>unconstrained method {1} converts checked exception to unchecked</LongDescription>
+		<ShortDescription>Unconstrained method converts checked exception to unchecked</ShortDescription>
+		<LongDescription>Unconstrained method {1} converts checked exception to unchecked</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>This method is not constrained by an interface or superclass, but converts a caught checked exception
@@ -2245,10 +2590,10 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="EXS_EXCEPTION_SOFTENING_HAS_CHECKED">
-		<ShortDescription>constrained method converts checked exception to unchecked instead of another allowable checked exception</ShortDescription>
-		<LongDescription>constrained method {1} converts checked exception to unchecked instead of another allowable checked exception</LongDescription>
+		<ShortDescription>Constrained method converts checked exception to unchecked instead of another allowable checked exception</ShortDescription>
+		<LongDescription>Constrained method {1} converts checked exception to unchecked instead of another allowable checked exception</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>This method's exception signature is constrained by an interface of super class to not throw a 
@@ -2258,10 +2603,10 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="EXS_EXCEPTION_SOFTENING_NO_CHECKED">
-		<ShortDescription>constrained method converts checked exception to unchecked</ShortDescription>
-		<LongDescription>constrained method {1} converts checked exception to unchecked</LongDescription>
+		<ShortDescription>Constrained method converts checked exception to unchecked</ShortDescription>
+		<LongDescription>Constrained method {1} converts checked exception to unchecked</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>This method's exception signature is constrained by an interface or super class to not throw
@@ -2271,10 +2616,10 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="CFS_CONFUSING_FUNCTION_SEMANTICS">
-		<ShortDescription>method returns modified parameter</ShortDescription>
-		<LongDescription>method {1} returns modified parameter</LongDescription>
+		<ShortDescription>Method returns modified parameter</ShortDescription>
+		<LongDescription>Method {1} returns modified parameter</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>This method appears to modify a parameter, and then return this parameter as the 
@@ -2286,10 +2631,10 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="JAO_JUNIT_ASSERTION_ODDITIES_ACTUAL_CONSTANT">
-		<ShortDescription>method passes constant to second (actual) assertion parameter</ShortDescription>
-		<LongDescription>method {1} passes constant to second (actual) assertion parameter</LongDescription>
+		<ShortDescription>Method passes constant to second (actual) assertion parameter</ShortDescription>
+		<LongDescription>Method {1} passes constant to second (actual) assertion parameter</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>This method calls assert passing a constant value as the second of the two values. The assert
@@ -2298,10 +2643,10 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="JAO_JUNIT_ASSERTION_ODDITIES_INEXACT_DOUBLE">
-		<ShortDescription>method asserts that two doubles are exactly equal</ShortDescription>
-		<LongDescription>method {1} asserts that two doubles are exactly equal</LongDescription>
+		<ShortDescription>Method asserts that two doubles are exactly equal</ShortDescription>
+		<LongDescription>Method {1} asserts that two doubles are exactly equal</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>This method calls assert with two doubles or Doubles. Due to the inprecision of doubles, you
@@ -2309,10 +2654,10 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="JAO_JUNIT_ASSERTION_ODDITIES_BOOLEAN_ASSERT">
-		<ShortDescription>method asserts that a value is true or false</ShortDescription>
-		<LongDescription>method {1} asserts that a value is true or false</LongDescription>
+		<ShortDescription>Method asserts that a value is true or false</ShortDescription>
+		<LongDescription>Method {1} asserts that a value is true or false</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>This method asserts that a value is equal to true or false. It is simpler to just 
@@ -2320,10 +2665,10 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
-	<BugPattern type="JAO_JUNIT_ASSERTION_ODITIES_IMPOSSIBLE_NULL">
-		<ShortDescription>method asserts that an auto-boxed value is not null</ShortDescription>
-		<LongDescription>method {1} asserts that an auto-boxed value is not null</LongDescription>
+
+	<BugPattern type="JAO_JUNIT_ASSERTION_ODDITIES_IMPOSSIBLE_NULL">
+		<ShortDescription>Method asserts that an auto-boxed value is not null</ShortDescription>
+		<LongDescription>Method {1} asserts that an auto-boxed value is not null</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>This method asserts that a primitive value that was autoboxed into a boxed primitive was not 
@@ -2332,10 +2677,10 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="SCA_SUSPICIOUS_CLONE_ALGORITHM">
-		<ShortDescription>clone method stores a new value to member field of source object</ShortDescription>
-		<LongDescription>clone method {1} stores a new value to member field of source object</LongDescription>
+		<ShortDescription>Clone method stores a new value to member field of source object</ShortDescription>
+		<LongDescription>Clone method {1} stores a new value to member field of source object</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>The clone method stores a value to a member field of the source object. Normally, all 
@@ -2343,10 +2688,10 @@
 			a read-only operation, this seems incorrect.</p>]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="WEM_WEAK_EXCEPTION_MESSAGING">
-		<ShortDescription>method throws exception with static message string</ShortDescription>
-		<LongDescription>method {1} throws exception with static message string</LongDescription>
+		<ShortDescription>Method throws exception with static message string</ShortDescription>
+		<LongDescription>Method {1} throws exception with static message string</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>This method creates and throws an exception using a static string as the exceptions message.
@@ -2356,10 +2701,10 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="SCSS_SUSPICIOUS_CLUSTERED_SESSION_SUPPORT">
-		<ShortDescription>method modifies http session attribute without calling setAttribute</ShortDescription>
-		<LongDescription>method {1} modifies http session attribute without calling setAttribute</LongDescription>
+		<ShortDescription>Method modifies http session attribute without calling setAttribute</ShortDescription>
+		<LongDescription>Method {1} modifies http session attribute without calling setAttribute</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>This method fetches a complex object from an HttpSession object, modifies this object, but does
@@ -2369,10 +2714,10 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="LO_SUSPECT_LOG_CLASS">
-		<ShortDescription>method specifies an unrelated class when allocating a Logger</ShortDescription>
-		<LongDescription>method {1} specifies an unrelated class when allocating a Logger</LongDescription>
+		<ShortDescription>Method specifies an unrelated class when allocating a Logger</ShortDescription>
+		<LongDescription>Method {1} specifies an unrelated class when allocating a Logger</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>This method creates a Logger by passing in a specification for a class that is unrelated
@@ -2380,10 +2725,37 @@
 			]]>
 		</Details>
 	</BugPattern>
+
+	<BugPattern type="LO_SUSPECT_LOG_PARAMETER">
+		<ShortDescription>Constructor declares a Logger parameter</ShortDescription>
+		<LongDescription>Constructor {1} declares a Logger parameter</LongDescription>
+		<Details>
+			<![CDATA[
+			<p>This constructor declares a parameter that is a Logger. As loggers are meant to be
+			created statically per class, it doesn't make sense that you would pass a Logger from one
+			class to another. Declare the Logger static in each class instead.</p>
+			]]>
+		</Details>
+	</BugPattern>
 	
+	<BugPattern type="LO_STUTTERED_MESSAGE">
+		<ShortDescription>Method stutters exception message in logger</ShortDescription>
+		<LongDescription>Method {1} stutters exception message in logger</LongDescription>
+		<Details>
+			<![CDATA[
+				This method uses a logger method that takes an exception, and passes the result of
+				the getMessage() method on the exception that occurred as the log message.
+				Since you are already passing in the exception, that message is already present in the
+				logs, and by passing it in as the message, you are just stuttering information.
+				It would be more helpful to provide a hand written message that describes the error in
+				this method, possibly including the values of key variables.
+			]]>
+		</Details>
+	</BugPattern>
+
 	<BugPattern type="IICU_INCORRECT_INTERNAL_CLASS_USE">
-		<ShortDescription>class relies on internal api classes</ShortDescription>
-		<LongDescription>class {0} relies on internal api classes</LongDescription>
+		<ShortDescription>Class relies on internal api classes</ShortDescription>
+		<LongDescription>Class {0} relies on internal api classes</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>This class makes use of internal api classes. As these
@@ -2398,18 +2770,18 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="DSOC_DUBIOUS_SET_OF_COLLECTIONS">
-		<ShortDescription>method uses a set of collections</ShortDescription>
-		<LongDescription>method {1} uses a set of collections</LongDescription>
+		<ShortDescription>Method uses a set of collections</ShortDescription>
+		<LongDescription>Method {1} uses a set of collections</LongDescription>
 		<Details>
 			<![CDATA[
-			<p>This method creates a set that contains other collections, or a Map who's keySet is
+			<p>This method creates a set that contains other collections, or a Map whose keySet is
 			another collection. As collections tend to calculate hashCode, equals and compareTo by 
 			iterating the contents of the collection, this can perform poorly.</p>
-			<p>In addition, when a set is used, you typically are using it to do contains, or find
-			type functionality, which seems dubious when do so on a collection</p>
-			<p>Finally, As a collection is often modified, problems will occur if the collection is 
+			<p>In addition, when a set is used, you typically are using it to do 'contains', or 'find'
+			type functionality, which seems dubious when done on a collection</p>
+			<p>Finally, as a collection is often modified, problems will occur if the collection is 
 			contained in a set, because the hashCode, equals or compareTo values will change while the
 			collection is in the set</p>
 			<p>If you wish to maintain a collection of collections, it is probably better to use a List
@@ -2417,22 +2789,522 @@
 			]]>
 		</Details>
 	</BugPattern>
-	
+
 	<BugPattern type="BED_BOGUS_EXCEPTION_DECLARATION">
-		<ShortDescription>non derivable method declares throwing an exception that isn't thrown</ShortDescription>
-		<LongDescription>non derivable method {1} declares throwing an exception that isn't thrown</LongDescription>
+		<ShortDescription>Non derivable method declares throwing an exception that isn't thrown</ShortDescription>
+		<LongDescription>Non derivable method {1} declares throwing an exception that isn't thrown</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>This method declares that it throws a checked exception that it does not throw. As this method is
 			either a constructor, static method or private method, there is no reason for this method to declare
-			the exception in it's throws clause, and just causes calling methods to unnecessarily handle an exception
+			the exception in its throws clause, and just causes calling methods to unnecessarily handle an exception
 			that will never be thrown. The exception in question should be removed from the throws clause.</p>
 			]]>
 		</Details>
 	</BugPattern>
+
+	<BugPattern type="UNNC_UNNECESSARY_NEW_NULL_CHECK">
+		<ShortDescription>Method checks the result of a new allocation</ShortDescription>
+		<LongDescription>Method {1} checks the result of a new allocation</LongDescription>
+		<Details>
+			<![CDATA[
+			<p>This method allocations an object with new, and then checks that the object is null
+			or non null. As the new operator is guaranteed to either succeed or throw an exception,
+			this null check is unnecessary and can be removed.
+			]]>
+		</Details>
+	</BugPattern>
+
+	<BugPattern type="DTEP_DEPRECATED_TYPESAFE_ENUM_PATTERN">
+		<ShortDescription>Class appears to implement the old style type safe enum pattern</ShortDescription>
+		<LongDescription>Class {0} appears to implement the old style type safe enum pattern</LongDescription>
+		<Details>
+			<![CDATA[
+			<p>This class appears to implement the old style type safe enum pattern that was used in place of
+			real enums. Since this class is compiled with java 1.5 or better, it would be simpler and more 
+			easy to understand if it was just switched over to an enum.</p>
+			]]>
+		</Details>
+	</BugPattern>
+
+	<BugPattern type="SMA_STUTTERED_METHOD_ARGUMENTS">
+		<ShortDescription>Code calls a method passing the same value to two different arguments</ShortDescription>
+		<LongDescription>Code {1} calls a method passing the same value to two different arguments</LongDescription>
+		<Details>
+			<![CDATA[
+			<p>This method calls a method passing the same value for two or more of the parameters.
+			Often this is a cut/paste bug, but if not, it is confusing why you would pass the same value for two
+			different parameters. Perhaps an alternative method that just takes one parameter should be overridden
+			in this case.</p>
+			]]>
+		</Details>
+	</BugPattern>
+
+	<BugPattern type="TBP_TRISTATE_BOOLEAN_PATTERN">
+		<ShortDescription>Method returns null for Boolean type</ShortDescription>
+		<LongDescription>Method {1} returns null for Boolean type</LongDescription>
+		<Details>
+			<![CDATA[
+			<p>This method declares that it returns a Boolean value. However the code
+			can return a null value. As this is now three values that can be returned;
+			Boolean.TRUE, Boolean.FALSE, null; you have changed what a Boolean means.
+			It would be clearer to just create a new Enum that has the three values
+			you want, and define that the method returns that type.</p>
+			]]>
+		</Details>
+	</BugPattern>
+
+	<BugPattern type="SUA_SUSPICIOUS_UNINITIALIZED_ARRAY">
+		<ShortDescription>Method returns an array that appears not to be initialized</ShortDescription>
+		<LongDescription>Method {1} returns an array that appears not to be initialized</LongDescription>
+		<Details>
+			<![CDATA[
+			<p>This method returns an array that was allocated but apparently not initialized. It is
+			possible that the caller of this method will do the work of initializing this array, but
+			that is not a common pattern, and it is assumed that this array has just been forgotten to 
+			be initialized.</p>
+			]]>
+		</Details>
+	</BugPattern>
+
+	<BugPattern type="ITU_INAPPROPRIATE_TOSTRING_USE">
+		<ShortDescription>Method performs algorithmic operations on the result of a toString() call</ShortDescription>
+		<LongDescription>Method {1} performs algorithmic operations on the result of a toString() call</LongDescription>
+		<Details>
+			<![CDATA[
+			<p>This method calls algorithmic operations on a String that was returned from a toString() method.
+			As these methods are for debugging/logging purposes, it shouldn't be the basis of core logic in your code.
+			]]>
+		</Details>
+	</BugPattern>
+
+	<BugPattern type="IKNC_INCONSISTENT_HTTP_ATTRIBUTE_CASING">
+		<ShortDescription>Method uses the same HttpSession attribute name but with different casing</ShortDescription>
+		<LongDescription>Method {1} uses the same HttpSession attribute name but with different casing</LongDescription>
+		<Details>
+			<![CDATA[
+			<p>This method sets or gets an HttpSession attribute with a parmeter name that was used in other locations
+			but with a different casing. As HttpSession attribute are case sensitive, this will be very confusing.
+			]]>
+		</Details>
+	</BugPattern>
+
+	<BugPattern type="IKNC_INCONSISTENT_HTTP_PARAM_CASING">
+		<ShortDescription>Method uses the same HttpRequest parameter name but with different casing</ShortDescription>
+		<LongDescription>Method {1} uses the same HttpRequest parameter name but with different casing</LongDescription>
+		<Details>
+			<![CDATA[
+			<p>This method fetches an HttpServletRequest parameter with a parameter name that was used in other locations
+			but with a different casing. As HttpServletRequest parameters are case sensitive, this will be very confusing.
+			]]>
+		</Details>
+	</BugPattern>
+
+	<BugPattern type="OC_OVERZEALOUS_CASTING">
+		<ShortDescription>Method manually casts the right hand side of an assignment more specifically than needed</ShortDescription>
+		<LongDescription>Method {1} manually casts the right hand side of an assignment more specifically than needed</LongDescription>
+		<Details>
+			<![CDATA[
+			<p>This method casts the right hand side of an expression to a class that is more specific than the 
+			variable on the left hand side of the assignment. The cast only has to be as specific as what the variable
+			that is on the left. Using a more specific type on the right hand side just increases cohesion.
+			]]>
+		</Details>
+	</BugPattern>
+
+	<BugPattern type="PDP_POORLY_DEFINED_PARAMETER">
+		<ShortDescription>Method defines parameters more abstractly than needed to function properly</ShortDescription>
+		<LongDescription>Method {1} defines parameters more abstractly than needed to function properly</LongDescription>
+		<Details>
+			<![CDATA[
+			<p>This method defines parameters at a more abstract level than is actually needed to function correctly,
+			as the code casts these parameters to more concrete types. Since this method is not derivable, you should 
+			just define the parameters with the type that is needed.
+			]]>
+		</Details>
+	</BugPattern>
+
+	<BugPattern type="NSE_NON_SYMMETRIC_EQUALS">
+		<ShortDescription>Equals method compares this object against other types in a non symmetric way</ShortDescription>
+		<LongDescription>Equals method {1} compares this object against other types in a non symmetric way</LongDescription>
+		<Details>
+			<![CDATA[
+			<p>This class implements an equals method that compares this object against another type of object.
+			This is almost always a bad thing to do, but if it is to be done, you must make sure that the basic
+			symmetry rule of equivalence is maintained, that being if a equals b, then b equals a. It does not
+			appear that the class that is being compared to this class knows about this class, and doesn't compare itself
+			to this.</p>
+			]]>
+		</Details>
+	</BugPattern>
+
+	<BugPattern type="CVAA_CONTRAVARIANT_ARRAY_ASSIGNMENT">
+		<ShortDescription>Method performs a contravariant array assignment</ShortDescription>
+		<LongDescription>Method {1} performs a contravariant array assignment</LongDescription>
+		<Details>
+			<![CDATA[
+			<p>This method contains a contravariant array assignment. Since arrays are mutable data structures, their use 
+			must be restricted to covariant or invariant usage</p>
+			
+			<pre>
+			class A {}
+			class B extends A {}
+			
+			 B[] b = new B[2];
+			 A[] a = b;
+			</pre>         
+			]]>
+		</Details>
+	</BugPattern>
+
+	<BugPattern type="CVAA_CONTRAVARIANT_ELEMENT_ASSIGNMENT">
+		<ShortDescription>Method performs a contravariant array element assignment</ShortDescription>
+		<LongDescription>Method {1} performs a contravariant array element assignment</LongDescription>
+		<Details>
+			<![CDATA[
+			<p>This method contains a contravariant array element assignment. Since arrays are mutable 
+			data structures, their use must be restricted to covariant or invariant usage</p>
+			
+			<pre>
+			class A {}
+			class B extends A {}
+			
+			 B[] b = new B[2];
+			 A[] a = b;
+			 a[0] = new A(); // results in ArrayStoreException (Runtime)
+			</pre>         
+			]]>
+		</Details>
+	</BugPattern>
+
+	<BugPattern type="NFF_NON_FUNCTIONAL_FIELD">
+		<ShortDescription>Serializable class defines a final transient field</ShortDescription>
+		<LongDescription>Serializable class {0} defines a final transient field</LongDescription>
+		<Details>
+			<![CDATA[
+			<p>This serializable class defines a field as both transient and final. As transient fields
+			are not serialized across the stream, it is required that some piece of code reinitialize that field
+			when it is deserialized. But since constructors aren't called when deserialization, the field is not initialized. 
+			And since the field is final, no other method can initialize it as well.</p>
+			]]>
+		</Details>
+	</BugPattern>
+
+	<BugPattern type="SNG_SUSPICIOUS_NULL_FIELD_GUARD">
+		<ShortDescription>Method tests a field for not null as guard and reassigns it</ShortDescription>
+		<LongDescription>Method {1} tests a field for not null as guard and reassigns it</LongDescription>
+		<Details>
+    			<![CDATA[
+    			<p>This method tests a field to make sure it's not null before executing a conditional block of
+    			code. However in the conditional block is reassigns the field. It is likely that the guard
+    			should have been a check to see if the field is null, not that the field was not null.</p>
+    			]]>
+    		</Details>
+	</BugPattern>
+
+	<BugPattern type="SNG_SUSPICIOUS_NULL_LOCAL_GUARD">
+		<ShortDescription>Method tests a local variable for not null as guard and reassigns it</ShortDescription>
+		<LongDescription>Method {1} tests a local variable for not null as guard and reassigns it</LongDescription>
+		<Details>
+    			<![CDATA[
+    			<p>This method tests a local variable to make sure it's not null before executing a conditional block of
+    			code. However in the conditional block is reassigns the local variable. It is likely that the guard
+    			should have been a check to see if the local variable is null, not that the local variable was not null.</p>
+    			]]>
+    		</Details>
+	</BugPattern>
+
+	<BugPattern type="MDM_RUNTIME_EXIT_OR_HALT">
+		<ShortDescription>Method calls Runtime.exit() or Runtime.halt()</ShortDescription>
+		<LongDescription>Method {1} calls {2}</LongDescription>
+		<Details>
+		  <![CDATA[
+		  <p>Calling <code>Runtime.exit()</code> or <code>Runtime.halt()</code> shuts down the entire Java virtual machine. This should only been done when it is appropriate. Such calls make it hard or impossible for your code to be invoked by other code. Consider throwing a RuntimeException instead.</p>
+		  ]]>
+		</Details>
+	</BugPattern>
+
+	<BugPattern type="MDM_RUNFINALIZATION">
+		<ShortDescription>Method triggers finalization</ShortDescription>
+		<LongDescription>Method {1} triggers finalization when calling {2}</LongDescription>
+		<Details>
+		<![CDATA[
+		<p>Manually triggering finalization can result in serious performance problems and may be masking resource cleanup bugs.</p>
+		]]>
+		</Details>
+	</BugPattern>
+
+	<BugPattern type="MDM_BIGDECIMAL_EQUALS">
+		<ShortDescription>Method calls BigDecimal.equals()</ShortDescription>
+		<LongDescription>Method {1} calls BigDecimal.equals(), which is normally a mistake</LongDescription>
+		<Details>
+		<![CDATA[
+		<p><code>equals()</code> being called to compare two <code>java.math.BigDecimal</code> numbers. This is normally a mistake, as two <code>BigDecimal</code> objects are only equal if they are equal in both value and scale, so that <i>2.0</i> is not equal to <i>2.00</i>. To compare <code>BigDecimal</code> objects for mathematical equality, use <code>compareTo()</code> instead.</p>
+		]]>
+		</Details>
+	</BugPattern>
+
+	<BugPattern type="MDM_INETADDRESS_GETLOCALHOST">
+		<ShortDescription>Method calls InetAddress.getLocalHost()</ShortDescription>
+		<LongDescription>Method {1} calls InetAddress.getLocalHost(), which may be a security risk</LongDescription>
+		<Details>
+		  <![CDATA[
+		  <p>Do not call <code>InetAddress.getLocalHost()</code> on multihomed servers. On a multihomed server, <code>InetAddress.getLocalHost()</code> simply returns the IP address associated with the server's internal hostname. This could any of the network interfaces, which could expose the machine to security risks. Server applications that need to listen on sockets should add configurable properties to define which network interfaces the server should bind.</p>
+		  ]]>
+		</Details>
+	</BugPattern>
+
+	<BugPattern type="MDM_PROMISCUOUS_SERVERSOCKET">
+		<ShortDescription>Method creates promiscuous ServerSocket object</ShortDescription>
+		<LongDescription>Method {1} creates a promiscuous ServerSocket, which may be a security risk</LongDescription>
+		<Details>
+		  <![CDATA[
+		  <p>Do not use the <code>ServerSocket</code> constructor or <code>ServerSocketFactory.createServerSocket()</code> factory methods that accepts connections on any network interface. By default, an application that listens on a socket will listen for connection attempts on any network interface, which can be a security risk. Only the long form the <code>ServerSocket</code> constructor or <code>ServerSocketFactory.createServerSocket()</code> factory methods take a specific local address to define which network interface the socket should bind.</p>
+		  ]]>
+		</Details>
+	</BugPattern>
+
+	<BugPattern type="MDM_RANDOM_SEED">
+		<ShortDescription>Method creates insecure Random object</ShortDescription>
+		<LongDescription>Method {1} creates an insecure Random object, which may be a security risk</LongDescription>
+		<Details>
+		  <![CDATA[
+		  <p><code>Random()</code> constructor without a seed is insecure because it defaults to easily guessable seed: <code>System.currentTimeMillis()</code>. Initialize seed with <code>Random(SecureRandom.getInstance().generateSeed())</code> or use <code>SecureRandom</code> instead.</p>
+		  ]]>
+		</Details>
+	</BugPattern>
+
+	<BugPattern type="MDM_SECURERANDOM">
+		<ShortDescription>Method calls deprecated SecureRandom method</ShortDescription>
+		<LongDescription>Method {1} calls deprecated SecureRandom method {2}</LongDescription>
+		<Details>
+		  <![CDATA[
+		  <p>The <code>SecureRandom()</code> constructors and <code>SecureRandom.getSeed()</code> method are deprecated. Call <code>SecureRandom.getInstance()</code> and <code>SecureRandom.getInstance().generateSeed()</code> instead.</p>
+		  ]]>
+		</Details>
+	</BugPattern>
+
+	<BugPattern type="MDM_THREAD_PRIORITIES">
+		<ShortDescription>Method uses suspicious thread priorities</ShortDescription>
+		<LongDescription>Method {1} uses suspicious thread priorities by calling method {2}</LongDescription>
+		<Details>
+		  <![CDATA[
+		  <p>Getting or setting thread priorities is not portable and could cause or mask race conditions.</p>
+		  ]]>
+		</Details>
+	</BugPattern>
+
+	<BugPattern type="MDM_THREAD_YIELD">
+		<ShortDescription>Method attempts to manually schedule threads</ShortDescription>
+		<LongDescription>Method {1} attempts to manually schedule threads by calling method {2}</LongDescription>
+		<Details>
+		  <![CDATA[
+		  <p>Manual thread scheduling with <code>Thread.sleep()</code> or <code>Thread.yield()</code> has no guaranteed semantics and is often used to mask race conditions.</p>
+		  ]]>
+		</Details>
+	</BugPattern>
+
+	<BugPattern type="MDM_WAIT_WITHOUT_TIMEOUT">
+		<ShortDescription>Method sleeps without timeout</ShortDescription>
+		<LongDescription>Method {1} sleeps without timeout when calling {2}</LongDescription>
+		<Details>
+		  <![CDATA[
+		  <p>Calling <code>{2}</code> without timeout could block forever. Consider using a timeout to detect deadlocks or performance problems. Thread.join() Object.wait() Condition.await() Lock.lock() Lock.lockInterruptibly()</p>
+		  ]]>
+		</Details>
+	</BugPattern>
+
+	<BugPattern type="MDM_THREAD_FAIRNESS">
+		<ShortDescription>Method ignores Lock's fairness settings by calling tryLock()</ShortDescription>
+		<LongDescription>Method {1} ignores Lock's fairness settings by calling {2}</LongDescription>
+		<Details>
+		  <![CDATA[
+		  <p>Calling <code>Lock.tryLock()</code> or <code>ReentrantLock.tryLock()</code> without a timeout does not honor the lock's fairness setting. If you want to honor the fairness setting for this lock, then use <code>tryLock(0, TimeUnit.SECONDS)</code> which is almost equivalent (it also detects interruption).</p>
+		  ]]>
+		</Details>
+	</BugPattern>
+
+	<BugPattern type="MDM_SIGNAL_NOT_SIGNALALL">
+		<ShortDescription>Method calls Condition.signal() rather than Condition.signalAll()</ShortDescription>
+		<LongDescription>Method {1} calls Condition.signal() rather than Condition.signalAll()</LongDescription>
+		<Details>
+		  <![CDATA[
+		  <p><code>Condition.signalAll()</code> is prefered over <code>Condition.signal()</code>. Calling <code>signal()</code> only wakes up one thread, meaning that the thread woken up might not be the one waiting for the condition that the caller just satisfied.</p>
+		  ]]>
+		</Details>
+	</BugPattern>
+
+	<BugPattern type="MDM_LOCK_ISLOCKED">
+		<ShortDescription>Method tests if a lock is locked</ShortDescription>
+		<LongDescription>Method {1} tests if a lock is locked by calling {2}</LongDescription>
+		<Details>
+		  <![CDATA[
+		  <p>Calling <code>ReentrantLock.isLocked()</code> or <code>ReentrantLock.isHeldByCurrentThread()</code> might indicate race conditions or incorrect locking. These methods are designed for use in debug code or monitoring of the system state, not for synchronization control.</p>
+		  ]]>
+		</Details>
+	</BugPattern>
+
+	<BugPattern type="MDM_STRING_BYTES_ENCODING">
+		<ShortDescription>Method encodes String bytes without specifying the character encoding</ShortDescription>
+		<LongDescription>Method {1} encodes String bytes without specifying the character encoding</LongDescription>
+		<Details>
+		  <![CDATA[
+		  <p>The behavior of the <code>String(byte[] bytes)</code> and <code>String.getBytes()</code> is undefined if the string cannot be encoded in the platform's default charset. Instead, use the <code>String(byte[] bytes, String encoding)</code> or <code>String.getBytes(String encoding)></code> constructor which accepts the string's encoding as an argument. Be sure to specify the encoding used for the user's locale.</p>
+		  ]]>
+		</Details>
+	</BugPattern>
+
+	<BugPattern type="MDM_SETDEFAULTLOCALE">
+		<ShortDescription>Method calls Locale.setDefault()</ShortDescription>
+		<LongDescription>Method {1} calls Locale.setDefault(), changing locale for all threads</LongDescription>
+		<Details>
+		  <![CDATA[
+		  <p>Do not use the <code>Locale.setDefault()</code> method to change the default locale. It changes the JVM's default locale for all threads and makes your applications unsafe to threads. It does not affect the host locale. Since changing the JVM's default locale may affect many different areas of functionality, this method should only be used if the caller is prepared to reinitialize locale-sensitive code running within the same Java Virtual Machine, such as the user interface.</p>
+		  ]]>
+		</Details>
+	</BugPattern>
+
+	<BugPattern type="ROOM_REFLECTION_ON_OBJECT_METHODS">
+		<ShortDescription>Method uses reflection to call a method available on java.lang.Object</ShortDescription>
+		<LongDescription>Method {1} uses reflection to call a method available on java.lang.Object</LongDescription>
+		<Details>
+			<![CDATA[
+				<p>This method uses reflection to call a method that is defined in java.lang.Object.
+				As these methods are always available, it is not necessary to call these methods with
+				reflection.
+			]]>
+		</Details>
+	</BugPattern>
+
+	<BugPattern type="IPU_IMPROPER_PROPERTIES_USE">
+		<ShortDescription>Method puts non-String values into a Properties object</ShortDescription>
+		<LongDescription>Method {1} puts non-String values into a Properties object</LongDescription>
+		<Details>
+			<![CDATA[
+				<p>This method places non-String objects into a Properties object. As the Properties object
+				is intented to be a String to String map, putting non String objects is wrong, and takes advantage
+				of a design flaw in the Properties class by deriving from Hashtable instead of using aggregation.
+				If you want a collection that holds other types of objects, use a Hashtable, or better still newer collections
+				like HashMap or TreeMap.
+			]]>
+		</Details>
+	</BugPattern>
+
+	<BugPattern type="IPU_IMPROPER_PROPERTIES_USE_SETPROPERTY">
+		<ShortDescription>Method uses Properties.put instead of Properties.setProperty</ShortDescription>
+		<LongDescription>Method {1} uses Properties.put instead of Properties.setProperty</LongDescription>
+		<Details>
+			<![CDATA[
+				<p>This method uses the inherited method from Hashtable put(String key, Object value) in
+				a Properties object. Since the Properties object was intended to be only a String to String
+				map, use of the derived put method is discouraged. Use the Properties.setProperty method instead.
+			]]>
+		</Details>
+	</BugPattern>
+
+	<BugPattern type="PCAIL_POSSIBLE_CONSTANT_ALLOCATION_IN_LOOP">
+		<ShortDescription>Method allocates an object that is used in a constant way in a loop</ShortDescription>
+		<LongDescription>Method {1} allocates an object that is used in a constant way in a loop</LongDescription>
+		<Details>
+			<![CDATA[
+				<p>This method allocates an object using the default constructor in a loop, and then
+				only uses it in a quasi-static way. It is never assigned to anything that lives outside
+				the loop, and could potentially be allocated once outside the loop. Often this can be 
+				achieved by calling a clear() like method in the loop, to reset the state of the object
+				in the loop.
+			]]>
+		</Details>
+	</BugPattern>
+
+	<BugPattern type="WOC_WRITE_ONLY_COLLECTION_LOCAL">
+		<ShortDescription>Method creates and initializes a collection but never reads or gains information from it</ShortDescription>
+		<LongDescription>Method {1} creates and initializes a collection but never reads or gains information from it</LongDescription>
+		<Details>
+			<![CDATA[
+				<p>This method creates and initializes a collection but then never access this collection
+				to gain information, or fetch items from the collection. It is likely that this collection
+				is left over from a past effort, and can be removed.
+			]]>
+		</Details>
+	</BugPattern>
+
+	<BugPattern type="WOC_WRITE_ONLY_COLLECTION_FIELD">
+		<ShortDescription>Class creates and initializes a collection but never reads or gains information from it</ShortDescription>
+		<LongDescription>Class {0} creates and initializes a collection but never reads or gains information from it</LongDescription>
+		<Details>
+			<![CDATA[
+				<p>This class creates and initializes a collection as a field but then never access this collection
+				to gain information, or fetch items from the collection. It is likely that this collection
+				is left over from a past effort, and can be removed.
+			]]>
+		</Details>
+	</BugPattern>
+
+	<BugPattern type="UVA_USE_VAR_ARGS">
+		<ShortDescription>Method defines parameter list with array as last argument, rather than vararg</ShortDescription>
+		<LongDescription>Method {1} defines parameter list with array as last argument, rather than vararg</LongDescription>
+		<Details>
+			<![CDATA[
+				<p>This method defines a parameter list that ends with an array. As this class is compiled with
+				Java 1.5 or better, this parameter could be defined as a vararg parameter instead, which can be
+				more convienent for client developers to use. This is not a bug, per se, just an improvement.
+			]]>
+		</Details>
+	</BugPattern>
+
+	<BugPattern type="PUS_POSSIBLE_UNSUSPECTED_SERIALIZATION">
+		<ShortDescription>Method serializes an instance of a non-static inner class</ShortDescription>
+		<LongDescription>Method {1} serializes an instance of a non-static inner class</LongDescription>
+		<Details>
+			<![CDATA[
+				<p>This method serializes an instance of a non-static inner class. Since this class has a
+				reference to the containing class, this outer class will be serialized as well. This is often
+				not intentional, and will make the amount of data that is serialized much more than is needed.
+				If the outer classes is not desired to be serialized, either make the inner class, static, or 
+				pull it out into a separate "first class" class.
+			]]>
+		</Details>
+	</BugPattern>
 	
+	<BugPattern type="SEC_SIDE_EFFECT_CONSTRUCTOR">
+		<ShortDescription>Method uses a Side Effect Constructor</ShortDescription>
+		<LongDescription>Method {1} uses a Side Effect Constructor</LongDescription>
+		<Details>
+			<![CDATA[
+				<p>This method creates an object but does not assign this object to any variable or field.
+				This implies that the class operates through side effects in the constructor, which is a 
+				bad pattern to use, as it adds unnecessary coupling. Consider pulling the side effect out of 
+				the constructor, into a separate method, or into the calling method.
+			]]>
+		</Details>
+	</BugPattern>
+	
+	<BugPattern type="SGSU_SUSPICIOUS_GETTER_SETTER_USE">
+		<ShortDescription>Method uses same bean's getter value for setter</ShortDescription>
+		<LongDescription>Method {1} uses same bean's getter value for setter</LongDescription>
+		<Details>
+			<![CDATA[
+				<p>This method retrieves the property of a java bean, only to use it in the setter
+				for the same property of the same bean. This is usually a copy/paste typo.
+			]]>
+		</Details>
+	</BugPattern>
+	
+	<BugPattern type="LGO_LINGERING_GRAPHICS_OBJECT">
+		<ShortDescription>Method allocations a java.awt.Graphics object without disposing it</ShortDescription>
+		<LongDescription>Method {1} allocations a java.awt.Graphics object without disposing it</LongDescription>
+		<Details>
+			<![CDATA[
+				<p>This method allocates a java.awt.Graphics object but doesn't dispose of it when done. While
+				the garbage collecter will clean this up, given that a large number of Graphics objects can be
+				created in a short period of time, it is recommended that you explicitly dispose() of them.
+				</p>
+			]]>
+		</Details>
+	</BugPattern>
+
 	<!-- BugCode -->
-	
+
 	<BugCode abbrev="ISB">Inefficient String Buffering</BugCode>
 	<BugCode abbrev="SCI">Synchronized Collection Iterators</BugCode>
 	<BugCode abbrev="CC">Cyclomatic Complexity</BugCode>
@@ -2509,4 +3381,27 @@
 	<BugCode abbrev="IICU">Incorrect Internal Class use</BugCode>
 	<BugCode abbrev="DSOC">Dubious Set of Collections</BugCode>
 	<BugCode abbrev="BED">Bogus Exception Declaration</BugCode>
+	<BugCode abbrev="UNNC">Unnecessary New Null Check</BugCode>
+	<BugCode abbrev="DTEP">Deprecated Typesafe Enum Pattern</BugCode>
+	<BugCode abbrev="SMA">Stuttered Method Arguments</BugCode>
+	<BugCode abbrev="TBP">Tristate Boolean Pattern</BugCode>
+	<BugCode abbrev="SUA">Suspicious Uninitialized Array</BugCode>
+	<BugCode abbrev="ITU">Inappropriate ToString Use</BugCode>
+	<BugCode abbrev="IKNC">Inconsistent Key Name Casing</BugCode>
+	<BugCode abbrev="OC">Overzealous Casting</BugCode>
+	<BugCode abbrev="PDP">Poorly Defined Parameter</BugCode>
+	<BugCode abbrev="NSE">Non Symmetric Equals</BugCode>
+	<BugCode abbrev="CVAA">Contravariant Array Assignment</BugCode>
+	<BugCode abbrev="NFF">Non Functional Field</BugCode>
+	<BugCode abbrev="SNG">Suspicious Null Guard</BugCode>
+	<BugCode abbrev="MDM">More Dumb Methods</BugCode>
+	<BugCode abbrev="ROOM">Reflection on Object Methods</BugCode>
+	<BugCode abbrev="IPU">Improper Properties use</BugCode>
+	<BugCode abbrev="PCAIL">Possible Constant Allocation In Loop</BugCode>
+	<BugCode abbrev="WOC">Write Only Collection</BugCode>
+	<BugCode abbrev="UVA">Use Var Args</BugCode>
+	<BugCode abbrev="PUS">Possible Unsuspected Serialization</BugCode>
+	<BugCode abbrev="SEC">Side Effect Constructor</BugCode>
+	<BugCode abbrev="SGSU">Suspicious Getter Setter Use</BugCode>
+	<BugCode abbrev="LGO">Lingering Graphics Object</BugCode>
 </MessageCollection>
