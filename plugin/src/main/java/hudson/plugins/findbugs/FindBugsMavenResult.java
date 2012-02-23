@@ -31,6 +31,7 @@ public class FindBugsMavenResult extends FindBugsResult {
     }
 
     /** {@inheritDoc} */
+    @SuppressWarnings("deprecation")
     @Override
     protected Class<? extends ResultAction<? extends BuildResult>> getResultActionType() {
         return MavenFindBugsResultAction.class;
