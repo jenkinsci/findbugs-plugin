@@ -4,15 +4,10 @@ import hudson.XmlFile;
 import hudson.plugins.analysis.test.AbstractSerializeModelTest;
 import hudson.plugins.analysis.util.model.AbstractAnnotation;
 import hudson.plugins.analysis.util.model.AnnotationStream;
-import hudson.plugins.analysis.util.model.FileAnnotation;
 import hudson.plugins.analysis.util.model.JavaProject;
 import hudson.plugins.analysis.util.model.Priority;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.net.URISyntaxException;
 
 import junit.framework.Assert;
 
@@ -23,7 +18,9 @@ import com.thoughtworks.xstream.XStream;
 /**
  * Tests the serialization of the model.
  *
- * @see <a href="http://www.ibm.com/developerworks/library/j-serialtest.html">Testing object serialization</a>
+ * @see <a
+ *      href="http://www.ibm.com/developerworks/library/j-serialtest.html">Testing
+ *      object serialization</a>
  */
 public class BugSerializeModelTest extends AbstractSerializeModelTest {
     /** Serialization provider. */
@@ -74,37 +71,23 @@ public class BugSerializeModelTest extends AbstractSerializeModelTest {
     }
 
     /**
-     * Test whether a serialized project is the same object after deserialization of the file format of release 2.2.
-     *
-     * @throws ClassNotFoundException Signals a test failure
-     * @throws IOException Signals a test failure
+     * Test whether a serialized project is the same object after
+     * deserialization of the file format of release 2.2.
      */
     @Test
-    public void ensureSameSerialization() throws IOException, ClassNotFoundException {
-        InputStream inputStream = BugSerializeModelTest.class.getResourceAsStream("project.ser");
-        ObjectInputStream objectStream = new ObjectInputStream(inputStream);
-        Object deserialized = objectStream.readObject();
-        JavaProject project = (JavaProject) deserialized;
+    public void ensureSameSerialization() {
+        JavaProject project = deserialize("project.ser");
 
         verifyProject(project);
     }
 
     /**
-     * Test whether a serialized project is the same object after deserialization of the file format of release 2.2.
-     *
-     * @throws IOException Signals that an I/O exception has occurred.
-     * @throws URISyntaxException if URI is wrong
+     * Test whether a serialized project is the same object after
+     * deserialization of the file format of release 2.2.
      */
     @Test
-    public void ensureSameXmlSerialization() throws IOException, URISyntaxException {
-        XmlFile xmlFile = new XmlFile(XSTREAM, new File(BugSerializeModelTest.class.getResource("project.ser.xml").toURI()));
-        Object deserialized = xmlFile.read();
-
-        FileAnnotation[] files = (FileAnnotation[]) deserialized;
-        JavaProject project = new JavaProject();
-        project.addAnnotations(files);
-
-        verifyProject(project);
+    public void ensureSameXmlSerialization() {
+        ensureSerialization("project.ser.xml");
     }
 
     /** {@inheritDoc} */
