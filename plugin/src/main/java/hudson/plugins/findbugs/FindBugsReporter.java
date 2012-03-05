@@ -182,21 +182,25 @@ public class FindBugsReporter extends HealthAwareReporter<FindBugsResult> {
     /**
      * Determines the filename of the FindBugs results.
      *
-     * @param mojo the mojo containing the FindBugs configuration
+     * @param mojo
+     *            the mojo containing the FindBugs configuration
      * @return filename of the FindBugs results
      */
     private String determineFileName(final MojoInfo mojo) {
-        String fileName = FINDBUGS_XML_FILE;
         try {
+            if (FindBugsPlugin.isFindBugs2x(mojo.mojoExecution.getVersion())) {
+                return MAVEN_FINDBUGS_XML_FILE;
+            }
+
             Boolean isNativeFormat = mojo.getConfigurationValue("findbugsXmlOutput", Boolean.class);
             if (Boolean.FALSE.equals(isNativeFormat)) {
-                fileName = MAVEN_FINDBUGS_XML_FILE;
+                return MAVEN_FINDBUGS_XML_FILE;
             }
         }
         catch (ComponentConfigurationException exception) {
             // ignore and assume new format
         }
-        return fileName;
+        return FINDBUGS_XML_FILE;
     }
 
     @Override
