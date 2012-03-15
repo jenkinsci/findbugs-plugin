@@ -188,7 +188,7 @@ public class FindBugsReporter extends HealthAwareReporter<FindBugsResult> {
      */
     private String determineFileName(final MojoInfo mojo) {
         try {
-            if (FindBugsPlugin.isFindBugs2x(mojo.mojoExecution.getVersion())) {
+            if (FindBugsPlugin.isFindBugs2x(mojo.mojoExecution)) {
                 return FINDBUGS_XML_FILE;
             }
 

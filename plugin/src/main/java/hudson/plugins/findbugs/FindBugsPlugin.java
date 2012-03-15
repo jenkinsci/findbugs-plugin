@@ -6,6 +6,7 @@ import hudson.plugins.analysis.views.DetailFactory;
 import java.io.IOException;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.maven.plugin.MojoExecution;
 import org.xml.sax.SAXException;
 
 /**
@@ -27,20 +28,20 @@ public class FindBugsPlugin extends Plugin {
      * Returns whether the specified maven findbugs plug-in uses a FindBugs
      * release 2.0.0 or newer.
      *
-     * @param version
+     * @param mojoExecution
      *            the maven version ID
      * @return <code>true</code> if FindBugs 2.0.0 or newer is used
      */
-    public static boolean isFindBugs2x(final String version) {
+    public static boolean isFindBugs2x(final MojoExecution mojoExecution) {
         try {
-            String[] versions = StringUtils.split(version, ".");
+            String[] versions = StringUtils.split(mojoExecution.getVersion(), ".");
             if (versions.length > 1) {
                 int major = Integer.parseInt(versions[0]);
                 int minor = Integer.parseInt(versions[1]);
                 return major > 2 || (major == 2 && minor >= 4);
             }
         }
-        catch (NumberFormatException exception) {
+        catch (Throwable exception) { // NOCHECKSTYLE NOPMD
             // ignore and return false
         }
         return false;
