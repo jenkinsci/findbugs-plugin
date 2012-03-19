@@ -39,6 +39,9 @@ public class FindBugsPluginTest {
         return FindBugsPlugin.isFindBugs2x(execution);
     }
 
+    /**
+     * Verifies that exceptions during version detection are catched.
+     */
     @Test
     public void testNoSuchMethodError() {
         MojoExecution execution = mock(MojoExecution.class);
