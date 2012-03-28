@@ -194,13 +194,13 @@ public class FindBugsReporter extends HealthAwareReporter<FindBugsResult> {
 
             Boolean isNativeFormat = mojo.getConfigurationValue("findbugsXmlOutput", Boolean.class);
             if (Boolean.FALSE.equals(isNativeFormat)) {
-                return FINDBUGS_XML_FILE;
+                return MAVEN_FINDBUGS_XML_FILE;
             }
         }
         catch (ComponentConfigurationException exception) {
-            // ignore and assume new format
+            // return new format
         }
-        return MAVEN_FINDBUGS_XML_FILE;
+        return FINDBUGS_XML_FILE;
     }
 
     @Override
