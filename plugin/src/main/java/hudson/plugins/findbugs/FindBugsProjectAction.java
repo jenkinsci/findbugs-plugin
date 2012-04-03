@@ -37,18 +37,8 @@ public class FindBugsProjectAction extends AbstractProjectAction<ResultAction<Fi
      */
     public FindBugsProjectAction(final AbstractProject<?, ?> project,
             final Class<? extends ResultAction<FindBugsResult>> type) {
-        super(project, type, new FindBugsDescriptor());
-    }
-
-    /** {@inheritDoc} */
-    public String getDisplayName() {
-        return Messages.FindBugs_ProjectAction_Name();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String getTrendName() {
-        return Messages.FindBugs_Trend_Name();
+        super(project, type, Messages._FindBugs_ProjectAction_Name(), Messages._FindBugs_Trend_Name(),
+                FindBugsDescriptor.PLUGIN_ID, FindBugsDescriptor.ICON_URL, FindBugsDescriptor.RESULT_URL);
     }
 
     @Override

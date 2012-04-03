@@ -2,9 +2,9 @@ package hudson.plugins.findbugs;
 
 import hudson.model.AbstractBuild;
 import hudson.plugins.analysis.core.BuildHistory;
-import hudson.plugins.analysis.core.BuildResult;
 import hudson.plugins.analysis.core.ParserResult;
 import hudson.plugins.analysis.core.ResultAction;
+import hudson.plugins.analysis.core.BuildResult;
 import hudson.plugins.analysis.util.model.FileAnnotation;
 import hudson.plugins.findbugs.parser.Bug;
 
@@ -37,26 +37,18 @@ public class FindBugsResult extends BuildResult {
      */
     public FindBugsResult(final AbstractBuild<?, ?> build, final String defaultEncoding,
             final ParserResult result) {
-        super(build, defaultEncoding, result);
+        super(build, new BuildHistory(build, FindBugsResultAction.class), result, defaultEncoding);
         init();
     }
 
-    /**
-     * Creates a new instance of {@link FindBugsResult}.
-     *
-     * @param build
-     *            the current build as owner of this action
-     * @param defaultEncoding
-     *            the default encoding to be used when reading and parsing files
-     * @param result
-     *            the parsed result with all annotations
-     * @param history
-     *            the history of build results of the associated plug-in
-     */
-    public FindBugsResult(final AbstractBuild<?, ?> build, final String defaultEncoding,
-            final ParserResult result, final BuildHistory history) {
-        super(build, defaultEncoding, result, history);
+    FindBugsResult(final AbstractBuild<?, ?> build, final BuildHistory history,
+            final ParserResult result, final String defaultEncoding, final boolean canSerialize) {
+        super(build, history, result, defaultEncoding);
+
         init();
+        if (canSerialize) {
+            serializeAnnotations(result.getAnnotations());
+        }
     }
 
     private void init() {
@@ -85,17 +77,12 @@ public class FindBugsResult extends BuildResult {
         return numberOfComments;
     }
 
-    /** {@inheritDoc} */
     @Override
     protected void configure(final XStream xstream) {
         xstream.alias("bug", Bug.class);
     }
 
-    /**
-     * Returns a summary message for the summary.jelly file.
-     *
-     * @return the summary message
-     */
+    @Override
     public String getSummary() {
         return ResultSummary.createSummary(this);
     }
@@ -118,17 +105,11 @@ public class FindBugsResult extends BuildResult {
         return notInCloud;
     }
 
-    /** {@inheritDoc} */
     @Override
     protected String createDeltaMessage() {
         return ResultSummary.createDeltaMessage(this);
     }
 
-    /**
-     * Returns the name of the file to store the serialized annotations.
-     *
-     * @return the name of the file to store the serialized annotations
-     */
     @Override
     protected String getSerializationFileName() {
         return "findbugs-warnings.xml";
@@ -139,7 +120,6 @@ public class FindBugsResult extends BuildResult {
         return Messages.FindBugs_ProjectAction_Name();
     }
 
-    /** {@inheritDoc} */
     @Override
     protected Class<? extends ResultAction<? extends BuildResult>> getResultActionType() {
         return FindBugsResultAction.class;

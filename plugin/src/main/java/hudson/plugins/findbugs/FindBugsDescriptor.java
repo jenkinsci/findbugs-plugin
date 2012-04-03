@@ -9,34 +9,34 @@ import hudson.plugins.analysis.core.PluginDescriptor;
  *
  * @author Ulli Hafner
  */
-@Extension(ordinal = 100) // NOCHECKSTYLE
+@Extension(ordinal = 100)
 public final class FindBugsDescriptor extends PluginDescriptor {
-    private static final String PLUGIN_NAME = "findbugs";
+    /** The ID of this plug-in is used as URL. */
+    static final String PLUGIN_ID = "findbugs";
+    /** The URL of the result action. */
+    static final String RESULT_URL = PluginDescriptor.createResultUrlName(PLUGIN_ID);
     /** Icon to use for the result and project action. */
-    private static final String ACTION_ICON = "/plugin/findbugs/icons/findbugs-32x32.gif";
+    static final String ICON_URL = "/plugin/findbugs/icons/findbugs-32x32.gif";
 
     /**
-     * Instantiates a new find bugs descriptor.
+     * Creates a new instance of {@link FindBugsDescriptor}.
      */
     public FindBugsDescriptor() {
         super(FindBugsPublisher.class);
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getDisplayName() {
         return Messages.FindBugs_Publisher_Name();
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getPluginName() {
-        return PLUGIN_NAME;
+        return PLUGIN_ID;
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getIconUrl() {
-        return ACTION_ICON;
+        return ICON_URL;
     }
 }

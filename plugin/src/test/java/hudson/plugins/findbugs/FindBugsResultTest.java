@@ -9,10 +9,9 @@ import hudson.plugins.analysis.test.BuildResultTest;
  * Tests the class {@link FindBugsResult}.
  */
 public class FindBugsResultTest extends BuildResultTest<FindBugsResult> {
-    /** {@inheritDoc} */
     @Override
     protected FindBugsResult createBuildResult(final AbstractBuild<?, ?> build, final ParserResult project, final BuildHistory history) {
-        return new FindBugsResult(build, null, project, history);
+        return new FindBugsResult(build, history, project, "UTF8", false);
     }
 }
 
