@@ -33,12 +33,6 @@ public class WarningsTablePortlet extends AbstractWarningsTablePortlet {
         return FindBugsProjectAction.class;
     }
 
-    /** {@inheritDoc} */
-    @Override
-    protected String getPluginName() {
-        return "findbugs";
-    }
-
     /**
      * Extension point registration.
      *
