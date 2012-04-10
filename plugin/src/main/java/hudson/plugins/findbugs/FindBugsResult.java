@@ -37,8 +37,7 @@ public class FindBugsResult extends BuildResult {
      */
     public FindBugsResult(final AbstractBuild<?, ?> build, final String defaultEncoding,
             final ParserResult result) {
-        super(build, new BuildHistory(build, FindBugsResultAction.class), result, defaultEncoding);
-        init();
+        this(build, new BuildHistory(build, FindBugsResultAction.class), result, defaultEncoding, true);
     }
 
     FindBugsResult(final AbstractBuild<?, ?> build, final BuildHistory history,
