@@ -16,7 +16,7 @@ public final class FindBugsDescriptor extends PluginDescriptor {
     /** The URL of the result action. */
     static final String RESULT_URL = PluginDescriptor.createResultUrlName(PLUGIN_ID);
     /** Icon to use for the result and project action. */
-    static final String ICON_URL = "/plugin/findbugs/icons/findbugs-32x32.gif";
+    static final String ICON_URL = "/plugin/findbugs/icons/findbugs-32x32.png";
 
     /**
      * Creates a new instance of {@link FindBugsDescriptor}.
