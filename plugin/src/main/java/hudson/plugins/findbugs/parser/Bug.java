@@ -312,13 +312,11 @@ public class Bug extends AbstractAnnotation {
         this.instanceHash = instanceHash;
     }
 
-    /** {@inheritDoc} */
     @Override
     public int hashCode() {
         return 31 + ((instanceHash == null) ? 0 : instanceHash.hashCode()); // NOCHECKSTYLE
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean equals(final Object obj) {
         if (this == obj) {

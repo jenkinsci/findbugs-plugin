@@ -141,13 +141,11 @@ public class FindBugsPublisher extends HealthAwarePublisher {
         return pattern;
     }
 
-    /** {@inheritDoc} */
     @Override
     public Action getProjectAction(final AbstractProject<?, ?> project) {
         return new FindBugsProjectAction(project);
     }
 
-    /** {@inheritDoc} */
     @Override
     public BuildResult perform(final AbstractBuild<?, ?> build, final PluginLogger logger) throws InterruptedException, IOException {
         logger.log("Collecting findbugs analysis files...");
@@ -164,7 +162,6 @@ public class FindBugsPublisher extends HealthAwarePublisher {
         return result;
     }
 
-    /** {@inheritDoc} */
     @Override
     public FindBugsDescriptor getDescriptor() {
         return (FindBugsDescriptor)super.getDescriptor();

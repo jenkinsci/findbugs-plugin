@@ -33,7 +33,6 @@ public class FindBugsTabDetail extends TabDetail {
         super(owner, detailFactory, annotations, url, defaultEncoding);
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getWarnings() {
         return "findbugs-warnings.jelly";

@@ -48,19 +48,16 @@ public class FindBugsResultAction extends AbstractResultAction<FindBugsResult> {
         return Messages.FindBugs_ProjectAction_Name();
     }
 
-    /** {@inheritDoc} */
     @Override
     protected PluginDescriptor getDescriptor() {
         return new FindBugsDescriptor();
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getMultipleItemsTooltip(final int numberOfItems) {
         return Messages.FindBugs_ResultAction_MultipleWarnings(numberOfItems);
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getSingleItemTooltip() {
         return Messages.FindBugs_ResultAction_OneWarning();

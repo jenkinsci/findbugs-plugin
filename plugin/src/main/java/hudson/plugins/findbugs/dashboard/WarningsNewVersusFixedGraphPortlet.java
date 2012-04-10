@@ -37,19 +37,16 @@ public final class WarningsNewVersusFixedGraphPortlet extends AbstractWarningsGr
         configureGraph(getGraphType());
     }
 
-    /** {@inheritDoc} */
     @Override
     protected Class<? extends AbstractProjectAction<?>> getAction() {
         return FindBugsProjectAction.class;
     }
 
-    /** {@inheritDoc} */
     @Override
     protected String getPluginName() {
         return "findbugs";
     }
 
-    /** {@inheritDoc} */
     @Override
     protected BuildResultGraph getGraphType() {
         return new NewVersusFixedGraph();

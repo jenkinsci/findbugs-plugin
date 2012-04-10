@@ -27,7 +27,6 @@ public class WarningsTablePortlet extends AbstractWarningsTablePortlet {
         super(name);
     }
 
-    /** {@inheritDoc} */
     @Override
     protected Class<? extends AbstractProjectAction<?>> getAction() {
         return FindBugsProjectAction.class;

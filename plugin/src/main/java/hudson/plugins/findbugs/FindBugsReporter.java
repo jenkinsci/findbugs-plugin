@@ -125,7 +125,6 @@ public class FindBugsReporter extends HealthAwareReporter<FindBugsResult> {
         return isRankActivated;
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean preExecute(final MavenBuildProxy build, final MavenProject pom, final MojoInfo mojo,
             final BuildListener listener) throws InterruptedException, IOException {

@@ -15,7 +15,6 @@ import org.xml.sax.SAXException;
  * @author Ulli Hafner
  */
 public class FindBugsPlugin extends Plugin {
-    /** {@inheritDoc} */
     @Override
     public void start() throws IOException, SAXException {
         FindBugsMessages.getInstance().initialize();

@@ -26,19 +26,16 @@ import java.util.List;
  * @author Keith Lea
  */
 public class FindbugsEvaluationsGraph extends CategoryBuildResultGraph {
-    /** {@inheritDoc} */
     @Override
     public String getId() {
         return "EVALS";
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getLabel() {
         return hudson.plugins.findbugs.Messages.FindBugs_EvaluationsGraph_title();
     }
 
-    /** {@inheritDoc} */
     @Override
     protected List<Integer> computeSeries(final BuildResult current) {
         List<Integer> series = new ArrayList<Integer>();
@@ -49,13 +46,11 @@ public class FindbugsEvaluationsGraph extends CategoryBuildResultGraph {
         return series;
     }
 
-    /** {@inheritDoc} */
     @Override
     protected JFreeChart createChart(final CategoryDataset dataSet) {
         return createBlockChart(dataSet);
     }
 
-    /** {@inheritDoc} */
     @Override
     protected Color[] getColors() {
         return new Color[] {ColorPalette.BLUE};

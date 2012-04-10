@@ -13,7 +13,6 @@ import java.util.Collection;
  * @author Ulli Hafner
  */
 public class FindBugsDetailFactory extends DetailFactory {
-    /** {@inheritDoc} */
     @Override
     protected TabDetail createTabDetail(final AbstractBuild<?, ?> owner,
             final Collection<FileAnnotation> annotations, final String url, final String defaultEncoding) {
