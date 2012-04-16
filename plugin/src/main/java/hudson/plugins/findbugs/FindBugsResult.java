@@ -37,7 +37,24 @@ public class FindBugsResult extends BuildResult {
      */
     public FindBugsResult(final AbstractBuild<?, ?> build, final String defaultEncoding,
             final ParserResult result) {
-        this(build, new BuildHistory(build, FindBugsResultAction.class), result, defaultEncoding, true);
+        this(build, defaultEncoding, result, FindBugsResultAction.class);
+    }
+
+    /**
+     * Creates a new instance of {@link FindBugsResult}.
+     *
+     * @param build
+     *            the current build as owner of this action
+     * @param defaultEncoding
+     *            the default encoding to be used when reading and parsing files
+     * @param result
+     *            the parsed result with all annotations
+     * @param actionType
+     *            the type of the result action
+     */
+    protected FindBugsResult(final AbstractBuild<?, ?> build, final String defaultEncoding, final ParserResult result,
+            final Class<? extends ResultAction<FindBugsResult>> actionType) {
+        this(build, new BuildHistory(build, actionType), result, defaultEncoding, true);
     }
 
     FindBugsResult(final AbstractBuild<?, ?> build, final BuildHistory history,

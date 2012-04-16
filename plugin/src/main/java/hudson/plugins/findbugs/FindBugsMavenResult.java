@@ -1,7 +1,6 @@
 package hudson.plugins.findbugs;
 
 import hudson.model.AbstractBuild;
-import hudson.plugins.analysis.core.BuildHistory;
 import hudson.plugins.analysis.core.ParserResult;
 import hudson.plugins.analysis.core.ResultAction;
 import hudson.plugins.analysis.core.BuildResult;
@@ -29,7 +28,7 @@ public class FindBugsMavenResult extends FindBugsResult {
     @SuppressWarnings("deprecation")
     public FindBugsMavenResult(final AbstractBuild<?, ?> build, final String defaultEncoding,
             final ParserResult result) {
-        super(build, new BuildHistory(build, MavenFindBugsResultAction.class), result, defaultEncoding, true);
+        super(build, defaultEncoding, result, MavenFindBugsResultAction.class);
     }
 
     /** {@inheritDoc} */

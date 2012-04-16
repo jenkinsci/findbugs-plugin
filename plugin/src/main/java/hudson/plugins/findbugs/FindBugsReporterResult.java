@@ -1,9 +1,9 @@
 package hudson.plugins.findbugs;
 
 import hudson.model.AbstractBuild;
-import hudson.plugins.analysis.core.BuildResult;
 import hudson.plugins.analysis.core.ParserResult;
 import hudson.plugins.analysis.core.ResultAction;
+import hudson.plugins.analysis.core.BuildResult;
 
 /**
  * Represents the aggregated results of the FindBugs analysis in m2 jobs.
@@ -25,7 +25,7 @@ public class FindBugsReporterResult extends FindBugsResult {
      */
     public FindBugsReporterResult(final AbstractBuild<?, ?> build, final String defaultEncoding,
             final ParserResult result) {
-        super(build, defaultEncoding, result);
+        super(build, defaultEncoding, result, FindBugsMavenResultAction.class);
     }
 
     @Override
