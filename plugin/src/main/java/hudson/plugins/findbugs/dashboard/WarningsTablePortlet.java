@@ -21,10 +21,13 @@ public class WarningsTablePortlet extends AbstractWarningsTablePortlet {
      *
      * @param name
      *            the name of the portlet
+     * @param canHideZeroWarningsProjects
+     *            determines if zero warnings projects should be hidden in the
+     *            table
      */
     @DataBoundConstructor
-    public WarningsTablePortlet(final String name) {
-        super(name);
+    public WarningsTablePortlet(final String name, final boolean canHideZeroWarningsProjects) {
+        super(name, canHideZeroWarningsProjects);
     }
 
     @Override
