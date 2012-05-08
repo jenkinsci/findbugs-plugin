@@ -100,7 +100,12 @@ public class FindBugsResult extends BuildResult {
 
     @Override
     public String getSummary() {
-        return ResultSummary.createSummary(this);
+        return "FindBugs: " + createDefaultSummary(FindBugsDescriptor.RESULT_URL, getNumberOfAnnotations(), getNumberOfModules());
+    }
+
+    @Override
+    protected String createDeltaMessage() {
+        return createDefaultDeltaMessage(FindBugsDescriptor.RESULT_URL, getNumberOfNewWarnings(), getNumberOfFixedWarnings());
     }
 
     /**
@@ -119,11 +124,6 @@ public class FindBugsResult extends BuildResult {
      */
     public int getNotInCloud() {
         return notInCloud;
-    }
-
-    @Override
-    protected String createDeltaMessage() {
-        return ResultSummary.createDeltaMessage(this);
     }
 
     @Override
