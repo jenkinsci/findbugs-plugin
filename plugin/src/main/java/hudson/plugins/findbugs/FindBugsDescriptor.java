@@ -15,8 +15,10 @@ public final class FindBugsDescriptor extends PluginDescriptor {
     static final String PLUGIN_ID = "findbugs";
     /** The URL of the result action. */
     static final String RESULT_URL = PluginDescriptor.createResultUrlName(PLUGIN_ID);
+    /** Icons prefix. */
+    static final String ICON_URL_PREFIX = "/plugin/findbugs/icons/";
     /** Icon to use for the result and project action. */
-    static final String ICON_URL = "/plugin/findbugs/icons/findbugs-32x32.png";
+    static final String ICON_URL = ICON_URL_PREFIX + "findbugs-24x24.png";
 
     /**
      * Creates a new instance of {@link FindBugsDescriptor}.
@@ -38,5 +40,10 @@ public final class FindBugsDescriptor extends PluginDescriptor {
     @Override
     public String getIconUrl() {
         return ICON_URL;
+    }
+
+    @Override
+    public String getSummaryIconUrl() {
+        return ICON_URL_PREFIX + "findbugs-48x48.png";
     }
 }
