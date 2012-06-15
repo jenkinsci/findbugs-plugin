@@ -208,6 +208,8 @@ public class Bug extends AbstractAnnotation {
      * @return the created object
      */
     private Object readResolve() {
+        superReadResolve();
+
         if (instanceHash == null) {
             instanceHash = String.valueOf(super.hashCode());
         }
