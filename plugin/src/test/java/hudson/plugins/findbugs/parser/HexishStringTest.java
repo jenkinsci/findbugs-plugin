@@ -1,12 +1,16 @@
 package hudson.plugins.findbugs.parser;
 
+import static org.junit.Assert.*;
+
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-
 /**
+ * Tests the class {@link HexishString}.
+ *
  * @author Kohsuke Kawaguchi
  */
+@SuppressWarnings({"PMD", "all"})
+//CHECKSTYLE:OFF
 public class HexishStringTest {
     @Test
     public void roundtrip() {
@@ -15,7 +19,7 @@ public class HexishStringTest {
         verify("1234");
     }
 
-    private void verify(String s) {
+    private void verify(final String s) {
         assertEquals(s,new HexishString(s).toString());
     }
 }

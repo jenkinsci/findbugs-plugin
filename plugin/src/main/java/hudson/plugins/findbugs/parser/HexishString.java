@@ -1,10 +1,13 @@
 package hudson.plugins.findbugs.parser;
 
+import java.io.Serializable;
+
+import org.apache.commons.codec.DecoderException;
+import org.apache.commons.codec.binary.Hex;
+
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
-import org.apache.commons.codec.DecoderException;
-import org.apache.commons.codec.binary.Hex;
 
 /**
  * Efficient representation for mostly hexadecimal strings.
@@ -26,31 +29,39 @@ import org.apache.commons.codec.binary.Hex;
  *
  * @author Kohsuke Kawaguchi
  */
-public final class HexishString {
-    private final Object content;
+@edu.umd.cs.findbugs.annotations.SuppressWarnings("")
+@SuppressWarnings({"PMD", "all"})
+//CHECKSTYLE:OFF
+public final class HexishString implements Serializable {
+    private static final long serialVersionUID = 2925134919588181979L;
+    private final Serializable content;
 
-    public HexishString(String value) {
+    public HexishString(final String value) {
         if (isHex(value)) {
             try {
                 content = Hex.decodeHex(value.toCharArray());
             } catch (DecoderException e) {
                 throw new AssertionError(e);    // we've already verified that value is a valid hex
             }
-        } else
-            this.content = value.toCharArray();
+        }
+        else {
+            content = value.toCharArray();
+        }
     }
 
     @Override
     public String toString() {
-        if (content instanceof char[])
+        if (content instanceof char[]) {
             return new String((char[])content);
-        else
+        }
+        else {
             return Hex.encodeHexString((byte[])content);
+        }
     }
 
     @Override
-    public boolean equals(Object that) {
-        return that instanceof HexishString && this.toString().equals(that.toString());
+    public boolean equals(final Object that) {
+        return that instanceof HexishString && toString().equals(that.toString());
     }
 
     @Override
@@ -58,20 +69,25 @@ public final class HexishString {
         return toString().hashCode();
     }
 
-    private boolean isHex(String value) {
+    private boolean isHex(final String value) {
         int len = value.length();
-        if (len%2==1)   return false;   // if it's odd number of hex they don't map unambiguously to byte[].
+        if (len%2==1)
+         {
+            return false;   // if it's odd number of hex they don't map unambiguously to byte[].
+        }
         for (int i= len -1; i>=0; i--) {
             char ch = value.charAt(i);
-            if (('0'<=ch && ch<='9') || ('a'<=ch && ch<='f'))
+            if (('0'<=ch && ch<='9') || ('a'<=ch && ch<='f')) {
                 continue;
-            else
+            }
+            else {
                 return false;
+            }
         }
         return true;
     }
 
-    public static HexishString of(String s) {
+    public static HexishString of(final String s) {
         return s==null ? null : new HexishString(s);
     }
 
@@ -79,15 +95,16 @@ public final class HexishString {
      * {@link Converter} implementation for XStream that writes this out as a plain string.
      */
     public static final class ConverterImpl extends AbstractSingleValueConverter {
-        public ConverterImpl(XStream xs) {
+        public ConverterImpl(final XStream xs) {
         }
 
         @Override
-        public Object fromString(String str) {
+        public Object fromString(final String str) {
             return new HexishString(str);
         }
 
-        public boolean canConvert(Class type) {
+        @Override
+        public boolean canConvert(final Class type) {
             return type==HexishString.class;
         }
     }
