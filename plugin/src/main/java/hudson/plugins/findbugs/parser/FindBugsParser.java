@@ -1,6 +1,7 @@
 package hudson.plugins.findbugs.parser; // NOPMD
 
 import hudson.plugins.analysis.core.AnnotationParser;
+import hudson.plugins.analysis.util.TreeStringBuilder;
 import hudson.plugins.analysis.util.model.FileAnnotation;
 import hudson.plugins.analysis.util.model.LineRange;
 import hudson.plugins.analysis.util.model.Priority;
@@ -213,7 +214,8 @@ public class FindBugsParser implements AnnotationParser {
         SourceFinder sourceFinder = new SourceFinder(project);
         String actualName = extractModuleName(moduleName, project);
 
-        ArrayList<FileAnnotation> annotations = new ArrayList<FileAnnotation>();
+        TreeStringBuilder stringPool = new TreeStringBuilder();
+        List<FileAnnotation> annotations = new ArrayList<FileAnnotation>();
         Collection<BugInstance> bugs = collection.getCollection();
         for (BugInstance warning : bugs) {
             SourceLineAnnotation sourceLine = warning.getPrimarySourceLineAnnotation();
@@ -238,6 +240,7 @@ public class FindBugsParser implements AnnotationParser {
                 setAffectedLines(warning, bug);
 
                 annotations.add(bug);
+                bug.intern(stringPool);
             }
         }
         return annotations;
