@@ -54,6 +54,7 @@ public class FindBugsParser implements AnnotationParser {
 
     private static final String DOT = ".";
     private static final String SLASH = "/";
+    private static final String CLOUD_DETAILS_URL_PROPERTY = "detailsUrl";
 
     private static final int DAY_IN_MSEC = 1000 * 60 * 60 * 24;
     private static final int HIGH_PRIORITY_LOWEST_RANK = 4;
@@ -286,12 +287,13 @@ public class FindBugsParser implements AnnotationParser {
     private boolean setCloudInformation(final SortedBugCollection collection, final BugInstance warning, final Bug bug) {
         Cloud cloud = collection.getCloud();
         bug.setShouldBeInCloud(cloud.isOnlineCloud());
-        // FIXME: This method has been removed in findbugs 2.0.0
-        // bug.setDetailsUrlTemplate(cloud.getBugDetailsUrlTemplate());
+        Map<String, String> cloudDetails = collection.getXmlCloudDetails();
+        bug.setDetailsUrlTemplate(cloudDetails.get(CLOUD_DETAILS_URL_PROPERTY));
+
         long firstSeen = cloud.getFirstSeen(warning);
         bug.setInCloud(cloud.isInCloud(warning));
         bug.setFirstSeen(firstSeen);
-        int ageInDays = (int) ((collection.getAnalysisTimestamp() - firstSeen) / DAY_IN_MSEC);
+        int ageInDays = (int)((collection.getAnalysisTimestamp() - firstSeen) / DAY_IN_MSEC);
         bug.setAgeInDays(ageInDays);
         bug.setReviewCount(cloud.getNumberReviewers(warning));
 
