@@ -286,6 +286,8 @@ public class FindBugsParser implements AnnotationParser {
     @edu.umd.cs.findbugs.annotations.SuppressWarnings("NP")
     private boolean setCloudInformation(final SortedBugCollection collection, final BugInstance warning, final Bug bug) {
         Cloud cloud = collection.getCloud();
+        cloud.waitUntilIssueDataDownloaded();
+
         bug.setShouldBeInCloud(cloud.isOnlineCloud());
         Map<String, String> cloudDetails = collection.getXmlCloudDetails();
         bug.setDetailsUrlTemplate(cloudDetails.get(CLOUD_DETAILS_URL_PROPERTY));
