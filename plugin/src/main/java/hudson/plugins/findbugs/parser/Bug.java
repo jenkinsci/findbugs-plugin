@@ -149,6 +149,7 @@ public class Bug extends AbstractAnnotation {
     }
 
     // CHECKSTYLE:OFF Properties of FindBugs cloud
+    @SuppressWarnings("javadoc")
     public long getFirstSeen() {
         return firstSeen;
     }
@@ -157,14 +158,17 @@ public class Bug extends AbstractAnnotation {
         this.firstSeen = firstSeen;
     }
 
+    @SuppressWarnings("javadoc")
     public void setInCloud(final boolean inCloud) {
         this.inCloud = inCloud;
     }
 
+    @SuppressWarnings("javadoc")
     public boolean isInCloud() {
         return inCloud;
     }
 
+    @SuppressWarnings("javadoc")
     public int getAgeInDays() {
         return ageInDays;
     }
@@ -173,6 +177,7 @@ public class Bug extends AbstractAnnotation {
         this.ageInDays = ageInDays;
     }
 
+    @SuppressWarnings("javadoc")
     public int getReviewCount() {
         return reviewCount;
     }
@@ -181,6 +186,7 @@ public class Bug extends AbstractAnnotation {
         this.reviewCount = reviewCount;
     }
 
+    @SuppressWarnings("javadoc")
     public boolean isNotAProblem() {
         return notAProblem;
     }
@@ -189,14 +195,17 @@ public class Bug extends AbstractAnnotation {
         this.notAProblem = notAProblem;
     }
 
+    @SuppressWarnings("javadoc")
     public void setShouldBeInCloud(final boolean shouldBeInCloud) {
         this.shouldBeInCloud = shouldBeInCloud;
     }
 
+    @SuppressWarnings("javadoc")
     public boolean isShouldBeInCloud() {
         return shouldBeInCloud;
     }
 
+    @SuppressWarnings("javadoc")
     public void setDetailsUrlTemplate(@CheckForNull final String detailsUrl) {
         this.detailsUrl = detailsUrl;
     }

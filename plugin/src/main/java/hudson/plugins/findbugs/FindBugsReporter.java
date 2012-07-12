@@ -94,6 +94,9 @@ public class FindBugsReporter extends HealthAwareReporter<FindBugsResult> {
      * @param isRankActivated
      *            determines whether to use the rank when evaluation the
      *            priority
+     * @param canComputeNew
+     *            determines whether new warnings should be computed (with
+     *            respect to baseline)
      */
     // CHECKSTYLE:OFF
     @SuppressWarnings("PMD.ExcessiveParameterList")
