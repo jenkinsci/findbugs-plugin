@@ -93,7 +93,7 @@ public class MavenFindBugsResultAction extends FindBugsResultAction implements A
 
     /** Backward compatibility. @deprecated */
     @edu.umd.cs.findbugs.annotations.SuppressWarnings("")
-    @SuppressWarnings("unused")
+    @SuppressWarnings("PMD")
     @Deprecated
     private transient String height;
 }
