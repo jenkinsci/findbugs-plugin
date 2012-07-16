@@ -1,6 +1,5 @@
 package hudson.plugins.findbugs.dashboard;
 
-import edu.umd.cs.findbugs.annotations.SuppressWarnings;
 import hudson.plugins.analysis.Messages;
 import hudson.plugins.analysis.core.BuildResult;
 import hudson.plugins.analysis.graph.CategoryBuildResultGraph;
@@ -12,13 +11,14 @@ import hudson.plugins.analysis.util.ToolTipBuilder;
 import hudson.plugins.analysis.util.ToolTipProvider;
 import hudson.plugins.findbugs.FindBugsResult;
 import hudson.util.ColorPalette;
+
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.renderer.category.CategoryItemRenderer;
 import org.jfree.data.category.CategoryDataset;
-
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Builds a review count graph for a specified result action.
@@ -56,36 +56,11 @@ public class FindbugsEvaluationsGraph extends CategoryBuildResultGraph {
         return new Color[] {ColorPalette.BLUE};
     }
 
-    // CHECKSTYLE:OFF
     /** {@inheritDoc} */
-    @java.lang.SuppressWarnings("serial")
-    @SuppressWarnings("SIC")
     @Override
     protected CategoryItemRenderer createRenderer(final GraphConfiguration configuration, final String pluginName, final ToolTipProvider toolTipProvider) {
-        CategoryUrlBuilder url = new CategoryUrlBuilder(getRootUrl(), pluginName) {
-            /** {@inheritDoc} */
-            @Override
-            protected String getDetailUrl(final int row) {
-                if (row == 1) {
-                    return "fixed";
-                }
-                else {
-                    return "new";
-                }
-            }
-        };
-        ToolTipBuilder toolTip = new ToolTipBuilder(toolTipProvider) {
-            /** {@inheritDoc} */
-            @Override
-            protected String getShortDescription(final int row) {
-                if (row == 1) {
-                    return Messages.Trend_Fixed();
-                }
-                else {
-                    return Messages.Trend_New();
-                }
-            }
-        };
+        CategoryUrlBuilder url = new UrlBuilder(getRootUrl(), pluginName);
+        ToolTipBuilder toolTip = new DescriptionBuilder(toolTipProvider);
         if (configuration.useBuildDateAsDomain()) {
             return new ToolTipBoxRenderer(toolTip);
         }
@@ -93,5 +68,48 @@ public class FindbugsEvaluationsGraph extends CategoryBuildResultGraph {
             return new BoxRenderer(url, toolTip);
         }
     }
-    // CHECKSTYLE:ON
+
+    /**
+     * Shows a tooltip.
+     */
+    private static final class DescriptionBuilder extends ToolTipBuilder {
+        private static final long serialVersionUID = -223463531447822459L;
+
+        DescriptionBuilder(final ToolTipProvider provider) {
+            super(provider);
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        protected String getShortDescription(final int row) {
+            if (row == 1) {
+                return Messages.Trend_Fixed();
+            }
+            else {
+                return Messages.Trend_New();
+            }
+        }
+    }
+
+    /**
+     * Shows a URL.
+     */
+    private static final class UrlBuilder extends CategoryUrlBuilder {
+        private static final long serialVersionUID = 6928145843235050754L;
+
+        UrlBuilder(final String rootUrl, final String pluginName) {
+            super(rootUrl, pluginName);
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        protected String getDetailUrl(final int row) {
+            if (row == 1) {
+                return "fixed";
+            }
+            else {
+                return "new";
+            }
+        }
+    }
 }
