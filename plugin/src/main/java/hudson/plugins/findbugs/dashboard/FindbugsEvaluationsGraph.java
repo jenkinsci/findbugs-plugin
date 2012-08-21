@@ -3,6 +3,7 @@ package hudson.plugins.findbugs.dashboard;
 import hudson.plugins.analysis.Messages;
 import hudson.plugins.analysis.core.BuildResult;
 import hudson.plugins.analysis.graph.CategoryBuildResultGraph;
+import hudson.plugins.analysis.graph.ColorPalette;
 import hudson.plugins.analysis.graph.GraphConfiguration;
 import hudson.plugins.analysis.util.BoxRenderer;
 import hudson.plugins.analysis.util.CategoryUrlBuilder;
@@ -10,7 +11,6 @@ import hudson.plugins.analysis.util.ToolTipBoxRenderer;
 import hudson.plugins.analysis.util.ToolTipBuilder;
 import hudson.plugins.analysis.util.ToolTipProvider;
 import hudson.plugins.findbugs.FindBugsResult;
-import hudson.util.ColorPalette;
 
 import java.awt.Color;
 import java.util.ArrayList;
