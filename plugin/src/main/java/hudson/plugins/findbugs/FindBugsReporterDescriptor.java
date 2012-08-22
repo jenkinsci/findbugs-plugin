@@ -10,7 +10,7 @@ import hudson.plugins.analysis.core.ReporterDescriptor;
  *
  * @author Ulli Hafner
  */
-@Extension(ordinal = 100) // NOCHECKSTYLE
+@Extension(ordinal = 100, optional = true) // NOCHECKSTYLE
 public class FindBugsReporterDescriptor extends ReporterDescriptor {
     /**
      * Creates a new instance of <code>FindBugsReporterDescriptor</code>.
