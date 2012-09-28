@@ -34,10 +34,13 @@ public class FindBugsResult extends BuildResult {
      *            the default encoding to be used when reading and parsing files
      * @param result
      *            the parsed result with all annotations
+     * @param useStableBuildAsReference
+     *            determines whether only stable builds should be used as
+     *            reference builds or not
      */
     public FindBugsResult(final AbstractBuild<?, ?> build, final String defaultEncoding,
-            final ParserResult result) {
-        this(build, defaultEncoding, result, FindBugsResultAction.class);
+            final ParserResult result, final boolean useStableBuildAsReference) {
+        this(build, defaultEncoding, result, useStableBuildAsReference, FindBugsResultAction.class);
     }
 
     /**
@@ -49,12 +52,15 @@ public class FindBugsResult extends BuildResult {
      *            the default encoding to be used when reading and parsing files
      * @param result
      *            the parsed result with all annotations
+     * @param useStableBuildAsReference
+     *            determines whether only stable builds should be used as
+     *            reference builds or not
      * @param actionType
      *            the type of the result action
      */
     protected FindBugsResult(final AbstractBuild<?, ?> build, final String defaultEncoding, final ParserResult result,
-            final Class<? extends ResultAction<FindBugsResult>> actionType) {
-        this(build, new BuildHistory(build, actionType), result, defaultEncoding, true);
+            final boolean useStableBuildAsReference, final Class<? extends ResultAction<FindBugsResult>> actionType) {
+        this(build, new BuildHistory(build, actionType, useStableBuildAsReference), result, defaultEncoding, true);
     }
 
     FindBugsResult(final AbstractBuild<?, ?> build, final BuildHistory history,

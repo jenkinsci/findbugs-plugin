@@ -90,6 +90,8 @@ public class FindBugsPublisher extends HealthAwarePublisher {
      *            annotation threshold
      * @param canRunOnFailed
      *            determines whether the plug-in can run for failed builds, too
+     * @param useStableBuildAsReference
+     *            determines whether only stable builds should be used as reference builds or not
      * @param shouldDetectModules
      *            determines whether module names should be derived from Maven
      *            POM or Ant build files
@@ -111,14 +113,14 @@ public class FindBugsPublisher extends HealthAwarePublisher {
             final String unstableNewAll, final String unstableNewHigh, final String unstableNewNormal, final String unstableNewLow,
             final String failedTotalAll, final String failedTotalHigh, final String failedTotalNormal, final String failedTotalLow,
             final String failedNewAll, final String failedNewHigh, final String failedNewNormal, final String failedNewLow,
-            final boolean canRunOnFailed, final boolean shouldDetectModules,
+            final boolean canRunOnFailed, final boolean useStableBuildAsReference, final boolean shouldDetectModules,
             final String pattern, final boolean isRankActivated, final boolean canComputeNew) {
         super(healthy, unHealthy, thresholdLimit, defaultEncoding, useDeltaValues,
                 unstableTotalAll, unstableTotalHigh, unstableTotalNormal, unstableTotalLow,
                 unstableNewAll, unstableNewHigh, unstableNewNormal, unstableNewLow,
                 failedTotalAll, failedTotalHigh, failedTotalNormal, failedTotalLow,
                 failedNewAll, failedNewHigh, failedNewNormal, failedNewLow,
-                canRunOnFailed, shouldDetectModules, canComputeNew, PLUGIN_NAME);
+                canRunOnFailed, useStableBuildAsReference, shouldDetectModules, canComputeNew, false, PLUGIN_NAME);
         this.pattern = pattern;
         this.isRankActivated = isRankActivated;
     }
@@ -158,7 +160,7 @@ public class FindBugsPublisher extends HealthAwarePublisher {
                 new FindBugsParser(isRankActivated), shouldDetectModules(), isMavenBuild(build));
         ParserResult project = build.getWorkspace().act(collector);
         logger.logLines(project.getLogMessages());
-        FindBugsResult result = new FindBugsResult(build, getDefaultEncoding(), project);
+        FindBugsResult result = new FindBugsResult(build, getDefaultEncoding(), project, useOnlyStableBuildsAsReference());
 
         build.getActions().add(new FindBugsResultAction(build, this, result));
 
@@ -173,6 +175,6 @@ public class FindBugsPublisher extends HealthAwarePublisher {
     /** {@inheritDoc} */
     public MatrixAggregator createAggregator(final MatrixBuild build, final Launcher launcher,
             final BuildListener listener) {
-        return new FindBugsAnnotationsAggregator(build, launcher, listener, this, getDefaultEncoding());
+        return new FindBugsAnnotationsAggregator(build, launcher, listener, this, getDefaultEncoding(), useOnlyStableBuildsAsReference());
     }
 }
