@@ -1,5 +1,6 @@
 package hudson.plugins.findbugs;
 
+import hudson.FilePath;
 import hudson.maven.MavenAggregatedReport;
 import hudson.maven.MavenBuildProxy;
 import hudson.maven.MojoInfo;
@@ -11,6 +12,7 @@ import hudson.plugins.analysis.core.HealthAwareReporter;
 import hudson.plugins.analysis.core.ParserResult;
 import hudson.plugins.analysis.util.PluginLogger;
 import hudson.plugins.findbugs.parser.FindBugsParser;
+import hudson.remoting.VirtualChannel;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -170,7 +172,16 @@ public class FindBugsReporter extends HealthAwareReporter<FindBugsResult> {
         FilesParser findBugsCollector = new FilesParser(PLUGIN_NAME, determineFileName(mojo),
                 new FindBugsParser(sources, isRankActivated), getModuleName(pom));
 
-        return getTargetPath(pom).act(findBugsCollector);
+        return getOutputPath(mojo, pom).act(findBugsCollector);
+    }
+
+    private FilePath getOutputPath(final MojoInfo mojo, final MavenProject pom) {
+        try {
+            return new FilePath((VirtualChannel)null, mojo.getConfigurationValue("findbugsXmlOutputDirectory", String.class));
+        }
+        catch (ComponentConfigurationException exception) {
+            return getTargetPath(pom);
+        }
     }
 
     @Override
