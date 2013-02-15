@@ -44,7 +44,7 @@ public class FindBugsMavenResultAction extends MavenResultAction<FindBugsResult>
 
     /** {@inheritDoc} */
     public MavenAggregatedReport createAggregatedAction(final MavenModuleSetBuild build, final Map<MavenModule, List<MavenBuild>> moduleBuilds) {
-        return new FindBugsMavenResultAction(build, getHealthDescriptor(), getDisplayName(),
+        return new FindBugsMavenResultAction(build, getHealthDescriptor(), getDefaultEncoding(),
                 new FindBugsResult(build, getDefaultEncoding(), new ParserResult(), false));
     }
 
