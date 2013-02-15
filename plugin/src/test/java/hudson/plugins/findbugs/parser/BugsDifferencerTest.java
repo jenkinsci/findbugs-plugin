@@ -1,6 +1,6 @@
 package hudson.plugins.findbugs.parser;
 
-import static junit.framework.Assert.*;
+import static org.junit.Assert.*;
 import hudson.plugins.analysis.core.AnnotationDifferencer;
 import hudson.plugins.analysis.test.AnnotationDifferencerTest;
 import hudson.plugins.analysis.util.model.AnnotationStream;
