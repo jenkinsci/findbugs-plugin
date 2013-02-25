@@ -12,7 +12,7 @@
     <Details>
 <![CDATA[
 <p>
-このプラグインには、すべての標準的な FindBugs ディテクタがあります。
+このプラグインにはすべての標準的な FindBugs ディテクタがあります。
 </p>
 ]]>
     </Details>
@@ -58,7 +58,7 @@
   <!-- これを変えたら FindbugsPlugin のデフォルト ID も更新して下さい -->
   <Cloud id="edu.umd.cs.findbugs.cloud.doNothingCloud">
     <Description>(クラウド無効)</Description>
-    <Details>このプラグインを用いると、コメントは無効になります。</Details>
+    <Details>このプラグインを使用すると、バグレビューは無効になります。</Details>
   </Cloud>
 
   <PluginComponent
@@ -87,8 +87,8 @@
 
   <PluginComponent
     id="edu.umd.cs.findbugs.bugReporter.SuppressMalicious">
-    <Description>悪質なコードの脆弱性について警告を抑止する</Description>
-    <Details>悪質なコードの脆弱性について警告を抑止します</Details>
+    <Description>悪質なコード脆弱性について警告を抑止する</Description>
+    <Details>悪質なコード脆弱性について警告を抑止します</Details>
     </PluginComponent>
     
   <!--
@@ -115,14 +115,14 @@
   <BugCategory category="SECURITY">
     <Description>セキュリティ</Description>
     <Abbreviation>S</Abbreviation>
-    <Details>リモートから悪用できるセキュリティ脆弱性を作成できる方法で、信頼できない入力を使用しています。
+    <Details>リモートから利用可能なセキュリティ脆弱性を作成できる信頼できない入力を使用しています。
     </Details>
   </BugCategory>
 
   <BugCategory category="BAD_PRACTICE">
     <Description>バッドプラクティス</Description>
     <Abbreviation>B</Abbreviation>
-    <Details>推奨されている必須のコーディングプラクティスの違反です。たとえば、hashCode と equals の問題、cloneable イディオム、捨てられた例外、Serializable の問題、finalize の誤用など。
+    <Details>推奨または必須のコーディングプラクティスの違反です。たとえば、hashCode と equals の問題、cloneable イディオム、捨てられた例外、Serializable の問題、finalize の誤用など。
       いくつかのグループは、バッドプラクティスを気にしないかもしれないが、我々は正確な解析をしようと努力します。
     </Details>
   </BugCategory>
@@ -130,8 +130,8 @@
   <BugCategory category="STYLE">
     <Description>危ないコード</Description>
     <Abbreviation>D</Abbreviation>
-    <Details>紛らわしいコード、変則的なコード、それ自身を誤りに導く方法で書かれたコード。
-      たとえば、ローカル変数への無効な代入、switch 文のフォールスルー、未確認のキャスト、null とわかっている値の冗長な null チェックなど。
+    <Details>紛らわしいコード、変則的なコード、それ自身をエラーに導く方法で書かれたコード。
+      たとえば、ローカル変数への無効な代入、switch 文のフォールスルー、未確認のキャスト、null とわかっている値の冗長な null チェックなどです。
       より多くの誤検出を受け入れました。
   FindBugs の以前のバージョンでは、このカテゴリは Style として知られていました。
 　　　　</Details>
@@ -165,13 +165,25 @@
   <BugCategory category="EXPERIMENTAL">
     <Description>実験用</Description>
     <Abbreviation>X</Abbreviation>
-    <Details>実験用で完全に吟味していないバグパターン</Details>
+    <Details>実験用で完全に精査されていないバグパターン</Details>
     <!-- DM_CONVERT_CASE is the only core bug pattern in this category -->
   </BugCategory>
 
 
-  <!-- ********************************************************************** Detectors ********************************************************************** -->
-
+  <!--
+  **********************************************************************
+  Detectors
+  **********************************************************************
+   -->
+  <Detector class="edu.umd.cs.findbugs.detect.InitializeNonnullFieldsInConstructor">
+    <Details>
+<![CDATA[
+<p> Finds nonnull fields that are not written to in constructors.
+このディテクタは、コンストラクタで書き込まれない非 null フィールドを発券します。
+</p>
+]]>
+     </Details>
+  </Detector>
   <Detector class="edu.umd.cs.findbugs.detect.IntCast2LongAsInstant">
     <Details>
 <![CDATA[
@@ -196,7 +208,7 @@
     <Details>
 <![CDATA[
 <p>
-このディテクタは、メソッドパラメータとそれらのメソッドパラメータに直接適用された型修飾子との間で矛盾を発見します。
+このディテクタは、型修飾子が直接適用されるメソッドパラメータとそれらのメソッドパラメータの使い方との間で矛盾を発見します。
 </p>
 ]]>
     </Details>
@@ -237,7 +249,7 @@
     <Details>
 <![CDATA[
 <p>
-このディテクタは、net.jcip.annotations.Immutable としてアノテーションが付けられたクラスのルール違反を探します。
+このディテクタは、net.jcip.annotations.Immutable としてアノテートされたクラスのルール違反を探します。
 </p>
 ]]>
     </Details>
@@ -284,7 +296,7 @@
     <Details>
 <![CDATA[
 <p>
-このディテクタは、FindUnsatisfiedObligation ディテクタによって使われる責務の種類とメソッドに関するデータベースを構築します。
+このディテクタは、FindUnsatisfiedObligation ディテクタによって使われる責務の種類とメソッドのデータベースを構築します。
 </p>
 ]]>
     </Details>
@@ -330,7 +342,7 @@
     <Details>
 <![CDATA[
 <p>
-このディテクタは、どのクラスが .class オブジェクトへの定数参照があるか決定しようと試みます。
+このディテクタは、どのクラスが .class オブジェクトへの定数参照を持っているのか決定しようと試みます。
 </p>
 ]]>
     </Details>
@@ -348,8 +360,8 @@
     <Details>
 <![CDATA[
 <p>
-このディテクタは、そのクラスの新しいインスタンスを返すメソッドを持つ不変クラスを探します。
-そこで、それらのメソッドが呼び出されるインスタンスを変異させると誤って思うかもしれません。
+このディテクタは、クラスの新しいインスタンスを返すメソッドがある不変クラスを探します。
+それらのメソッドが呼び出されるところでインスタンスを変化させると事故が起きるかもしれません。
 </p>
 ]]>
     </Details>
@@ -358,7 +370,7 @@
     <Details>
 <![CDATA[
 <p>
-このディテクタは、継承されたメソッドと、外部のメソッドとの間の潜在的混同を探します。
+このディテクタは、継承されたメソッドと外部のメソッドとの潜在的混同を探します。
 </p>
 ]]>
     </Details>
@@ -367,7 +379,7 @@
     <Details>
 <![CDATA[
 <p>
-このディテクタは、メソッドの戻り値をチェックするために、アノテーションを探します。
+このディテクタは、メソッドの戻り値をチェックするためにアノテーションを探します。
 </p>
 ]]>
     </Details>
@@ -376,7 +388,7 @@
     <Details>
 <![CDATA[
 <p>
-このディテクタは、クラスリテラルではなく、<code>getClass</code> の結果で同期化するコードを探します。
+このディテクタは、クラスリテラルではなく、getClass の結果で同期化するコードを探します。
 </p>
 ]]>
     </Details>
@@ -396,7 +408,7 @@
 <![CDATA[
 <p>
 このディテクタは、メソッド、フィールド、パラメータで @NonNull アノテーションを探します。
-null かもしれない値が null でない値だけが使われるべき文脈で使われたときに FindNullDeref ディテクタで使われます。
+null かもしれない値が null でない値だけが使われるべき文脈で使われたときに FindNullDeref ディテクタが警告を生成するために使われます。
 </p>
 ]]>
     </Details>
@@ -406,8 +418,8 @@ null かもしれない値が null でない値だけが使われるべき文脈
     <Details>
 <![CDATA[
 <p>
-このディテクタは、どのパラメータが無条件で  null 値を利用するのかを決定するために、アプリケーションのすべてのメソッドを解析します。
-この情報は、null 値がメソッドに渡されるかもしれない呼び出し場所を発見するために、後の解析パスで使われます。
+このディテクタは、無条件でパラメータの  null 値が利用されるのか判定するためにアプリケーションのすべてのメソッドを解析します。
+この情報は、null 値がメソッドに渡されるかもしれない呼び出し場所を発見するために後の解析パスで使われます。
 </p>
 <p>
 低速ディテクタです。
@@ -420,7 +432,7 @@ null かもしれない値が null でない値だけが使われるべき文脈
     <Details>
 <![CDATA[
 <p>
-このディテクタは、どのメソッドが常に null でない値を返すかを決定するアプリケーションで、すべてのメソッドを解析します。
+このディテクタは、どのメソッドが常に非 null 値を返すのか判定するためにアプリケーションで、すべてのメソッドを解析します。
 </p>
 ]]>
     </Details>
@@ -451,7 +463,7 @@ null かもしれない値が null でない値だけが使われるべき文脈
     <Details>
 <![CDATA[
 <p>
-このディテクタは、クラスが別のパッケージのクラスによって拡張されるなら、予想外の結果をもたらす可能性がある <code>this.getClass().getResource(...)</code> の使い方を探します。
+このディテクタは、クラスが別のパッケージのクラスによって拡張されるなら、予想外の結果をもたらす可能性がある <code>this.getClass().getResource(...)</code> の使用を探します。
 </p>
 ]]>
     </Details>
@@ -502,7 +514,7 @@ null かもしれない値が null でない値だけが使われるべき文脈
     <Details>
 <![CDATA[
 <p>
-このディテクタは、無名内部クラスに定義されたメソッドで、スーパークラスのメソッドをオーバーライドすることを意図していますが、実際はオーバーライドになっていないメソッドを探します。
+このディテクタは、無名内部クラスに定義されたメソッドで、スーパークラスのメソッドをオーバーライドすることを意図しているのに、実際はオーバーライドになっていないメソッドを探します。
 </p>
 ]]>
     </Details>
@@ -522,7 +534,7 @@ null かもしれない値が null でない値だけが使われるべき文脈
     <Details>
 <![CDATA[
 <p>
-<code>java.net.URL</code>の <code>equals</code> メソッドと <code>hashCode</code> メソッドはドメイン名の解決をします。
+<code>java.net.URL</code> の equals と hashCode メソッドはドメイン名の解決をします。
 その結果、これらの演算は非常に高くつく可能性があります。このディテクタは、メソッドが呼び出されるかもしれない場所を探します。
 </p>
 ]]>
@@ -554,7 +566,7 @@ null かもしれない値が null でない値だけが使われるべき文脈
     <Details>
 <![CDATA[
 <p>
-このディテクタは、<code>(x == 5 || x == 5)</code> のような繰り返された条件テストを含んでいるコードを探します。
+このディテクタは、<code>(x == 5 || x == 5)</code> のような繰り返される条件テストを含んでいるコードを探します。
 </p>
 ]]>
     </Details>
@@ -633,7 +645,7 @@ null かもしれない値が null でない値だけが使われるべき文脈
     <Details>
 <![CDATA[
 <p>
-このディテクタは、ランダムな信号を生成します。それはメソッドによって実行される演算のハッシュ値に基づく警告です。
+このディテクタは、ランダムな信号を生成します。メソッドによって実行される演算のハッシュ値に基づく警告です。
 これらの警告はソフトウェアで実際のバグを発見するのではなく、データマイニング実験のコントロールとして役に立つことを目的とした偽のランダムノイズです。
 </p>
 <p>
@@ -647,7 +659,7 @@ null かもしれない値が null でない値だけが使われるべき文脈
     <Details>
 <![CDATA[
 <p>
-null の参照解除のためのノイズが多いディテクタです。コードの問題を見つける方法として使用するのではく、警告の妥当性または予測能力の実験でコントロールとして役に立つことを意図としました。
+null の参照解除のためのノイズが多いディテクタです。コードの問題を見つける方法として使用するのではく、警告の妥当性または予測能力の実験でコントロールとして役に立つことを意図しました。
 </p>
 ]]>
     </Details>
@@ -728,7 +740,7 @@ null の参照解除のためのノイズが多いディテクタです。コー
     <Details>
 <![CDATA[
 <p>
-このディテクタは、非短絡論理演算子の疑わしい使い方を探します（<code>||</code> と <code>&amp;&amp;</code> の代わりに <code>|</code> と <code>&amp;</code>)。
+このディテクタは、非短絡論理演算子の疑わしい使用を探します（<code>||</code> と <code>&amp;&amp;</code> の代わりに <code>|</code> と <code>&amp;</code>)。
 </p>
 ]]>
     </Details>
@@ -748,7 +760,7 @@ null の参照解除のためのノイズが多いディテクタです。コー
     <Details>
 <![CDATA[
 <p>
-このディテクタは、浮動小数点演算の使い方を探します。
+このディテクタは、浮動小数点演算の使用を探します。
 </p>
 <p>
 中速ディテクタです。
@@ -788,7 +800,7 @@ null の参照解除のためのノイズが多いディテクタです。コー
     <Details>
 <![CDATA[
 <p>
-このディテクタは、null とわかっている値のロードを探します。
+このディテクタは、null とわかっている値の読み出しを探します。
 </p>
 ]]>
     </Details>
@@ -900,7 +912,7 @@ null の参照解除のためのノイズが多いディテクタです。コー
     <Details>
 <![CDATA[
 <p>
-このディテクタは、スピンロックを探します。
+このディテクタは、条件式またはループ内で呼び出されない <code>wait</code> メソッドを探します。
 </p>
 ]]>
     </Details>
@@ -993,7 +1005,7 @@ null の参照解除のためのノイズが多いディテクタです。コー
     <Details>
 <![CDATA[
 <p>
-このディテクタは、更新されるフィールドから読み出されるオブジェクトの同期化を探します。
+このディテクタは、変更されたフィールドから読み込まれるオブジェクトで同期化を探します。
 </p>
 ]]>
     </Details>
@@ -1013,7 +1025,7 @@ null の参照解除のためのノイズが多いディテクタです。コー
     <Details>
 <![CDATA[
 <p>
-このディテクタは、悪意のあるコードによって変更されるかもしれない static フィールドを探します。
+このディテクタは、悪質なコードによって変更されるかもしれない static フィールドを探します。
 </p>
 ]]>
     </Details>
@@ -1072,7 +1084,7 @@ null の参照解除のためのノイズが多いディテクタです。コー
     <Details>
 <![CDATA[
 <p>
-このディテクタは、このクラスが本当に直列化されるという証拠として readObject と writeObject を介して明示的な直列化を探します。
+このディテクタは、このクラスが本当に直列化されるという証拠として readObject と writeObject を通して明示的な直列化を探します。
 </p>
 ]]>
     </Details>
@@ -1114,7 +1126,7 @@ null の参照解除のためのノイズが多いディテクタです。コー
     <Details>
 <![CDATA[
 <p>
-このディテクタは、<code>NullPointerException</code> が発生するかもしれない場所を探します。
+このディテクタは、NullPointerException が発生するかもしれない場所を探します。
 また、null に対する参照値の冗長な比較を探します。
 </p>
 <p>
@@ -1128,7 +1140,7 @@ null の参照解除のためのノイズが多いディテクタです。コー
     <Details>
 <![CDATA[
 <p>
-このディテクタは、<code>NullPointerException</code> が発生するかもしれない場所を探します。
+このディテクタは、NullPointerException が発生するかもしれない場所を探します。
 非短絡評価の使用はありふれたテクニックで失敗の原因になります。
 </p>
 ]]>
@@ -1139,7 +1151,7 @@ null の参照解除のためのノイズが多いディテクタです。コー
     <Details>
 <![CDATA[
 <p>
-このディテクタは、メソッドから脱出しないで、メソッドからのすべての経路でクローズされるように見えない入出力ストリームオブジェクトを探します。
+このディテクタは、メソッドから脱出しないで、メソッドからのすべての経路でクローズされるように見えない IO ストリームオブジェクトを探します。
 <p>
 低速ディテクタです。
 </p>
@@ -1178,7 +1190,7 @@ null の参照解除のためのノイズが多いディテクタです。コー
 中速ディテクタです。
 </p>
 <p>
-このディテクタを使用するために、補助クラスパスに <code>java.util.concurrent</code> パッケージ  (またはパッケージ自体の解析) が必要であることに注意してください。
+このディテクタを使用するために、補助クラスパスに <code>java.util.concurrent</code> パッケージ  (またはパッケージ自体を解析している) が必要であることに注意してください。
 </p>
 ]]>
     </Details>
@@ -1202,7 +1214,7 @@ null の参照解除のためのノイズが多いディテクタです。コー
     <Details>
 <![CDATA[
 <p>
-このディテクタは、現在ロックされているオブジェクトで呼び出されるように見えない <code>wait</code> メソッド、<code>notify</code> メソッド、<code>notifyAll</code> メソッドを探します。
+このディテクタは、現在ロックされているオブジェクトで作成されるように見えない <code>wait</code> メソッド、<code>notify</code> メソッド、<code>notifyAll</code> メソッドの呼び出しを探します。
 </p>
 </p>
 中速ディテクタです。
@@ -1296,7 +1308,7 @@ null の参照解除のためのノイズが多いディテクタです。コー
     <Details>
 <![CDATA[
 <p>
-このディテクタは、ループの中で + を使用している文字列連結を探します。
+このディテクタは、+を使ったループによる文字列の連結を探します。
 </p>
 ]]>
     </Details>
@@ -1554,16 +1566,27 @@ null の参照解除のためのノイズが多いディテクタです。コー
     <Details>
 <![CDATA[
 <p>
-このディテクタは、HTTP セッションへの直列化できないオブジェクトの格納を探します。
+このディテクタは、HTTP セッションへの非直列化オブジェクトの格納を探します。
 </p>
 ]]>
     </Details>
   </Detector>
+  
+  <Detector class="edu.umd.cs.findbugs.detect.FindUseOfNonSerializableValue">
+    <Details>
+<![CDATA[
+<p>
+このディテクタは、それらが直列化可能であることを要求するコンテキストで、非Serializableなオブジェクトの使用方法を探します。
+</p>
+]]>
+    </Details>
+  </Detector>
+  
   <Detector class="edu.umd.cs.findbugs.detect.FindNonSerializableValuePassedToWriteObject">
     <Details>
 <![CDATA[
 <p>
-このディテクタは、<code>ObjectOutput</code> の <code>writeObject</code> メソッドに渡された直列化できないオブジェクトの格納を探します。
+このディテクタは、<code>ObjectOutput</code> の <code>writeObject</code> メソッドに渡された非直列化オブジェクトを探します。
 </p>
 ]]>
     </Details>
@@ -1931,7 +1954,7 @@ null の参照解除のためのノイズが多いディテクタです。コー
 <p>
 このコードは、10進数の数にうまく変換されない double 値から BigDecimal を作成しています。
 たとえば、Java で new BigDecimal(0.1) と書くと0.1と正確に等しい BigDecimal (スケールが1で、スケールなしの値が1) が作成されると思うかもしれませんが
-実際には、0.1000000000000000055511151231257827021181583404541015625と等しくなります。
+実際には0.1000000000000000055511151231257827021181583404541015625と等しくなります。
 </p>
 <p>
 おそらくBigDecimal.valueOf(double d) メソッドの使用が望ましいです。BigDecimal(たとえば、BigDecimal.valueOf(0.1) は0.1を与えます) を作成するためには double の文字列表現を使用します。
@@ -2045,8 +2068,8 @@ null の参照解除のためのノイズが多いディテクタです。コー
 </p>
 <p>
 FindBugs は、HRS の最も露骨で自明なケースだけを探します。
-FindBugs が何かを発見したならほぼ間違いなく FindBugs が報告しない、より多くの脆弱性があるでしょう。
-HRS を心配するなら、商用の静的解析ツールかペンテストツールの使用を真剣に検討するべきです。
+FindBugs が何かを発見したならほぼ間違いなく FindBugs が報告しないより多くの脆弱性があるでしょう。
+HRS を心配するなら、商用の静的解析ツールかペネトレーションテストツールの使用を真剣に検討するべきです。
 </p>
 ]]>
     </Details>
@@ -2063,8 +2086,42 @@ HRS を心配するなら、商用の静的解析ツールかペンテストツ�
 </p>
 <p>
 FindBugs は、HRS のもっとも露骨で自明なケースだけを探します。
-FindBugs が何かを発見したならほぼ間違いなく FindBugs が報告しない、より多くの脆弱性があるでしょう。
-HRS を心配するなら、商用の静的解析ツールかペンテストツールの使用を真剣に検討するべきです。
+FindBugs が何かを発見したならほぼ間違いなく FindBugs が報告しないより多くの脆弱性があるでしょう。
+HRS を心配するなら、商用の静的解析ツールかペネトレーションテストツールの使用を真剣に検討するべきです。
+</p>
+]]>
+    </Details>
+  </BugPattern>
+  <BugPattern type="PT_RELATIVE_PATH_TRAVERSAL">
+    <ShortDescription>サーブレットの相対パストラバーサル</ShortDescription>
+    <LongDescription>相対パストラバーサル。{1}</LongDescription>
+    <Details>
+<![CDATA[
+<p>
+ソフトウェアは、制限されたディレクトリ内にあるべきパス名を構築するためにHTTPリクエストのパラメータを使いますが、パラメータはそのディレクトリの外にある場所に解決できる「..」のようなシーケンスを適切に無効にしていません。
+詳細は、<a href="http://cwe.mitre.org/data/definitions/23.html">http://cwe.mitre.org/data/definitions/23.html</a> を参照してください。
+</p>
+<p>
+FindBugs は、相対パストラバーサルのもっとも露骨で自明なケースだけを探します。
+FindBugs が何かを発見したならほぼ間違いなく FindBugs が報告しないより多くの脆弱性があるでしょう。
+相対パストラバーサルを心配するなら、商用の静的解析ツールかペネトレーションテストツールの使用を真剣に検討するべきです。
+</p>
+]]>
+    </Details>
+  </BugPattern>
+  <BugPattern type="PT_ABSOLUTE_PATH_TRAVERSAL">
+    <ShortDescription>サーブレットの絶対パストラバーサル</ShortDescription>
+    <LongDescription>絶対パストラバーサル。{1}</LongDescription>
+    <Details>
+<![CDATA[
+<p>
+ソフトウェアは、制限されたディレクトリ内にあるべきパス名を構築するためにHTTPリクエストのパラメータを使いますが、パラメータはそのディレクトリの外にある場所に解決できる「/abs/path」のような絶対パスシーケンスを適切に無効にしていません。
+詳細は、<a href="http://cwe.mitre.org/data/definitions/36.html">http://cwe.mitre.org/data/definitions/36.html</a> を参照してください。
+</p>
+<p>
+FindBugs は、相対パストラバーサルのもっとも露骨で自明なケースだけを探します。
+FindBugs が何かを発見したならほぼ間違いなく FindBugs が報告しないより多くの脆弱性があるでしょう。
+相対パストラバーサルを心配するなら、商用の静的解析ツールかペネトレーションテストツールの使用を真剣に検討するべきです。
 </p>
 ]]>
     </Details>
@@ -2080,8 +2137,8 @@ HRS を心配するなら、商用の静的解析ツールかペンテストツ�
 </p>
 <p>
 FindBugs は、XSS のもっとも露骨で自明なケースだけを探します。
-FindBugs が何かを発見したならほぼ間違いなく FindBugs が報告しない、より多くの脆弱性があるでしょう。
-XSS を心配するなら、商用の静的解析ツールかペンテストツールの使用を真剣に検討するべきです。
+FindBugs が何かを発見したならほぼ間違いなく FindBugs が報告しないより多くの脆弱性があるでしょう。
+XSS を心配するなら、商用の静的解析ツールかペネトレーションテストツールの使用を真剣に検討するべきです。
 </p>
 ]]>
     </Details>
@@ -2099,8 +2156,8 @@ XSS を心配するなら、商用の静的解析ツールかペンテストツ�
 </p>
 <p>
 FindBugs は、XSS のもっとも露骨で自明なケースだけを探します。
-FindBugs が何かを発見したならほぼ間違いなく FindBugs が報告しない、より多くの脆弱性があるでしょう。
-XSS を心配するなら、商用の静的解析ツールかペンテストツールの使用を真剣に検討するべきです。
+FindBugs が何かを発見したならほぼ間違いなく FindBugs が報告しないより多くの脆弱性があるでしょう。
+XSS を心配するなら、商用の静的解析ツールかペネトレーションテストツールの使用を真剣に検討するべきです。
 </p>
 ]]>
     </Details>
@@ -2117,8 +2174,8 @@ XSS を心配するなら、商用の静的解析ツールかペンテストツ�
 </p>
 <p>
 FindBugs は、XSS のもっとも露骨で自明なケースだけを探します。
-FindBugs が何かを発見したならほぼ間違いなく FindBugs が報告しない、より多くの脆弱性があるでしょう。
-XSS に関して心配しているなら商用の静的解析ツールかペンテストツールの使用を真剣に検討するべきです。
+FindBugs が何かを発見したならほぼ間違いなく FindBugs が報告しないより多くの脆弱性があるでしょう。
+XSS に関して心配しているなら商用の静的解析ツールかペネトレーションテストツールの使用を真剣に検討するべきです。
 </p>
 ]]>
     </Details>
@@ -2130,7 +2187,7 @@ XSS に関して心配しているなら商用の静的解析ツールかペン�
     <Details>
 <![CDATA[
 <p>
-(<a href="http://java.sun.com/developer/JDCTechTips/2003/tt1208.html#1">From JDC Tech Tip</a>):<br>
+(<a href="http://web.archive.org/web/20090526170426/http://java.sun.com/developer/JDCTechTips/2003/tt1208.html">From JDC Tech Tip</a>)<br>
 に解説されているとおり、Swing のメソッド、<code>show</code> メソッド、<code>setVisible</code> メソッド、<code>pack</code> メソッドは、フレームのために関連したピアを作成します。
 ピアの作成で、システムはイベントディスパッチスレッドを作成します。
 これが問題になることがあります。なぜなら <code>pack</code> メソッドと <code>validate</code> メソッドがまだ処理中でもイベントディスパッチスレッドがリスナに通知できるからです。
@@ -2225,13 +2282,26 @@ volatile フィールドのインクリメントは、アトミックではあ�
     <Details>
 <![CDATA[
 <p>
-Boolean.TRUE、Boolean.FALSE、null を返すメソッドは事故が起こるのを待っているようなものです。
+Boolean.TRUE、Boolean.FALSE、null を返すメソッドはいつ事故が起きてもおかしくないです。
 まるで論理型の値を返すかのように、このメソッドは呼び出される可能性があります。
 そして、コンパイラは Boolean 値のオートアンボクシングを挿入します。
-null 値が返されるなら <code>NullPointerException</code> が発生することになります。
+null 値が返されるなら NullPointerException が発生することになります。
 </p>
 ]]>
     </Details>
+  </BugPattern>
+
+　　<BugPattern type="NP_NONNULL_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR">
+    <ShortDescription>非 null フィールドは初期化されていない</ShortDescription>
+    <LongDescription>非 null フィールド {2.name} は {1} によって初期化されていません。</LongDescription>
+    <Details>
+<![CDATA[
+<p>
+フィールドは、非 null としてマークされているが、コンストラクタで書き込まれていません。
+フィールドは、コンストラクタの間、ほかの場所で初期化されるか、または使用する前に常に初期化されるかもしれません。
+</p>
+]]>
+       </Details>
   </BugPattern>
 
   <BugPattern type="NP_SYNC_AND_NULL_CHECK_FIELD">
@@ -2241,10 +2311,9 @@ null 値が返されるなら <code>NullPointerException</code> が発生する�
 <![CDATA[
 <p>
 フィールドは同期化しているので、おそらく null ではないと思われます。
-null のフィールドを同期化すると <code>NullPointerException</code> がスローされるので、null チェックは無意味になります。
+null のフィールドを同期化すると NullPointerException がスローされるので、null チェックは無意味になります。
 別のフィールドで同期化した方がよいです。
 </p>
-
 ]]>
     </Details>
   </BugPattern>
@@ -2255,7 +2324,7 @@ null のフィールドを同期化すると <code>NullPointerException</code> �
     <Details>
 <![CDATA[
 <p>
-このコードには、条件テストが2回、つまり、1つめの条件テストが正しいとき、2つめの条件テストが実行されます (たとえば、<code>x == 0 || x == 0</code>)。
+このコードには条件テストが2回、つまり、1つめの条件テストが正しいとき、2つめの条件テストが実行されます (たとえば、<code>x == 0 || x == 0</code>)。
 たぶん、2つめの条件テストは何か他のことを意図しています (たとえば、<code>x == 0 || y == 0</code>)。
 </p>
 ]]>
@@ -2519,7 +2588,7 @@ null のフィールドを同期化すると <code>NullPointerException</code> �
     <Details>
 <![CDATA[
 <p>
-クラスには、net.jcip.annotations.Immutable アノテーションが付けられています。
+クラスにはnet.jcip.annotations.Immutable でアノテートされています。
 Immutable アノテーションのルールは、すべてのフィールドを final にすることを義務づけます。
 </p>
 ]]>
@@ -2560,7 +2629,7 @@ URL の <code>equals</code> と <code>hashCode</code> は、ドメイン名の�
     <Details>
 <![CDATA[
 <p>
-URL の <code>quals</code> メソッドと <code>hashCode</code> メソッドは、ドメイン名の解決を行うので、ひどい性能になる可能性があります。<br>
+URL の <code>equals</code> メソッドと <code>hashCode</code> メソッドは、ドメイン名の解決を行うので、ひどい性能になる可能性があります。<br>
 詳細は、<a href="http://michaelscharf.blogspot.com/2006/11/javaneturlequals-and-hashcode-make.html">http://michaelscharf.blogspot.com/2006/11/javaneturlequals-and-hashcode-make.html</a> を参照してください。<br>
 その代わりに <code>java.net.URI</code> を使うことを検討してください。
 </p>
@@ -2574,7 +2643,7 @@ URL の <code>quals</code> メソッドと <code>hashCode</code> メソッドは
     <Details>
 <![CDATA[
 <p>
-アノテーションがそれ自身に <code>@Retention(RetentionPolicy.RUNTIME)</code> アノテーションを付けない限り、アノテーションはリフレクション (たとえば、<code>isAnnotationPresent(...)</code> メソッド) を使用して観測できません。
+アノテーションは、<code>@Retention(RetentionPolicy.RUNTIME)</code> でアノテートされなければ、リフレクション (たとえば、<code>isAnnotationPresent(...)</code> メソッド) を使用して観測することができません。
 </p>
 ]]>
     </Details>
@@ -2913,7 +2982,7 @@ JLS セクション15.25を参照してください。
     <Details>
 <![CDATA[
 <p>
-このメソッドには、ダブルチェックロッキングのインスタンスがあるかもしれません。
+このメソッドにはダブルチェックロッキングのインスタンスがあるかもしれません。
 このイディオムは、Java のメモリモデルでは正しくありません。<br>
 詳細は、<a href="http://www.cs.umd.edu/~pugh/java/memoryModel/DoubleCheckedLocking.html" >http://www.cs.umd.edu/~pugh/java/memoryModel/DoubleCheckedLocking.html</a> を参照してください。
 </p>
@@ -3017,7 +3086,7 @@ JLS セクション15.25を参照してください。
     <Details>
 <![CDATA[
 <p>
-このメソッドには、明示的にオブジェクトで <code>finalize</code> メソッドの呼び出しがあります。
+このメソッドには明示的にオブジェクトで <code>finalize</code> メソッドの呼び出しがあります。
 ファイナライザは Java 仮想マシンによって1度だけ実行されることになっているので、これは間違った考えです。
 </p>
 <p>
@@ -3215,7 +3284,7 @@ public boolean equals(Object o) {
 <p>
 このクラスでは、常に false を返す <code>equlas</code> メソッドを定義しています。
 これは、オブジェクトがそれ自身と等価ではないことを意味していて、このクラスの有用な Map や Set を作成できません。
-より根本的に、<code>equals</code> メソッドの要件一つである反射性を満たしていないことになります。
+より根本的に、<code>equals</code> メソッドの要件の一つである反射性を満たしていないことになります。
 </p>
 <p>
 おそらく意図されたことは、オブジェクトはそれ自身と等価であるというオブジェクト同一性です。
@@ -3513,8 +3582,7 @@ public int hashCode() {
     <Details>
 <![CDATA[
 <p>
-このフィールドは、<code>net.jcip.annotations.GuardedBy</code> アノテーションが付けられていますが、
-アノテーションに違反すると思われる方法でアクセスされる可能性があります。
+このフィールドは、<code>net.jcip.annotations.GuardedBy</code> でアノテートされているが、アノテーションに違反すると思われる方法でアクセスされる可能性があります。
 </p>
 ]]>
     </Details>
@@ -3544,7 +3612,7 @@ Web サーバは、通常サーブレットや JSP クラスのインスタン�
 このバグレポートは、バグパターンディテクタが以下のように判断したことを示します。
 </p>
 <ul>
-  <li>クラスには、ロックされたアクセスとアンロックされたアクセスが混在していて、</li>
+  <li>クラスにはロックされたアクセスとアンロックされたアクセスが混在していて、</li>
   <li>少なくとも1つのロックされたアクセスがクラス自身のメソッドの1つによって実行され、</li>
   <li>読み出しの2倍の重み付けをした書き込みで、非同期フィールドのアクセス (読み出しと書き込み) 数がすべてのアクセスのわずか1/3</li>
 </ul>
@@ -3729,7 +3797,7 @@ public static メソッドは、クラスの 静的な状態の一部である�
     <Details>
 <![CDATA[
 <p>
-このメソッドには、条件制御フローによってガードされない <code>java.lang.Object.wait()</code> の呼び出しがあります。
+このメソッドには条件制御フローによってガードされない <code>java.lang.Object.wait()</code> の呼び出しがあります。
 このコードは、<code>wait</code> メソッドを呼び出す前に、待機するつもりだった条件がすでに満たされていないことを確かめるべきです。
 どんな前の通知も無視されます。
 </p>
@@ -3797,7 +3865,7 @@ class B extends A {
     <Details>
 <![CDATA[
 <p>
-このクラスには、類似した名前の get メソッドと set メソッドがあり、set メソッドは同期化していて、get メソッドは同期化していません。
+このクラスには類似した名前の get メソッドと set メソッドがあり、set メソッドは同期化していて、get メソッドは同期化していません。
 get メソッドの呼び出し元がオブジェクトのための一貫した状態を必ずしも見るというわけではないので、実行時に間違った振る舞いになるかもしれません。
 get メソッドは同期化するべきです。
 </p>
@@ -3967,7 +4035,7 @@ CERT の <a href="https://www.securecoding.cert.org/confluence/display/java/CON0
     <Details>
 <![CDATA[
 <p>
-このコードには、空の synchronized ブロックがあります。
+このコードには空の synchronized ブロックがあります。
 </p>
 <blockquote><pre>
 synchronized() {
@@ -3991,7 +4059,7 @@ synchronized() {
 このバグレポートは、バグパターンディテクタが以下のように判断したことをを示します。 
 </p>
 <ul>
-  <li>クラスには、ロックされたアクセスとアンロックされたアクセスが混在していて、</li>
+  <li>クラスにはロックされたアクセスとアンロックされたアクセスが混在していて、</li>
   <li>少なくとも1つのロックされたアクセスがクラス自身のメソッドの1つによって実行され、</li>
   <li>読み出しの2倍の重み付けをした書き込みで、非同期フィールドのアクセス (読み出しと書き込み) 数がすべてのアクセスのわずか1/3</li>
 </ul>
@@ -4053,8 +4121,8 @@ private Long getNotificationSequenceNumber() {
 <![CDATA[
 <p>
 インタフェースに定義された final static フィールドは、配列や Hashtable などの可変オブジェクトを参照しています。
-この可変オブジェクトは、悪意のあるコードや別のパッケージからの事故によって変更される可能性があります。
-これを解決するために、フィールドはクラスへ移動する必要があり、脆弱性を回避するためにパッケージプロテクテッドにすべきです。
+この可変オブジェクトは、悪質なコードや偶然別のパッケージによって変更される可能性があります。
+これを解決するために、フィールドはクラスへ移動する必要があり、脆弱性を回避するためにパッケージプロテクテッドにします。
 </p>
 ]]>
     </Details>
@@ -4066,22 +4134,36 @@ private Long getNotificationSequenceNumber() {
     <Details>
 <![CDATA[
 <p>
-この可変 static フィールドは、悪意のあるコードや別のパッケージからの事故によって変更される可能性があります。
-フィールドは、脆弱性を回避するために final またはパッケージプロテクテッドにすべきです。
+この可変 static フィールドは、悪質なコードや偶然別のパッケージによって変更される可能性があります。
+フィールドは、脆弱性を回避するために final またはパッケージプロテクテッドにできます。
 </p>
 ]]>
     </Details>
   </BugPattern>
 
-  <BugPattern type="MS_SHOULD_BE_FINAL">
-    <ShortDescription>final にすべきフィールド</ShortDescription>
-    <LongDescription>{1} は final ではありませんが、final にすべきです。</LongDescription>
+  <BugPattern type="MS_SHOULD_BE_REFACTORED_TO_BE_FINAL">
+    <ShortDescription>final でないフィールドはリファクタリングするべき</ShortDescription>
+    <LongDescription>{1} は、final でないのでリファクタリングするべきです。</LongDescription>
     <Details>
 <![CDATA[
 <p>
-この可変 static フィールドは、悪意のあるコードや別のパッケージからの事故によって変更される可能性があります。
-フィールドは、脆弱性を回避するために final にすべきです。
- </p>
+final でない public static フィールドは、悪質なコードや偶然別のパッケージによって変更される可能性があります。
+フィールドは、脆弱性を回避するために final にできます。
+しかしながら、スタティックイニシャライザには複数のフィールドへの書き込みがあるので、何らかのリファクタリングを必要とするでしょう。
+</p>
+]]>
+    </Details>
+  </BugPattern>
+  
+  <BugPattern type="MS_SHOULD_BE_FINAL">
+    <ShortDescription>final にすべきフィールド</ShortDescription>
+    <LongDescription>{1} は、final ではありませんが、final にすべきです。</LongDescription>
+    <Details>
+<![CDATA[
+<p>
+final でない public static フィールドは、悪質なコードや偶然別のパッケージによって変更される可能性があります。
+フィールドは、脆弱性を回避するために final にできます。
+</p>
 ]]>
     </Details>
   </BugPattern>
@@ -4092,8 +4174,8 @@ private Long getNotificationSequenceNumber() {
     <Details>
 <![CDATA[
 <p>
-この可変 static フィールドは、悪意のあるコードや別のパッケージからの事故によって変更される可能性があります。
-フィールドは、脆弱性を回避するためにパッケージプロテクテッドにすべきです。
+この可変 static フィールドは、悪質なコードや偶然別のパッケージによって変更される可能性があります。
+フィールドは、脆弱性を回避するためにパッケージプロテクテッドにできます。
 </p>
 ]]>
     </Details>
@@ -4105,7 +4187,7 @@ private Long getNotificationSequenceNumber() {
     <Details>
 <![CDATA[
 <p>
-この final static フィールドは、Hashtable を参照しているので、悪意のあるコードや別のパッケージからの事故によってアクセスされる可能性があります。
+この final static フィールドは、Hashtable を参照しているので、悪質なコードや偶然別のパッケージによってアクセスされる可能性があります。
 このコードは、Hashtable のコンテンツを自由に変更できます。
 </p>
 ]]>
@@ -4118,7 +4200,7 @@ private Long getNotificationSequenceNumber() {
     <Details>
 <![CDATA[
 <p>
-この final static フィールドは、配列を参照しているので、悪意のあるコードや誤って別のパッケージからアクセスされる可能性があります。
+この final static フィールドは、配列を参照しているので、悪質なコードや偶然別のパッケージによってアクセスされる可能性があります。
 このコードは、配列のコンテンツを自由に変更できます。
 </p>
 ]]>
@@ -4126,12 +4208,12 @@ private Long getNotificationSequenceNumber() {
   </BugPattern>
 
   <BugPattern type="MS_CANNOT_BE_FINAL">
-    <ShortDescription>final でないフィールドは悪意のあるコードから保護できない</ShortDescription>
-    <LongDescription>{1} は、final でないので、悪意のあるコードから保護できません。 </LongDescription>
+    <ShortDescription>final でないフィールドは悪質なコードから保護できない</ShortDescription>
+    <LongDescription>{1} は、final でないので、悪質なコードから保護できません。 </LongDescription>
     <Details>
 <![CDATA[
 <p>
-この可変 static フィールドは、悪意のあるコードや別のパッケージからの事故によって変更される可能性があります。
+この可変 static フィールドは、悪質なコードや偶然別のパッケージによって変更される可能性があります。
 残念ながらこのような使い方は簡単に解決できません。
 </p>
 ]]>
@@ -4159,7 +4241,7 @@ Java の仕様上は継承したメソッドを呼び出しますが、これは
     <Details>
 <![CDATA[
 <p>
-このクラスには、そのスーパークラスと同一の単純名がありますが、スーパークラスは異なるパッケージです (たとえば、<code>alpha.Foo</code> が <code>beta.Foo</code> を拡張します)。
+このクラスにはそのスーパークラスと同一の単純名がありますが、スーパークラスは異なるパッケージです (たとえば、<code>alpha.Foo</code> が <code>beta.Foo</code> を拡張します)。
 これは非常に紛らわしく、参照関係を解決するために import 文を見なければならなかったり、スーパークラスに存在するメソッドを誤ってオーバーライドしてしまったりする状況を作り出します。
 </p>
 ]]>
@@ -4172,7 +4254,7 @@ Java の仕様上は継承したメソッドを呼び出しますが、これは
     <Details>
 <![CDATA[
 <p>
-このクラスまたはインタフェースには、実装された/拡張されたインタフェースと同一の単純名がありますが、インタフェースは異なるパッケージです (たとえば、<code>alpha.Foo</code> が <code>beta.Foo</code> を継承しているような状況です)。
+このクラスまたはインタフェースには実装された/拡張されたインタフェースと同一の単純名がありますが、インタフェースは異なるパッケージです (たとえば、<code>alpha.Foo</code> が <code>beta.Foo</code> を継承しているような状況です)。
 これは非常に紛らわしく、参照関係を解決するために import 文を見なければならなかったり、スーパークラスに存在するメソッドを誤ってオーバーライドしてしまったりする状況を作り出します。
 </p>
 ]]>
@@ -4472,7 +4554,7 @@ public class B extends A {
     <Details>
 <![CDATA[
 <p>
-このクラスには、複数の場所で更新されるフィールドがあります。したがって、このクラスの状態の一部であると思われます。
+このクラスには複数の場所で更新されるフィールドがあります。したがって、このクラスの状態の一部であると思われます。
 しかしながら、フィールドは transient と宣言しているので、 readObject/readResolve で設定されません。
 クラスの直列化復元されたインスタンスにはデフォルト値が設定されます。
 </p>
@@ -4559,7 +4641,7 @@ Externalizable オブジェクトが直列化復元されるときは、最初�
     <Details>
 <![CDATA[
 <p>
-このメソッドには、1つの case が次の case へと通り抜ける switch 文があります。
+このメソッドには1つの case が次の case へと通り抜ける switch 文があります。
 通常、break か return でこの case を終わらせる必要があります。
 </p>
 ]]>
@@ -4571,8 +4653,11 @@ Externalizable オブジェクトが直列化復元されるときは、最初�
     <Details>
 <![CDATA[
 <p>
-このメソッドには、default がない switch 文があります。
+このメソッドにはdefault がない switch 文があります。
 通常、default を用意する必要があります。
+</p>
+<p>
+解析は生成されたバイトコードを見るだけなので、default が  switch 文の終わりにあって、break 文で終わらないならば、誤警告のトリガーとなります。
 </p>
 ]]>
     </Details>
@@ -4609,7 +4694,7 @@ Externalizable オブジェクトが直列化復元されるときは、最初�
     <Details>
 <![CDATA[
 <p>
-このクラスには、同期化している <code>writeObject</code> メソッドがあります。
+このクラスには同期化している <code>writeObject</code> メソッドがあります。
 しかしながら、クラスのその他のメソッドは同期化していません。
 </p>
 ]]>
@@ -4624,8 +4709,8 @@ Externalizable オブジェクトが直列化復元されるときは、最初�
 <p>
 この直列化可能クラスは同期化する <code>readObject</code> メソッド を定義しています。
 定義によって、直列化復元によって作成されるオブジェクトは1つのスレッドによってだけ到達可能です。
-したがって、<code>readObject()</code> は同期化する必要がありません。
-<code>readObject()</code> メソッドそのものが別のスレッドに見えるようになるオブジェクトの原因になっているなら非常に疑わしいコーディングスタイルの例です。
+したがって、<code>readObject</code> メソッドは同期化する必要がありません。
+<code>readObject</code> メソッドそのものが別のスレッドに見えるようになるオブジェクトの原因になっているなら非常に疑わしいコーディングスタイルの例です。
 </p>
 ]]>
     </Details>
@@ -4656,7 +4741,6 @@ Externalizable オブジェクトが直列化復元されるときは、最初�
 ]]>
     </Details>
   </BugPattern>
-
 
   <BugPattern type="SE_NONLONG_SERIALVERSIONID">
     <ShortDescription>serialVersionUID が long ではない</ShortDescription>
@@ -4750,7 +4834,7 @@ Externalizable オブジェクトが直列化復元されるときは、最初�
     <Details>
 <![CDATA[
 <p>
-このクラスには、コンパイル時に静的な値に初期化されるインスタンス final フィールドがあります。
+このクラスにはコンパイル時に静的な値に初期化されるインスタンス final フィールドがあります。
 static フィールドにすることを検討してください。
 </p>
 ]]>
@@ -4881,7 +4965,7 @@ static フィールドにすることを検討してください。
 <![CDATA[
 <p>
 ここで参照されている変数は、以前に null なのかチェックしているため  null であることがわかっています。
-これは有効かもしれないし、間違いかもしれません (たぶん、異なる変数を参照することを意図してました、あるいは以前の null チェックで、 null でないのか確かめるべきでした)。
+これは有効かもしれないし、間違いかもしれません (たぶん、異なる変数を参照することを意図してました、あるいは以前の null チェックで  null でないのか確かめるべきでした)。
 </p>
 ]]>
     </Details>
@@ -4894,7 +4978,7 @@ static フィールドにすることを検討してください。
 <![CDATA[
 <p>
 <code>readLine</code> メソッドの結果が null なのか確かめないで値を利用しています。
-<code>readLine</code> メソッドは、それ以上読み出すテキスト行がなければ null を返すので、<code>NullPointerException</code> が発生します。
+<code>readLine</code> メソッドは、それ以上読み出すテキスト行がなければ null を返すので、NullPointerException が発生します。
 </p>
 ]]>
     </Details>
@@ -4907,7 +4991,7 @@ static フィールドにすることを検討してください。
 <![CDATA[
 <p>
 <code>readLine</code> メソッドの結果をすぐに利用しています。
-<code>readLine</code> メソッドは、それ以上読み出すテキスト行がなければ null を返すので、<code>NullPointerException</code> が発生します。
+<code>readLine</code> メソッドは、それ以上読み出すテキスト行がなければ null を返すので、NullPointerException が発生します。
 </p>
 ]]>
     </Details>
@@ -4920,7 +5004,7 @@ static フィールドにすることを検討してください。
 <![CDATA[
 <p>
 プログラムは、決して null でない値を書き込むとは思われないフィールドの値を利用しています。
-この値を利用すると <code>NullPointerException</code> が発生します。
+この値を利用すると NullPointerException が発生します。
 </p>
 ]]>
     </Details>
@@ -4933,7 +5017,7 @@ static フィールドにすることを検討してください。
 <![CDATA[
 <p>
 プログラムは、決して null 値でない値を書き込むと思われない public または protected フィールドの null 値を利用しています。
-フィールドが解析によって見られない機構を通して初期化されない限り、この値を利用すると <code>NullPointerException</code> が発生します。
+フィールドが解析によって見られない機構を通して初期化されない限り、この値を利用すると NullPointerException が発生します。
 </p>
 ]]>
     </Details>
@@ -4946,7 +5030,7 @@ static フィールドにすることを検討してください。
 <![CDATA[
 <p>
 このクラスは内部クラスですが、おそらく static 内部クラスにすべきです。
-実際には、内部クラスと外部クラスのスレッドローカルとの間にデッドロックの深刻な危険性があります。
+実際には内部クラスと外部クラスのスレッドローカルとの間にデッドロックの深刻な危険性があります。
 内部クラスが static でないので、外部クラスへの参照を保持します。
 スレッドローカルに内部クラスのインスタンスの参照があるなら、内部と外部のインスタンスの両方が到達可能になり、ガベージされません。
 </p>
@@ -4976,7 +5060,7 @@ static フィールドにすることを検討してください。
 <p>
 このフィールドは、どんなコンストラクタの中でも決して初期化されません。したがって、オブジェクトが構築された後、null である可能性があります。
 どこかほかで、値がロードされて、null チェックなしで null 値が利用されます。
-フィールドが初期化される前に利用されると <code>NullPointerException</code> が発生するので、誤りか疑わしい設計かもしれません。
+フィールドが初期化される前に利用されると NullPointerException が発生するので、誤りか疑わしい設計かもしれません。
 </p>
 ]]>
     </Details>
@@ -5148,7 +5232,7 @@ dateString = dateString.trim();
     <Details>
 <![CDATA[
 <p>
-このコードは、compareTo か比較メソッドを呼び出して、戻り値が特定の値（たとえば1または-1） なのか確かめています。
+このコードは、compareTo または compare メソッドを呼び出して、戻り値が特定の値（たとえば1または-1） なのか確かめています。
 これらのメソッドを呼び出すときは特定のゼロ以外の値ではなく、結果の符号だけをチェックするべきです。
 多数または大部分の compareTo と比較メソッドは-1、0または1を返しますが、いくつかは他の値を返します。
 </p>
@@ -5191,7 +5275,7 @@ if (x &lt; 0) {
 <![CDATA[
 <p>
 ここで null 値を利用しようとしています。
-コードが実行されると <code>NullPointerException</code> が発生します。
+コードが実行されると NullPointerException が発生します。
 </p>
 ]]>
     </Details>
@@ -5204,7 +5288,7 @@ if (x &lt; 0) {
 <![CDATA[
 <p>
 <code>close</code> メソッドは、常に null 値のオブジェクトで呼び出されています。
-この文が実行されるなら <code>NullPointerException</code> が発生します。
+この文が実行されるなら NullPointerException が発生します。
 ここでクローズするべき何かを決してクローズしないという大きな危険性があります。
 </p>
 ]]>
@@ -5212,12 +5296,12 @@ if (x &lt; 0) {
   </BugPattern>
 
   <BugPattern type="NP_STORE_INTO_NONNULL_FIELD">
-    <ShortDescription>@NonNull アノテーションが付けられたフィールドに null を格納している</ShortDescription>
-    <LongDescription>@NonNull アノテーションが付けられたフィールド {2.givenClass} に null を格納しています。{1}</LongDescription>
+    <ShortDescription>@NonNull でアノテートされたフィールドに null を格納している</ShortDescription>
+    <LongDescription>@NonNull でアノテートされたフィールド {2.givenClass} に null を格納しています。{1}</LongDescription>
     <Details>
       <![CDATA[
 <p>
-@NonNull アノテーションが付けられたフィールドに null かもしれない値を格納しています。 
+@NonNull でアノテートされたフィールドに null かもしれない値を格納しています。 
 </p>
 ]]>
     </Details>
@@ -5230,7 +5314,7 @@ if (x &lt; 0) {
 <![CDATA[
 <p>
 例外経路上のここで null 値を利用しています。
-コードが実行されると <code>NullPointerException</code> が発生します。
+コードが実行されると NullPointerException が発生します。
 現在の FindBugs は実行不可能な例外経路を取り除いていないので、誤検出かもしれないことに注意してください。
 </p>
 <p>
@@ -5241,12 +5325,12 @@ switch 文の default が多くの場合実行不可能なので FindBugs が例
   </BugPattern>
 
   <BugPattern type="NP_PARAMETER_MUST_BE_NONNULL_BUT_MARKED_AS_NULLABLE">
-    <ShortDescription>null 値を許容しないパラメータに null 値を許容するアノテーションが付けられている</ShortDescription>
-    <LongDescription>{2} は、null 値を許容しないのに null 値を許容するアノテーションが付けられています。</LongDescription>
+    <ShortDescription>パラメータは  非 null でなければならないが null 可能としてアノテートされている</ShortDescription>
+    <LongDescription>{2} は、非 null でなければならないが、null 可能としてアノテートされています。</LongDescription>
     <Details>
 <![CDATA[
 <p>
-このパラメータは、null 値を許容しないことを要求する方法で常に使われていますが、パラメータには明示的に null 値を許容するアノテーションが付けられています。
+このパラメータは、常に 非 null にすることを要求する方法で使われますが、パラメータには明示的に null 可能としてアノテートされています。
 パラメータかアノテーションのどちらかの使い方が間違っています。
 </p>
 ]]>
@@ -5259,8 +5343,8 @@ switch 文の default が多くの場合実行不可能なので FindBugs が例
     <Details>
 <![CDATA[
 <p>
-そこで分岐または文が実行されるなら null 値が利用されて <code>NullPointerException</code> が発生します。
-もちろん、問題は分岐または文が実行不可能で、<code>NullPointerException</code> が決して発生する可能性がないということかもしれません。
+そこで分岐または文が実行されるなら null 値が利用されて NullPointerException が発生します。
+もちろん、問題は分岐または文が実行不可能で、NullPointerException が決して発生する可能性がないということかもしれません。
 それを決めるのは FindBugs の能力を超えています。
 </p>
 ]]>
@@ -5273,10 +5357,10 @@ switch 文の default が多くの場合実行不可能なので FindBugs が例
     <Details>
 <![CDATA[
 <p>
-分岐または文が実行されるなら、null 値が利用されて <code>NullPointerException</code> が発生します。
-もちろん、問題は分岐または文が実行不可能で、<code>NullPointerException</code> が決して発生する可能性がないということかもしれません。
+分岐または文が実行されるなら、null 値が利用されて NullPointerException が発生します。
+もちろん、問題は分岐または文が実行不可能で、NullPointerException が決して発生する可能性がないということかもしれません。
 それを決めるのは FindBugs の能力を超えています。
-この値がすでに null であることを検査されたという事実からこれは確かな可能性です。
+この値がすでに null であることを検査したという事実からこれは確かな可能性です。
 </p>
 ]]>
     </Details>
@@ -5289,7 +5373,7 @@ switch 文の default が多くの場合実行不可能なので FindBugs が例
 <![CDATA[
 <p>
 例外経路上のここで null 値が利用されています。
-コードが実行されると <code>NullPointerException</code> が発生するかもしれません。
+コードが実行されると NullPointerException が発生するかもしれません。
 現在の FindBugs は実行不可能な例外経路を取り除かないので、誤検出かもしれないことに注意してください。
 </p>
 <p>
@@ -5306,7 +5390,7 @@ switch 文の default が多くの場合実行不可能なので FindBugs が例
 <![CDATA[
 <p>
 メソッドからの戻り値を null チェックしないで利用しています。メソッドの戻り値は null なのかチェックするべきです。
-コードが実行されると <code>NullPointerException</code> が発生するかもしれません。
+コードが実行されると NullPointerException が発生するかもしれません。
 </p>
 ]]>
     </Details>
@@ -5318,8 +5402,8 @@ switch 文の default が多くの場合実行不可能なので FindBugs が例
     <Details>
 <![CDATA[
 <p>
-おそらく、 null 値を許容しないメソッドパラメータに  null 値を渡しています。
-パラメータは、常に非 null であるべきパラメータとしてアノテーションが付けられていたか、または解析が常に null 値を利用すると示していました。
+null の可能性がある値が、非 null メソッドパラメータに渡されています。
+パラメータは、常に非 null とすべきパラメータとしてアノテートされていたか、または解析が常に null 値を利用すると示していました。
 </p>
 ]]>
     </Details>
@@ -5332,7 +5416,7 @@ switch 文の default が多くの場合実行不可能なので FindBugs が例
       <![CDATA[
 <p>
 おそらく、すべての知られているターゲットメソッドが非 null であることを要求する呼び出し場所で null 値を渡しています。
-パラメータは、常に非 null であるべきパラメータとしてアノテーションが付けられていたか、または解析が常に null 値を利用すると示していました。
+パラメータは、常に非 null とすべきパラメータとしてアノテートされていたか、または解析が常に null 値を利用すると示していました。
 </p>
       ]]>
     </Details>
@@ -5345,7 +5429,7 @@ switch 文の default が多くの場合実行不可能なので FindBugs が例
       <![CDATA[
 <p>
 このメソッド呼び出しは非 null メソッドパラメータに対して null 値を渡しています。
-パラメータは、常に非 null であるべきパラメータとしてアノテーションが付けられていたか、または解析が常に null 値を利用すると示していました。
+パラメータは、常に非 null とすべきパラメータとしてアノテートされていたか、または解析が常に null 値を利用すると示していました。
 </p>
       ]]>
     </Details>
@@ -5358,7 +5442,7 @@ switch 文の default が多くの場合実行不可能なので FindBugs が例
       <![CDATA[
 <p>
 このメソッドは、非 null でなければならないメソッドのパラメータとして、null 値を渡しています。
-このパラメータは、@Nonnull として明示的にアノテーションが付けられていたか、または解析が常に null 値を利用すると示していました。
+このパラメータは、@Nonnull として明示的にアノテートされていたか、または解析が常に null 値を利用すると示していました。
 </p>
       ]]>
     </Details>
@@ -5492,7 +5576,7 @@ null ではなく空の文字列またはいくつかの他の適切な文字列
     <Details>
 <![CDATA[
 <p>
-このメソッドには、分岐するのかどうかに関係なく、制御フローが同じ場所へと続く、役に立たない制御フロー文があります。<br>
+このメソッドには分岐するのかどうかに関係なく、制御フローが同じ場所へと続く、役に立たない制御フロー文があります。<br>
 たとえば、これは 空の <code>if</code> 文が原因になります。
 <blockquote><pre>
 if (argv.length == 0) {
@@ -5509,7 +5593,7 @@ if (argv.length == 0) {
     <Details>
 <![CDATA[
 <p>
-このメソッドには、分岐するのかどうかに関係なく、制御フローが同じか次の行へと続く、役に立たない制御フロー文があります。<br>
+このメソッドには分岐するのかどうかに関係なく、制御フローが同じか次の行へと続く、役に立たない制御フロー文があります。<br>
 多くの場合、不注意に <code>if</code> 文の本体を空文を使用したことが原因になります。
 </p>
 <blockquote><pre>
@@ -5522,12 +5606,12 @@ if (argv.length == 1);
 
   <BugPattern type="RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE">
     <ShortDescription>すでに利用していた値の null チェック</ShortDescription>
-    <LongDescription>すでに利用していた値を {4.lineNumber} の {2.givenClass} で null チェックしています。{1}</LongDescription>
+    <LongDescription>すでに利用していた {2.givenClass} の値を {4.lineNumber} で null チェックしています。{1}</LongDescription>
     <Details>
 <![CDATA[
 <p>
 ここで値が null なのかチェックしていますが、すでに値を利用していたので null である可能性はありません。
-値が null なら以前の利用で <code>NullPointerException</code> が発生していたでしょう。
+値が null なら以前の利用で NullPointerException が発生していたでしょう。
 基本的に、この値が null であることを許すのかどうかに関係なく、このコードと以前の値の利用は一致しません。
 チェックは冗長か、または以前の値の利用は誤りです。
 </p>
@@ -5541,7 +5625,7 @@ if (argv.length == 1);
     <Details>
 <![CDATA[
 <p>
-このメソッドには、null とわかっている値の冗長な null チェックがあります。
+このメソッドにはnull とわかっている値の冗長な null チェックがあります。
 </p>
 ]]>
     </Details>
@@ -5565,7 +5649,7 @@ if (argv.length == 1);
     <Details>
 <![CDATA[
 <p>
-このメソッドには、両方とも明らかに null とわかっている2つの参照の冗長な比較があります。
+このメソッドには両方とも明らかに null とわかっている2つの参照の冗長な比較があります。
 </p>
 ]]>
     </Details>
@@ -5577,7 +5661,7 @@ if (argv.length == 1);
     <Details>
 <![CDATA[
 <p>
-このメソッドには、null でないことがわかっている参照と null とわかっている別の参照との比較があります。
+このメソッドにはnull でないことがわかっている参照と null とわかっている別の参照との比較があります。
 </p>
 ]]>
     </Details>
@@ -5688,7 +5772,7 @@ try {
 通常は2つの Boolean 値 (<code>Boolean.TRUE</code> と <code>Boolean.FALSE</code>) だけですが、
 <code>new Boolean(b)</code> コンストラクタを使用して他の Boolean オブジェクトを作成する可能性があります。
 そのようなオブジェクトを回避することは最高です。
-しかし、それらが存在するなら、Boolean オブジェクトの等価性をチェックするために <code>.equals(...)</code> より == または != を使用しているなら異なる結果をもたらします。
+しかし、それらが存在するなら、Boolean オブジェクトの等価性をチェックするために <code>.equals(...)</code> ではなく == または != を使用しているなら異なる結果をもたらします。
 </p>
 ]]>
     </Details>
@@ -5799,7 +5883,7 @@ try {
     <Details>
 <![CDATA[
 <p>
-このメソッドには、ローカル変数の自己代入があり、ローカル変数とフィールドが同じ名前です。<br>
+このメソッドにはローカル変数の自己代入があり、ローカル変数とフィールドが同じ名前です。<br>
 たとえば、以下のようなコードです。
 </p>
 <blockquote><pre>
@@ -5821,7 +5905,7 @@ try {
     <Details>
 <![CDATA[
 <p>
-このメソッドには、ローカル変数の自己代入があります。<br>
+このメソッドにはローカル変数の自己代入があります。<br>
 たとえば、以下のようなコードです。
 </p>
 <blockquote><pre>
@@ -5843,7 +5927,7 @@ public void foo() {
     <Details>
 <![CDATA[
 <p>
-このメソッドには、フィールドの自己代入があります。<br>
+このメソッドにはフィールドの自己代入があります。<br>
 たとえば、以下のようなコードです。
 </p>
 <blockquote><pre>
@@ -5865,7 +5949,7 @@ public void foo() {
     <Details>
 <![CDATA[
 <p>
-このメソッドには、フィールドの二重代入があります。<br>
+このメソッドにはフィールドの二重代入があります。<br>
 たとえば、以下のようなコードです。
 </p>
 <blockquote><pre>
@@ -5887,7 +5971,7 @@ public void foo() {
     <Details>
 <![CDATA[
 <p>
-このメソッドには、ローカル変数の二重代入があります。<br>
+このメソッドにはローカル変数の二重代入があります。<br>
 たとえば、以下のようなコードです。
 </p>
 <blockquote><pre>
@@ -6307,7 +6391,7 @@ For more information, see the
     <Details>
 <![CDATA[
 <p>
-このメソッドには、volatile でない static フィールドの非同期な遅延初期化があります。
+このメソッドにはvolatile でない static フィールドの非同期な遅延初期化があります。
 コンパイラやプロセッサが命令を並べ替えるかもしれないので、メソッドが複数のスレッドによって呼び出されるかもしれないなら、
 スレッドは完全に初期化されたオブジェクトを見るとは保証されていません。
 フィールドにアクセスした際に、中途半端に初期化されたインスタンスが見えてしまう危険があります。
@@ -6324,7 +6408,7 @@ For more information, see the
     <Details>
 <![CDATA[
 <p>
-このメソッドには、static フィールドの非同期な遅延初期化があります。
+このメソッドにはstatic フィールドの非同期な遅延初期化があります。
 フィールドが設定されたあと、その場所に格納されるオブジェクトはさらに更新されるかアクセスされます。
 それが設定されるとすぐに、そのフィールドの設定は他のスレッドに見えます。
 フィールドを設定するさらなるアクセスがオブジェクトを初期化するのに役に立つなら、
@@ -6344,8 +6428,8 @@ For more information, see the
     <Details>
 <![CDATA[
 <p>
-このメソッドは、<code>java.util.concurrent.locks.Lock</code> を実装したオブジェクトで同期化しています。
-そのようなオブジェクトは、<code>synchronized (...)</code> 構造ではなく、<code>acquire()</code>/<code>release()</code> を使用してロック/アンロックをします。
+このメソッドは、java.util.concurrent.locks.Lock を実装したオブジェクトで同期化しています。
+そのようなオブジェクトは <code>synchronized (...)</code> 構文よりも <code>acquire()</code>/<code>release()</code> を使用してロックとロックの解除をします。
 </p>
 ]]>
     </Details>
@@ -6372,7 +6456,11 @@ For more information, see the
 <![CDATA[
 <p>
 このメソッドは、java.util.concurrent パッケージのクラス (またはサブクラス) のインスタンスで同期化しています。
-これらのクラスのインスタンスは、<code>synchronized</code> の使用とは違う互換性のないそれら自身の同時制御メカニズムを持っています。
+これらのクラスのインスタンスは、<code>synchronized</code> の使用とは違う互換性のないそれら自身の並行制御メカニズムを持っています。
+たとえば、<code>AtomicBoolean</code> で同期しても、他のスレッドが <code>AtomicBoolean</code> を変更するのを防ぎません。
+</p>
+<p>
+そのようなコードは正しいかもしれないが、後日コードを維持しなければならない人々を混乱させるかもしれないので慎重にレビューし文書化するべきです、
 </p>
 ]]>
     </Details>
@@ -6584,7 +6672,7 @@ JUnit の TestCase クラスで、どんなテストメソッドも実装して�
 
   <BugPattern type="BRSA_BAD_RESULTSET_ACCESS" deprecated="true">  <!-- deprecated in favor of SQL_BAD_RESULTSET_ACCESS -->
     <ShortDescription>Method attempts to access a result set field with index 0</ShortDescription>
-    <LongDescription>Method {1} attempts to access a result set field with index 0</LongDescription>
+    <LongDescription>{1} attempts to access a result set field with index 0</LongDescription>
     <Details>
 <![CDATA[
 <p> A call to getXXX or updateXXX methods of a result set was made where the
@@ -6595,7 +6683,7 @@ field index is 0. As ResultSet fields start at index 1, this is always a mistake
 
   <BugPattern type="SQL_BAD_RESULTSET_ACCESS">
     <ShortDescription>インデックスが0で ResultSet にアクセスしようとしているメソッド</ShortDescription>
-    <LongDescription>メソッド {1} は、インデックスが0で ResultSet にアクセスしようとしています。</LongDescription>
+    <LongDescription>{1} は、インデックスが0で ResultSet にアクセスしようとしています。</LongDescription>
     <Details>
 <![CDATA[
 <p>
@@ -6608,7 +6696,7 @@ field index is 0. As ResultSet fields start at index 1, this is always a mistake
 
   <BugPattern type="SQL_BAD_PREPARED_STATEMENT_ACCESS">
     <ShortDescription>インデックスが0で PreparedStatement にアクセスしようとしているメソッド</ShortDescription>
-    <LongDescription>メソッド {1} は、インデックスが0で PreparedStatement にアクセスしようとしています。</LongDescription>
+    <LongDescription>{1} は、インデックスが0で PreparedStatement にアクセスしようとしています。</LongDescription>
     <Details>
 <![CDATA[
 <p>
@@ -6621,7 +6709,7 @@ field index is 0. As ResultSet fields start at index 1, this is always a mistake
 
   <BugPattern type="SIO_SUPERFLUOUS_INSTANCEOF">
     <ShortDescription>instanceof 演算子を使用した不必要な型チェック</ShortDescription>
-    <LongDescription>メソッド {1} は、静的に確定している可能性があるのに instanceof 演算子を使用して不必要な型チェックをしています。</LongDescription>
+    <LongDescription>{1} は、静的に確定している可能性があるのに instanceof 演算子を使用して不必要な型チェックをしています。</LongDescription>
     <Details>
 <![CDATA[
 <p>
@@ -6681,7 +6769,7 @@ field index is 0. As ResultSet fields start at index 1, this is always a mistake
 <p>
 このメソッドは、互換性のない型の配列を比較するために <code>.equals(Object o)</code> を呼び出しています (たとえば、<code>String[]</code> と <code>StringBuffer[]</code>、<code>String[]</code> と <code>int[]</code>) 。
 それらは、決して等価ではありません。
-さらに、<code>equals(...)</code> が配列を比較するのに使用されるとき、それらが同じ配列であるかどうか確かめるだけで、配列のコンテンツを無視します。
+さらに、<code>equals(...)</code> が配列を比較するのに使用されるとき、それらが同じ配列であるかどうか確かめるだけで、配列のコンテンツは無視します。
 </p>
 ]]>
     </Details>
@@ -6689,7 +6777,7 @@ field index is 0. As ResultSet fields start at index 1, this is always a mistake
 
   <BugPattern type="STI_INTERRUPTED_ON_CURRENTTHREAD">
     <ShortDescription>interrupted メソッドを呼び出すために不要な currentThread メソッドを呼び出している</ShortDescription>
-    <LongDescription>メソッド {1} は、interrupted メソッドを呼び出すために不要な currentThread メソッドを呼び出しています。</LongDescription>
+    <LongDescription>{1} は、interrupted メソッドを呼び出すために不要な currentThread メソッドを呼び出しています。</LongDescription>
     <Details>
 <![CDATA[
 <p>
@@ -6803,7 +6891,7 @@ J2SE 5.0ではそうしません。
 
   <BugPattern type="MF_METHOD_MASKS_FIELD">
     <ShortDescription>フィールドを隠す変数を定義しているメソッド</ShortDescription>
-    <LongDescription>メソッド {1} は、フィールド {2.givenClass} を隠す変数を定義しています。</LongDescription>
+    <LongDescription>{1} は、フィールド {2.givenClass} を隠す変数を定義しています。</LongDescription>
     <Details>
 <![CDATA[
 <p>
@@ -6829,7 +6917,7 @@ J2SE 5.0ではそうしません。
 
   <BugPattern type="WMI_WRONG_MAP_ITERATOR">
     <ShortDescription>entrySet イテレータではなく効率が悪い keySet イテレータを使用している</ShortDescription>
-    <LongDescription>メソッド {1} は、entrySet イテレータではなく効率が悪い keySet イテレータを使用しています。</LongDescription>
+    <LongDescription>{1} は、entrySet イテレータではなく効率が悪い keySet イテレータを使用しています。</LongDescription>
     <Details>
 <![CDATA[
 <p>
@@ -6842,7 +6930,7 @@ Map の entrySet イテレータを使用した方が <code>Map.get(key)</code> 
 
   <BugPattern type="ISC_INSTANTIATE_STATIC_CLASS">
     <ShortDescription>static メソッドだけを提供するクラスの不必要なインスタンス化</ShortDescription>
-    <LongDescription>メソッド {1} は、static メソッドだけを提供するクラスを不必要にインスタンス化しています。</LongDescription>
+    <LongDescription>{1} は、static メソッドだけを提供するクラスを不必要にインスタンス化しています。</LongDescription>
     <Details>
 <![CDATA[
 <p>
@@ -6863,6 +6951,19 @@ Map の entrySet イテレータを使用した方が <code>Map.get(key)</code> 
 それぞれの catch ブロックが同一である多くの例外型をキャッチすることの短縮形として <code>try { ... } catch (Exception e) { something }</code> を使用することが共通のバグパターンです。
 しかし、この構文は誤って実行時例外も同様にキャッチするので、潜在的なバグを隠します。
 </p>
+<p>
+より良いアプローチは、明示的にキャッチするよりもスローされる特定の例外をスローします。
+あるいは、以下に示すように明示的に RuntimeException をキャッチ、再スローして、非実行時例外をキャッチします。
+</p>
+<blockquote><pre>
+try {
+    ...
+} catch (RuntimeException e) {
+    throw e;
+} catch (Exception e) {
+    ... deal with all non-runtime exceptions ...
+}
+</pre></blockquote>
 ]]>
     </Details>
   </BugPattern>
@@ -7219,7 +7320,7 @@ double value2 =  x / (double) y;
     <Details>
 <![CDATA[
 <p>
-この書式文字列には、改行文字 (\n) が含まれています。
+この書式文字列には改行文字 (\n) が含まれています。
 一般に書式文字列には %n を使用することがより望ましいです。%n は、プラットホーム特有の行セパレータを作り出します。
 </p>
 ]]>
@@ -7240,13 +7341,13 @@ double value2 =  x / (double) y;
   </BugPattern>
 
   <BugPattern type="VA_FORMAT_STRING_BAD_CONVERSION_TO_BOOLEAN">
-    <ShortDescription>Boolean でない引数を ％b 書式指示子を使用してフォーマットしている</ShortDescription>
-    <LongDescription>Boolean でない引数を ％b 書式指示子を使用してフォーマットしています。{1}</LongDescription>
+    <ShortDescription>Boolean 型でない引数を ％b 書式指示子を使用してフォーマットしている</ShortDescription>
+    <LongDescription>Boolean 型でない引数を ％b 書式指示子を使用してフォーマットしています。{1}</LongDescription>
     <Details>
 <![CDATA[
 <p>
 Boolean 型でない引数を %b 書式指示子でフォーマットしています。これは例外をスローしません。
-その代わりに null でない値では true 、null では false を出力します。
+その代わりに、非  null 値では true 、null では false を出力します。
 書式文字列のこの機能は奇妙で意図したことではないかもしれません。
 </p>
 ]]>
@@ -7514,11 +7615,26 @@ an indication of some misunderstanding or some other logic error.
 <p>
 このキャストはチェックされていません。
 すべての型のインスタンスがキャストした型にキャストできるというわけではありません。
-プログラムのロジックが確実にこのキャストが失敗しないことを確認してください。 
+プログラムのロジックがこのキャストが失敗しないことを確実に確認してください。  
 </p>
 ]]>
     </Details>
   </BugPattern>
+
+   <BugPattern type="BC_UNCONFIRMED_CAST_OF_RETURN_VALUE">
+    <ShortDescription>メソッドからの戻り値の未チェック/未確認のキャスト</ShortDescription>
+    <LongDescription>{2} からの {3} 戻り値への未チェック/未確認のキャストです。{1}</LongDescription>
+    <Details>
+<![CDATA[
+<p>
+このコードは、メソッドの戻り値の未確認のキャストを実行しています。
+コードは、キャストが安全であることが保証されるようにメソッドを呼び出しているかもしれませんが、FindBugs はキャストが安全であることを検証できません。
+プログラムのロジックがこのキャストが失敗しないことを確実に確認してください。 
+</p>
+]]>
+    </Details>
+  </BugPattern>
+
   <BugPattern type="BC_BAD_CAST_TO_CONCRETE_COLLECTION">
     <ShortDescription>具象コレクションへの疑わしいキャスト</ShortDescription>
     <LongDescription>{2} から {3} への疑わしいキャストです。{1}</LongDescription>
@@ -7610,7 +7726,7 @@ String メソッドが呼び出されていて、"." が引数として正規表
 <p>
 このコードは、32ビット int の0から31の範囲を超えた量でシフトを実行しています。
 これの効果は、どのくらいシフトするのかを決めるために整数値の下位5ビット (32で割った余り) を使うことです (たとえば、40ビットでシフトすることは8ビットでシフトすることと同じで、32ビットでシフトすることは0ビットでシフトすることと同じです)。
-これはおそらく、期待されたことでありません、そして、それは少なくとも紛らわしいです。
+これはおそらく、期待されたことではありません、それは少なくとも紛らわしいです。
 </p>
 ]]>
     </Details>
@@ -7659,8 +7775,8 @@ String メソッドが呼び出されていて、"." が引数として正規表
   </BugPattern>
 
   <BugPattern type="DMI_INVOKING_TOSTRING_ON_ANONYMOUS_ARRAY">
-    <ShortDescription>配列で toString メソッドを呼び出している</ShortDescription>
-    <LongDescription>配列で toString メソッドを呼び出しています。{1}</LongDescription>
+    <ShortDescription>名前のない配列で toString メソッドを呼び出している</ShortDescription>
+    <LongDescription>名前のない配列で toString メソッドを呼び出しています。{1}</LongDescription>
     <Details>
 <![CDATA[
 <p>
@@ -7772,11 +7888,11 @@ Joshua Bloch が <a href="http://googleresearch.blogspot.com/2006/06/extra-extra
 
   <BugPattern type="DB_DUPLICATE_BRANCHES">
     <ShortDescription>2つの分岐のために同じコードを使用しているメソッド</ShortDescription>
-    <LongDescription>メソッド {1} は、2つの分岐のために同じコードを使用しています。</LongDescription>
+    <LongDescription>{1} は、2つの分岐のために同じコードを使用しています。</LongDescription>
     <Details>
 <![CDATA[
 <p>
-このメソッドは、条件分岐の2つの分岐を実装するためにに同じコードを使用しています。
+このメソッドは、条件分岐の2つの分岐を実装するために同じコードを使用しています。
 これがコーディングミスではないことを確認してください。
 </p>
 ]]>
@@ -7785,7 +7901,7 @@ Joshua Bloch が <a href="http://googleresearch.blogspot.com/2006/06/extra-extra
 
   <BugPattern type="DB_DUPLICATE_SWITCH_CLAUSES">
     <ShortDescription>switch 文の2つの case のために同じコードを使用しているメソッド</ShortDescription>
-    <LongDescription>メソッド {1} は、switch 文の2つの case のために同じコードを使用しています。</LongDescription>
+    <LongDescription>{1} は、switch 文の2つの case のために同じコードを使用しています。</LongDescription>
     <Details>
 <![CDATA[
 <p>
@@ -7798,7 +7914,7 @@ Joshua Bloch が <a href="http://googleresearch.blogspot.com/2006/06/extra-extra
 
   <BugPattern type="IMA_INEFFICIENT_MEMBER_ACCESS">
     <ShortDescription>所有クラスの private メンバー変数にアクセスしているメソッド</ShortDescription>
-    <LongDescription>メソッド {1} は、所有クラスの private メンバー変数にアクセスしています。</LongDescription>
+    <LongDescription>{1} は、所有クラスの private メンバー変数にアクセスしています。</LongDescription>
     <Details>
 <![CDATA[
 <p>
@@ -7812,7 +7928,7 @@ Joshua Bloch が <a href="http://googleresearch.blogspot.com/2006/06/extra-extra
 
   <BugPattern type="XFB_XML_FACTORY_BYPASS">
     <ShortDescription>XMLインタフェースの特定の実装のインスタンスを作成しているメソッド</ShortDescription>
-    <LongDescription>メソッド {1} は、XMLインタフェースの特定の実装のインスタンスを作成しています。</LongDescription>
+    <LongDescription>{1} は、XMLインタフェースの特定の実装のインスタンスを作成しています。</LongDescription>
     <Details>
 <![CDATA[
 <p>
@@ -7832,7 +7948,7 @@ Joshua Bloch が <a href="http://googleresearch.blogspot.com/2006/06/extra-extra
 
   <BugPattern type="USM_USELESS_SUBCLASS_METHOD">
     <ShortDescription>親クラスのメソッドに過剰に委譲しているメソッド</ShortDescription>
-    <LongDescription>メソッド {1} は、親クラスのメソッドに過剰に委譲しています。</LongDescription>
+    <LongDescription>{1} は、親クラスのメソッドに過剰に委譲しています。</LongDescription>
     <Details>
 <![CDATA[
 <p>
@@ -7872,7 +7988,7 @@ Joshua Bloch が <a href="http://googleresearch.blogspot.com/2006/06/extra-extra
 
   <BugPattern type="QBA_QUESTIONABLE_BOOLEAN_ASSIGNMENT">
     <ShortDescription>論理式で boolean リテラル値を代入しているメソッド</ShortDescription>
-    <LongDescription>メソッド {1} は、論理式で boolean リテラル値を代入しています。</LongDescription>
+    <LongDescription>{1} は、論理式で boolean リテラル値を代入しています。</LongDescription>
     <Details>
 <![CDATA[
 <p>
@@ -8063,20 +8179,44 @@ JavaDoc に書かれているように、DateFormat はマルチスレッドで�
     </Details>
   </BugPattern>
 
-  <BugPattern type="TQ_ALWAYS_VALUE_USED_WHERE_NEVER_REQUIRED">
-    <ShortDescription>型修飾子を付けられた値がその修飾子を付けてはならない値を必要とする場所で使われている</ShortDescription>
-    <LongDescription>型修飾子 {2} を付けられた値がその修飾子を付けてはならない値を必要とする場所で使われています。</LongDescription>
+  <BugPattern type="TQ_COMPARING_VALUES_WITH_INCOMPATIBLE_TYPE_QUALIFIERS">
+    <ShortDescription>互換性のない型修飾子による比較値</ShortDescription>
+    <LongDescription>型修飾子 {2.simpleName} でアノテートされた値がその修飾子がない値と等価性のために比較されています。</LongDescription>
     <Details>
-<![CDATA[
+      <![CDATA[
 <p>
-型修飾子アノテーションを付けられた値がそのアノテーションを付けてはならない値を必要とする場所で使われています。
+型修飾子アノテーションを指定した値がその修飾子のない値と比較しています。
 </p>
 <p>
-より正確に、when=ALWAYS を指定している型修飾子アノテーションが付けられた値は、到達することが保証されているか同じ型修飾子が when=NEVER を指定するところで使用します。
+より正確に、when=ALWAYS を指定した型修飾子でアノテートされた値が同じ型修飾子で when=NEVER を指定する値と比較しています。
 </p>
 <p>
 たとえば、@NonNegative が型修飾子アノテーション @Negative(when=When.NEVER) の略称だとします。
-以下のコードは、return 文が ＠NonNegative 値を必要とするが ＠Negative としてマークされている引数を受け取るのでこの警告を生成します。
+以下のコードは、return 文が @NonNegative 値を要求するが、@Negative としてマークされている値を受け取るのでこの警告を生成します。
+</p>
+<blockquote><pre>
+public boolean example(@Negative Integer value1, @NonNegative Integer value2) {
+    return value1.equals(value2);
+}
+</pre></blockquote>
+      ]]>
+    </Details>
+  </BugPattern>
+
+  <BugPattern type="TQ_ALWAYS_VALUE_USED_WHERE_NEVER_REQUIRED">
+    <ShortDescription>型修飾子でアノテーションされた値がその修飾子を付けてはならない値を必要とする場所で使われている</ShortDescription>
+    <LongDescription>型修飾子 {2} でアノテートされた値がその修飾子を付けてはならない値を必要とする場所で使われています。</LongDescription>
+    <Details>
+<![CDATA[
+<p>
+型修飾子アノテーションを指定した値がその修飾子を付けてはならない値を必要とする場所で使われています。
+</p>
+<p>
+より正確に、when=ALWAYS を指定した型修飾子でアノテートされた値が到達することが保証されているか同じ型修飾子で when=NEVER を指定する場所で使用しています。
+</p>
+<p>
+たとえば、@NonNegative が型修飾子アノテーション @Negative(when=When.NEVER) の略称だとします。
+以下のコードは、return 文が ＠NonNegative 値を要求するが ＠Negative としてマークされている値を受け取るのでこの警告を生成します。
 </p>
 <blockquote><pre>
 public @NonNegative Integer example(@Negative Integer value) {
@@ -8088,15 +8228,15 @@ public @NonNegative Integer example(@Negative Integer value) {
   </BugPattern>
 
   <BugPattern type="TQ_NEVER_VALUE_USED_WHERE_ALWAYS_REQUIRED">
-    <ShortDescription>型修飾子を付けていない値がその修飾子が付く値を必要とする場所で使われている</ShortDescription>
-    <LongDescription>型修飾子 {2.simpleName} を付けていない値がその修飾子が付く値を必要としている場所で使われています。</LongDescription>
+    <ShortDescription>型修飾子でアノテーションされていない値がその修飾子が付けられた値を必要とする場所で使われている</ShortDescription>
+    <LongDescription>型修飾子 {2.simpleName} でアノテートされていない値がその修飾子が付けられた値を必要とする場所で使われています。</LongDescription>
     <Details>
 <![CDATA[
 <p>
-型修飾子アノテーションを付けていない値がそのアノテーションが付いた値を必要とする場所で使われています。
+型修飾子アノテーションを指定していない値がその修飾子が付けられた値を必要とする場所で使われています。
 </p>
 <p>
-より正確に、when=NEVER を指定している型修飾子アノテーションが付けられた値が同じ型修飾子が when=ALWAYS を指定する場所で使用しています。
+より正確に、when=NEVER を指定した型修飾子でアノテートされた値が同じ型修飾子で when=ALWAYS を指定する場所で使用しています。
 </p>        
 ]]>
     </Details>
@@ -8104,24 +8244,25 @@ public @NonNegative Integer example(@Negative Integer value) {
 
   <BugPattern type="TQ_MAYBE_SOURCE_VALUE_REACHES_ALWAYS_SINK">
     <ShortDescription>型修飾子を付けていないかもしれない値がその型修飾子を必要とする方法で常に使われている</ShortDescription>
-    <LongDescription>型修飾子 {2.simpleName} を付けていないかもしれない値がその型修飾子を必要とする方法で常に使われています。</LongDescription>
+    <LongDescription>{2.simpleName} アノテーションを付けていないかもしれない値がその型修飾子を必要とする方法で常に使われています。</LongDescription>
     <Details>
 <![CDATA[
 <p>
-型修飾子によって示される値のインスタンスではない可能性としてアノテーションが付けられた値です。
-値はその型修飾子によって示された要求方法で使うことが保証されています。
+型修飾子によって示された値のインスタンスではない可能性としてアノテートされた値です。
+値はその型修飾子によって示された値を必要とする方法で使われることが保証されています。
 </p>
 ]]>
     </Details>
   </BugPattern>
 
   <BugPattern type="TQ_MAYBE_SOURCE_VALUE_REACHES_NEVER_SINK">
-    <ShortDescription>型修飾子を付けているかもしれない値がその型修飾子が禁止する方法で常に使われている</ShortDescription>
-    <LongDescription>{2.simpleName} アノテーションを付けているかもしれない値がその型修飾子があるのを禁止する方法で常に使われています。</LongDescription>
+    <ShortDescription>型修飾子を付けているかもしれない値がその型修飾子を禁止する方法で常に使われている</ShortDescription>
+    <LongDescription>{2.simpleName} アノテーションを付けているかもしれない値がその型修飾子を禁止する方法で常に使われています。</LongDescription>
     <Details>
 <![CDATA[
 <p>
-型修飾子によって示される値のインスタンスである可能性としてアノテーションが付つけられた値を禁止する方法で使われています。
+型修飾子によって示された値のインスタンスである可能性としてアノテートされた値です。
+値はその型修飾子によって示された値を禁止する方法で使われることが保証されています。
 </p>
 ]]>
     </Details>
@@ -8129,12 +8270,12 @@ public @NonNegative Integer example(@Negative Integer value) {
 
   <BugPattern type="TQ_EXPLICIT_UNKNOWN_SOURCE_VALUE_REACHES_NEVER_SINK">
     <ShortDescription>値は型修飾子を必要としないが、不明としてマークされている</ShortDescription>
-    <LongDescription>値は、{2.simpleName} を必要としませんが、明示的に {2.simpleName} に関して不明としてアノテーションが付けられています。</LongDescription>
+    <LongDescription>値は、{2.simpleName} を必要としませんが、明示的に {2.simpleName} に関して不明としてアノテーションされています。</LongDescription>
     <Details>
 <![CDATA[
 <p>
 値は、型修飾子によって示された値でないことを必要とする方法で使われています。
-しかし、値はどこでその型修飾子がいるのか禁止されているかわからないと述べている明示的なアノテーションがあります。
+しかし、値はどこでその型修飾子がいるのか禁止されていのるかわからないと述べている明示的なアノテーションがあります。
 使い方かアノテーションのどちらかが間違っています。
 </p>
 ]]>
@@ -8143,7 +8284,7 @@ public @NonNegative Integer example(@Negative Integer value) {
 
   <BugPattern type="TQ_EXPLICIT_UNKNOWN_SOURCE_VALUE_REACHES_ALWAYS_SINK">
     <ShortDescription>値は型修飾子を必要としているが、不明としてマークされている</ShortDescription>
-    <LongDescription>値は、常に {2.simpleName} を必要としていますが、明示的に {2.simpleName} に関して不明としてアノテーションが付けられています。</LongDescription>
+    <LongDescription>値は、常に {2.simpleName} を必要としていますが、明示的に {2.simpleName} に関して不明としてアノテーションされています。</LongDescription>
     <Details>
 <![CDATA[
 <p>
@@ -8216,18 +8357,18 @@ Jason Mehrens によって寄贈されたバグパターン
 
   <BugPattern type="OBL_UNSATISFIED_OBLIGATION">
     <ShortDescription>ストリームやリソースのクリーンアップに失敗するかもしれないメソッド</ShortDescription>
-    <LongDescription>メソッド {1} は、{2} のクリーンアップに失敗するかもしれません。</LongDescription>
+    <LongDescription>{1} は、{2} のクリーンアップに失敗するかもしれません。</LongDescription>
     <Details>
 <![CDATA[
 <p>
-このメソッドは、ストリーム、データベースオブジェクト、または明示的にクリーンアップ操作を必要としている他のリソースのクリーンアップ (クローズする、処分する) に失敗するかもしれません。
+このメソッドは、ストリーム、データベースオブジェクト、または明示的にクリーンアップ操作を必要としている他のリソースのクリーンアップ (クローズする、片付ける) に失敗するかもしれません。
 </p>   
 <p>
 通常、メソッドがストリープや他のリソースを開いたなら、メソッドはストリームやリソースがメソッドが戻る前にクリーンアップされることを確認するために、try/finally ブロックを使用するべきです。
 </p>
 <p>
 このバグパターンは、OS_OPEN_STREAM と ODR_OPEN_DATABASE_RESOURCE と基本的に同じですが異なる (そして、うまくいけばより良い) 静的解析技術に基づいています。
-私たちは関心があるのがこのバグパターンの有用性についてのフィードバックを得ることです。
+私たちは、このバグパターンの有用性についてのフィードバックを得ることに関心があります。
 どちらかの方法でフィードバックを送ってください。
 </p>
 <ul>
@@ -8244,13 +8385,43 @@ Jason Mehrens によって寄贈されたバグパターン
     </Details>
   </BugPattern>
 
+  <BugPattern type="OBL_UNSATISFIED_OBLIGATION_EXCEPTION_EDGE">
+    <ShortDescription>チェック例外でストリームやリソースのクリーンアップに失敗するかもしれないメソッド</ShortDescription>
+    <LongDescription>{1} は、チェック例外で {2} のクリーンアップに失敗するかもしれません。</LongDescription>
+    <Details>
+<![CDATA[
+<p>
+このメソッドは、ストリーム、データベースオブジェクト、または明示的にクリーンアップ操作を必要としている他のリソースのクリーンアップ (クローズする、片付ける) に失敗するかもしれません。
+</p>   
+<p>
+通常、メソッドがストリープや他のリソースを開いたなら、メソッドはストリームやリソースがメソッドが戻る前にクリーンアップされることを確認するために、try/finally ブロックを使用するべきです。
+</p>
+<p>
+このバグパターンは、OS_OPEN_STREAM と ODR_OPEN_DATABASE_RESOURCE と基本的に同じですが異なる (そして、うまくいけばより良い) 静的解析技術に基づいています。
+私たちは、このバグパターンの有用性についてのフィードバックを得ることに関心があります。
+どちらかの方法でフィードバックを送ってください。
+</p>
+<ul>
+<li>send email to findbugs@cs.umd.edu</li>
+<li>file a bug report: <a href="http://findbugs.sourceforge.net/reportingBugs.html">http://findbugs.sourceforge.net/reportingBugs.html</a></li>
+</ul>
+<p>
+特に、このバグパターンの誤検出抑制探索法は詳細にわたって調整されていないので、誤検出についてのレポートは我々の助けになります。 
+</p>
+<p>
+解析技術の説明は、Weimer と Necula による <i>Finding and Preventing Run-Time Error Handling Mistakes</i> を参照してください。 
+</p>
+]]>
+      </Details>
+  </BugPattern>
+  
   <BugPattern type="FB_UNEXPECTED_WARNING">
     <ShortDescription>FindBugs からの予期しない/望ましくない警告</ShortDescription>
     <LongDescription>予期しない/望ましくない {2} FindBugs 警告。{1}</LongDescription>
     <Details>
 <![CDATA[
 <p>
-FindBugs は、@NoWarning アノテーションによって、予期しない/望ましくない警告を生成しました。
+FindBugs は、@NoWarning でアノテートされたことにより、予期しない/望ましくない警告を生成しました。
 </p>
 ]]>
     </Details>
@@ -8262,7 +8433,7 @@ FindBugs は、@NoWarning アノテーションによって、予期しない/�
     <Details>
 <![CDATA[
 <p>
-FindBugs は、@ExpectedWarning によって、予期した/望ましい警告が生成されませんでした。
+FindBugs は、@ExpectedWarning でアノテートされたことにより、予期した/望ましい警告が生成されませんでした。
 </p>
 ]]>
     </Details>
@@ -8326,7 +8497,7 @@ Ulf Ochsenfahrt と Eric Fellheimer
     <Details>
 <![CDATA[
 <p>
-このコードには、並行抽象化 （たとえば、並行ハッシュマップ） の呼び出しシーケンスがあります。
+このコードには並行抽象化 （たとえば、並行ハッシュマップ） の呼び出しシーケンスがあります。
 これらの呼び出しは原子的に実行されません。
 </p>
 ]]>
@@ -8406,6 +8577,7 @@ Ulf Ochsenfahrt と Eric Fellheimer
   <BugCode abbrev="IA">あいまいな呼び出し</BugCode>
   <BugCode abbrev="HSC">巨大な文字列定数</BugCode>
   <BugCode abbrev="HRS">HRS 脆弱性</BugCode>
+  <BugCode abbrev="PT">パストラバーサル</BugCode>
   <BugCode abbrev="XSS">XSS 脆弱性</BugCode>
   <BugCode abbrev="NP">null値 の利用</BugCode>
   <BugCode abbrev="NOISE">偽のランダム警告</BugCode>
