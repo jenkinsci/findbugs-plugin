@@ -1204,7 +1204,84 @@
 			]]>
 		</Details>
 	</Detector>
+	
+	<Detector class="com.mebigfatguy.fbcontrib.detect.StackedTryBlocks">
+		<Details>
+			<![CDATA[
+			<p>This detector looks for two or more try catch blocks that are consecutive 
+			and catch the same kind of exception, and each catch block mandatorily throws 
+			the same exception. These two catch blocks can and should be made into one 
+			catch block to simply the code.</p>
+			<p>It is a fast detector</p>
+			]]>
+		</Details>
+	</Detector>
 
+    <Detector class="com.mebigfatguy.fbcontrib.detect.CommonsEqualsBuilderToEquals">
+        <Details>
+            <![CDATA[
+            <p>This detector looks for uses for Commons-lang EqualsBuilder where the
+            result of equals() is returned instead of calling the method isEquals().</p>
+            <p>It is a fast detector</p>
+            ]]>
+        </Details>
+    </Detector>
+    
+   <Detector class="com.mebigfatguy.fbcontrib.detect.CommonsHashcodeBuilderToHashcode">
+        <Details>
+            <![CDATA[
+            <p>This detector looks for uses for Commons-lang HashCodeBuilder where the
+            result of hashCode() is returned instead of calling the method toHashCode().</p>
+            <p>It is a fast detector</p>
+            ]]>
+        </Details>
+    </Detector>
+    
+   <Detector class="com.mebigfatguy.fbcontrib.detect.CommonsStringBuilderToString">
+        <Details>
+            <![CDATA[
+            <p>This detector looks for uses for Commons-lang ToStringBuilder where the
+            result of toString() is returned without an intermediate invocation of toString().</p>
+            <p>It is a fast detector</p>
+            ]]>
+        </Details>
+    </Detector>
+    
+    <Detector class="com.mebigfatguy.fbcontrib.detect.CompareClassNameEquals">
+        <Details>
+            <![CDATA[
+            <p> In a JVM, Two classes are the same class (and consequently the same type) if
+            they are loaded by the same class loader, and they have the same fully
+            qualified name [JVMSpec 1999].
+            
+            Comparing class name ignores the class loader.
+            </p>
+            ]]>
+        </Details>
+    </Detector>
+    
+    <Detector class="com.mebigfatguy.fbcontrib.detect.BackportReusePublicIdentifiers">
+        <Details>
+            <![CDATA[
+            <p> Detects use of Backport Utils concurrent classes. Updated/Efficient version of these
+            classes are available in versions of the JDK 5.0 and higher, and these
+            classes should only be used if you are targeting JDK 1.4 and lower.
+            </p>
+            ]]>
+        </Details>
+    </Detector>
+    
+    <Detector class="com.mebigfatguy.fbcontrib.detect.CloneUsability">
+        <Details>
+            <![CDATA[
+            <p> Looks for classes that implement clone() that do not specialize the return value, and do
+            not swallow CloneNotSupportedException. Not doing so makes the clone method not as simple to use, 
+            and should be harmless to do so.
+            </p>
+            ]]>
+        </Details>
+    </Detector>
+    
 	<!-- BugPattern -->
 
 	<BugPattern type="ISB_INEFFICIENT_STRING_BUFFERING">
@@ -1963,6 +2040,18 @@
 			]]>
 		</Details>
 	</BugPattern>
+	
+	<BugPattern type="S508C_APPENDED_STRING">
+		<ShortDescription>Method passes appended string to title/label of component</ShortDescription>
+		<LongDescription>Method {1} passes appended string to title/label of component</LongDescription>
+		<Details>
+			<![CDATA[
+				<p>This method creates a component and passes a string that was build up from a number of
+				strings through appending multiple strings together. As foreign languages may order phrases
+				differently, this will make translations difficult.</p>
+			]]>
+		</Details>
+	</BugPattern>
 
 	<BugPattern type="UEC_USE_ENUM_COLLECTIONS">
 		<ShortDescription>Class uses an ordinary set or map with an enum class as the key</ShortDescription>
@@ -2458,7 +2547,7 @@
 		</Details>
 	</BugPattern>
 
-	<BugPattern type="SCII_SPOILED_CHILD_INTERFACE_IMPLEMENTATOR">
+	<BugPattern type="SCII_SPOILED_CHILD_INTERFACE_IMPLEMENTOR">
 		<ShortDescription>Class implements interface by relying on unknowing superclass methods</ShortDescription>
 		<LongDescription>Class {0} implements interface by relying on unknowing superclass methods</LongDescription>
 		<Details>
@@ -3049,7 +3138,7 @@
 		<LongDescription>Method {1} calls InetAddress.getLocalHost(), which may be a security risk</LongDescription>
 		<Details>
 		  <![CDATA[
-		  <p>Do not call <code>InetAddress.getLocalHost()</code> on multihomed servers. On a multihomed server, <code>InetAddress.getLocalHost()</code> simply returns the IP address associated with the server's internal hostname. This could any of the network interfaces, which could expose the machine to security risks. Server applications that need to listen on sockets should add configurable properties to define which network interfaces the server should bind.</p>
+		  <p>Do not call <code>InetAddress.getLocalHost()</code> on multihomed servers. On a multihomed server, <code>InetAddress.getLocalHost()</code> simply returns the IP address associated with the server's internal hostname. This could be any of the network interfaces, which could expose the machine to security risks. Server applications that need to listen on sockets should add configurable properties to define which network interfaces the server should bind.</p>
 		  ]]>
 		</Details>
 	</BugPattern>
@@ -3302,7 +3391,109 @@
 			]]>
 		</Details>
 	</BugPattern>
+	
+	<BugPattern type="STB_STACKED_TRY_BLOCKS">
+		<ShortDescription>Method stacks similar try/catch blocks</ShortDescription>
+		<LongDescription>Method {1} stacks similar try/catch blocks</LongDescription>
+		<Details>
+			<![CDATA[
+				<P>This method declares two try catch blocks one after another, where each 
+				catch block catches the same type of exception. They also throw uniformly the
+				same type of exception. These two catch blocks can be combined into one to
+				simplify the method.</p>
+			]]>
+		</Details>
+	</BugPattern>
 
+    <BugPattern type="CEBE_COMMONS_EQUALS_BUILDER_ISEQUALS">
+        <ShortDescription>Method returns the result of invoking equals() on EqualsBuilder</ShortDescription>
+        <LongDescription>Method {1} returns the result of invoking equals() in EqualsBuilder</LongDescription>
+        <Details>
+            <![CDATA[
+            <p>This method returns the result of equals on the EqualsBuilder type
+            instead of calling the method isEqual().</p>
+            ]]>
+        </Details>
+    </BugPattern>
+
+    <BugPattern type="CHTH_COMMONS_HASHCODE_BUILDER_TOHASHCODE">
+        <ShortDescription>Method returns the result of invoking hashCode() on HashCodeBuilder</ShortDescription>
+        <LongDescription>Method {1} returns the result of invoking hashCode() in HashCodeBuilder</LongDescription>
+        <Details>
+            <![CDATA[
+            <p>This method returns the result of hashCode on the HashCodeBuilder type
+            instead of calling the method toHashCode().</p>
+            ]]>
+        </Details>
+    </BugPattern>
+    
+    <BugPattern type="CSBTS_COMMONS_STRING_BUILDER_TOSTRING">
+        <ShortDescription>Method returns the result of invoking toString() without intermediate invocation of append() in ToStringBuilder</ShortDescription>
+        <LongDescription>Method {1} returns the result of invoking toString() without intermediate invocation of append() in ToStringBuilder</LongDescription>
+        <Details>
+            <![CDATA[
+            <p>This method returns the result of toString() on ToStringBuilder without an
+            intermediate invocation of append()</p>
+            ]]>
+        </Details>
+    </BugPattern>
+    
+    <BugPattern type="CCNE_COMPARE_CLASS_EQUALS_NAME">
+        <ShortDescription>Method compares class name instead of comparing class</ShortDescription>
+        <LongDescription>Method {1} compares class name instead of comparing the class</LongDescription>
+        <Details>
+            <![CDATA[
+            <p> In a JVM, Two classes are the same class (and consequently the same type) if
+            they are loaded by the same class loader, and they have the same fully
+            qualified name [JVMSpec 1999].
+            
+            Comparing class name ignores the class loader.
+            </p>
+            ]]>
+        </Details>
+    </BugPattern>
+    
+    <BugPattern type="BRPI_BACKPORT_REUSE_PUBLIC_IDENTIFIERS">
+        <ShortDescription>Method uses backport concurrency utils</ShortDescription>
+        <LongDescription>Method {1} backport concurrency utils</LongDescription>
+        <Details>
+            <![CDATA[
+            <p> This class usees Backport Utils concurrent classes. Updated/Efficient version of these
+            classes are available in versions of the JDK 5.0 and higher, and these
+            classes should only be used if you are targeting JDK 1.4 and lower.
+            </p>
+            ]]>
+        </Details>
+    </BugPattern>
+    
+    <BugPattern type="CU_CLONE_USABILITY_OBJECT_RETURN">
+        <ShortDescription>Clone method declares it returns an Object</ShortDescription>
+        <LongDescription>Clone method {1} declares it returns an Object</LongDescription>
+        <Details>
+            <![CDATA[
+            <p> This class implements the Cloneable interface but defines its clone method to return an 
+            Object. Since most likely users of this method will need to cast it to the real type, this will
+            be more painful than necessary. Just declare the return value to be the type of this class.
+            </p>
+            ]]>
+        </Details>
+    </BugPattern>
+        
+    <BugPattern type="CU_CLONE_USABILITY_THROWS">
+        <ShortDescription>Clone method declares it throws CloneNotSupportedException</ShortDescription>
+        <LongDescription>Clone method {1} declares it throws CloneNotSupportedException</LongDescription>
+        <Details>
+            <![CDATA[
+            <p> This class implements the Cloneable interface but defines its clone method to still return
+            a CloneNotSupportedException. Since you are implementing clone() it would make sense that the method
+            in question will _not_ throw that exception, so annotating your method with it just makes client use
+            of your more painful as they have to handle an exception that will never happen. Just remove the 
+            throws clause from your method.
+            </p>
+            ]]>
+        </Details>
+    </BugPattern>   
+         
 	<!-- BugCode -->
 
 	<BugCode abbrev="ISB">Inefficient String Buffering</BugCode>
@@ -3386,7 +3577,7 @@
 	<BugCode abbrev="SMA">Stuttered Method Arguments</BugCode>
 	<BugCode abbrev="TBP">Tristate Boolean Pattern</BugCode>
 	<BugCode abbrev="SUA">Suspicious Uninitialized Array</BugCode>
-	<BugCode abbrev="ITU">Inappropriate ToString Use</BugCode>
+	<BugCode abbrev="ITU">Inappropriate toString Use</BugCode>
 	<BugCode abbrev="IKNC">Inconsistent Key Name Casing</BugCode>
 	<BugCode abbrev="OC">Overzealous Casting</BugCode>
 	<BugCode abbrev="PDP">Poorly Defined Parameter</BugCode>
@@ -3404,4 +3595,11 @@
 	<BugCode abbrev="SEC">Side Effect Constructor</BugCode>
 	<BugCode abbrev="SGSU">Suspicious Getter Setter Use</BugCode>
 	<BugCode abbrev="LGO">Lingering Graphics Object</BugCode>
+	<BugCode abbrev="STB">Stacked Try Blocks</BugCode>
+	<BugCode abbrev="CEBE">Commons EqualsBuilder To Equals</BugCode>
+	<BugCode abbrev="CHTH">Commons HashCodeBuilder To hashCode</BugCode>
+	<BugCode abbrev="CSBTS">Commons ToStringBuilder To String</BugCode>
+    <BugCode abbrev="CCNE">Compare class name equals</BugCode>
+    <BugCode abbrev="BRPI">Backport concurrent reuse of public identifiers</BugCode>
+    <BugCode abbrev="CU">Clone Usability</BugCode>
 </MessageCollection>
