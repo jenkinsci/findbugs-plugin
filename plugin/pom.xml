@@ -31,6 +31,10 @@
       <comments>FindBugs messages.xml file from the findbugs-contrib project.</comments>
     </license>
     <license>
+      <name>GNU LESSER GENERAL PUBLIC LICENSE</name>
+      <comments>FindBugs messages.xml file from the find-sec-bugs project.</comments>
+    </license>
+    <license>
       <comments>The findbugs logo is a trademark by The University of
         Maryland. These icons are a courtesy of the FindBugs team.</comments>
     </license>

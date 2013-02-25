@@ -25,6 +25,18 @@ public class FindBugsMessagesTest {
     private static final int EXPECTED_PATTERNS = 432;
     /** Expected number of patterns in fb-contrib. */
     private static final int EXPECTED_CONTRIB_PATTERNS = 163;
+    /** Expected number of patterns in fb-contrib. */
+    private static final int EXPECTED_SECURITY_PATTERNS = 40;
+
+    /**
+     * Verifies that the total number of supported bug messages is correct.
+     * @throws IOException
+     */
+    @Test
+    public void verifyTotals() {
+        assertEquals("Wrong number of messages read.", EXPECTED_PATTERNS + EXPECTED_CONTRIB_PATTERNS + EXPECTED_SECURITY_PATTERNS,
+                FindBugsMessages.getInstance().size());
+    }
 
     /**
      * Checks the number of different FindBugs messages.
@@ -60,6 +72,27 @@ public class FindBugsMessagesTest {
         try {
             List<Pattern> patterns = FindBugsMessages.getInstance().parse(file);
             assertEquals(WRONG_NUMBER_OF_WARNINGS_DETECTED, EXPECTED_CONTRIB_PATTERNS,
+                    patterns.size());
+        }
+        finally {
+            IOUtils.closeQuietly(file);
+        }
+    }
+
+    /**
+     * Checks the number of different FindBugs messages in the find-sec-bugs package.
+     *
+     * @throws SAXException
+     *             if we can't read the file
+     * @throws IOException
+     *             if we can't read the file
+     */
+    @Test
+    public void parseFindbugsSecurityMessages() throws IOException, SAXException {
+        InputStream file = FindBugsMessages.class.getResourceAsStream("find-sec-bugs-messages.xml");
+        try {
+            List<Pattern> patterns = FindBugsMessages.getInstance().parse(file);
+            assertEquals(WRONG_NUMBER_OF_WARNINGS_DETECTED, EXPECTED_SECURITY_PATTERNS,
                     patterns.size());
         }
         finally {

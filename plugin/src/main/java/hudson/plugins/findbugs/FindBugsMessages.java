@@ -51,6 +51,9 @@ public final class FindBugsMessages {
     public void initialize() throws IOException, SAXException {
         synchronized (messages) {
             loadMessages("messages.xml", messages, shortMessages);
+            loadMessages("fb-contrib-messages.xml", messages, shortMessages);
+            loadMessages("find-sec-bugs-messages.xml", messages, shortMessages);
+
             try {
                 loadMessages("messages_fr.xml", frMessages, frShortMessages);
                 loadMessages("messages_ja.xml", jaMessages, jaShortMessages);
@@ -58,7 +61,6 @@ public final class FindBugsMessages {
             catch (Exception exception) { // NOCHECKSTYLE
                 // ignore failures on localized messages
             }
-            loadMessages("fb-contrib-messages.xml", messages, shortMessages);
         }
     }
 
@@ -150,6 +152,15 @@ public final class FindBugsMessages {
             localizedMessage = en.get(name);
         }
         return localizedMessage;
+    }
+
+    /**
+     * Returns the size of this messages cache.
+     *
+     * @return the number of stored messages (English locale)
+     */
+    public int size() {
+        return messages.size();
     }
 
     /**
