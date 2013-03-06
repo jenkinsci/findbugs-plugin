@@ -1,0 +1,24 @@
+<div>
+  <p>
+    Jenkins 能以圖表方式顯示您類別檔案的 <a
+    href="http://findbugs.sourceforge.net/">FindBugs</a> 分析結果。
+    當這個選項啟用，而且您的建置有執行到 Maven 的 <code>findbugs:findbugs</code>
+    Goal，Jenkins 就能提供有用的分析結果資訊，例如: 結果歷史趨勢、模組及套件統計、查看分析報告及警告的網頁等。
+  </p>
+  這個外掛程式需要 <a
+    href="http://mojo.codehaus.org/findbugs-maven-plugin/">findbugs-maven-plugin</a>
+  1.2 或是更新的版本。如果您的 <code>pom.xml</code> 裡有下列設定，那麼這個外掛程式就會自動挑出正確的結果檔:
+<pre>
+&lt;plugin&gt;
+   &lt;groupId&gt;org.codehaus.mojo&lt;/groupId&gt;
+   &lt;artifactId&gt;findbugs-maven-plugin&lt;/artifactId&gt;
+   &lt;version&gt;1.2&lt;/version&gt;
+   &lt;configuration&gt;
+      &lt;findbugsXmlOutput&gt;true&lt;/findbugsXmlOutput&gt;
+      &lt;findbugsXmlWithMessages&gt;true&lt;/findbugsXmlWithMessages&gt;
+      &lt;xmlOutput&gt;true&lt;/xmlOutput&gt;
+      [...]
+   &lt;/configuration&gt;
+&lt;/plugin&gt;
+</pre>
+</div>

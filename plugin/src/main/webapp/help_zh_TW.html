@@ -1,0 +1,51 @@
+<div>
+  <p>
+    Jenkins 能以圖表方式顯示您類別檔案的 <a
+      href="http://findbugs.sourceforge.net/">FindBugs</a> 分析結果。
+    當這個顯示啟用後，Jenkins 會從不同面向顯示 FindBugs 分析結果，包含:
+    結果歷史趨勢、模組及套件統計、查看分析報告及警告的網頁等。
+  </p>
+  <p>
+    您要在建置過程中執行到 FindBugs 才能用這項功能，本 Jenkins 外掛程式不會實際進行分析!
+  </p>
+
+  <h4>Maven 設定</h4>
+  這個外掛程式需要<a
+    href="http://mojo.codehaus.org/findbugs-maven-plugin/">findbugs-maven-plugin</a>
+  1.2 或是更新的版本。請將下面的片段加到您的 <code>pom.xml</code> 檔案裡，啟用 FindBugs 分析:
+<pre>
+&lt;plugin&gt;
+   &lt;groupId&gt;org.codehaus.mojo&lt;/groupId&gt;
+   &lt;artifactId&gt;findbugs-maven-plugin&lt;/artifactId&gt;
+   &lt;version&gt;1.2&lt;/version&gt;
+   &lt;configuration&gt;
+      &lt;findbugsXmlOutput&gt;true&lt;/findbugsXmlOutput&gt;
+      &lt;findbugsXmlWithMessages&gt;true&lt;/findbugsXmlWithMessages&gt;
+      &lt;xmlOutput&gt;true&lt;/xmlOutput&gt;
+      [...]
+   &lt;/configuration&gt;
+&lt;/plugin&gt;
+</pre>
+
+  <h4>Ant 設定</h4>
+  要將 <span class="application">FindBugs</span> 將到 <code
+    class="filename">build.xml</code> 裡，您要先新增 task 定義，看起來應該像:
+<pre class="screen">
+  &lt;taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask"/&gt;
+</pre>
+    當您加好 task 定義後，您可以再定義一組使用到 <code class="literal">findbugs</code> task 定義的
+    target，例如:
+<pre
+  class="screen">
+  &lt;target name="findbugs" depends="jar"&gt;
+
+    &lt;findbugs home="${findbugs.home}"
+              output="xml:withMessages"
+              outputFile="findbugs.xml" &gt;
+      &lt;auxClasspath path="${basedir}/lib/Regex.jar" /&gt;
+      &lt;sourcePath path="${basedir}/src/java" /&gt;
+      &lt;class location="${basedir}/bin/bcel.jar" /&gt;
+    &lt;/findbugs&gt;
+  &lt;/target&gt;
+</pre>
+</div>
