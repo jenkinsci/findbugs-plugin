@@ -1,28 +1,32 @@
 package hudson.plugins.findbugs;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.maven.project.MavenProject;
+import org.codehaus.plexus.component.configurator.ComponentConfigurationException;
+import org.codehaus.plexus.configuration.xml.XmlPlexusConfiguration;
+import org.kohsuke.stapler.DataBoundConstructor;
+
 import hudson.FilePath;
 import hudson.maven.MavenAggregatedReport;
 import hudson.maven.MavenBuildProxy;
 import hudson.maven.MojoInfo;
 import hudson.maven.MavenBuild;
 import hudson.maven.MavenModule;
+
 import hudson.model.BuildListener;
+
 import hudson.plugins.analysis.core.FilesParser;
 import hudson.plugins.analysis.core.HealthAwareReporter;
 import hudson.plugins.analysis.core.ParserResult;
 import hudson.plugins.analysis.util.PluginLogger;
 import hudson.plugins.findbugs.parser.FindBugsParser;
+
 import hudson.remoting.VirtualChannel;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import org.apache.maven.project.MavenProject;
-import org.codehaus.plexus.component.configurator.ComponentConfigurationException;
-import org.codehaus.plexus.configuration.xml.XmlPlexusConfiguration;
-import org.kohsuke.stapler.DataBoundConstructor;
 
 /**
  * Publishes the results of the FindBugs analysis (maven 2 project type).
@@ -177,11 +181,15 @@ public class FindBugsReporter extends HealthAwareReporter<FindBugsResult> {
 
     private FilePath getOutputPath(final MojoInfo mojo, final MavenProject pom) {
         try {
-            return new FilePath((VirtualChannel)null, mojo.getConfigurationValue("findbugsXmlOutputDirectory", String.class));
+            String configurationValue = mojo.getConfigurationValue("findbugsXmlOutputDirectory", String.class);
+            if (StringUtils.isNotBlank(configurationValue)) {
+                return new FilePath((VirtualChannel)null, configurationValue);
+            }
         }
         catch (ComponentConfigurationException exception) {
-            return getTargetPath(pom);
+            // ignore and use fall back value
         }
+        return getTargetPath(pom);
     }
 
     @Override
