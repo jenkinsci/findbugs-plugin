@@ -10,6 +10,8 @@ public class XmlBugInstance {
     /** Unique ID of a bug. */
     private String instanceHash;
     private String message;
+    private String type;
+    private String category;
 
     /**
      * Returns the hash code of this bug.
@@ -48,4 +50,21 @@ public class XmlBugInstance {
     public void setMessage(final String message) {
         this.message = message;
     }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
 }

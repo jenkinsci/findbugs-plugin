@@ -135,14 +135,32 @@ public class FindBugsParser implements AnnotationParser {
      */
     public Collection<FileAnnotation> parse(final File file, final Collection<String> sources, final String moduleName)
             throws IOException, DocumentException, SAXException {
-        FileInputStream input = null;
+        return parse(new InputStreamProvider() {
+            @Override public InputStream getInputStream() throws IOException {
+                return new FileInputStream(file);
+            }
+        }, sources, moduleName);
+    }
+
+    interface InputStreamProvider {
+        InputStream getInputStream() throws IOException;
+    }
+
+    Collection<FileAnnotation> parse(InputStreamProvider file, final Collection<String> sources, final String moduleName)
+            throws IOException, DocumentException, SAXException {
+        InputStream input = null;
         try {
-            input = new FileInputStream(file);
-            Map<String, String> hashToMessageMapping = createHashToMessageMapping(input);
+            input = file.getInputStream();
+            Map<String,String> hashToMessageMapping = new HashMap<String,String>();
+            Map<String,String> categories = new HashMap<String,String>();
+            for (XmlBugInstance bug : preparse(input)) {
+                hashToMessageMapping.put(bug.getInstanceHash(), bug.getMessage());
+                categories.put(bug.getType(), bug.getCategory());
+            }
             IOUtils.closeQuietly(input);
 
-            input = new FileInputStream(file);
-            return parse(input, sources, moduleName, hashToMessageMapping);
+            input = file.getInputStream();
+            return parse(input, sources, moduleName, hashToMessageMapping, categories);
         }
         finally {
             IOUtils.closeQuietly(input);
@@ -150,8 +168,10 @@ public class FindBugsParser implements AnnotationParser {
     }
 
     /**
-     * Creates a mapping of FindBugs warnings to messages. A bug is represented
-     * by its unique hash code.
+     * Preparses a file for some information not available from the FindBugs parser.
+     * Creates a mapping of FindBugs warnings to messages.
+     * A bug is represented by its unique hash code.
+     * Also obtains original categories for bug types.
      *
      * @param file
      *            the FindBugs XML file
@@ -161,7 +181,7 @@ public class FindBugsParser implements AnnotationParser {
      * @throws IOException
      *             signals that an I/O exception has occurred.
      */
-    public Map<String, String> createHashToMessageMapping(final InputStream file) throws SAXException, IOException {
+    List<XmlBugInstance> preparse(final InputStream file) throws SAXException, IOException {
         Digester digester = new Digester();
         digester.setValidating(false);
         digester.setClassLoader(FindBugsParser.class.getClassLoader());
@@ -178,11 +198,7 @@ public class FindBugsParser implements AnnotationParser {
         digester.push(bugs);
         digester.parse(file);
 
-        HashMap<String, String> mapping = new HashMap<String, String>();
-        for (XmlBugInstance bug : bugs) {
-            mapping.put(bug.getInstanceHash(), bug.getMessage());
-        }
-        return mapping;
+        return bugs;
     }
 
     /**
@@ -197,13 +213,14 @@ public class FindBugsParser implements AnnotationParser {
      *            name of maven module
      * @param hashToMessageMapping
      *            mapping of hash codes to messages
+     * @param categories mapping from bug types to their categories
      * @return the parsed result (stored in the module instance)
      * @throws IOException
      *             if the file could not be parsed
      * @throws DocumentException in case of a parser exception
      */
-    public Collection<FileAnnotation> parse(final InputStream file, final Collection<String> sources,
-            final String moduleName, final Map<String, String> hashToMessageMapping) throws IOException,
+    private Collection<FileAnnotation> parse(final InputStream file, final Collection<String> sources,
+            final String moduleName, final Map<String, String> hashToMessageMapping, final Map<String,String> categories) throws IOException,
             DocumentException {
         SortedBugCollection collection = readXml(file);
 
@@ -222,13 +239,16 @@ public class FindBugsParser implements AnnotationParser {
             SourceLineAnnotation sourceLine = warning.getPrimarySourceLineAnnotation();
 
             String message = warning.getMessage();
+            String type = warning.getType();
             if (message.contains("TEST: Unknown")) {
-                message = FindBugsMessages.getInstance().getShortMessage(warning.getType(), LocaleProvider.getLocale());
+                message = FindBugsMessages.getInstance().getShortMessage(type, LocaleProvider.getLocale());
+            }
+            String category = categories.get(type);
+            if (category == null) { // alternately, only if warning.getBugPattern().getType().equals("UNKNOWN")
+                category = warning.getBugPattern().getCategory();
             }
             Bug bug = new Bug(getPriority(warning),
-                    StringUtils.defaultIfEmpty(hashToMessageMapping.get(warning.getInstanceHash()), message),
-                    warning.getBugPattern().getCategory(),
-                    warning.getType(), sourceLine.getStartLine(), sourceLine.getEndLine());
+                    StringUtils.defaultIfEmpty(hashToMessageMapping.get(warning.getInstanceHash()), message), category, type, sourceLine.getStartLine(), sourceLine.getEndLine());
             bug.setInstanceHash(warning.getInstanceHash());
             bug.setRank(warning.getBugRank());
 
