@@ -1,12 +1,5 @@
 package hudson.plugins.findbugs.parser; // NOPMD
 
-import hudson.plugins.analysis.core.AnnotationParser;
-import hudson.plugins.analysis.util.TreeStringBuilder;
-import hudson.plugins.analysis.util.model.FileAnnotation;
-import hudson.plugins.analysis.util.model.LineRange;
-import hudson.plugins.analysis.util.model.Priority;
-import hudson.plugins.findbugs.FindBugsMessages;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -37,6 +30,13 @@ import edu.umd.cs.findbugs.SourceLineAnnotation;
 import edu.umd.cs.findbugs.ba.SourceFile;
 import edu.umd.cs.findbugs.ba.SourceFinder;
 import edu.umd.cs.findbugs.cloud.Cloud;
+
+import hudson.plugins.analysis.core.AnnotationParser;
+import hudson.plugins.analysis.util.TreeStringBuilder;
+import hudson.plugins.analysis.util.model.FileAnnotation;
+import hudson.plugins.analysis.util.model.LineRange;
+import hudson.plugins.analysis.util.model.Priority;
+import hudson.plugins.findbugs.FindBugsMessages;
 
 /**
  * A parser for the native FindBugs XML files (ant task, batch file or
@@ -136,23 +136,19 @@ public class FindBugsParser implements AnnotationParser {
     public Collection<FileAnnotation> parse(final File file, final Collection<String> sources, final String moduleName)
             throws IOException, DocumentException, SAXException {
         return parse(new InputStreamProvider() {
-            @Override public InputStream getInputStream() throws IOException {
+            public InputStream getInputStream() throws IOException {
                 return new FileInputStream(file);
             }
         }, sources, moduleName);
     }
 
-    interface InputStreamProvider {
-        InputStream getInputStream() throws IOException;
-    }
-
-    Collection<FileAnnotation> parse(InputStreamProvider file, final Collection<String> sources, final String moduleName)
+    Collection<FileAnnotation> parse(final InputStreamProvider file, final Collection<String> sources, final String moduleName)
             throws IOException, DocumentException, SAXException {
         InputStream input = null;
         try {
             input = file.getInputStream();
-            Map<String,String> hashToMessageMapping = new HashMap<String,String>();
-            Map<String,String> categories = new HashMap<String,String>();
+            Map<String, String> hashToMessageMapping = new HashMap<String, String>();
+            Map<String, String> categories = new HashMap<String, String>();
             for (XmlBugInstance bug : preparse(input)) {
                 hashToMessageMapping.put(bug.getInstanceHash(), bug.getMessage());
                 categories.put(bug.getType(), bug.getCategory());
@@ -168,7 +164,7 @@ public class FindBugsParser implements AnnotationParser {
     }
 
     /**
-     * Preparses a file for some information not available from the FindBugs parser.
+     * Pre-parses a file for some information not available from the FindBugs parser.
      * Creates a mapping of FindBugs warnings to messages.
      * A bug is represented by its unique hash code.
      * Also obtains original categories for bug types.
@@ -220,8 +216,8 @@ public class FindBugsParser implements AnnotationParser {
      * @throws DocumentException in case of a parser exception
      */
     private Collection<FileAnnotation> parse(final InputStream file, final Collection<String> sources,
-            final String moduleName, final Map<String, String> hashToMessageMapping, final Map<String,String> categories) throws IOException,
-            DocumentException {
+            final String moduleName, final Map<String, String> hashToMessageMapping, final Map<String, String> categories)
+                    throws IOException, DocumentException {
         SortedBugCollection collection = readXml(file);
 
         Project project = collection.getProject();
@@ -399,6 +395,13 @@ public class FindBugsParser implements AnnotationParser {
         else {
             return project.getProjectName();
         }
+    }
+
+    /**
+     * Provides an input stream for the parser.
+     */
+    interface InputStreamProvider {
+        InputStream getInputStream() throws IOException;
     }
 }
 

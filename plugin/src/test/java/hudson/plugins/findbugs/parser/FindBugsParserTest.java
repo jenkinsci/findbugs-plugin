@@ -1,14 +1,6 @@
 package hudson.plugins.findbugs.parser;
 
 import static org.junit.Assert.*;
-import hudson.plugins.analysis.test.AbstractEnglishLocaleTest;
-import hudson.plugins.analysis.util.model.FileAnnotation;
-import hudson.plugins.analysis.util.model.JavaPackage;
-import hudson.plugins.analysis.util.model.LineRange;
-import hudson.plugins.analysis.util.model.MavenModule;
-import hudson.plugins.analysis.util.model.Priority;
-import hudson.plugins.findbugs.FindBugsMessages;
-import hudson.plugins.findbugs.Messages;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,6 +14,15 @@ import org.apache.commons.io.IOUtils;
 import org.dom4j.DocumentException;
 import org.junit.Test;
 import org.xml.sax.SAXException;
+
+import hudson.plugins.analysis.test.AbstractEnglishLocaleTest;
+import hudson.plugins.analysis.util.model.FileAnnotation;
+import hudson.plugins.analysis.util.model.JavaPackage;
+import hudson.plugins.analysis.util.model.LineRange;
+import hudson.plugins.analysis.util.model.MavenModule;
+import hudson.plugins.analysis.util.model.Priority;
+import hudson.plugins.findbugs.FindBugsMessages;
+import hudson.plugins.findbugs.Messages;
 
 /**
  *  Tests the extraction of FindBugs analysis results.
@@ -42,9 +43,9 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
     /** Error message. */
     private static final String WRONG_NUMBER_OF_WARNINGS_PARSED = "Wrong number of bugs parsed.";
 
-    private MavenModule parseFile(final String fileName, final boolean isRankActivated) throws Exception {
+    private MavenModule parseFile(final String fileName, final boolean isRankActivated) throws IOException, SAXException, DocumentException {
         Collection<FileAnnotation> annotations = new FindBugsParser(isRankActivated).parse(new FindBugsParser.InputStreamProvider() {
-            @Override public InputStream getInputStream() throws IOException {
+            public InputStream getInputStream() throws IOException {
                 return FindBugsParserTest.class.getResourceAsStream(fileName);
             }
         }, new ArrayList<String>(), fileName);
@@ -66,10 +67,9 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
      *             in case of an error
      * @throws DocumentException
      *             in case of an error
-     * @see <a href="http://issues.jenkins-ci.org/browse/JENKINS-7238">Issue 7238</a>
      */
     @Test
-    public void issue7238() throws Exception {
+    public void issue7238() throws IOException, SAXException, DocumentException {
         FindBugsMessages.getInstance().initialize();
 
         MavenModule module = parseFile("issue7238.xml", false);
@@ -88,7 +88,7 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
      * @see <a href="http://issues.jenkins-ci.org/browse/JENKINS-12314">Issue 12314</a>
      */
     @Test
-    public void issue12314() throws Exception {
+    public void issue12314() throws IOException, SAXException, DocumentException {
         FindBugsMessages.getInstance().initialize();
 
         MavenModule module = parseFile("issue12314.xml", false);
@@ -113,7 +113,7 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
      * @see <a href="http://issues.jenkins-ci.org/browse/JENKINS-7932">Issue 7932</a>
      */
     @Test
-    public void issue7312and7932() throws Exception {
+    public void issue7312and7932() throws IOException, SAXException, DocumentException {
         FindBugsMessages.getInstance().initialize();
 
         String saxParser = this.getClass().getName();
@@ -135,7 +135,7 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
      * @see <a href="http://issues.jenkins-ci.org/browse/JENKINS-7932">Issue 7932</a>
      */
     @Test
-    public void issue7932OOnNull() throws Exception {
+    public void issue7932OOnNull() throws IOException, SAXException, DocumentException {
         FindBugsMessages.getInstance().initialize();
 
         System.clearProperty(FindBugsParser.SAX_DRIVER_PROPERTY);
@@ -156,7 +156,7 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
     public void testMessageMapping() throws SAXException, IOException {
         InputStream stream = FindBugsParserTest.class.getResourceAsStream(FINDBUGS_NATIVE_XML);
         try {
-            Map<String,String> mapping = new HashMap<String,String>();
+            Map<String, String> mapping = new HashMap<String, String>();
             for (XmlBugInstance bug : new FindBugsParser(false).preparse(stream)) {
                 mapping.put(bug.getInstanceHash(), bug.getMessage());
             }
@@ -188,7 +188,7 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
      *             in case of an error
      */
     @Test
-    public void testFileWithMultipleLinesAndRanges() throws Exception {
+    public void testFileWithMultipleLinesAndRanges() throws IOException, SAXException, DocumentException {
         scanNativeFile(FINDBUGS_NATIVE_XML, FINDBUGS_NATIVE_XML,
                 Priority.NORMAL, "org/apache/hadoop/dfs/BlockCrcUpgrade.java", "org.apache.hadoop.dfs", 1309, 1309,
                 5, "org/apache/hadoop/streaming/StreamJob.java", "org.apache.hadoop.streaming", 935, 980, 1, false);
@@ -209,7 +209,7 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
      *             in case of an error
      */
     @Test
-    public void scanFileWarningsHaveMultipleClasses() throws Exception {
+    public void scanFileWarningsHaveMultipleClasses() throws IOException, SAXException, DocumentException {
         scanNativeFile("findbugs-multclass.xml", "FindBugs",
                 Priority.HIGH, "umd/cs/findbugs/PluginLoader.java", "edu.umd.cs.findbugs", 82, 82,
                 1, "edu/umd/cs/findbugs/PluginLoader.java", "edu.umd.cs.findbugs", 93, 93, 1, false);
@@ -223,11 +223,13 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
      *
      * @throws IOException
      *             in case of an error
+     * @throws SAXException
+     *             in case of an error
      * @throws DocumentException
      *             in case of an error
      */
     @Test
-    public void scanFbContribFile() throws Exception {
+    public void scanFbContribFile() throws IOException, SAXException, DocumentException {
         MavenModule parseFile = parseFile("fbcontrib.xml", false);
         JavaPackage javaPackage = parseFile.getPackage("hudson.plugins.tasks");
         assertEquals(WRONG_NUMBER_OF_WARNINGS_PARSED, 16, javaPackage.getNumberOfAnnotations());
@@ -250,11 +252,13 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
      *
      * @throws IOException
      *             in case of an error
+     * @throws SAXException
+     *             in case of an error
      * @throws DocumentException
      *             in case of an error
      */
     @Test
-    public void handleFilesWithoutMessages() throws Exception {
+    public void handleFilesWithoutMessages() throws IOException, SAXException, DocumentException {
         MavenModule module = parseFile("findbugs-nomessage.xml", false);
         assertEquals(WRONG_NUMBER_OF_WARNINGS_PARSED, 1, module.getNumberOfAnnotations());
 
@@ -272,9 +276,11 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
      *             Signals that an I/O exception has occurred.
      * @throws DocumentException
      *             the document exception
+     * @throws SAXException
+     *             in case of an error
      */
     @Test
-    public void handleFileWithNotABugConsensus() throws Exception {
+    public void handleFileWithNotABugConsensus() throws IOException, SAXException, DocumentException {
         MavenModule module = parseFile("findbugs-with-notAProblem-bug.xml", false);
         assertEquals(WRONG_NUMBER_OF_WARNINGS_PARSED, 1, module.getNumberOfAnnotations());
 
@@ -287,11 +293,15 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
     /**
      * Shows that a file with first seen date is handled correctly.
      *
-     * @throws IOException Signals that an I/O exception has occurred.
-     * @throws DocumentException the document exception
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     * @throws DocumentException
+     *             the document exception
+     * @throws SAXException
+     *             in case of an error
      */
     @Test
-    public void handleFileWithFirstSeenDate() throws Exception {
+    public void handleFileWithFirstSeenDate() throws IOException, SAXException, DocumentException {
         MavenModule module = parseFile("findbugs-with-firstSeen.xml", false);
         assertEquals(WRONG_NUMBER_OF_WARNINGS_PARSED, 1, module.getNumberOfAnnotations());
 
@@ -306,11 +316,15 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
     /**
      * Shows that a file with reviews is handled correctly.
      *
-     * @throws IOException Signals that an I/O exception has occurred.
-     * @throws DocumentException the document exception
+     * @throws SAXException
+     *             in case of an error
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     * @throws DocumentException
+     *             the document exception
      */
     @Test
-    public void handleFileWithReviews() throws Exception {
+    public void handleFileWithReviews() throws IOException, SAXException, DocumentException {
         MavenModule module = parseFile("findbugs-with-reviews.xml", false);
         assertEquals(WRONG_NUMBER_OF_WARNINGS_PARSED, 1, module.getNumberOfAnnotations());
 
@@ -322,17 +336,27 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
                    next.getMessage().matches(".*4 comments.*"));
     }
 
+    /**
+     * Verifies that third party categories are correctly parsed.
+     *
+     * @throws SAXException
+     *             in case of an error
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     * @throws DocumentException
+     *             the document exception
+     */
     @Test
-    public void thirdPartyCategory() throws Exception {
+    public void thirdPartyCategory() throws IOException, SAXException, DocumentException {
         MavenModule module = parseFile("findbugs-3rd-party-category.xml", false);
         assertEquals(WRONG_NUMBER_OF_WARNINGS_PARSED, 2, module.getNumberOfAnnotations());
         Iterator<FileAnnotation> annotations = module.getAnnotations().iterator();
         FileAnnotation next = annotations.next();
-        assertEquals("SE_NO_SERIALVERSIONID", next.getType());
-        assertEquals("BAD_PRACTICE", next.getCategory());
+        assertEquals("Wrong serial version ID: ", "SE_NO_SERIALVERSIONID", next.getType());
+        assertEquals("Wrong category: ", "BAD_PRACTICE", next.getCategory());
         next = annotations.next();
-        assertEquals("WEAK_MESSAGE_DIGEST", next.getType());
-        assertEquals("SECURITY", next.getCategory());
+        assertEquals("Wrong type: ", "WEAK_MESSAGE_DIGEST", next.getType());
+        assertEquals("Wrong category: ", "SECURITY", next.getCategory());
     }
 
     // CHECKSTYLE:OFF
@@ -340,7 +364,7 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
     private void scanNativeFile(final String findbugsFile, final String projectName,
             final Priority priority, final String fileName1, final String packageName1, final int start1, final int end1,
             final int ranges1, final String fileName2, final String packageName2, final int start2, final int end2, final int ranges2, final boolean isRankActivated)
-            throws Exception {
+            throws IOException, SAXException, DocumentException {
    // CHECKSTYLE:ON
         FindBugsMessages.getInstance().initialize();
 
