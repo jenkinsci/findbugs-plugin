@@ -22,7 +22,6 @@ import hudson.plugins.analysis.util.model.LineRange;
 import hudson.plugins.analysis.util.model.MavenModule;
 import hudson.plugins.analysis.util.model.Priority;
 import hudson.plugins.findbugs.FindBugsMessages;
-import hudson.plugins.findbugs.Messages;
 
 /**
  *  Tests the extraction of FindBugs analysis results.
@@ -44,7 +43,11 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
     private static final String WRONG_NUMBER_OF_WARNINGS_PARSED = "Wrong number of bugs parsed.";
 
     private MavenModule parseFile(final String fileName, final boolean isRankActivated) throws IOException, SAXException, DocumentException {
-        Collection<FileAnnotation> annotations = new FindBugsParser(isRankActivated).parse(new FindBugsParser.InputStreamProvider() {
+        return parseFile(fileName, isRankActivated, null);
+    }
+
+    private MavenModule parseFile(final String fileName, final boolean isRankActivated, final String excludePattern) throws IOException, SAXException, DocumentException {
+        Collection<FileAnnotation> annotations = new FindBugsParser(isRankActivated, excludePattern).parse(new FindBugsParser.InputStreamProvider() {
             public InputStream getInputStream() throws IOException {
                 return FindBugsParserTest.class.getResourceAsStream(fileName);
             }
@@ -74,6 +77,25 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
 
         MavenModule module = parseFile("issue7238.xml", false);
         assertEquals("Wrong number of warnings", 1820, module.getNumberOfAnnotations());
+    }
+
+
+    /**
+     * Parses fb-contrib messages.
+     *
+     * @throws IOException
+     *             in case of an error
+     * @throws SAXException
+     *             in case of an error
+     * @throws DocumentException
+     *             in case of an error
+     */
+    @Test
+    public void issue7238withExcludePattern() throws IOException, SAXException, DocumentException {
+        FindBugsMessages.getInstance().initialize();
+
+        MavenModule module = parseFile("issue7238.xml", false, "*gti/plc/test*,*gti/plc/server/siemens/libnodave*,*gti/plc/util*");
+        assertEquals("Wrong number of warnings", 1752, module.getNumberOfAnnotations());
     }
 
     /**

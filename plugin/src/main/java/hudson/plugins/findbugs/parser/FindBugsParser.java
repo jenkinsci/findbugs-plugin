@@ -11,8 +11,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 import org.apache.commons.digester3.Digester;
 import org.apache.commons.io.IOUtils;
@@ -21,6 +23,8 @@ import org.apache.xerces.parsers.SAXParser;
 import org.dom4j.DocumentException;
 import org.jvnet.localizer.LocaleProvider;
 import org.xml.sax.SAXException;
+
+import com.google.common.collect.Sets;
 
 import edu.umd.cs.findbugs.BugAnnotation;
 import edu.umd.cs.findbugs.BugInstance;
@@ -39,8 +43,7 @@ import hudson.plugins.analysis.util.model.Priority;
 import hudson.plugins.findbugs.FindBugsMessages;
 
 /**
- * A parser for the native FindBugs XML files (ant task, batch file or
- * maven-findbugs-plugin >= 1.2).
+ * A parser for the native FindBugs XML files (ant task, batch file or maven-findbugs-plugin >= 1.2).
  *
  * @author Ulli Hafner
  */
@@ -64,32 +67,68 @@ public class FindBugsParser implements AnnotationParser {
     @edu.umd.cs.findbugs.annotations.SuppressWarnings("SE")
     private final List<String> mavenSources = new ArrayList<String>();
 
+    /** Determines whether to use the rank when evaluation the priority. @since 4.26 */
     private final boolean isRankActivated;
+
+    /** RegEx patterns of files to exclude from report. */
+    private final Set<Pattern> excludePatterns = Sets.newHashSet();
 
     /**
      * Creates a new instance of {@link FindBugsParser}.
      *
      * @param isRankActivated
-     *            determines whether to use the rank when evaluation the
-     *            priority
+     *            determines whether to use the rank when evaluation the priority
      */
     public FindBugsParser(final boolean isRankActivated) {
-        this(new ArrayList<String>(), isRankActivated);
+        this(isRankActivated, null);
+    }
+
+    /**
+     * Creates a new instance of {@link FindBugsParser}.
+     *
+     * @param isRankActivated
+     *            determines whether to use the rank when evaluation the priority
+     * @param excludePattern
+     *            RegEx pattern of files to exclude from report
+     */
+    public FindBugsParser(final boolean isRankActivated, final String excludePattern) {
+        this(new ArrayList<String>(), isRankActivated, excludePattern);
     }
 
     /**
      * Creates a new instance of {@link FindBugsParser}.
      *
      * @param sourceFolders
-     *            a collection of folders to scan for source files. If empty,
-     *            the source folders are guessed.
+     *            a collection of folders to scan for source files. If empty, the source folders are guessed.
      * @param isRankActivated
-     *            determines whether to use the rank when evaluation the
-     *            priority
+     *            determines whether to use the rank when evaluation the priority
+     * @param excludePattern
+     *            RegEx patterns of files to exclude from report
      */
-    public FindBugsParser(final Collection<String> sourceFolders, final boolean isRankActivated) {
+    public FindBugsParser(final Collection<String> sourceFolders, final boolean isRankActivated,
+            final String excludePattern) {
         mavenSources.addAll(sourceFolders);
         this.isRankActivated = isRankActivated;
+        addPatterns(excludePatterns, excludePattern);
+    }
+
+    /**
+     * Extract the RegEx patterns from the string.
+     *
+     * @param patterns
+     *            RegEx patterns of files to exclude from report
+     * @param pattern
+     *            String of RegEx patterns
+     */
+    private void addPatterns(final Set<Pattern> patterns, final String pattern) {
+        if (StringUtils.isNotBlank(pattern)) {
+            String[] splitted = StringUtils.split(pattern, ',');
+            for (String singlePattern : splitted) {
+                String trimmed = StringUtils.trim(singlePattern);
+                String directoriesReplaced = StringUtils.replace(trimmed, "**", "*"); // NOCHECKSTYLE
+                patterns.add(Pattern.compile(StringUtils.replace(directoriesReplaced, "*", ".*"))); // NOCHECKSTYLE
+            }
+        }
     }
 
     /** {@inheritDoc} */
@@ -116,8 +155,7 @@ public class FindBugsParser implements AnnotationParser {
     }
 
     /**
-     * Returns the parsed FindBugs analysis file. This scanner accepts files in
-     * the native FindBugs format.
+     * Returns the parsed FindBugs analysis file. This scanner accepts files in the native FindBugs format.
      *
      * @param file
      *            the FindBugs analysis file
@@ -142,8 +180,8 @@ public class FindBugsParser implements AnnotationParser {
         }, sources, moduleName);
     }
 
-    Collection<FileAnnotation> parse(final InputStreamProvider file, final Collection<String> sources, final String moduleName)
-            throws IOException, DocumentException, SAXException {
+    Collection<FileAnnotation> parse(final InputStreamProvider file, final Collection<String> sources,
+            final String moduleName) throws IOException, DocumentException, SAXException {
         InputStream input = null;
         try {
             input = file.getInputStream();
@@ -164,10 +202,9 @@ public class FindBugsParser implements AnnotationParser {
     }
 
     /**
-     * Pre-parses a file for some information not available from the FindBugs parser.
-     * Creates a mapping of FindBugs warnings to messages.
-     * A bug is represented by its unique hash code.
-     * Also obtains original categories for bug types.
+     * Pre-parses a file for some information not available from the FindBugs parser. Creates a mapping of FindBugs
+     * warnings to messages. A bug is represented by its unique hash code. Also obtains original categories for bug
+     * types.
      *
      * @param file
      *            the FindBugs XML file
@@ -198,8 +235,7 @@ public class FindBugsParser implements AnnotationParser {
     }
 
     /**
-     * Returns the parsed FindBugs analysis file. This scanner accepts files in
-     * the native FindBugs format.
+     * Returns the parsed FindBugs analysis file. This scanner accepts files in the native FindBugs format.
      *
      * @param file
      *            the FindBugs analysis file
@@ -209,15 +245,17 @@ public class FindBugsParser implements AnnotationParser {
      *            name of maven module
      * @param hashToMessageMapping
      *            mapping of hash codes to messages
-     * @param categories mapping from bug types to their categories
+     * @param categories
+     *            mapping from bug types to their categories
      * @return the parsed result (stored in the module instance)
      * @throws IOException
      *             if the file could not be parsed
-     * @throws DocumentException in case of a parser exception
+     * @throws DocumentException
+     *             in case of a parser exception
      */
     private Collection<FileAnnotation> parse(final InputStream file, final Collection<String> sources,
-            final String moduleName, final Map<String, String> hashToMessageMapping, final Map<String, String> categories)
-                    throws IOException, DocumentException {
+            final String moduleName, final Map<String, String> hashToMessageMapping,
+            final Map<String, String> categories) throws IOException, DocumentException {
         SortedBugCollection collection = readXml(file);
 
         Project project = collection.getProject();
@@ -231,7 +269,9 @@ public class FindBugsParser implements AnnotationParser {
         TreeStringBuilder stringPool = new TreeStringBuilder();
         List<FileAnnotation> annotations = new ArrayList<FileAnnotation>();
         Collection<BugInstance> bugs = collection.getCollection();
+
         for (BugInstance warning : bugs) {
+
             SourceLineAnnotation sourceLine = warning.getPrimarySourceLineAnnotation();
 
             String message = warning.getMessage();
@@ -243,8 +283,9 @@ public class FindBugsParser implements AnnotationParser {
             if (category == null) { // alternately, only if warning.getBugPattern().getType().equals("UNKNOWN")
                 category = warning.getBugPattern().getCategory();
             }
-            Bug bug = new Bug(getPriority(warning),
-                    StringUtils.defaultIfEmpty(hashToMessageMapping.get(warning.getInstanceHash()), message), category, type, sourceLine.getStartLine(), sourceLine.getEndLine());
+            Bug bug = new Bug(getPriority(warning), StringUtils.defaultIfEmpty(
+                    hashToMessageMapping.get(warning.getInstanceHash()), message), category, type,
+                    sourceLine.getStartLine(), sourceLine.getEndLine());
             bug.setInstanceHash(warning.getInstanceHash());
             bug.setRank(warning.getBugRank());
 
@@ -259,8 +300,34 @@ public class FindBugsParser implements AnnotationParser {
                 annotations.add(bug);
                 bug.intern(stringPool);
             }
+
         }
-        return annotations;
+
+        return applyExcludeFilter(annotations);
+    }
+
+    /**
+     * Applies the exclude filter to the found annotations.
+     *
+     * @param allAnnotations
+     *            all annotations
+     * @return the filtered annotations if there is a filter defined
+     */
+    private List<FileAnnotation> applyExcludeFilter(final List<FileAnnotation> allAnnotations) {
+        if (excludePatterns.isEmpty()) {
+            return allAnnotations;
+        }
+        else {
+            List<FileAnnotation> excludedAnnotations = new ArrayList<FileAnnotation>(allAnnotations);
+            for (FileAnnotation annotation : allAnnotations) {
+                for (Pattern exclude : excludePatterns) {
+                    if (exclude.matcher(annotation.getFileName()).matches()) {
+                        excludedAnnotations.remove(annotation);
+                    }
+                }
+            }
+            return excludedAnnotations;
+        }
     }
 
     private Priority getPriority(final BugInstance warning) {
@@ -329,15 +396,17 @@ public class FindBugsParser implements AnnotationParser {
         }
     }
 
-    private String findSourceFile(final Project project, final SourceFinder sourceFinder, final SourceLineAnnotation sourceLine) {
+    private String findSourceFile(final Project project, final SourceFinder sourceFinder,
+            final SourceLineAnnotation sourceLine) {
         try {
             SourceFile sourceFile = sourceFinder.findSourceFile(sourceLine);
             return sourceFile.getFullFileName();
         }
         catch (IOException exception) {
-            Logger.getLogger(getClass().getName()).log(Level.WARNING,
-                    "Can't resolve absolute file name for file " + sourceLine.getSourceFile()
-                    + ", dir list = " + project.getSourceDirList().toString());
+            Logger.getLogger(getClass().getName()).log(
+                    Level.WARNING,
+                    "Can't resolve absolute file name for file " + sourceLine.getSourceFile() + ", dir list = "
+                            + project.getSourceDirList().toString());
             return sourceLine.getPackageName().replace(DOT, SLASH) + SLASH + sourceLine.getSourceFile();
         }
     }
@@ -379,8 +448,7 @@ public class FindBugsParser implements AnnotationParser {
     }
 
     /**
-     * Extracts the module name from the specified project. If empty then the
-     * provided default name is used.
+     * Extracts the module name from the specified project. If empty then the provided default name is used.
      *
      * @param defaultName
      *            the default module name to use
@@ -404,4 +472,3 @@ public class FindBugsParser implements AnnotationParser {
         InputStream getInputStream() throws IOException;
     }
 }
-

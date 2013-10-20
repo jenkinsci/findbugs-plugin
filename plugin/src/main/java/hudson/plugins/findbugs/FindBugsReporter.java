@@ -47,6 +47,9 @@ public class FindBugsReporter extends HealthAwareReporter<FindBugsResult> {
     /** Determines whether to use the rank when evaluation the priority. @since 4.26 */
     private final boolean isRankActivated;
 
+    /** RegEx files patterns to exclude from report. */
+    private final String excludePattern;
+
     /**
      * Creates a new instance of <code>FindBugsReporter</code>.
      *
@@ -105,6 +108,8 @@ public class FindBugsReporter extends HealthAwareReporter<FindBugsResult> {
      * @param canComputeNew
      *            determines whether new warnings should be computed (with
      *            respect to baseline)
+     * @param excludePattern
+     *            RegEx files patterns to exclude from report
      */
     // CHECKSTYLE:OFF
     @SuppressWarnings("PMD.ExcessiveParameterList")
@@ -114,7 +119,7 @@ public class FindBugsReporter extends HealthAwareReporter<FindBugsResult> {
             final String unstableNewAll, final String unstableNewHigh, final String unstableNewNormal, final String unstableNewLow,
             final String failedTotalAll, final String failedTotalHigh, final String failedTotalNormal, final String failedTotalLow,
             final String failedNewAll, final String failedNewHigh, final String failedNewNormal, final String failedNewLow,
-            final boolean canRunOnFailed, final boolean useStableBuildAsReference, final boolean isRankActivated, final boolean canComputeNew) {
+            final boolean canRunOnFailed, final boolean useStableBuildAsReference, final boolean isRankActivated, final boolean canComputeNew, final String excludePattern) {
         super(healthy, unHealthy, thresholdLimit, useDeltaValues,
                 unstableTotalAll, unstableTotalHigh, unstableTotalNormal, unstableTotalLow,
                 unstableNewAll, unstableNewHigh, unstableNewNormal, unstableNewLow,
@@ -122,6 +127,7 @@ public class FindBugsReporter extends HealthAwareReporter<FindBugsResult> {
                 failedNewAll, failedNewHigh, failedNewNormal, failedNewLow,
                 canRunOnFailed, useStableBuildAsReference, canComputeNew, PLUGIN_NAME);
         this.isRankActivated = isRankActivated;
+        this.excludePattern = excludePattern;
     }
     // CHECKSTYLE:ON
 
@@ -134,6 +140,15 @@ public class FindBugsReporter extends HealthAwareReporter<FindBugsResult> {
      */
     public boolean isRankActivated() {
         return isRankActivated;
+    }
+
+    /**
+     * Returns the RegEx patterns to exclude from report.
+     *
+     * @return RegEx files patterns to exclude from report
+     */
+    public String getExcludePattern() {
+        return excludePattern;
     }
 
     @Override
@@ -174,7 +189,7 @@ public class FindBugsReporter extends HealthAwareReporter<FindBugsResult> {
         sources.addAll(pom.getTestCompileSourceRoots());
 
         FilesParser findBugsCollector = new FilesParser(PLUGIN_NAME, determineFileName(mojo),
-                new FindBugsParser(sources, isRankActivated), getModuleName(pom));
+                new FindBugsParser(sources, isRankActivated, getExcludePattern()), getModuleName(pom));
 
         return getOutputPath(mojo, pom).act(findBugsCollector);
     }
