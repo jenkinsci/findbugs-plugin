@@ -1,8 +1,13 @@
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define"
-    xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:u="/util" xmlns:fb="/findbugs">
-  <fb:rank/>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout"
+  xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:u="/util" xmlns:fb="/findbugs">
+  <f:entry title="${%FindBugs results}" field="pattern"
+    description="${%description.pattern('http://ant.apache.org/manual/Types/fileset.html')}">
+    <f:textbox />
+  </f:entry>
+  <fb:exclude_pattern />
+  <fb:rank />
   <f:advanced>
-    <u:advancedMaven id="findbugs"/>
+    <u:advanced id="findbugs" />
   </f:advanced>
 </j:jelly>

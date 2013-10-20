@@ -5,6 +5,7 @@
     description="${%description.pattern('http://ant.apache.org/manual/Types/fileset.html')}">
     <f:textbox />
   </f:entry>
+  <fb:exclude_pattern />
   <fb:rank />
   <f:advanced>
     <u:advanced id="findbugs" />
