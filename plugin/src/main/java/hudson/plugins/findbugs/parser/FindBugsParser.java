@@ -70,8 +70,11 @@ public class FindBugsParser implements AnnotationParser {
     /** Determines whether to use the rank when evaluation the priority. @since 4.26 */
     private final boolean isRankActivated;
 
-    /** RegEx patterns of files to exclude from report. */
+    /** RegEx patterns of files to exclude from the report. */
     private final Set<Pattern> excludePatterns = Sets.newHashSet();
+
+    /** RegEx patterns of files to include in the report. */
+    private final Set<Pattern> includePatterns = Sets.newHashSet();
 
     /**
      * Creates a new instance of {@link FindBugsParser}.
@@ -80,7 +83,7 @@ public class FindBugsParser implements AnnotationParser {
      *            determines whether to use the rank when evaluation the priority
      */
     public FindBugsParser(final boolean isRankActivated) {
-        this(isRankActivated, null);
+        this(isRankActivated, null, null);
     }
 
     /**
@@ -89,10 +92,12 @@ public class FindBugsParser implements AnnotationParser {
      * @param isRankActivated
      *            determines whether to use the rank when evaluation the priority
      * @param excludePattern
-     *            RegEx pattern of files to exclude from report
+     *            RegEx patterns of files to exclude from the report
+     * @param includePattern
+     *            RegEx patterns of files to include in the report
      */
-    public FindBugsParser(final boolean isRankActivated, final String excludePattern) {
-        this(new ArrayList<String>(), isRankActivated, excludePattern);
+    public FindBugsParser(final boolean isRankActivated, final String excludePattern, final String includePattern) {
+        this(new ArrayList<String>(), isRankActivated, excludePattern, includePattern);
     }
 
     /**
@@ -103,20 +108,23 @@ public class FindBugsParser implements AnnotationParser {
      * @param isRankActivated
      *            determines whether to use the rank when evaluation the priority
      * @param excludePattern
-     *            RegEx patterns of files to exclude from report
+     *            RegEx patterns of files to exclude from the report
+     * @param includePattern
+     *            RegEx patterns of files to include in the report
      */
     public FindBugsParser(final Collection<String> sourceFolders, final boolean isRankActivated,
-            final String excludePattern) {
+            final String excludePattern, final String includePattern) {
         mavenSources.addAll(sourceFolders);
         this.isRankActivated = isRankActivated;
+        addPatterns(includePatterns, includePattern);
         addPatterns(excludePatterns, excludePattern);
     }
 
     /**
-     * Extract the RegEx patterns from the string.
+     * Add RegEx patterns to include/exclude in the report.
      *
      * @param patterns
-     *            RegEx patterns of files to exclude from report
+     *            RegEx patterns
      * @param pattern
      *            String of RegEx patterns
      */
@@ -130,6 +138,7 @@ public class FindBugsParser implements AnnotationParser {
             }
         }
     }
+
 
     /** {@inheritDoc} */
     public Collection<FileAnnotation> parse(final File file, final String moduleName) throws InvocationTargetException {
@@ -306,6 +315,7 @@ public class FindBugsParser implements AnnotationParser {
         return applyExcludeFilter(annotations);
     }
 
+
     /**
      * Applies the exclude filter to the found annotations.
      *
@@ -314,12 +324,26 @@ public class FindBugsParser implements AnnotationParser {
      * @return the filtered annotations if there is a filter defined
      */
     private List<FileAnnotation> applyExcludeFilter(final List<FileAnnotation> allAnnotations) {
-        if (excludePatterns.isEmpty()) {
-            return allAnnotations;
+        List<FileAnnotation> includedAnnotations;
+        if (includePatterns.isEmpty()) {
+            includedAnnotations = allAnnotations;
         }
         else {
-            List<FileAnnotation> excludedAnnotations = new ArrayList<FileAnnotation>(allAnnotations);
+            includedAnnotations = new ArrayList<FileAnnotation>();
             for (FileAnnotation annotation : allAnnotations) {
+                for (Pattern include : includePatterns) {
+                    if (include.matcher(annotation.getFileName()).matches()) {
+                        includedAnnotations.add(annotation);
+                    }
+                }
+            }
+        }
+        if (excludePatterns.isEmpty()) {
+            return includedAnnotations;
+        }
+        else {
+            List<FileAnnotation> excludedAnnotations = new ArrayList<FileAnnotation>(includedAnnotations);
+            for (FileAnnotation annotation : includedAnnotations) {
                 for (Pattern exclude : excludePatterns) {
                     if (exclude.matcher(annotation.getFileName()).matches()) {
                         excludedAnnotations.remove(annotation);

@@ -40,8 +40,11 @@ public class FindBugsPublisher extends HealthAwarePublisher {
     /** Determines whether to use the rank when evaluation the priority. @since 4.26 */
     private final boolean isRankActivated;
 
-    /** RegEx files patterns to exclude from report. */
+    /** RegEx patterns of files to exclude from the report. */
     private final String excludePattern;
+
+    /** RegEx patterns of files to include in the report. */
+    private final String includePattern;
 
     /**
      * Creates a new instance of {@link FindBugsPublisher}.
@@ -109,7 +112,9 @@ public class FindBugsPublisher extends HealthAwarePublisher {
      *            determines whether new warnings should be computed (with
      *            respect to baseline)
      * @param excludePattern
-     *            RegEx files patterns to exclude from report
+     *            RegEx patterns of files to exclude from the report
+     * @param includePattern
+     *            RegEx patterns of files to include in the report
      */
     // CHECKSTYLE:OFF
     @SuppressWarnings("PMD.ExcessiveParameterList")
@@ -121,7 +126,7 @@ public class FindBugsPublisher extends HealthAwarePublisher {
             final String failedTotalAll, final String failedTotalHigh, final String failedTotalNormal, final String failedTotalLow,
             final String failedNewAll, final String failedNewHigh, final String failedNewNormal, final String failedNewLow,
             final boolean canRunOnFailed, final boolean useStableBuildAsReference, final boolean shouldDetectModules,
-            final String pattern, final boolean isRankActivated, final boolean canComputeNew, final String excludePattern) {
+            final String pattern, final boolean isRankActivated, final boolean canComputeNew, final String excludePattern, final String includePattern) {
         super(healthy, unHealthy, thresholdLimit, defaultEncoding, useDeltaValues,
                 unstableTotalAll, unstableTotalHigh, unstableTotalNormal, unstableTotalLow,
                 unstableNewAll, unstableNewHigh, unstableNewNormal, unstableNewLow,
@@ -131,6 +136,7 @@ public class FindBugsPublisher extends HealthAwarePublisher {
         this.pattern = pattern;
         this.isRankActivated = isRankActivated;
         this.excludePattern= excludePattern;
+        this.includePattern= includePattern;
     }
     // CHECKSTYLE:ON
 
@@ -155,12 +161,21 @@ public class FindBugsPublisher extends HealthAwarePublisher {
     }
 
     /**
-     * Returns the RegEx patterns to exclude from report.
+     * RegEx patterns of files to exclude from the report.
      *
-     * @return RegEx files patterns to exclude from report
+     * @return String of concatenated exclude patterns separated by a comma
      */
     public String getExcludePattern() {
         return excludePattern;
+    }
+
+    /**
+     * Returns the RegEx patterns to include in the report.
+     *
+     * @return String of concatenated include patterns separated by a comma
+     */
+    public String getIncludePattern() {
+        return includePattern;
     }
 
     @Override
@@ -174,7 +189,7 @@ public class FindBugsPublisher extends HealthAwarePublisher {
 
         String defaultPattern = isMavenBuild(build) ? MAVEN_DEFAULT_PATTERN : ANT_DEFAULT_PATTERN;
         FilesParser collector = new FilesParser(PLUGIN_NAME, StringUtils.defaultIfEmpty(getPattern(), defaultPattern),
-                new FindBugsParser(isRankActivated, getExcludePattern()), shouldDetectModules(), isMavenBuild(build));
+                new FindBugsParser(isRankActivated, getExcludePattern(), getIncludePattern()), shouldDetectModules(), isMavenBuild(build));
         ParserResult project = build.getWorkspace().act(collector);
         logger.logLines(project.getLogMessages());
         FindBugsResult result = new FindBugsResult(build, getDefaultEncoding(), project, useOnlyStableBuildsAsReference());
