@@ -1,19 +1,9 @@
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout"
-  xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:u="/util" xmlns:fb="/findbugs">
-  <f:entry title="${%FindBugs results}" field="pattern"
-    description="${%description.pattern('http://ant.apache.org/manual/Types/fileset.html')}">
-    <f:textbox />
-  </f:entry>
-  <fb:rank />
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define"
+    xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:u="/util" xmlns:fb="/findbugs">
+  <fb:rank/>
   <f:advanced>
-    <f:entry title="${%Bugs to include}" field="includePattern" description="${%description.includePattern}">
-      <f:textbox />
-    </f:entry>
-    <f:entry title="${%Bugs to ignore}" field="excludePattern" description="${%description.excludePattern}">
-      <f:textbox />
-    </f:entry>
-
-    <u:advanced id="findbugs" />
+    <fb:filter/>
+    <u:advancedMaven id="findbugs"/>
   </f:advanced>
 </j:jelly>

@@ -58,6 +58,7 @@ public class FindBugsParser implements AnnotationParser {
     private static final String DOT = ".";
     private static final String SLASH = "/";
     private static final String CLOUD_DETAILS_URL_PROPERTY = "detailsUrl";
+    private static final String EMPTY_STRING = "";
 
     private static final int DAY_IN_MSEC = 1000 * 60 * 60 * 24;
     private static final int HIGH_PRIORITY_LOWEST_RANK = 4;
@@ -83,7 +84,7 @@ public class FindBugsParser implements AnnotationParser {
      *            determines whether to use the rank when evaluation the priority
      */
     public FindBugsParser(final boolean isRankActivated) {
-        this(isRankActivated, null, null);
+        this(isRankActivated, EMPTY_STRING, EMPTY_STRING);
     }
 
     /**
@@ -312,18 +313,18 @@ public class FindBugsParser implements AnnotationParser {
 
         }
 
-        return applyExcludeFilter(annotations);
+        return applyFilters(annotations);
     }
 
 
     /**
-     * Applies the exclude filter to the found annotations.
+     * Applies the exclude and include filters to the found annotations.
      *
      * @param allAnnotations
      *            all annotations
      * @return the filtered annotations if there is a filter defined
      */
-    private List<FileAnnotation> applyExcludeFilter(final List<FileAnnotation> allAnnotations) {
+    private List<FileAnnotation> applyFilters(final List<FileAnnotation> allAnnotations) {
         List<FileAnnotation> includedAnnotations;
         if (includePatterns.isEmpty()) {
             includedAnnotations = allAnnotations;

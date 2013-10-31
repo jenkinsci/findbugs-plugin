@@ -7,13 +7,7 @@
   </f:entry>
   <fb:rank />
   <f:advanced>
-    <f:entry title="${%Bugs to include}" field="includePattern" description="${%description.includePattern}">
-      <f:textbox />
-    </f:entry>
-    <f:entry title="${%Bugs to ignore}" field="excludePattern" description="${%description.excludePattern}">
-      <f:textbox />
-    </f:entry>
-
+  	<fb:filter/>
     <u:advanced id="findbugs" />
   </f:advanced>
 </j:jelly>
