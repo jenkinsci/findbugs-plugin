@@ -4,6 +4,10 @@
   <fb:rank/>
   <f:advanced>
     <fb:filter/>
+<<<<<<< HEAD
     <u:advancedMaven id="findbugs"/>
+=======
+    <u:advanced id="findbugs" />
+>>>>>>> branch 'master' of https://github.com/ger007s/findbugs-plugin.git
   </f:advanced>
 </j:jelly>
