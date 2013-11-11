@@ -1,23 +1,25 @@
 package hudson.plugins.findbugs;
 
+import java.io.IOException;
+
+import org.apache.commons.lang.StringUtils;
+import org.kohsuke.stapler.DataBoundConstructor;
+
 import hudson.Launcher;
 import hudson.matrix.MatrixAggregator;
 import hudson.matrix.MatrixBuild;
+
 import hudson.model.Action;
 import hudson.model.BuildListener;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
+
 import hudson.plugins.analysis.core.FilesParser;
 import hudson.plugins.analysis.core.HealthAwarePublisher;
 import hudson.plugins.analysis.core.ParserResult;
 import hudson.plugins.analysis.core.BuildResult;
 import hudson.plugins.analysis.util.PluginLogger;
 import hudson.plugins.findbugs.parser.FindBugsParser;
-
-import java.io.IOException;
-
-import org.apache.commons.lang.StringUtils;
-import org.kohsuke.stapler.DataBoundConstructor;
 
 /**
  * Publishes the results of the FindBugs analysis (freestyle project type).
@@ -37,6 +39,12 @@ public class FindBugsPublisher extends HealthAwarePublisher {
 
     /** Determines whether to use the rank when evaluation the priority. @since 4.26 */
     private final boolean isRankActivated;
+
+    /** RegEx patterns of files to exclude from the report. */
+    private final String excludePattern;
+
+    /** RegEx patterns of files to include in the report. */
+    private final String includePattern;
 
     /**
      * Creates a new instance of {@link FindBugsPublisher}.
@@ -103,6 +111,10 @@ public class FindBugsPublisher extends HealthAwarePublisher {
      * @param canComputeNew
      *            determines whether new warnings should be computed (with
      *            respect to baseline)
+     * @param excludePattern
+     *            RegEx patterns of files to exclude from the report
+     * @param includePattern
+     *            RegEx patterns of files to include in the report
      */
     // CHECKSTYLE:OFF
     @SuppressWarnings("PMD.ExcessiveParameterList")
@@ -114,7 +126,7 @@ public class FindBugsPublisher extends HealthAwarePublisher {
             final String failedTotalAll, final String failedTotalHigh, final String failedTotalNormal, final String failedTotalLow,
             final String failedNewAll, final String failedNewHigh, final String failedNewNormal, final String failedNewLow,
             final boolean canRunOnFailed, final boolean useStableBuildAsReference, final boolean shouldDetectModules,
-            final String pattern, final boolean isRankActivated, final boolean canComputeNew) {
+            final String pattern, final boolean isRankActivated, final boolean canComputeNew, final String excludePattern, final String includePattern) {
         super(healthy, unHealthy, thresholdLimit, defaultEncoding, useDeltaValues,
                 unstableTotalAll, unstableTotalHigh, unstableTotalNormal, unstableTotalLow,
                 unstableNewAll, unstableNewHigh, unstableNewNormal, unstableNewLow,
@@ -123,6 +135,8 @@ public class FindBugsPublisher extends HealthAwarePublisher {
                 canRunOnFailed, useStableBuildAsReference, shouldDetectModules, canComputeNew, false, PLUGIN_NAME);
         this.pattern = pattern;
         this.isRankActivated = isRankActivated;
+        this.excludePattern= excludePattern;
+        this.includePattern= includePattern;
     }
     // CHECKSTYLE:ON
 
@@ -146,6 +160,24 @@ public class FindBugsPublisher extends HealthAwarePublisher {
         return pattern;
     }
 
+    /**
+     * RegEx patterns of files to exclude from the report.
+     *
+     * @return String of concatenated exclude patterns separated by a comma
+     */
+    public String getExcludePattern() {
+        return excludePattern;
+    }
+
+    /**
+     * Returns the RegEx patterns to include in the report.
+     *
+     * @return String of concatenated include patterns separated by a comma
+     */
+    public String getIncludePattern() {
+        return includePattern;
+    }
+
     @Override
     public Action getProjectAction(final AbstractProject<?, ?> project) {
         return new FindBugsProjectAction(project);
@@ -157,7 +189,7 @@ public class FindBugsPublisher extends HealthAwarePublisher {
 
         String defaultPattern = isMavenBuild(build) ? MAVEN_DEFAULT_PATTERN : ANT_DEFAULT_PATTERN;
         FilesParser collector = new FilesParser(PLUGIN_NAME, StringUtils.defaultIfEmpty(getPattern(), defaultPattern),
-                new FindBugsParser(isRankActivated), shouldDetectModules(), isMavenBuild(build));
+                new FindBugsParser(isRankActivated, getExcludePattern(), getIncludePattern()), shouldDetectModules(), isMavenBuild(build));
         ParserResult project = build.getWorkspace().act(collector);
         logger.logLines(project.getLogMessages());
         FindBugsResult result = new FindBugsResult(build, getDefaultEncoding(), project, useOnlyStableBuildsAsReference());

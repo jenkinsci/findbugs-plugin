@@ -7,6 +7,7 @@
   </f:entry>
   <fb:rank />
   <f:advanced>
+  	<fb:filter/>
     <u:advanced id="findbugs" />
   </f:advanced>
 </j:jelly>

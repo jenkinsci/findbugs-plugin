@@ -3,6 +3,7 @@
     xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:u="/util" xmlns:fb="/findbugs">
   <fb:rank/>
   <f:advanced>
+    <fb:filter/>
     <u:advancedMaven id="findbugs"/>
   </f:advanced>
 </j:jelly>
