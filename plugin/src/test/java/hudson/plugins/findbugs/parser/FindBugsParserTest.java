@@ -132,7 +132,8 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
     public void issue7238withIncludeExcludePattern() throws IOException, SAXException, DocumentException {
         FindBugsMessages.getInstance().initialize();
 
-        MavenModule module = parseFile("issue7238.xml", false,"*gti/plc/server/siemens/libnodave*","*gti/plc/test*,*gti/plc/server/siemens/libnodave*,*gti/plc/util*");
+        MavenModule module = parseFile("issue7238.xml", false,
+                "*gti/plc/server/siemens/libnodave*", "*gti/plc/test*,*gti/plc/server/siemens/libnodave*,*gti/plc/util*");
         assertEquals("Wrong number of warnings", 57, module.getNumberOfAnnotations());
     }
 

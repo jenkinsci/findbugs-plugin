@@ -1,11 +1,5 @@
 package hudson.plugins.findbugs.parser;
 
-import hudson.model.Hudson;
-import hudson.plugins.analysis.util.model.AbstractAnnotation;
-import hudson.plugins.analysis.util.model.Priority;
-import hudson.plugins.findbugs.FindBugsMessages;
-import hudson.plugins.findbugs.Messages;
-
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.Random;
@@ -14,6 +8,13 @@ import javax.annotation.CheckForNull;
 
 import org.apache.commons.lang.StringUtils;
 import org.jvnet.localizer.LocaleProvider;
+
+import hudson.model.Hudson;
+
+import hudson.plugins.analysis.util.model.AbstractAnnotation;
+import hudson.plugins.analysis.util.model.Priority;
+import hudson.plugins.findbugs.FindBugsMessages;
+import hudson.plugins.findbugs.Messages;
 
 /**
  * A serializable Java Bean class representing a warning.
@@ -279,7 +280,7 @@ public class Bug extends AbstractAnnotation {
             cloudMessage.append(Messages.FindBugs_Bug_cloudInfo_seenAt_plural(ageInDays));
             if (firstSeen > 0) {
                 DateFormat format = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
-                cloudMessage.append(" ");
+                cloudMessage.append(' ');
                 cloudMessage.append(Messages.FindBugs_Bug_cloudInfo_firstSeen(format.format(new Date(firstSeen))));
             }
         }
