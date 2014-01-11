@@ -9,6 +9,7 @@ import org.xml.sax.SAXException;
 
 import hudson.Plugin;
 
+import hudson.plugins.analysis.core.PluginDescriptor;
 import hudson.plugins.analysis.views.DetailFactory;
 
 /**
@@ -28,7 +29,9 @@ public class FindBugsPlugin extends Plugin {
         FindBugsMessages.getInstance().initialize();
         FindBugsDetailFactory detailBuilder = new FindBugsDetailFactory();
         DetailFactory.addDetailBuilder(FindBugsResultAction.class, detailBuilder);
-        DetailFactory.addDetailBuilder(FindBugsMavenResultAction.class, detailBuilder);
+        if (PluginDescriptor.isMavenPluginInstalled()) {
+            MavenInitialization.run(detailBuilder);
+        }
 
         if (oldProperty != null) {
             System.setProperty(SAX_DRIVER_PROPERTY, oldProperty);
