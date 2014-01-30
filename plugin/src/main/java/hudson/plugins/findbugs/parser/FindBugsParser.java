@@ -16,6 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
+import hudson.plugins.analysis.util.SaxSetup;
 import org.apache.commons.digester3.Digester;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -51,9 +52,6 @@ import hudson.plugins.findbugs.FindBugsMessages;
 public class FindBugsParser implements AnnotationParser {
     /** Unique ID of this class. */
     private static final long serialVersionUID = 8306319007761954027L;
-
-    /** Property of SAX parser factory. */
-    static final String SAX_DRIVER_PROPERTY = "org.xml.sax.driver";
 
     private static final String DOT = ".";
     private static final String SLASH = "/";
@@ -365,19 +363,18 @@ public class FindBugsParser implements AnnotationParser {
     }
 
     private SortedBugCollection readXml(final InputStream file) throws IOException, DocumentException {
-        String oldProperty = System.getProperty(SAX_DRIVER_PROPERTY);
-        if (oldProperty != null) {
-            System.setProperty(SAX_DRIVER_PROPERTY, SAXParser.class.getName());
-        }
+        SaxSetup sax = new SaxSetup();
         ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
-        Thread.currentThread().setContextClassLoader(FindBugsParser.class.getClassLoader());
-        SortedBugCollection collection = new SortedBugCollection();
-        collection.readXML(file);
-        Thread.currentThread().setContextClassLoader(contextClassLoader);
-        if (oldProperty != null) {
-            System.setProperty(SAX_DRIVER_PROPERTY, oldProperty);
+        try {
+            Thread.currentThread().setContextClassLoader(FindBugsParser.class.getClassLoader());
+            SortedBugCollection collection = new SortedBugCollection();
+            collection.readXML(file);
+            return collection;
         }
-        return collection;
+        finally {
+            Thread.currentThread().setContextClassLoader(contextClassLoader);
+            sax.cleanup();
+        }
     }
 
     /**

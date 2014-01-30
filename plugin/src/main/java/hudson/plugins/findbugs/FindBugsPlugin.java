@@ -2,9 +2,9 @@ package hudson.plugins.findbugs;
 
 import java.io.IOException;
 
+import hudson.plugins.analysis.util.SaxSetup;
 import org.apache.commons.lang.StringUtils;
 import org.apache.maven.plugin.MojoExecution;
-import org.apache.xerces.parsers.SAXParser;
 import org.xml.sax.SAXException;
 
 import hudson.Plugin;
@@ -18,23 +18,23 @@ import hudson.plugins.analysis.views.DetailFactory;
  * @author Ulli Hafner
  */
 public class FindBugsPlugin extends Plugin {
-    /** Property of SAX parser factory. */
-    static final String SAX_DRIVER_PROPERTY = "org.xml.sax.driver";
-
     @Override
     public void start() throws IOException, SAXException {
-        String oldProperty = System.getProperty(SAX_DRIVER_PROPERTY);
-        System.setProperty(SAX_DRIVER_PROPERTY, SAXParser.class.getName());
+        SaxSetup sax = new SaxSetup();
+        try {
+            initializeMessages();
+        }
+        finally {
+            sax.cleanup();
+        }
+    }
 
+    private void initializeMessages() throws IOException, SAXException {
         FindBugsMessages.getInstance().initialize();
         FindBugsDetailFactory detailBuilder = new FindBugsDetailFactory();
         DetailFactory.addDetailBuilder(FindBugsResultAction.class, detailBuilder);
         if (PluginDescriptor.isMavenPluginInstalled()) {
             MavenInitialization.run(detailBuilder);
-        }
-
-        if (oldProperty != null) {
-            System.setProperty(SAX_DRIVER_PROPERTY, oldProperty);
         }
     }
 
