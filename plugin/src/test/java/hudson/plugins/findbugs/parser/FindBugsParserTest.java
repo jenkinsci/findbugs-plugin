@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import hudson.plugins.analysis.util.SaxSetup;
 import org.apache.commons.io.IOUtils;
 import org.dom4j.DocumentException;
 import org.junit.Test;
@@ -178,10 +179,10 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
         FindBugsMessages.getInstance().initialize();
 
         String saxParser = this.getClass().getName();
-        System.setProperty(FindBugsParser.SAX_DRIVER_PROPERTY, saxParser);
+        System.setProperty(SaxSetup.SAX_DRIVER_PROPERTY, saxParser);
         MavenModule module = parseFile("issue7312.xml", false);
         assertEquals("Wrong number of warnings", 0, module.getNumberOfAnnotations());
-        assertEquals("Wrong sax parser property", saxParser, System.getProperty(FindBugsParser.SAX_DRIVER_PROPERTY));
+        assertEquals("Wrong sax parser property", saxParser, System.getProperty(SaxSetup.SAX_DRIVER_PROPERTY));
     }
 
     /**
@@ -196,13 +197,13 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
      * @see <a href="http://issues.jenkins-ci.org/browse/JENKINS-7932">Issue 7932</a>
      */
     @Test
-    public void issue7932OOnNull() throws IOException, SAXException, DocumentException {
+    public void issue7932Null() throws IOException, SAXException, DocumentException {
         FindBugsMessages.getInstance().initialize();
 
-        System.clearProperty(FindBugsParser.SAX_DRIVER_PROPERTY);
+        System.clearProperty(SaxSetup.SAX_DRIVER_PROPERTY);
         MavenModule module = parseFile("issue7312.xml", false);
         assertEquals("Wrong number of warnings", 0, module.getNumberOfAnnotations());
-        assertNull("Wrong sax parser property", System.getProperty(FindBugsParser.SAX_DRIVER_PROPERTY));
+        assertNull("Wrong sax parser property", System.getProperty(SaxSetup.SAX_DRIVER_PROPERTY));
     }
 
     /**
