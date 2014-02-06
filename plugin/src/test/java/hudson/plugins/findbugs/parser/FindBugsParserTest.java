@@ -219,7 +219,7 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
         InputStream stream = FindBugsParserTest.class.getResourceAsStream(FINDBUGS_NATIVE_XML);
         try {
             Map<String, String> mapping = new HashMap<String, String>();
-            for (XmlBugInstance bug : new FindBugsParser(false).preparse(stream)) {
+            for (XmlBugInstance bug : new FindBugsParser(false).preParse(stream)) {
                 mapping.put(bug.getInstanceHash(), bug.getMessage());
             }
             assertEquals(WRONG_NUMBER_OF_WARNINGS_PARSED, 2, mapping.size());

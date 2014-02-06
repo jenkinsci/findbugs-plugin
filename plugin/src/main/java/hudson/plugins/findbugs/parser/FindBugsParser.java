@@ -20,7 +20,6 @@ import hudson.plugins.analysis.util.SaxSetup;
 import org.apache.commons.digester3.Digester;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.xerces.parsers.SAXParser;
 import org.dom4j.DocumentException;
 import org.jvnet.localizer.LocaleProvider;
 import org.xml.sax.SAXException;
@@ -129,8 +128,8 @@ public class FindBugsParser implements AnnotationParser {
      */
     private void addPatterns(final Set<Pattern> patterns, final String pattern) {
         if (StringUtils.isNotBlank(pattern)) {
-            String[] splitted = StringUtils.split(pattern, ',');
-            for (String singlePattern : splitted) {
+            String[] split = StringUtils.split(pattern, ',');
+            for (String singlePattern : split) {
                 String trimmed = StringUtils.trim(singlePattern);
                 String directoriesReplaced = StringUtils.replace(trimmed, "**", "*"); // NOCHECKSTYLE
                 patterns.add(Pattern.compile(StringUtils.replace(directoriesReplaced, "*", ".*"))); // NOCHECKSTYLE
@@ -195,7 +194,7 @@ public class FindBugsParser implements AnnotationParser {
             input = file.getInputStream();
             Map<String, String> hashToMessageMapping = new HashMap<String, String>();
             Map<String, String> categories = new HashMap<String, String>();
-            for (XmlBugInstance bug : preparse(input)) {
+            for (XmlBugInstance bug : preParse(input)) {
                 hashToMessageMapping.put(bug.getInstanceHash(), bug.getMessage());
                 categories.put(bug.getType(), bug.getCategory());
             }
@@ -222,7 +221,7 @@ public class FindBugsParser implements AnnotationParser {
      * @throws IOException
      *             signals that an I/O exception has occurred.
      */
-    List<XmlBugInstance> preparse(final InputStream file) throws SAXException, IOException {
+    List<XmlBugInstance> preParse(final InputStream file) throws SAXException, IOException {
         Digester digester = new Digester();
         digester.setValidating(false);
         digester.setClassLoader(FindBugsParser.class.getClassLoader());
@@ -299,7 +298,7 @@ public class FindBugsParser implements AnnotationParser {
 
             boolean ignore = setCloudInformation(collection, warning, bug);
             if (!ignore) {
-                bug.setNotAProblem(ignore);
+                bug.setNotAProblem(false);
                 bug.setFileName(findSourceFile(project, sourceFinder, sourceLine));
                 bug.setPackageName(warning.getPrimaryClass().getPackageName());
                 bug.setModuleName(actualName);
