@@ -76,8 +76,14 @@
         <developerConnection>scm:git:git@github.com:jenkinsci/${project.artifactId}-plugin.git</developerConnection>
         <url>https://github.com/jenkinsci/${project.artifactId}-plugin</url>
       <tag>HEAD</tag>
-  </scm>
+    </scm>
 
+    <distributionManagement>
+        <repository>
+            <id>maven.jenkins-ci.org</id>
+            <url>http://maven.jenkins-ci.org:8081/content/repositories/releases/</url>
+        </repository>
+    </distributionManagement>
     <repositories>
         <repository>
             <id>repo.jenkins-ci.org</id>
