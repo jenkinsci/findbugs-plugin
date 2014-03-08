@@ -1,27 +1,19 @@
 package hudson.plugins.findbugs.parser;
 
-import static org.junit.Assert.*;
-
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
-import hudson.plugins.analysis.util.SaxSetup;
 import org.apache.commons.io.IOUtils;
 import org.dom4j.DocumentException;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
+import static org.junit.Assert.*;
+
 import hudson.plugins.analysis.test.AbstractEnglishLocaleTest;
-import hudson.plugins.analysis.util.model.FileAnnotation;
-import hudson.plugins.analysis.util.model.JavaPackage;
-import hudson.plugins.analysis.util.model.LineRange;
-import hudson.plugins.analysis.util.model.MavenModule;
-import hudson.plugins.analysis.util.model.Priority;
+import hudson.plugins.analysis.util.SaxSetup;
+import hudson.plugins.analysis.util.model.*;
 import hudson.plugins.findbugs.FindBugsMessages;
 import hudson.plugins.findbugs.Messages;
 
@@ -412,7 +404,10 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
     public void thirdPartyCategory() throws IOException, SAXException, DocumentException {
         MavenModule module = parseFile("findbugs-3rd-party-category.xml", false);
         assertEquals(WRONG_NUMBER_OF_WARNINGS_PARSED, 2, module.getNumberOfAnnotations());
-        Iterator<FileAnnotation> annotations = module.getAnnotations().iterator();
+        Set<FileAnnotation> bugs = module.getAnnotations();
+        List<FileAnnotation> sorted = new ArrayList<FileAnnotation>(bugs);
+        Collections.sort(sorted);
+        Iterator<FileAnnotation> annotations = sorted.iterator();
         FileAnnotation next = annotations.next();
         assertEquals("Wrong serial version ID: ", "SE_NO_SERIALVERSIONID", next.getType());
         assertEquals("Wrong category: ", "BAD_PRACTICE", next.getCategory());
