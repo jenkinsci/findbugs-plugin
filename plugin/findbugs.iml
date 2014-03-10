@@ -92,7 +92,7 @@
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.5.3" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: org.slf4j:slf4j-nop:1.5.3" level="project" />
     <orderEntry type="library" name="Maven: net.sourceforge.nekohtml:nekohtml:1.9.13" level="project" />
-    <orderEntry type="library" name="Maven: org.jvnet.hudson.plugins.findbugs:library:2.0.1" level="project" />
+    <orderEntry type="library" name="Maven: org.jvnet.hudson.plugins.findbugs:library:2.0.4" level="project" />
     <orderEntry type="library" name="Maven: org.jenkins-ci.plugins:dashboard-view:2.2" level="project" />
     <orderEntry type="library" name="Maven: joda-time:joda-time:1.6" level="project" />
     <orderEntry type="library" name="Maven: org.jenkins-ci.plugins:token-macro:1.5.1" level="project" />
