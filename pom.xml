@@ -4,7 +4,7 @@
     <groupId>org.jvnet.hudson.plugins.findbugs</groupId>
     <artifactId>parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.1</version>
+    <version>1.2-SNAPSHOT</version>
     <name>FindBugs Parent</name>
     <description>Parent pom to build findbugs plug-in that is composed of plug-in and shaded findbugs library
     </description>
@@ -39,7 +39,7 @@
         <connection>scm:git:git://github.com/jenkinsci/findbugs-plugin.git</connection>
         <developerConnection>scm:git:git@github.com:jenkinsci/findbugs-plugin.git</developerConnection>
         <url>https://github.com/jenkinsci/findbugs-plugin</url>
-        <tag>parent-1.1</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <build>
