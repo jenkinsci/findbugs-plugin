@@ -3,13 +3,13 @@
 
 -->
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define"
-  xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+<j:jelly xmlns:j="jelly:core"
+         xmlns:f="/lib/form">
 
-    <f:entry title="${%Bugs to include}" field="includePattern" description="${%description.includePattern}">
+    <f:entry title="${%name.includePattern}" field="includePattern" description="${%description.includePattern}">
       <f:textbox />
     </f:entry>
-    <f:entry title="${%Bugs to ignore}" field="excludePattern" description="${%description.excludePattern}">
+    <f:entry title="${%name.excludePattern}" field="excludePattern" description="${%description.excludePattern}">
       <f:textbox />
     </f:entry>
 
