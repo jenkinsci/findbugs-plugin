@@ -16,7 +16,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
-import hudson.plugins.analysis.util.SaxSetup;
 import org.apache.commons.digester3.Digester;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -36,6 +35,7 @@ import edu.umd.cs.findbugs.ba.SourceFinder;
 import edu.umd.cs.findbugs.cloud.Cloud;
 
 import hudson.plugins.analysis.core.AnnotationParser;
+import hudson.plugins.analysis.util.SaxSetup;
 import hudson.plugins.analysis.util.TreeStringBuilder;
 import hudson.plugins.analysis.util.model.FileAnnotation;
 import hudson.plugins.analysis.util.model.LineRange;
@@ -73,6 +73,8 @@ public class FindBugsParser implements AnnotationParser {
 
     /** RegEx patterns of files to include in the report. */
     private final Set<Pattern> includePatterns = Sets.newHashSet();
+
+    private int sourceFilesNotFound = 0;
 
     /**
      * Creates a new instance of {@link FindBugsParser}.
@@ -420,14 +422,17 @@ public class FindBugsParser implements AnnotationParser {
     private String findSourceFile(final Project project, final SourceFinder sourceFinder,
             final SourceLineAnnotation sourceLine) {
         try {
-            SourceFile sourceFile = sourceFinder.findSourceFile(sourceLine);
+            final SourceFile sourceFile = sourceFinder.findSourceFile(sourceLine);
             return sourceFile.getFullFileName();
         }
         catch (IOException exception) {
-            Logger.getLogger(getClass().getName()).log(
-                    Level.WARNING,
-                    "Can't resolve absolute file name for file " + sourceLine.getSourceFile() + ", dir list = "
-                            + project.getSourceDirList().toString());
+            final StringBuilder sb = new StringBuilder("Can't resolve absolute file name for file ");
+            sb.append(sourceLine.getSourceFile());
+            if ( sourceFilesNotFound++ <= 0 ) {
+                sb.append(", dir list = ");
+                sb.append( project.getSourceDirList());
+            }
+            Logger.getLogger(getClass().getName()).log(Level.WARNING, sb.toString());
             return sourceLine.getPackageName().replace(DOT, SLASH) + SLASH + sourceLine.getSourceFile();
         }
     }
