@@ -1,3 +1,9 @@
 plugin/target
+plugin/bin
 library/target
+library/bin
 plugin/work
+library/.classpath
+library/.project
+plugin/.classpath
+plugin/.project
