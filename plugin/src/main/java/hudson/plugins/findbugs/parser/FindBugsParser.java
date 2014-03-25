@@ -5,18 +5,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
-import hudson.plugins.analysis.util.SaxSetup;
 import org.apache.commons.digester3.Digester;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -26,16 +19,13 @@ import org.xml.sax.SAXException;
 
 import com.google.common.collect.Sets;
 
-import edu.umd.cs.findbugs.BugAnnotation;
-import edu.umd.cs.findbugs.BugInstance;
-import edu.umd.cs.findbugs.Project;
-import edu.umd.cs.findbugs.SortedBugCollection;
-import edu.umd.cs.findbugs.SourceLineAnnotation;
+import edu.umd.cs.findbugs.*;
 import edu.umd.cs.findbugs.ba.SourceFile;
 import edu.umd.cs.findbugs.ba.SourceFinder;
 import edu.umd.cs.findbugs.cloud.Cloud;
 
 import hudson.plugins.analysis.core.AnnotationParser;
+import hudson.plugins.analysis.util.SaxSetup;
 import hudson.plugins.analysis.util.TreeStringBuilder;
 import hudson.plugins.analysis.util.model.FileAnnotation;
 import hudson.plugins.analysis.util.model.LineRange;
@@ -68,11 +58,10 @@ public class FindBugsParser implements AnnotationParser {
     /** Determines whether to use the rank when evaluation the priority. @since 4.26 */
     private final boolean isRankActivated;
 
-    /** RegEx patterns of files to exclude from the report. */
     private final Set<Pattern> excludePatterns = Sets.newHashSet();
-
-    /** RegEx patterns of files to include in the report. */
     private final Set<Pattern> includePatterns = Sets.newHashSet();
+
+    private boolean isFirstError = true;
 
     /**
      * Creates a new instance of {@link FindBugsParser}.
@@ -424,10 +413,14 @@ public class FindBugsParser implements AnnotationParser {
             return sourceFile.getFullFileName();
         }
         catch (IOException exception) {
-            Logger.getLogger(getClass().getName()).log(
-                    Level.WARNING,
-                    "Can't resolve absolute file name for file " + sourceLine.getSourceFile() + ", dir list = "
-                            + project.getSourceDirList().toString());
+            StringBuilder sb = new StringBuilder("Can't resolve absolute file name for file ");
+            sb.append(sourceLine.getSourceFile());
+            if (isFirstError) {
+                sb.append(", dir list = ");
+                sb.append( project.getSourceDirList());
+                isFirstError = false;
+            }
+            Logger.getLogger(getClass().getName()).log(Level.WARNING, sb.toString());
             return sourceLine.getPackageName().replace(DOT, SLASH) + SLASH + sourceLine.getSourceFile();
         }
     }
