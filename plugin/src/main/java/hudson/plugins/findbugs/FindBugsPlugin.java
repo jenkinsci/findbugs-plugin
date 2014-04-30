@@ -1,11 +1,7 @@
 package hudson.plugins.findbugs;
 
-import java.io.IOException;
-
-import hudson.plugins.analysis.util.SaxSetup;
 import org.apache.commons.lang.StringUtils;
 import org.apache.maven.plugin.MojoExecution;
-import org.xml.sax.SAXException;
 
 import hudson.Plugin;
 
@@ -19,18 +15,11 @@ import hudson.plugins.analysis.views.DetailFactory;
  */
 public class FindBugsPlugin extends Plugin {
     @Override
-    public void start() throws IOException, SAXException {
-        SaxSetup sax = new SaxSetup();
-        try {
-            initializeMessages();
-        }
-        finally {
-            sax.cleanup();
-        }
+    public void start() {
+        initializeDetails();
     }
 
-    private void initializeMessages() throws IOException, SAXException {
-        FindBugsMessages.getInstance().initialize();
+    private void initializeDetails() {
         FindBugsDetailFactory detailBuilder = new FindBugsDetailFactory();
         DetailFactory.addDetailBuilder(FindBugsResultAction.class, detailBuilder);
         if (PluginDescriptor.isMavenPluginInstalled()) {
