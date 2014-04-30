@@ -14,7 +14,6 @@ import static org.junit.Assert.*;
 import hudson.plugins.analysis.test.AbstractEnglishLocaleTest;
 import hudson.plugins.analysis.util.SaxSetup;
 import hudson.plugins.analysis.util.model.*;
-import hudson.plugins.findbugs.FindBugsMessages;
 import hudson.plugins.findbugs.Messages;
 
 /**
@@ -67,13 +66,9 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
      */
     @Test
     public void issue7238() throws IOException, SAXException, DocumentException {
-        FindBugsMessages.getInstance().initialize();
-
         MavenModule module = parseFile("issue7238.xml", false);
         assertEquals("Wrong number of warnings", 1820, module.getNumberOfAnnotations());
     }
-
-
 
     /**
      * Parses fb-contrib messages.
@@ -87,8 +82,6 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
      */
     @Test
     public void issue7238withIncludePattern() throws IOException, SAXException, DocumentException {
-        FindBugsMessages.getInstance().initialize();
-
         MavenModule module = parseFile("issue7238.xml", false, null, "*gti/plc/test*,*gti/plc/server/siemens/libnodave*,*gti/plc/util*");
         assertEquals("Wrong number of warnings", 68, module.getNumberOfAnnotations());
     }
@@ -105,8 +98,6 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
      */
     @Test
     public void issue7238withExcludePattern() throws IOException, SAXException, DocumentException {
-        FindBugsMessages.getInstance().initialize();
-
         MavenModule module = parseFile("issue7238.xml", false, "*gti/plc/test*,*gti/plc/server/siemens/libnodave*,*gti/plc/util*", null);
         assertEquals("Wrong number of warnings", 1752, module.getNumberOfAnnotations());
     }
@@ -123,8 +114,6 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
      */
     @Test
     public void issue7238withIncludeExcludePattern() throws IOException, SAXException, DocumentException {
-        FindBugsMessages.getInstance().initialize();
-
         MavenModule module = parseFile("issue7238.xml", false,
                 "*gti/plc/server/siemens/libnodave*", "*gti/plc/test*,*gti/plc/server/siemens/libnodave*,*gti/plc/util*");
         assertEquals("Wrong number of warnings", 57, module.getNumberOfAnnotations());
@@ -143,8 +132,6 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
      */
     @Test
     public void issue12314() throws IOException, SAXException, DocumentException {
-        FindBugsMessages.getInstance().initialize();
-
         MavenModule module = parseFile("issue12314.xml", false);
         assertEquals("Wrong number of warnings", 1, module.getNumberOfAnnotations());
 
@@ -168,8 +155,6 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
      */
     @Test
     public void issue7312and7932() throws IOException, SAXException, DocumentException {
-        FindBugsMessages.getInstance().initialize();
-
         String saxParser = this.getClass().getName();
         System.setProperty(SaxSetup.SAX_DRIVER_PROPERTY, saxParser);
         MavenModule module = parseFile("issue7312.xml", false);
@@ -190,8 +175,6 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
      */
     @Test
     public void issue7932Null() throws IOException, SAXException, DocumentException {
-        FindBugsMessages.getInstance().initialize();
-
         System.clearProperty(SaxSetup.SAX_DRIVER_PROPERTY);
         MavenModule module = parseFile("issue7312.xml", false);
         assertEquals("Wrong number of warnings", 0, module.getNumberOfAnnotations());
@@ -423,8 +406,6 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
             final int ranges1, final String fileName2, final String packageName2, final int start2, final int end2, final int ranges2, final boolean isRankActivated)
             throws IOException, SAXException, DocumentException {
    // CHECKSTYLE:ON
-        FindBugsMessages.getInstance().initialize();
-
         MavenModule module = parseFile(findbugsFile, isRankActivated);
         assertEquals("Wrong project name guessed", projectName, module.getName());
 

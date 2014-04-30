@@ -101,16 +101,9 @@ public class FindBugsMessagesTest {
 
     /**
      * Checks that a warning message of each file is correctly parsed.
-     *
-     * @throws SAXException
-     *             if we can't read the file
-     * @throws IOException
-     *             if we can't read the file
      */
     @Test
-    public void parse() throws IOException, SAXException {
-        FindBugsMessages.getInstance().initialize();
-
+    public void parse() {
         assertTrue(WRONG_WARNING_MESSAGE, FindBugsMessages.getInstance().getMessage(NP_STORE_INTO_NONNULL_FIELD, Locale.ENGLISH).contains("A value that could be null is stored into a field that has been annotated as NonNull."));
         assertTrue(WRONG_WARNING_MESSAGE, FindBugsMessages.getInstance().getMessage(NP_STORE_INTO_NONNULL_FIELD, Locale.GERMAN).contains("A value that could be null is stored into a field that has been annotated as NonNull."));
         assertEquals(WRONG_WARNING_MESSAGE, "Store of null value into field annotated NonNull", FindBugsMessages.getInstance().getShortMessage(NP_STORE_INTO_NONNULL_FIELD, Locale.ENGLISH));
@@ -120,16 +113,9 @@ public class FindBugsMessagesTest {
 
     /**
      * Checks that localized messages are loaded.
-     *
-     * @throws SAXException
-     *             if we can't read the file
-     * @throws IOException
-     *             if we can't read the file
      */
     @Test
-    public void parseLocalizations() throws IOException, SAXException {
-        FindBugsMessages.getInstance().initialize();
-
+    public void parseLocalizations() {
         assertTrue(WRONG_WARNING_MESSAGE, FindBugsMessages.getInstance().getShortMessage(NP_STORE_INTO_NONNULL_FIELD, Locale.FRANCE).contains("Stocke une valeur null dans"));
         assertTrue(WRONG_WARNING_MESSAGE, FindBugsMessages.getInstance().getMessage(NP_STORE_INTO_NONNULL_FIELD, Locale.FRANCE).contains("Une valeur qui pourrait"));
     }

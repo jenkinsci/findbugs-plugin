@@ -7,7 +7,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import hudson.plugins.analysis.util.SaxSetup;
 import org.apache.commons.digester3.Digester;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -28,7 +31,23 @@ public final class FindBugsMessages {
     private final Map<String, String> jaShortMessages = new HashMap<String, String>();
     private final Map<String, String> frShortMessages = new HashMap<String, String>();
 
-    private static final FindBugsMessages INSTANCE = new FindBugsMessages();
+    private static class FindBugsMessagesHolder {
+        private static FindBugsMessages INSTANCE = FindBugsMessages.initializeSingleton();
+    }
+
+    private static FindBugsMessages initializeSingleton() {
+        FindBugsMessages res = new FindBugsMessages();
+        SaxSetup sax = new SaxSetup();
+        try {
+            res.initialize();
+        } catch(Exception e) {
+            Logger.getLogger(FindBugsMessages.class.getName()).log(Level.WARNING, "FindBugsMessages initializeSingleton failed", e);
+        }
+        finally {
+            sax.cleanup();
+        }
+        return res;
+    }
 
     /**
      * Returns the singleton instance.
@@ -36,7 +55,8 @@ public final class FindBugsMessages {
      * @return the singleton instance
      */
     public static FindBugsMessages getInstance() {
-        return INSTANCE;
+        // lazily created instance, since inner classes are not loaded until they are referenced
+        return FindBugsMessagesHolder.INSTANCE;
     }
 
     /**
@@ -48,7 +68,7 @@ public final class FindBugsMessages {
      *             if we can't read a file
      */
     @edu.umd.cs.findbugs.annotations.SuppressWarnings({"DE", "REC"})
-    public void initialize() throws IOException, SAXException {
+    private void initialize() throws IOException, SAXException {
         synchronized (messages) {
             loadMessages("messages.xml", messages, shortMessages);
             loadMessages("fb-contrib-messages.xml", messages, shortMessages);
