@@ -2,19 +2,16 @@ package hudson.plugins.findbugs;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import hudson.plugins.analysis.util.SaxSetup;
 import org.apache.commons.digester3.Digester;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.xml.sax.SAXException;
+
+import hudson.plugins.analysis.util.SaxSetup;
 
 /**
  * Parses the FindBugs pattern descriptions and provides access to these HTML messages.
@@ -40,8 +37,10 @@ public final class FindBugsMessages {
         SaxSetup sax = new SaxSetup();
         try {
             res.initialize();
-        } catch(Exception e) {
-            Logger.getLogger(FindBugsMessages.class.getName()).log(Level.WARNING, "FindBugsMessages initializeSingleton failed", e);
+        }
+        catch (Exception exception) {
+            Logger.getLogger(FindBugsMessages.class.getName()).log(Level.WARNING,
+                    "FindBugsMessages initializeSingleton failed", exception);
         }
         finally {
             sax.cleanup();
