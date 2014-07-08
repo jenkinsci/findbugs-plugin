@@ -227,7 +227,7 @@ public class Bug extends AbstractAnnotation {
         return this;
     }
 
-    /** {@inheritDoc} */
+    @Override
     public String getToolTip() {
         return StringUtils.defaultIfEmpty(tooltip, FindBugsMessages.getInstance().getMessage(getType(), LocaleProvider.getLocale()));
     }

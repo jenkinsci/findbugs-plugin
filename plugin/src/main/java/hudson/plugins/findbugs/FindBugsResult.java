@@ -137,7 +137,7 @@ public class FindBugsResult extends BuildResult {
         return "findbugs-warnings.xml";
     }
 
-    /** {@inheritDoc} */
+    @Override
     public String getDisplayName() {
         return Messages.FindBugs_ProjectAction_Name();
     }

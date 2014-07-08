@@ -204,7 +204,7 @@ public class FindBugsPublisher extends HealthAwarePublisher {
         return (FindBugsDescriptor)super.getDescriptor();
     }
 
-    /** {@inheritDoc} */
+    @Override
     public MatrixAggregator createAggregator(final MatrixBuild build, final Launcher launcher,
             final BuildListener listener) {
         return new FindBugsAnnotationsAggregator(build, launcher, listener, this, getDefaultEncoding(), useOnlyStableBuildsAsReference());

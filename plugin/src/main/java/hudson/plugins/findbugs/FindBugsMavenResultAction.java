@@ -3,19 +3,15 @@
  */
 package hudson.plugins.findbugs;
 
-import hudson.maven.MavenAggregatedReport;
-import hudson.maven.MavenBuild;
-import hudson.maven.MavenModule;
-import hudson.maven.MavenModuleSet;
-import hudson.maven.MavenModuleSetBuild;
-import hudson.model.Action;
+import java.util.List;
+import java.util.Map;
+
+import hudson.maven.*;
 import hudson.model.AbstractBuild;
+import hudson.model.Action;
 import hudson.plugins.analysis.core.HealthDescriptor;
 import hudson.plugins.analysis.core.MavenResultAction;
 import hudson.plugins.analysis.core.ParserResult;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * A {@link FindBugsResultAction} for native Maven jobs. This action
@@ -42,13 +38,13 @@ public class FindBugsMavenResultAction extends MavenResultAction<FindBugsResult>
         super(new FindBugsResultAction(owner, healthDescriptor, result), defaultEncoding, "FINDBUGS");
     }
 
-    /** {@inheritDoc} */
+    @Override
     public MavenAggregatedReport createAggregatedAction(final MavenModuleSetBuild build, final Map<MavenModule, List<MavenBuild>> moduleBuilds) {
         return new FindBugsMavenResultAction(build, getHealthDescriptor(), getDefaultEncoding(),
                 new FindBugsResult(build, getDefaultEncoding(), new ParserResult(), false));
     }
 
-    /** {@inheritDoc} */
+    @Override
     public Action getProjectAction(final MavenModuleSet moduleSet) {
         return new FindBugsProjectAction(moduleSet, FindBugsMavenResultAction.class);
     }

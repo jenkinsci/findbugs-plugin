@@ -45,18 +45,18 @@ public class MavenFindBugsResultAction extends FindBugsResultAction implements A
         this.defaultEncoding = defaultEncoding;
     }
 
-    /** {@inheritDoc} */
+    @Override
     public MavenAggregatedReport createAggregatedAction(final MavenModuleSetBuild build, final Map<MavenModule, List<MavenBuild>> moduleBuilds) {
         return new MavenFindBugsResultAction(build, getHealthDescriptor(), defaultEncoding,
                 new FindBugsResult(build, defaultEncoding, new ParserResult(), false));
     }
 
-    /** {@inheritDoc} */
+    @Override
     public Action getProjectAction(final MavenModuleSet moduleSet) {
         return new FindBugsProjectAction(moduleSet);
     }
 
-    /** {@inheritDoc} */
+    @Override
     public Class<? extends AggregatableAction> getIndividualActionType() {
         return getClass();
     }
@@ -73,6 +73,7 @@ public class MavenFindBugsResultAction extends FindBugsResultAction implements A
      * @param newBuild
      *            Newly completed build.
      */
+    @Override
     public void update(final Map<MavenModule, List<MavenBuild>> moduleBuilds, final MavenBuild newBuild) {
         // not used anymore
     }

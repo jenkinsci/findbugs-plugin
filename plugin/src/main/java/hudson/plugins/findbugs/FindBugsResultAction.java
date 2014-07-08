@@ -31,7 +31,7 @@ public class FindBugsResultAction extends AbstractResultAction<FindBugsResult> {
         super(owner, new FindBugsHealthDescriptor(healthDescriptor), result);
     }
 
-    /** {@inheritDoc} */
+    @Override
     public String getDisplayName() {
         return Messages.FindBugs_ProjectAction_Name();
     }

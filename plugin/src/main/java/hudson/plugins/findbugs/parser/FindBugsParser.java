@@ -127,7 +127,7 @@ public class FindBugsParser implements AnnotationParser {
     }
 
 
-    /** {@inheritDoc} */
+    @Override
     public Collection<FileAnnotation> parse(final File file, final String moduleName) throws InvocationTargetException {
         try {
             Collection<String> sources = new ArrayList<String>(mavenSources);
@@ -170,6 +170,7 @@ public class FindBugsParser implements AnnotationParser {
     public Collection<FileAnnotation> parse(final File file, final Collection<String> sources, final String moduleName)
             throws IOException, DocumentException, SAXException {
         return parse(new InputStreamProvider() {
+            @Override
             public InputStream getInputStream() throws IOException {
                 return new FileInputStream(file);
             }

@@ -56,7 +56,6 @@ public class FindbugsEvaluationsGraph extends CategoryBuildResultGraph {
         return new Color[] {ColorPalette.BLUE};
     }
 
-    /** {@inheritDoc} */
     @Override
     protected CategoryItemRenderer createRenderer(final GraphConfiguration configuration, final String pluginName, final ToolTipProvider toolTipProvider) {
         CategoryUrlBuilder url = new UrlBuilder(getRootUrl(), pluginName);
@@ -79,8 +78,7 @@ public class FindbugsEvaluationsGraph extends CategoryBuildResultGraph {
             super(provider);
         }
 
-        /** {@inheritDoc} */
-        @Override
+            @Override
         protected String getShortDescription(final int row) {
             if (row == 1) {
                 return Messages.Trend_Fixed();
@@ -101,8 +99,7 @@ public class FindbugsEvaluationsGraph extends CategoryBuildResultGraph {
             super(rootUrl, pluginName);
         }
 
-        /** {@inheritDoc} */
-        @Override
+            @Override
         protected String getDetailUrl(final int row) {
             if (row == 1) {
                 return "fixed";

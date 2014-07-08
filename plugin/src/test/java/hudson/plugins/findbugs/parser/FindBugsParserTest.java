@@ -41,6 +41,7 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
 
     private MavenModule parseFile(final String fileName, final boolean isRankActivated, final String excludePattern, final String includePattern) throws IOException, SAXException, DocumentException {
         Collection<FileAnnotation> annotations = new FindBugsParser(isRankActivated, excludePattern, includePattern).parse(new FindBugsParser.InputStreamProvider() {
+            @Override
             public InputStream getInputStream() throws IOException {
                 return FindBugsParserTest.class.getResourceAsStream(fileName);
             }

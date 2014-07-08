@@ -1,101 +1,102 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>org.jvnet.hudson.plugins</groupId>
-        <artifactId>analysis-pom</artifactId>
-        <version>1.50</version>
-        <relativePath>../../analysis-pom/pom.xml</relativePath>
-    </parent>
+  <parent>
+    <groupId>org.jvnet.hudson.plugins</groupId>
+    <artifactId>analysis-pom</artifactId>
+    <version>1.50</version>
+    <relativePath>../../analysis-pom/pom.xml</relativePath>
+  </parent>
 
-    <artifactId>findbugs</artifactId>
-    <packaging>hpi</packaging>
-    <name>FindBugs Plug-in</name>
-    <version>4.57-SNAPSHOT</version>
-    <url>http://wiki.jenkins-ci.org/x/GYAs</url>
-    <description>This plug-in generates the trend report for FindBugs,
-        an open source program which uses static analysis to look for bugs
-        in Java code.
-    </description>
+  <artifactId>findbugs</artifactId>
+  <packaging>hpi</packaging>
+  <name>FindBugs Plug-in</name>
+  <version>4.57-SNAPSHOT</version>
+  <url>http://wiki.jenkins-ci.org/x/GYAs</url>
+  <description>This plug-in generates the trend report for FindBugs,
+    an open source program which uses static analysis to look for bugs
+    in Java code.
+  </description>
 
-    <licenses>
-        <license>
-            <name>MIT license</name>
-            <comments>All source code is under the MIT license.</comments>
-        </license>
-        <license>
-            <name>GNU LESSER GENERAL PUBLIC LICENSE</name>
-            <comments>FindBugs messages.xml file from the findbugs project.</comments>
-        </license>
-        <license>
-            <name>GNU LESSER GENERAL PUBLIC LICENSE</name>
-            <comments>FindBugs messages.xml file from the findbugs-contrib project.</comments>
-        </license>
-        <license>
-            <name>GNU LESSER GENERAL PUBLIC LICENSE</name>
-            <comments>FindBugs messages.xml file from the find-sec-bugs project.</comments>
-        </license>
-        <license>
-            <comments>The findbugs logo is a trademark by The University of
-                Maryland. These icons are a courtesy of the FindBugs team.
-            </comments>
-        </license>
-    </licenses>
+  <licenses>
+    <license>
+      <name>MIT license</name>
+      <comments>All source code is under the MIT license.</comments>
+    </license>
+    <license>
+      <name>GNU LESSER GENERAL PUBLIC LICENSE</name>
+      <comments>FindBugs messages.xml file from the findbugs project.</comments>
+    </license>
+    <license>
+      <name>GNU LESSER GENERAL PUBLIC LICENSE</name>
+      <comments>FindBugs messages.xml file from the findbugs-contrib project.</comments>
+    </license>
+    <license>
+      <name>GNU LESSER GENERAL PUBLIC LICENSE</name>
+      <comments>FindBugs messages.xml file from the find-sec-bugs project.</comments>
+    </license>
+    <license>
+      <comments>The findbugs logo is a trademark by The University of
+        Maryland. These icons are a courtesy of the FindBugs team.
+      </comments>
+    </license>
+  </licenses>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.jvnet.hudson.plugins</groupId>
-            <artifactId>analysis-core</artifactId>
-            <version>1.55</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jvnet.hudson.plugins</groupId>
-            <artifactId>analysis-test</artifactId>
-            <version>1.9</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jvnet.hudson.plugins.findbugs</groupId>
-            <artifactId>library</artifactId>
-            <version>2.0.4</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-digester3</artifactId>
-            <version>3.2</version>
-        </dependency>
-        <dependency>
-            <groupId>xerces</groupId>
-            <artifactId>xercesImpl</artifactId>
-            <version>2.11.0</version>
-        </dependency>
-    </dependencies>
+  <dependencies>
+    <dependency>
+      <groupId>org.jvnet.hudson.plugins</groupId>
+      <artifactId>analysis-core</artifactId>
+      <version>1.55</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jvnet.hudson.plugins</groupId>
+      <artifactId>analysis-test</artifactId>
+      <version>1.9</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jvnet.hudson.plugins.findbugs</groupId>
+      <artifactId>library</artifactId>
+      <version>2.0.4</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-digester3</artifactId>
+      <version>3.2</version>
+    </dependency>
+    <dependency>
+      <groupId>xerces</groupId>
+      <artifactId>xercesImpl</artifactId>
+      <version>2.11.0</version>
+    </dependency>
+  </dependencies>
 
-    <scm>
-        <connection>scm:git:git://github.com/jenkinsci/${project.artifactId}-plugin.git</connection>
-        <developerConnection>scm:git:git@github.com:jenkinsci/${project.artifactId}-plugin.git</developerConnection>
-        <url>https://github.com/jenkinsci/${project.artifactId}-plugin</url>
-      <tag>HEAD</tag>
-    </scm>
+  <scm>
+    <connection>scm:git:git://github.com/jenkinsci/${project.artifactId}-plugin.git</connection>
+    <developerConnection>scm:git:git@github.com:jenkinsci/${project.artifactId}-plugin.git</developerConnection>
+    <url>https://github.com/jenkinsci/${project.artifactId}-plugin</url>
+    <tag>HEAD</tag>
+  </scm>
 
-    <distributionManagement>
-        <repository>
-            <id>maven.jenkins-ci.org</id>
-            <url>http://maven.jenkins-ci.org:8081/content/repositories/releases/</url>
-        </repository>
-    </distributionManagement>
-    <repositories>
-        <repository>
-            <id>repo.jenkins-ci.org</id>
-            <url>http://repo.jenkins-ci.org/public/</url>
-        </repository>
-    </repositories>
+  <distributionManagement>
+    <repository>
+      <id>maven.jenkins-ci.org</id>
+      <url>http://maven.jenkins-ci.org:8081/content/repositories/releases/</url>
+    </repository>
+  </distributionManagement>
+  <repositories>
+    <repository>
+      <id>repo.jenkins-ci.org</id>
+      <url>http://repo.jenkins-ci.org/public/</url>
+    </repository>
+  </repositories>
 
-    <pluginRepositories>
-        <pluginRepository>
-            <id>repo.jenkins-ci.org</id>
-            <url>http://repo.jenkins-ci.org/public/</url>
-        </pluginRepository>
-    </pluginRepositories>
+  <pluginRepositories>
+    <pluginRepository>
+      <id>repo.jenkins-ci.org</id>
+      <url>http://repo.jenkins-ci.org/public/</url>
+    </pluginRepository>
+  </pluginRepositories>
 
 </project>
