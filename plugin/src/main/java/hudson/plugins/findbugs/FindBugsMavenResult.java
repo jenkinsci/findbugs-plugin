@@ -28,7 +28,7 @@ public class FindBugsMavenResult extends FindBugsResult {
     @SuppressWarnings("deprecation")
     public FindBugsMavenResult(final AbstractBuild<?, ?> build, final String defaultEncoding,
             final ParserResult result) {
-        super(build, defaultEncoding, result, false, MavenFindBugsResultAction.class);
+        super(build, defaultEncoding, result, false, false, MavenFindBugsResultAction.class);
     }
 
     @SuppressWarnings("deprecation")

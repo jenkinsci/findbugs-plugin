@@ -41,7 +41,7 @@ public class FindBugsMavenResultAction extends MavenResultAction<FindBugsResult>
     @Override
     public MavenAggregatedReport createAggregatedAction(final MavenModuleSetBuild build, final Map<MavenModule, List<MavenBuild>> moduleBuilds) {
         return new FindBugsMavenResultAction(build, getHealthDescriptor(), getDefaultEncoding(),
-                new FindBugsResult(build, getDefaultEncoding(), new ParserResult(), false));
+                new FindBugsResult(build, getDefaultEncoding(), new ParserResult(), false, false));
     }
 
     @Override
@@ -57,7 +57,9 @@ public class FindBugsMavenResultAction extends MavenResultAction<FindBugsResult>
     @Override
     protected FindBugsResult createResult(final FindBugsResult existingResult, final FindBugsResult additionalResult) {
         return new FindBugsReporterResult(getOwner(), additionalResult.getDefaultEncoding(),
-                aggregate(existingResult, additionalResult), existingResult.useOnlyStableBuildsAsReference());
+                aggregate(existingResult, additionalResult),
+                existingResult.usePreviousBuildAsStable(),
+                existingResult.useOnlyStableBuildsAsReference());
     }
 }
 

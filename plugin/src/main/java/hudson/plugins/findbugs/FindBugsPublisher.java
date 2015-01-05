@@ -98,6 +98,8 @@ public class FindBugsPublisher extends HealthAwarePublisher {
      *            annotation threshold
      * @param canRunOnFailed
      *            determines whether the plug-in can run for failed builds, too
+     * @param usePreviousBuildAsReference
+     *            determines whether to always use the previous build as the reference build
      * @param useStableBuildAsReference
      *            determines whether only stable builds should be used as reference builds or not
      * @param shouldDetectModules
@@ -125,14 +127,14 @@ public class FindBugsPublisher extends HealthAwarePublisher {
             final String unstableNewAll, final String unstableNewHigh, final String unstableNewNormal, final String unstableNewLow,
             final String failedTotalAll, final String failedTotalHigh, final String failedTotalNormal, final String failedTotalLow,
             final String failedNewAll, final String failedNewHigh, final String failedNewNormal, final String failedNewLow,
-            final boolean canRunOnFailed, final boolean useStableBuildAsReference, final boolean shouldDetectModules,
+            final boolean canRunOnFailed, final boolean usePreviousBuildAsReference, final boolean useStableBuildAsReference, final boolean shouldDetectModules,
             final String pattern, final boolean isRankActivated, final boolean canComputeNew, final String excludePattern, final String includePattern) {
         super(healthy, unHealthy, thresholdLimit, defaultEncoding, useDeltaValues,
                 unstableTotalAll, unstableTotalHigh, unstableTotalNormal, unstableTotalLow,
                 unstableNewAll, unstableNewHigh, unstableNewNormal, unstableNewLow,
                 failedTotalAll, failedTotalHigh, failedTotalNormal, failedTotalLow,
                 failedNewAll, failedNewHigh, failedNewNormal, failedNewLow,
-                canRunOnFailed, useStableBuildAsReference, shouldDetectModules, canComputeNew, false, PLUGIN_NAME);
+                canRunOnFailed, usePreviousBuildAsReference, useStableBuildAsReference, shouldDetectModules, canComputeNew, false, PLUGIN_NAME);
         this.pattern = pattern;
         this.isRankActivated = isRankActivated;
         this.excludePattern= excludePattern;
@@ -192,9 +194,10 @@ public class FindBugsPublisher extends HealthAwarePublisher {
                 new FindBugsParser(isRankActivated, getExcludePattern(), getIncludePattern()), shouldDetectModules(), isMavenBuild(build));
         ParserResult project = build.getWorkspace().act(collector);
         logger.logLines(project.getLogMessages());
-        FindBugsResult result = new FindBugsResult(build, getDefaultEncoding(), project, useOnlyStableBuildsAsReference());
+        FindBugsResult result = new FindBugsResult(build, getDefaultEncoding(), project,
+                usePreviousBuildAsReference(), useOnlyStableBuildsAsReference());
 
-        build.getActions().add(new FindBugsResultAction(build, this, result));
+        build.addAction(new FindBugsResultAction(build, this, result));
 
         return result;
     }
@@ -207,6 +210,7 @@ public class FindBugsPublisher extends HealthAwarePublisher {
     @Override
     public MatrixAggregator createAggregator(final MatrixBuild build, final Launcher launcher,
             final BuildListener listener) {
-        return new FindBugsAnnotationsAggregator(build, launcher, listener, this, getDefaultEncoding(), useOnlyStableBuildsAsReference());
+        return new FindBugsAnnotationsAggregator(build, launcher, listener, this, getDefaultEncoding(),
+                usePreviousBuildAsReference(), useOnlyStableBuildsAsReference());
     }
 }

@@ -1,14 +1,14 @@
 package hudson.plugins.findbugs;
 
+import com.thoughtworks.xstream.XStream;
+
 import hudson.model.AbstractBuild;
 import hudson.plugins.analysis.core.BuildHistory;
+import hudson.plugins.analysis.core.BuildResult;
 import hudson.plugins.analysis.core.ParserResult;
 import hudson.plugins.analysis.core.ResultAction;
-import hudson.plugins.analysis.core.BuildResult;
 import hudson.plugins.analysis.util.model.FileAnnotation;
 import hudson.plugins.findbugs.parser.Bug;
-
-import com.thoughtworks.xstream.XStream;
 
 /**
  * Represents the results of the FindBugs analysis. One instance of this class is persisted for
@@ -34,13 +34,17 @@ public class FindBugsResult extends BuildResult {
      *            the default encoding to be used when reading and parsing files
      * @param result
      *            the parsed result with all annotations
+     * @param usePreviousBuildAsReference
+     *            determines whether to use the previous build as the reference
+     *            build
      * @param useStableBuildAsReference
      *            determines whether only stable builds should be used as
      *            reference builds or not
      */
-    public FindBugsResult(final AbstractBuild<?, ?> build, final String defaultEncoding,
-            final ParserResult result, final boolean useStableBuildAsReference) {
-        this(build, defaultEncoding, result, useStableBuildAsReference, FindBugsResultAction.class);
+    public FindBugsResult(final AbstractBuild<?, ?> build, final String defaultEncoding, final ParserResult result,
+            final boolean usePreviousBuildAsReference, final boolean useStableBuildAsReference) {
+        this(build, defaultEncoding, result, usePreviousBuildAsReference, useStableBuildAsReference,
+                FindBugsResultAction.class);
     }
 
     /**
@@ -52,6 +56,9 @@ public class FindBugsResult extends BuildResult {
      *            the default encoding to be used when reading and parsing files
      * @param result
      *            the parsed result with all annotations
+     * @param usePreviousBuildAsReference
+     *            determines whether to use the previous build as the reference
+     *            build
      * @param useStableBuildAsReference
      *            determines whether only stable builds should be used as
      *            reference builds or not
@@ -59,8 +66,10 @@ public class FindBugsResult extends BuildResult {
      *            the type of the result action
      */
     protected FindBugsResult(final AbstractBuild<?, ?> build, final String defaultEncoding, final ParserResult result,
-            final boolean useStableBuildAsReference, final Class<? extends ResultAction<FindBugsResult>> actionType) {
-        this(build, new BuildHistory(build, actionType, useStableBuildAsReference), result, defaultEncoding, true);
+            final boolean usePreviousBuildAsReference, final boolean useStableBuildAsReference,
+            final Class<? extends ResultAction<FindBugsResult>> actionType) {
+        this(build, new BuildHistory(build, actionType, usePreviousBuildAsReference, useStableBuildAsReference),
+                result, defaultEncoding, true);
     }
 
     FindBugsResult(final AbstractBuild<?, ?> build, final BuildHistory history,

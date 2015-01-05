@@ -22,13 +22,17 @@ public class FindBugsReporterResult extends FindBugsResult {
      *            the default encoding to be used when reading and parsing files
      * @param result
      *            the parsed result with all annotations
+     * @param usePreviousBuildAsReference
+     *            determines whether to use the previous build as the reference
+     *            build
      * @param useStableBuildAsReference
      *            determines whether only stable builds should be used as
      *            reference builds or not
      */
-    public FindBugsReporterResult(final AbstractBuild<?, ?> build, final String defaultEncoding,
-            final ParserResult result, final boolean useStableBuildAsReference) {
-        super(build, defaultEncoding, result, useStableBuildAsReference, FindBugsMavenResultAction.class);
+    public FindBugsReporterResult(final AbstractBuild<?, ?> build, final String defaultEncoding, final ParserResult result,
+            final boolean usePreviousBuildAsReference, final boolean useStableBuildAsReference) {
+        super(build, defaultEncoding, result, usePreviousBuildAsReference, useStableBuildAsReference,
+                FindBugsMavenResultAction.class);
     }
 
     @Override
