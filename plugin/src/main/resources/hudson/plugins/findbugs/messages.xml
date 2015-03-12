@@ -16,10 +16,11 @@ This plugin contains all of the standard FindBugs detectors.
 </p>
 ]]>
     </Details>
+    <BugsUrl>http://findbugs.sourceforge.net/bugDescriptions.html</BugsUrl>
+    <AllBugsUrl>http://findbugs.sourceforge.net/allBugDescriptions.html</AllBugsUrl>
   </Plugin>
   <FindBugsMain cmd="addMessages" class="edu.umd.cs.findbugs.AddMessages">
-    <Description>add msgs (e.g., textual descriptions of bugs) to analysis results
-         </Description>
+    <Description>Add msgs (e.g., textual descriptions of bugs) to analysis results</Description>
   </FindBugsMain>
   <FindBugsMain cmd="analyze" class="edu.umd.cs.findbugs.FindBugs2">
     <Description>Perform FindBugs Analysis</Description>
@@ -43,17 +44,20 @@ This plugin contains all of the standard FindBugs detectors.
     <Description>Set project configuration/options</Description>
   </FindBugsMain>
   <FindBugsMain cmd="history" class="edu.umd.cs.findbugs.workflow.MineBugHistory">
-    <Description>List details from  multi-version analysis results</Description>
+    <Description>List details from multi-version analysis results</Description>
   </FindBugsMain>
   <FindBugsMain cmd="union" class="edu.umd.cs.findbugs.workflow.UnionResults">
     <Description>Merge analysis results from disjoint components</Description>
   </FindBugsMain>
   <FindBugsMain cmd="merge" class="edu.umd.cs.findbugs.workflow.Update">
-    <Description>Combine analysis results from different versions of software to produce multi-version analysis results </Description>
+    <Description>Combine analysis results from different versions of software to produce multi-version analysis results</Description>
   </FindBugsMain>
 
   <FindBugsMain cmd="dis" class="edu.umd.cs.findbugs.workflow.PrintClass">
     <Description>Disassemble a class file</Description>
+  </FindBugsMain>
+  <FindBugsMain cmd="errors" class="edu.umd.cs.findbugs.workflowListErrors">
+    <Description>List analysis errors stored in results file</Description>
   </FindBugsMain>
 
   <!-- On changing this, please also update default cloud id in FindbugsPlugin -->
@@ -161,10 +165,18 @@ This plugin contains all of the standard FindBugs detectors.
   Detectors
   **********************************************************************
    -->
+  <Detector class="edu.umd.cs.findbugs.detect.FindRoughConstants">
+    <Details>
+<![CDATA[
+<p> Finds constants which roughly (but not precisely) equal to known values like Math.PI.
+</p>
+]]>
+     </Details>
+  </Detector>
   <Detector class="edu.umd.cs.findbugs.detect.InitializeNonnullFieldsInConstructor">
     <Details>
 <![CDATA[
-<p> Finds nonnull fields that are not written to in constructors.
+<p> Finds non-null fields that are not written to in constructors.
 </p>
 ]]>
      </Details>
@@ -172,7 +184,7 @@ This plugin contains all of the standard FindBugs detectors.
   <Detector class="edu.umd.cs.findbugs.detect.IntCast2LongAsInstant">
     <Details>
 <![CDATA[
-<p> Finds uses of 32-bit values to describe milliseconds since the epoc.
+<p> Finds uses of 32-bit values to describe milliseconds since the epoch.
 </p>
 ]]>
      </Details>
@@ -181,7 +193,7 @@ This plugin contains all of the standard FindBugs detectors.
     <Details>
 <![CDATA[
 <p> Builds database of parameters that take a 64 bit value describing
-milliseconds since the epoc.</p>
+milliseconds since the epoch.</p>
 ]]>
      </Details>
   </Detector>
@@ -219,7 +231,7 @@ applied to method parameters and uses of those method parameters. </p>
   <Detector class="edu.umd.cs.findbugs.detect.CheckImmutableAnnotation">
     <Details>
 <![CDATA[
-<p> Looks for violations of the rules for classes annotated as net.jcip.annotations.Immutable.</p>
+<p> Looks for violations of the rules for classes annotated as net.jcip.annotations.Immutable or javax.annotation.concurrent.Immutable.</p>
 ]]>
     </Details>
   </Detector>
@@ -282,7 +294,7 @@ applied to method parameters and uses of those method parameters. </p>
   <Detector class="edu.umd.cs.findbugs.detect.Methods">
     <Details>
 <![CDATA[
-<p> Builds of database of all methods defined in analyzed classes, for use
+<p> Builds a database of all methods defined in analyzed classes, for use
 by other detectors.</p>
 ]]>
     </Details>
@@ -297,8 +309,22 @@ by other detectors.</p>
   <Detector class="edu.umd.cs.findbugs.detect.CalledMethods">
     <Details>
 <![CDATA[
-<p> Builds of database of all methods invoked in analyzed classes, for use
+<p> Builds a database of all methods invoked in analyzed classes, for use
 by other detectors.</p>
+]]>
+    </Details>
+  </Detector>
+  <Detector class="edu.umd.cs.findbugs.detect.FindNoSideEffectMethods">
+    <Details>
+<![CDATA[
+<p> Looks for the methods which have no side effect, just return some value.</p>
+]]>
+    </Details>
+  </Detector>
+  <Detector class="edu.umd.cs.findbugs.detect.BuildStringPassthruGraph">
+    <Details>
+<![CDATA[
+<p> Builds the database of string parameters passed from method to method unchanged.</p>
 ]]>
     </Details>
   </Detector>
@@ -306,7 +332,7 @@ by other detectors.</p>
     <Details>
 <![CDATA[
 <p> Looks for immutable classes with methods that return new instances of that class,
-where people might accidently think those methods mutate the instance they are invoked on.
+where people might accidentally think those methods mutate the instance they are invoked on.
 </p>
 ]]>
     </Details>
@@ -329,7 +355,7 @@ where people might accidently think those methods mutate the instance they are i
   <Detector class="edu.umd.cs.findbugs.detect.SynchronizeOnClassLiteralNotGetClass">
     <Details>
       <![CDATA[
-<p> Look for code that synchronizes on the results of getClass rather than on class
+<p> Looks for code that synchronizes on the results of getClass rather than on class
 literals.
 </p>
 ]]>
@@ -349,7 +375,7 @@ literals.
     <Details>
       <![CDATA[
       <p>
-      Looks for @NonNull annotations on methods, fields, and parameters.
+      Looks for @Nonnull annotations on methods, fields, and parameters.
       These can be used by the FindNullDeref detector to generate warnings
       when a possibly-null value is used in a context where only
       non-null values should be used.
@@ -377,7 +403,7 @@ literals.
       <![CDATA[
       <p>
       Analyze all methods in the application to determine which
-    methods always return nonnull values.
+    methods always return non-null values.
       </p>
       ]]>
    </Details>
@@ -389,6 +415,29 @@ literals.
 
 ]]>
     </Details>
+  </Detector>
+  <Detector class="edu.umd.cs.findbugs.detect.OptionalReturnNull">
+    <Details>
+<![CDATA[
+<p> Looks for methods with Optional return type that return explicit null values.</p>
+
+]]>
+    </Details>
+  </Detector>
+  <Detector class="edu.umd.cs.findbugs.detect.FindUselessObjects">
+    <Details>
+<![CDATA[
+<p> Looks for useless objects.</p>
+
+]]>
+    </Details>
+  </Detector>
+  <Detector class="edu.umd.cs.findbugs.detect.MutableEnum">
+    <Details>
+          <![CDATA[
+<p> Looks and warns about mutable enum fields.</p>
+          ]]>
+      </Details>
   </Detector>
   <Detector class="edu.umd.cs.findbugs.detect.BadUseOfReturnValue">
     <Details>
@@ -483,6 +532,13 @@ This does not help the garbage collector in any way, the nulling out of fields h
     <Details>
 <![CDATA[
 <p> This detector looks for code containing repeated conditional tests, such as (x == 5 || x == 5).
+]]>
+    </Details>
+  </Detector>
+  <Detector class="edu.umd.cs.findbugs.detect.RedundantConditions">
+    <Details>
+<![CDATA[
+<p> This detector looks for code containing useless conditions like the second condition in this expression: (x >= 10 && x >= 5).
 ]]>
     </Details>
   </Detector>
@@ -686,6 +742,14 @@ but nothing is done to handle the exception.  </p>
 <![CDATA[
 <p> This detector looks for calls to pointless methods,
 such as the no-argument String constructor.
+</p>
+]]>
+    </Details>
+  </Detector>
+  <Detector class="edu.umd.cs.findbugs.detect.CovariantArrayAssignment">
+    <Details>
+<![CDATA[
+<p> This detector looks for covariant array assignments like Object[] array = new String[10] which may cause ArrayStoreException at runtime.
 </p>
 ]]>
     </Details>
@@ -922,6 +986,13 @@ is suspiciously ignored.  It is a slow detector.</p>
 ]]>
     </Details>
   </Detector>
+  <Detector class="edu.umd.cs.findbugs.detect.FindComparatorProblems">
+    <Details>
+<![CDATA[
+<p> This detector looks for problems in Comparator.compare or Comparable.compareTo implementation.</p>
+]]>
+    </Details>
+  </Detector>
   <Detector class="edu.umd.cs.findbugs.detect.FindNullDeref">
     <Details>
 <![CDATA[
@@ -1055,6 +1126,24 @@ on JSR166 locks.  It is a moderately fast detector.</p>
     <Details>
 <![CDATA[
 <p> This detector looks for String concatenation in loops using +.
+</p>
+]]>
+    </Details>
+  </Detector>
+  <Detector class="edu.umd.cs.findbugs.detect.InefficientInitializationInsideLoop">
+    <Details>
+<![CDATA[
+<p> This detector looks for objects initialized within loop which can be moved outside for better performance.
+</p>
+]]>
+    </Details>
+  </Detector>
+  <Detector class="edu.umd.cs.findbugs.detect.InefficientIndexOf">
+    <Details>
+<![CDATA[
+<p> This detector looks for code that uses String.indexOf(String) or String.lastIndexOf(String),
+passing a constant string of length 1. It is recommended to use the more efficient integer implementations.
+A fast detector.
 </p>
 ]]>
     </Details>
@@ -1444,7 +1533,7 @@ factory pattern to create these objects.</p>
     <Details>
       <![CDATA[
       <p>
-      TrainNonNullAnnotations collects @NonNull and @PossiblyNull annotations
+      TrainNonNullAnnotations collects @Nonnull and @PossiblyNull annotations
       and stores them to database files.  This is a fast detector.
       </p>
       ]]>
@@ -1554,11 +1643,28 @@ factory pattern to create these objects.</p>
 ]]>
       </Details>
   </Detector>
+  <Detector class="edu.umd.cs.findbugs.detect.CheckRelaxingNullnessAnnotation">
+    <Details>
+      <![CDATA[
+        <p>Checks that overriding methods do not relax @Nonnull (made @CheckForNull) on return values
+        or @CheckForNull (made @Nonnull) on parameters.</p>
+      ]]>
+      </Details>
+  </Detector>
   <!--
   **********************************************************************
   BugPatterns
   **********************************************************************
    -->
+  <BugPattern type="CNT_ROUGH_CONSTANT_VALUE">
+    <ShortDescription>Rough value of known constant found</ShortDescription>
+    <LongDescription>Rough value of {3} found: {2}</LongDescription>
+    <Details>
+      <![CDATA[
+    <p>It's recommended to use the predefined library constant for code clarity and better precision.</p>
+]]>
+    </Details>
+  </BugPattern>
   <BugPattern type="SKIPPED_CLASS_TOO_BIG">
     <ShortDescription>Class too big for analysis</ShortDescription>
     <LongDescription>{0} is too big for analysis</LongDescription>
@@ -1933,12 +2039,25 @@ another package.</p>
        ]]>
        </Details>
   </BugPattern>
-  <BugPattern type="NP_NONNULL_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR">
-    <ShortDescription>Nonnull field is not initialized</ShortDescription>
-    <LongDescription>Nonnull field {2.name} is not initialized by {1}</LongDescription>
+  <BugPattern type="NP_OPTIONAL_RETURN_NULL">
+    <ShortDescription>Method with Optional return type returns explicit null</ShortDescription>
+    <LongDescription>{1} has Optional return type and returns explicit null</LongDescription>
     <Details>
        <![CDATA[
-       <p> The field is marked as nonnull, but isn't written to by the constructor.
+       <p>
+    The usage of Optional return type (java.util.Optional or com.google.common.base.Optiona) 
+    always mean that explicit null returns were not desired by design.
+    Returning a null value in such case is a contract violation and will most likely break clients code.
+       </p>
+       ]]>
+       </Details>
+  </BugPattern>
+  <BugPattern type="NP_NONNULL_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR">
+    <ShortDescription>Non-null field is not initialized</ShortDescription>
+    <LongDescription>Non-null field {2.name} is not initialized by {1}</LongDescription>
+    <Details>
+       <![CDATA[
+       <p> The field is marked as non-null, but isn't written to by the constructor.
     The field might be initialized elsewhere during constructor, or might always
     be initialized before use.
        </p>
@@ -2073,6 +2192,61 @@ should be written to the JarFile between the calls to
 ]]>
     </Details>
   </BugPattern>
+  <BugPattern type="CAA_COVARIANT_ARRAY_FIELD">
+    <ShortDescription>Covariant array assignment to a field</ShortDescription>
+    <LongDescription>Array of type {2} is assigned to the field of type {3}</LongDescription>
+    <Details>
+<![CDATA[
+<p>Array of covariant type is assigned to a field. This is confusing and may lead to ArrayStoreException at runtime
+if the reference of some other type will be stored in this array later like in the following code:
+</p>
+<p><code>Number[] arr = new Integer[10];
+arr[0] = 1.0;
+</code></p>
+<p>Consider changing the type of created array or the field type.</p>   	
+]]>
+    </Details>
+  </BugPattern>
+  <BugPattern type="CAA_COVARIANT_ARRAY_LOCAL">
+    <ShortDescription>Covariant array assignment to a local variable</ShortDescription>
+    <LongDescription>Array of type {2} is assigned to the variable of type {3}</LongDescription>
+    <Details>
+<![CDATA[
+<p>Array of covariant type is assigned to a local variable. This is confusing and may lead to ArrayStoreException at runtime
+if the reference of some other type will be stored in this array later like in the following code:
+</p>
+<p><code>Number[] arr = new Integer[10];
+arr[0] = 1.0;
+</code></p>
+<p>Consider changing the type of created array or the local variable type.</p>   	
+]]>
+    </Details>
+  </BugPattern>
+  <BugPattern type="CAA_COVARIANT_ARRAY_RETURN">
+    <ShortDescription>Covariant array is returned from the method</ShortDescription>
+    <LongDescription>Array of type {2} is returned from the method which return type is {3}</LongDescription>
+    <Details>
+<![CDATA[
+<p>Array of covariant type is returned from the method. This is confusing and may lead to ArrayStoreException at runtime
+if the calling code will try to store the reference of some other type in the returned array.
+</p>
+<p>Consider changing the type of created array or the method return type.</p>   	
+]]>
+    </Details>
+  </BugPattern>
+  <BugPattern type="CAA_COVARIANT_ARRAY_ELEMENT_STORE">
+    <ShortDescription>Possibly incompatible element is stored in covariant array</ShortDescription>
+    <LongDescription>Value of type {2} is stored into array which element type is {3}</LongDescription>
+    <Details>
+<![CDATA[
+<p>Value is stored into the array and the value type doesn't match the array type.
+It's known from the analysis that actual array type is narrower than the declared type of its variable or field
+and this assignment doesn't satisfy the original array type. This assignment may cause ArrayStoreException
+at runtime.
+</p>
+]]>
+    </Details>
+  </BugPattern>
   <BugPattern type="CN_IDIOM">
     <ShortDescription>Class implements Cloneable but does not define or use clone method</ShortDescription>
     <LongDescription>Class {0} implements Cloneable but does not define or use clone method</LongDescription>
@@ -2159,7 +2333,7 @@ will need to be changed in order to compile it in later versions of Java.</p>
   </BugPattern>
   <BugPattern type="DP_DO_INSIDE_DO_PRIVILEGED">
     <ShortDescription>Method invoked that should be only be invoked inside a doPrivileged block</ShortDescription>
-    <LongDescription>invocation of {2}, which should be invoked from within a doPrivileged block, in {1}</LongDescription>
+    <LongDescription>Invocation of {2}, which should be invoked from within a doPrivileged block, in {1}</LongDescription>
     <Details>
 <![CDATA[
   <p> This code invokes a method that requires a security permission check.
@@ -2171,7 +2345,7 @@ will need to be changed in order to compile it in later versions of Java.</p>
   <BugPattern type="DP_DO_INSIDE_DO_PRIVILEDGED">
     <!-- misspelled for backward compatibility -->
     <ShortDescription>Method invoked that should be only be invoked inside a doPrivileged block</ShortDescription>
-    <LongDescription>invocation of {2}, which should be invoked from within a doPrivileged block, in {1}</LongDescription>
+    <LongDescription>Invocation of {2}, which should be invoked from within a doPrivileged block, in {1}</LongDescription>
     <Details>
 <![CDATA[
   <p> This code invokes a method that requires a security permission check.
@@ -2196,8 +2370,8 @@ will need to be changed in order to compile it in later versions of Java.</p>
     <LongDescription>{1.givenClass} should be final since {0} is marked as Immutable.  </LongDescription>
     <Details>
 <![CDATA[
-  <p> The class is annotated with net.jcip.annotations.Immutable, and the rules for that annotation require
-that all fields are final.
+  <p> The class is annotated with net.jcip.annotations.Immutable or javax.annotation.concurrent.Immutable,
+  and the rules for those annotations require that all fields are final.
    .</p>
 ]]>
     </Details>
@@ -2229,7 +2403,7 @@ Consider using <code>java.net.URI</code> instead.
   </BugPattern>
   <BugPattern type="DMI_BLOCKING_METHODS_ON_URL">
     <ShortDescription>The equals and hashCode methods of URL are blocking</ShortDescription>
-    <LongDescription>invocation of {2}, which blocks to do domain name resolution, in {1}</LongDescription>
+    <LongDescription>Invocation of {2}, which blocks to do domain name resolution, in {1}</LongDescription>
     <Details>
 <![CDATA[
   <p> The equals and hashCode
@@ -2242,7 +2416,7 @@ Consider using <code>java.net.URI</code> instead.
   </BugPattern>
   <BugPattern type="DMI_ANNOTATION_IS_NOT_VISIBLE_TO_REFLECTION">
     <ShortDescription>Can't use reflection to check for presence of annotation without runtime retention</ShortDescription>
-    <LongDescription>use of reflection to check for the presence the annotation {3} which doesn't have runtime retention, in {1}</LongDescription>
+    <LongDescription>Use of reflection to check for the presence the annotation {3} which doesn't have runtime retention, in {1}</LongDescription>
     <Details>
 <![CDATA[
   <p> Unless an annotation has itself been annotated with  @Retention(RetentionPolicy.RUNTIME), the annotation can't be observed using reflection
@@ -2460,6 +2634,27 @@ to immediately undo the work of the boxing.
 ]]>
     </Details>
   </BugPattern>
+    <BugPattern type="DM_BOXED_PRIMITIVE_FOR_PARSING">
+    <ShortDescription>Boxing/unboxing to parse a primitive</ShortDescription>
+    <LongDescription>Boxing/unboxing to parse a primitive {1}</LongDescription>
+    <Details>
+<![CDATA[
+  <p>A boxed primitive is created from a String, just to extract the unboxed primitive value.
+  It is more efficient to just call the static parseXXX method.</p>
+]]>
+    </Details>
+  </BugPattern>
+    <BugPattern type="DM_BOXED_PRIMITIVE_FOR_COMPARE">
+    <ShortDescription>Boxing a primitive to compare</ShortDescription>
+    <LongDescription>Primitive is boxed to call {2}: use {3} instead</LongDescription>
+    <Details>
+<![CDATA[
+  <p>A boxed primitive is created just to call compareTo method. It's more efficient to use static compare method 
+  (for double and float since Java 1.4, for other primitive types since Java 1.7) which works on primitives directly.
+  </p>
+]]>
+    </Details>
+  </BugPattern>
   <BugPattern type="DM_NEW_FOR_GETCLASS">
     <ShortDescription>Method allocates an object, only to get the class object</ShortDescription>
     <LongDescription>{1} allocates an object, only to get the class object</LongDescription>
@@ -2495,6 +2690,17 @@ want to multiple the random value by something else before coercing it to an int
 ]]>
     </Details>
   </BugPattern>
+  <BugPattern type="DM_INVALID_MIN_MAX">
+    <ShortDescription>Incorrect combination of Math.max and Math.min</ShortDescription>
+    <LongDescription>Incorrect combination of Math.max and Math.min: this code always returns {2}</LongDescription>
+    <Details>
+<![CDATA[
+  <p>This code tries to limit the value bounds using the construct like Math.min(0, Math.max(100, value)). However the order of
+  the constants is incorrect: it should be Math.min(100, Math.max(0, value)). As the result this code always produces the same result
+  (or NaN if the value is NaN).</p>
+]]>
+    </Details>
+  </BugPattern>
   <BugPattern type="DM_NEXTINT_VIA_NEXTDOUBLE">
     <ShortDescription>Use the nextInt method of Random rather than nextDouble to generate a random integer</ShortDescription>
     <LongDescription>{1} uses the nextDouble method of Random to generate a random integer; using nextInt is more efficient</LongDescription>
@@ -2510,11 +2716,11 @@ value from -99 to 0, use <code>-r.nextInt(100)</code>.
     </Details>
   </BugPattern>
   <BugPattern type="SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE">
-    <ShortDescription>Nonconstant string passed to execute method on an SQL statement</ShortDescription>
-    <LongDescription>{1} passes a nonconstant String to an execute method on an SQL statement</LongDescription>
+    <ShortDescription>Nonconstant string passed to execute or addBatch method on an SQL statement</ShortDescription>
+    <LongDescription>{1} passes a nonconstant String to an execute or addBatch method on an SQL statement</LongDescription>
     <Details>
 <![CDATA[
-  <p>The method invokes the execute method on an SQL statement with a String that seems
+  <p>The method invokes the execute or addBatch method on an SQL statement with a String that seems
 to be dynamically generated. Consider using
 a prepared statement instead. It is more efficient and less vulnerable to
 SQL injection attacks.
@@ -2558,13 +2764,27 @@ be used to make the prepared statement do something unexpected and undesirable.
 ]]>
     </Details>
   </BugPattern>
+  <BugPattern type="DC_PARTIALLY_CONSTRUCTED">
+    <ShortDescription>Possible exposure of partially initialized object</ShortDescription>
+    <LongDescription>Possible exposure of partially initialized object in {1}</LongDescription>
+    <Details>
+<![CDATA[
+  <p>Looks like this method uses lazy field initialization with double-checked locking.
+  While the field is correctly declared as volatile, it's possible that the internal structure of
+  the object is changed after the field assignment, thus another thread may see the partially initialized object.</p>
+  <p>To fix this problem consider storing the object into the local variable first
+  and save it to the volatile field only after it's fully constructed.
+  </p>
+]]>
+    </Details>
+  </BugPattern>
   <BugPattern type="FI_FINALIZER_NULLS_FIELDS">
     <ShortDescription>Finalizer nulls fields</ShortDescription>
     <LongDescription>{3} is set to null inside finalize method in {1.class}</LongDescription>
     <Details>
 <![CDATA[
   <p> This finalizer nulls out fields.  This is usually an error, as it does not aid garbage collection,
-  and the object is going to be garbage collected anyway.
+  and the object is going to be garbage collected anyway.</p>
 ]]>
     </Details>
   </BugPattern>
@@ -2575,7 +2795,7 @@ be used to make the prepared statement do something unexpected and undesirable.
 <![CDATA[
   <p> This finalizer does nothing except null out fields. This is completely pointless, and requires that
 the object be garbage collected, finalized, and then garbage collected again. You should just remove the finalize
-method.
+method.</p>
 ]]>
     </Details>
   </BugPattern>
@@ -2636,7 +2856,7 @@ method.
   </BugPattern>
   <BugPattern type="FI_EXPLICIT_INVOCATION">
     <ShortDescription>Explicit invocation of finalizer</ShortDescription>
-    <LongDescription>explicit invocation of {2} in {1}</LongDescription>
+    <LongDescription>Explicit invocation of {2} in {1}</LongDescription>
     <Details>
 <![CDATA[
   <p> This method contains an explicit invocation of the <code>finalize()</code>
@@ -2645,7 +2865,7 @@ method.
 <p>If a connected set of objects beings finalizable, then the VM will invoke the
 finalize method on all the finalizable object, possibly at the same time in different threads.
 Thus, it is a particularly bad idea, in the finalize method for a class X, invoke finalize
-on objects referenced by X, because they may already be getting finalized in a separate thread.
+on objects referenced by X, because they may already be getting finalized in a separate thread.</p>
 ]]>
     </Details>
   </BugPattern>
@@ -2676,7 +2896,7 @@ is symmetric and transitive. Without those properties, very unexpected behavoirs
   </BugPattern>
   <BugPattern type="EQ_DONT_DEFINE_EQUALS_FOR_ENUM">
     <ShortDescription>Covariant equals() method defined for enum</ShortDescription>
-    <LongDescription>enum {0} defines equals({0.givenClass})</LongDescription>
+    <LongDescription>Enum {0} defines equals({0.givenClass})</LongDescription>
     <Details>
 <![CDATA[
   <p> This class defines an enumeration, and equality on enumerations are defined
@@ -2731,7 +2951,7 @@ Don't do it.
   </BugPattern>
   <BugPattern type="EQ_DOESNT_OVERRIDE_EQUALS">
     <ShortDescription>Class doesn't override equals in superclass</ShortDescription>
-    <LongDescription>{0} doesn't override {1.givenClass}</LongDescription>
+    <LongDescription>{0} doesn't override {2.givenClass}</LongDescription>
     <Details>
 <![CDATA[
   <p> This class extends a class that defines an equals method and adds fields, but doesn't
@@ -2906,6 +3126,18 @@ the  constant Integer.MIN_VALUE, which is an exceptionally bad practice.
 ]]>
     </Details>
   </BugPattern>
+  <BugPattern type="CO_COMPARETO_INCORRECT_FLOATING">
+    <ShortDescription>compareTo()/compare() incorrectly handles float or double value</ShortDescription>
+    <LongDescription>{1} incorrectly handles {2} value</LongDescription>
+    <Details>
+<![CDATA[
+  <p>This method compares double or float values using pattern like this: val1 &gt; val2 ? 1 : val1 &lt; val2 ? -1 : 0.
+This pattern works incorrectly for -0.0 and NaN values which may result in incorrect sorting result or broken collection 
+(if compared values are used as keys). Consider using Double.compare or Float.compare static methods which handle all 
+the special cases correctly.</p>
+]]>
+    </Details>
+  </BugPattern>
   <BugPattern type="CO_SELF_NO_OBJECT">
     <ShortDescription>Covariant compareTo() method defined</ShortDescription>
     <LongDescription>{0} defines compareTo({0.givenClass}) method but not compareTo(Object)</LongDescription>
@@ -2977,7 +3209,7 @@ the recommended <code>hashCode</code> implementation to use is:</p>
     equals returns true. If this is violated, weird and unpredictable
     failures will occur in classes such as PriorityQueue.
     In Java 5 the PriorityQueue.remove method uses the compareTo method,
-    while in Java 6 it uses the equals method.
+    while in Java 6 it uses the equals method.</p>
 
 <p>From the JavaDoc for the compareTo method in the Comparable interface:
 <blockquote>
@@ -2985,7 +3217,7 @@ It is strongly recommended, but not strictly required that <code>(x.compareTo(y)
 Generally speaking, any class that implements the Comparable interface and violates this condition
 should clearly indicate this fact. The recommended language
 is "Note: this class has a natural ordering that is inconsistent with equals."
-</blockquote>
+</blockquote></p>
 ]]>
     </Details>
   </BugPattern>
@@ -3107,8 +3339,8 @@ using the <code>equals(Object)</code> method instead.</p>
     <LongDescription>{1.givenClass} not guarded against concurrent access; locked {2}% of time</LongDescription>
     <Details>
 <![CDATA[
-  <p> This field is annotated with net.jcip.annotations.GuardedBy,
-but can be accessed in a way that seems to violate the annotation.</p>
+  <p> This field is annotated with net.jcip.annotations.GuardedBy or javax.annotation.concurrent.GuardedBy,
+but can be accessed in a way that seems to violate those annotations.</p>
 ]]>
 </Details>
   </BugPattern>
@@ -3137,6 +3369,7 @@ Thus, having a mutable instance field generally creates race conditions.
   </p>
   <ul>
   <li> The class contains a mix of locked and unlocked accesses,</li>
+  <li> The class is <b>not</b> annotated as javax.annotation.concurrent.NotThreadSafe,</li>
   <li> At least one locked access was performed by one of the class's own methods, and</li>
   <li> The number of unsynchronized field accesses (reads and writes) was no more than
        one third of all accesses, with writes being weighed twice as high as reads</li>
@@ -3178,7 +3411,7 @@ Thus, having a mutable instance field generally creates race conditions.
   </BugPattern>
   <BugPattern type="MS_EXPOSE_REP">
     <ShortDescription>Public static method may expose internal representation by returning array</ShortDescription>
-    <LongDescription>public static {1} may expose internal representation by returning {2.givenClass}</LongDescription>
+    <LongDescription>Public static {1} may expose internal representation by returning {2.givenClass}</LongDescription>
     <Details>
 <![CDATA[
   <p> A public static method returns a reference to
@@ -3713,6 +3946,31 @@ could be changed by malicious code or
 ]]>
     </Details>
   </BugPattern>
+  <BugPattern type="MS_MUTABLE_COLLECTION">
+    <ShortDescription>Field is a mutable collection</ShortDescription>
+    <LongDescription>{1} is a mutable collection</LongDescription>
+    <Details>
+<![CDATA[
+ <p>A mutable collection instance is assigned to a final static field, 
+   thus can be changed by malicious code or by accident from another package.
+   Consider wrapping this field into Collections.unmodifiableSet/List/Map/etc.
+   to avoid this vulnerability.</p>
+]]>
+    </Details>
+  </BugPattern>
+  <BugPattern type="MS_MUTABLE_COLLECTION_PKGPROTECT">
+    <ShortDescription>Field is a mutable collection which should be package protected</ShortDescription>
+    <LongDescription>{1} is a mutable collection which should be package protected</LongDescription>
+    <Details>
+<![CDATA[
+ <p>A mutable collection instance is assigned to a final static field, 
+   thus can be changed by malicious code or by accident from another package.
+   The field could be made package protected to avoid this vulnerability. 
+   Alternatively you may wrap this field into Collections.unmodifiableSet/List/Map/etc.
+   to avoid this vulnerability.</p>
+]]>
+    </Details>
+  </BugPattern>
   <BugPattern type="MS_MUTABLE_ARRAY">
     <ShortDescription>Field is a mutable array</ShortDescription>
     <LongDescription>{1} is a mutable array</LongDescription>
@@ -3738,17 +3996,49 @@ could be changed by malicious code or
 ]]>
     </Details>
   </BugPattern>
-  <BugPattern type="IA_AMBIGUOUS_INVOCATION_OF_INHERITED_OR_OUTER_METHOD">
-    <ShortDescription>Ambiguous invocation of either an inherited or outer method</ShortDescription>
-    <LongDescription>Ambiguous invocation of either an outer or inherited method {2} in {1}</LongDescription>
+  <BugPattern type="ME_MUTABLE_ENUM_FIELD">
+    <ShortDescription>Enum field is public and mutable</ShortDescription>
+    <LongDescription>{1} field is public and mutable</LongDescription>
     <Details>
 <![CDATA[
-  <p> An inner class is invoking a method that could be resolved to either a inherited method or a method defined in an outer class. By the Java semantics,
+  <p>A mutable public field is defined inside a public enum, thus can be changed by malicious code or by accident from another package.
+  Though mutable enum fields may be used for lazy initialization, it's a bad practice to expose them to the outer world.
+  Consider declaring this field final and/or package-private.</p>
+]]>
+    </Details>
+  </BugPattern>
+  <BugPattern type="ME_ENUM_FIELD_SETTER">
+    <ShortDescription>Public enum method unconditionally sets its field</ShortDescription>
+    <LongDescription>{1} unconditionally sets the field {2.name}</LongDescription>
+    <Details>
+<![CDATA[
+  <p>This public method declared in public enum unconditionally sets enum field, thus this field can be changed by malicious code 
+  or by accident from another package. Though mutable enum fields may be used for lazy initialization, it's a bad practice to expose them to the outer world.
+  Consider removing this method or declaring it package-private.</p>
+]]>
+    </Details>
+  </BugPattern>
+  <BugPattern type="IA_AMBIGUOUS_INVOCATION_OF_INHERITED_OR_OUTER_METHOD">
+    <ShortDescription>Potentially ambiguous invocation of either an inherited or outer method</ShortDescription>
+    <LongDescription>Potentially ambiguous invocation of either an outer or inherited method {2} in {1}</LongDescription>
+    <Details>
+<![CDATA[
+  <p>
+An inner class is invoking a method that could be resolved to either a inherited method or a method defined in an outer class.
+For example, you invoke <code>foo(17)</code>, which is defined in both a superclass and in an outer method.
+By the Java semantics,
 it will be resolved to invoke the inherited method, but this may not be want
-you intend. If you really intend to invoke the inherited method,
+you intend.
+</p>
+<p>If you really intend to invoke the inherited method,
 invoke it by invoking the method on super (e.g., invoke super.foo(17)), and
 thus it will be clear to other readers of your code and to FindBugs
 that you want to invoke the inherited method, not the method in the outer class.
+</p>
+<p>If you call <code>this.foo(17)</code>, then the inherited method will be invoked. However, since FindBugs only looks at
+classfiles, it
+can't tell the difference between an invocation of <code>this.foo(17)</code> and <code>foo(17)</code>, it will still
+complain about a potential ambiguous invocation.
 </p>
 ]]>
     </Details>
@@ -3762,7 +4052,7 @@ that you want to invoke the inherited method, not the method in the outer class.
 that its superclass is in a different package (e.g., <code>alpha.Foo</code> extends <code>beta.Foo</code>).
 This can be exceptionally confusing, create lots of situations in which you have to look at import statements
 to resolve references and creates many
-opportunities to accidently define methods that do not override methods in their superclasses.
+opportunities to accidentally define methods that do not override methods in their superclasses.
 </p>
 ]]>
     </Details>
@@ -3776,7 +4066,7 @@ opportunities to accidently define methods that do not override methods in their
 that the interface is in a different package (e.g., <code>alpha.Foo</code> extends <code>beta.Foo</code>).
 This can be exceptionally confusing, create lots of situations in which you have to look at import statements
 to resolve references and creates many
-opportunities to accidently define methods that do not override methods in their superclasses.
+opportunities to accidentally define methods that do not override methods in their superclasses.
 </p>
 ]]>
     </Details>
@@ -3921,7 +4211,7 @@ removing or deprecating the method with the similar but not identical signature.
 <![CDATA[
   <p> This regular method has the same name as the class it is defined in. It is likely that this was intended to be a constructor.
       If it was intended to be a constructor, remove the declaration of a void return value.
-    If you had accidently defined this method, realized the mistake, defined a proper constructor
+    If you had accidentally defined this method, realized the mistake, defined a proper constructor
     but can't get rid of this method due to backwards compatibility, deprecate the method.
 </p>
 ]]>
@@ -4014,8 +4304,8 @@ mechanism, it must not be declared as a static method.
     </Details>
   </BugPattern>
   <BugPattern type="SE_PRIVATE_READ_RESOLVE_NOT_INHERITED">
-    <ShortDescription>private readResolve method not inherited by subclasses</ShortDescription>
-    <LongDescription>private readResolve method in {0} not inherited by subclasses.</LongDescription>
+    <ShortDescription>Private readResolve method not inherited by subclasses</ShortDescription>
+    <LongDescription>Private readResolve method in {0} not inherited by subclasses.</LongDescription>
     <Details>
 <![CDATA[
   <p> This class defines a private readResolve method. Since it is private, it won't be inherited by subclasses.
@@ -4151,7 +4441,8 @@ is generally easy and good defensive programming.
   <p> This method contains a switch statement where default case is missing.
   Usually you need to provide a default case.</p>
   <p>Because the analysis only looks at the generated bytecode, this warning can be incorrect triggered if
-the default case is at the end of the switch statement and doesn't end with a break statement.
+the default case is at the end of the switch statement and the switch statement doesn't contain break statements for other
+cases.
 ]]>
     </Details>
   </BugPattern>
@@ -4418,7 +4709,7 @@ and generally bad practice.
   <p> The variable referenced at this point is known to be null due to an earlier
    check against null. Although this is valid, it might be a mistake (perhaps you
 intended to refer to a different variable, or perhaps the earlier check to see if the
-variable is null should have been a check to see if it was nonnull).
+variable is null should have been a check to see if it was non-null).
 </p>
 ]]>
     </Details>
@@ -4584,6 +4875,102 @@ inner object.&nbsp; This reference makes the instances
 ]]>
     </Details>
   </BugPattern>
+  <BugPattern type="UC_USELESS_VOID_METHOD">
+    <ShortDescription>Useless non-empty void method</ShortDescription>
+    <LongDescription>Method {1} seems to be useless</LongDescription>
+    <Details>
+<![CDATA[
+<p>Our analysis shows that this non-empty void method does not actually perform any useful work.
+Please check it: probably there's a mistake in its code or its body can be fully removed.
+</p>
+<p>We are trying to reduce the false positives as much as possible, but in some cases this warning might be wrong.
+Common false-positive cases include:</p>
+<p>- The method is intended to trigger loading of some class which may have a side effect.</p>
+<p>- The method is intended to implicitly throw some obscure exception.</p>
+]]>
+    </Details>
+  </BugPattern>
+  <BugPattern type="UC_USELESS_CONDITION">
+    <ShortDescription>Condition has no effect</ShortDescription>
+    <LongDescription>Useless condition: it's known that {2} at this point</LongDescription>
+    <Details>
+<![CDATA[
+<p>This condition always produces the same result as the value of the involved variable was narrowed before. 
+Probably something else was meant or condition can be removed.</p>
+]]>
+    </Details>
+  </BugPattern>
+  <BugPattern type="UC_USELESS_CONDITION_TYPE">
+    <ShortDescription>Condition has no effect due to the variable type</ShortDescription>
+    <LongDescription>Useless condition: it's always {2} because variable type is {3}</LongDescription>
+    <Details>
+<![CDATA[
+<p>This condition always produces the same result due to the type range of the involved variable. 
+Probably something else was meant or condition can be removed.</p>
+]]>
+    </Details>
+  </BugPattern>
+  <BugPattern type="UC_USELESS_OBJECT">
+    <ShortDescription>Useless object created</ShortDescription>
+    <LongDescription>Useless object stored in variable {2} of method {1}</LongDescription>
+    <Details>
+<![CDATA[
+<p>Our analysis shows that this object is useless. 
+It's created and modified, but its value never go outside of the method or produce any side-effect.
+Either there is a mistake and object was intended to be used or it can be removed.</p>
+<p>This analysis rarely produces false-positives. Common false-positive cases include:</p>
+<p>- This object used to implicitly throw some obscure exception.</p>
+<p>- This object used as a stub to generalize the code.</p>
+<p>- This object used to hold strong references to weak/soft-referenced objects.</p>
+]]>
+    </Details>
+  </BugPattern>
+  <BugPattern type="UC_USELESS_OBJECT_STACK">
+    <ShortDescription>Useless object created on stack</ShortDescription>
+    <LongDescription>Useless object created in method {1}</LongDescription>
+    <Details>
+<![CDATA[
+<p>This object is created just to perform some modifications which don't have any side-effect.
+Probably something else was meant or the object can be removed.</p>
+]]>
+    </Details>
+  </BugPattern>
+  <BugPattern type="RANGE_ARRAY_INDEX">
+    <ShortDescription>Array index is out of bounds</ShortDescription>
+    <LongDescription>Array index is out of bounds: {3}</LongDescription>
+    <Details>
+<![CDATA[
+   <p> Array operation is performed, but array index is out of bounds, which will result in ArrayIndexOutOfBoundsException at runtime.</p>
+]]>
+    </Details>
+  </BugPattern>
+  <BugPattern type="RANGE_ARRAY_OFFSET">
+    <ShortDescription>Array offset is out of bounds</ShortDescription>
+    <LongDescription>Array offset is out of bounds: {3}</LongDescription>
+    <Details>
+<![CDATA[
+   <p> Method is called with array parameter and offset parameter, but the offset is out of bounds. This will result in IndexOutOfBoundsException at runtime. </p>
+]]>
+    </Details>
+  </BugPattern>
+  <BugPattern type="RANGE_ARRAY_LENGTH">
+    <ShortDescription>Array length is out of bounds</ShortDescription>
+    <LongDescription>Array length is out of bounds: {3}</LongDescription>
+    <Details>
+<![CDATA[
+   <p> Method is called with array parameter and length parameter, but the length is out of bounds. This will result in IndexOutOfBoundsException at runtime. </p>
+]]>
+    </Details>
+  </BugPattern>
+  <BugPattern type="RANGE_STRING_INDEX">
+    <ShortDescription>String index is out of bounds</ShortDescription>
+    <LongDescription>String index is out of bounds when calling {5}: {3}</LongDescription>
+    <Details>
+<![CDATA[
+   <p> String method is called and specified string index is out of bounds. This will result in StringIndexOutOfBoundsException at runtime. </p>
+]]>
+    </Details>
+  </BugPattern>
   <BugPattern type="RV_CHECK_FOR_POSITIVE_INDEXOF">
     <ShortDescription>Method checks to see if result of String.indexOf is positive</ShortDescription>
     <LongDescription>{1} checks to see if result of String.indexOf is positive</LongDescription>
@@ -4597,8 +4984,8 @@ inner object.&nbsp; This reference makes the instances
     </Details>
   </BugPattern>
   <BugPattern type="RV_DONT_JUST_NULL_CHECK_READLINE">
-    <ShortDescription>Method discards result of readLine after checking if it is nonnull</ShortDescription>
-    <LongDescription>{1} discards result of readLine after checking if it is nonnull</LongDescription>
+    <ShortDescription>Method discards result of readLine after checking if it is non-null</ShortDescription>
+    <LongDescription>{1} discards result of readLine after checking if it is non-null</LongDescription>
     <Details>
 <![CDATA[
    <p> The value returned by readLine is discarded after checking to see if the return
@@ -4610,7 +4997,7 @@ to use that non-null value. Calling readLine again will give you a different lin
 
   <BugPattern type="RV_RETURN_VALUE_IGNORED_INFERRED">
     <ShortDescription>Method ignores return value, is this OK?</ShortDescription>
-    <LongDescription>return value of {2.givenClass} ignored, is this OK in {1}</LongDescription>
+    <LongDescription>Return value of {2.givenClass} ignored, is this OK in {1}</LongDescription>
     <Details>
 <![CDATA[
 <p>This code calls a method and ignores the return value. The return value
@@ -4629,9 +5016,30 @@ is important or acceptable.
     </Details>
   </BugPattern>
 
+  <BugPattern type="RV_RETURN_VALUE_IGNORED_NO_SIDE_EFFECT">
+    <ShortDescription>Return value of method without side effect is ignored</ShortDescription>
+    <LongDescription>Return value of {2.givenClass} ignored, but method has no side effect</LongDescription>
+    <Details>
+<![CDATA[
+<p>This code calls a method and ignores the return value. However our analysis shows that
+the method (including its implementations in subclasses if any) does not produce any effect 
+other than return value. Thus this call can be removed.
+</p>
+<p>We are trying to reduce the false positives as much as possible, but in some cases this warning might be wrong.
+Common false-positive cases include:</p>
+<p>- The method is designed to be overridden and produce a side effect in other projects which are out of the scope of the analysis.</p>
+<p>- The method is called to trigger the class loading which may have a side effect.</p>
+<p>- The method is called just to get some exception.</p>
+<p>If you feel that our assumption is incorrect, you can use a @CheckReturnValue annotation
+to instruct FindBugs that ignoring the return value of this method is acceptable.
+</p>
+]]>
+    </Details>
+  </BugPattern>
+
   <BugPattern type="RV_RETURN_VALUE_IGNORED">
     <ShortDescription>Method ignores return value</ShortDescription>
-    <LongDescription>return value of {2.givenClass} ignored in {1}</LongDescription>
+    <LongDescription>Return value of {2.givenClass} ignored in {1}</LongDescription>
     <Details>
 <![CDATA[
    <p> The return value of this method should be checked. One common
@@ -4661,7 +5069,7 @@ dateString = dateString.trim();
 
   <BugPattern type="RV_RETURN_VALUE_IGNORED_BAD_PRACTICE">
     <ShortDescription>Method ignores exceptional return value</ShortDescription>
-    <LongDescription>exceptional return value of {2} ignored in {1}</LongDescription>
+    <LongDescription>Exceptional return value of {2} ignored in {1}</LongDescription>
     <Details>
 <![CDATA[
    <p> This method returns a value that is not checked. The return value should be checked
@@ -4732,11 +5140,11 @@ something that should be closed.
     </Details>
   </BugPattern>
   <BugPattern type="NP_STORE_INTO_NONNULL_FIELD">
-    <ShortDescription>Store of null value into field annotated NonNull</ShortDescription>
-    <LongDescription>Store of null value into field {2.givenClass} annotated NonNull in {1}</LongDescription>
+    <ShortDescription>Store of null value into field annotated @Nonnull</ShortDescription>
+    <LongDescription>Store of null value into field {2.givenClass} annotated @Nonnull in {1}</LongDescription>
     <Details>
       <![CDATA[
-<p> A value that could be null is stored into a field that has been annotated as NonNull. </p>
+<p> A value that could be null is stored into a field that has been annotated as @Nonnull. </p>
 ]]>
     </Details>
   </BugPattern>
@@ -4756,11 +5164,11 @@ be an exception path, since the default case is often infeasible.</p>
     </Details>
   </BugPattern>
   <BugPattern type="NP_PARAMETER_MUST_BE_NONNULL_BUT_MARKED_AS_NULLABLE">
-    <ShortDescription>Parameter must be nonnull but is marked as nullable</ShortDescription>
-    <LongDescription>{2} must be nonnull but is marked as nullable</LongDescription>
+    <ShortDescription>Parameter must be non-null but is marked as nullable</ShortDescription>
+    <LongDescription>{2} must be non-null but is marked as nullable</LongDescription>
     <Details>
 <![CDATA[
-<p> This parameter is always used in a way that requires it to be nonnull,
+<p> This parameter is always used in a way that requires it to be non-null,
 but the parameter is explicitly annotated as being Nullable. Either the use
 of the parameter or the annotation is wrong.
 </p>
@@ -4826,56 +5234,56 @@ for null.  This may lead to a <code>NullPointerException</code> when the code is
    </Details>
   </BugPattern>
   <BugPattern type="NP_NULL_PARAM_DEREF_NONVIRTUAL">
-    <ShortDescription>Non-virtual method call passes null for nonnull parameter</ShortDescription>
-    <LongDescription>Non-virtual method call in {1} passes null for nonnull parameter of {2.givenClass}</LongDescription>
+    <ShortDescription>Non-virtual method call passes null for non-null parameter</ShortDescription>
+    <LongDescription>Non-virtual method call in {1} passes null for non-null parameter of {2.givenClass}</LongDescription>
     <Details>
       <![CDATA[
       <p>
-      A possibly-null value is passed to a nonnull method parameter.
+      A possibly-null value is passed to a non-null method parameter.
     Either the parameter is annotated as a parameter that should
-    always be nonnull, or analysis has shown that it will always be
+    always be non-null, or analysis has shown that it will always be
     dereferenced.
       </p>
       ]]>
    </Details>
   </BugPattern>
   <BugPattern type="NP_NULL_PARAM_DEREF_ALL_TARGETS_DANGEROUS">
-    <ShortDescription>Method call passes null for nonnull parameter</ShortDescription>
-    <LongDescription>Null passed for nonnull parameter of {2.givenClass} in {1}</LongDescription>
+    <ShortDescription>Method call passes null for non-null parameter</ShortDescription>
+    <LongDescription>Null passed for non-null parameter of {2.givenClass} in {1}</LongDescription>
     <Details>
       <![CDATA[
       <p>
       A possibly-null value is passed at a call site where all known
-      target methods require the parameter to be nonnull.
+      target methods require the parameter to be non-null.
     Either the parameter is annotated as a parameter that should
-    always be nonnull, or analysis has shown that it will always be
+    always be non-null, or analysis has shown that it will always be
     dereferenced.
       </p>
       ]]>
    </Details>
   </BugPattern>
   <BugPattern type="NP_NULL_PARAM_DEREF">
-    <ShortDescription>Method call passes null for nonnull parameter</ShortDescription>
-    <LongDescription>Null passed for nonnull parameter of {2.givenClass} in {1}</LongDescription>
+    <ShortDescription>Method call passes null for non-null parameter</ShortDescription>
+    <LongDescription>Null passed for non-null parameter of {2.givenClass} in {1}</LongDescription>
     <Details>
       <![CDATA[
       <p>
-      This method call passes a null value for a nonnull method parameter.
+      This method call passes a null value for a non-null method parameter.
     Either the parameter is annotated as a parameter that should
-    always be nonnull, or analysis has shown that it will always be
+    always be non-null, or analysis has shown that it will always be
     dereferenced.
       </p>
       ]]>
    </Details>
   </BugPattern>
   <BugPattern type="NP_NONNULL_PARAM_VIOLATION">
-    <ShortDescription>Method call passes null to a nonnull parameter </ShortDescription>
-    <LongDescription>Null passed for nonnull parameter of {2.givenClass} in {1}</LongDescription>
+    <ShortDescription>Method call passes null to a non-null parameter </ShortDescription>
+    <LongDescription>Null passed for non-null parameter of {2.givenClass} in {1}</LongDescription>
     <Details>
       <![CDATA[
       <p>
       This method passes a null value as the parameter of a method which
-    must be nonnull. Either this parameter has been explicitly marked
+    must be non-null. Either this parameter has been explicitly marked
     as @Nonnull, or analysis has determined that this parameter is
     always dereferenced.
       </p>
@@ -4883,13 +5291,13 @@ for null.  This may lead to a <code>NullPointerException</code> when the code is
    </Details>
   </BugPattern>
   <BugPattern type="NP_NONNULL_RETURN_VIOLATION">
-    <ShortDescription>Method may return null, but is declared @NonNull</ShortDescription>
-    <LongDescription>{1} may return null, but is declared @NonNull</LongDescription>
+    <ShortDescription>Method may return null, but is declared @Nonnull</ShortDescription>
+    <LongDescription>{1} may return null, but is declared @Nonnull</LongDescription>
     <Details>
       <![CDATA[
       <p>
       This method may return a null value, but the method (or a superclass method
-      which it overrides) is declared to return @NonNull.
+      which it overrides) is declared to return @Nonnull.
       </p>
       ]]>
    </Details>
@@ -4933,7 +5341,7 @@ for null.  This may lead to a <code>NullPointerException</code> when the code is
               </p>
         <p>Note that a check such as
             <code>if (x == null) throw new NullPointerException();</code>
-            is treated as a dereference of <code>x</code>.
+            is treated as a dereference of <code>x</code>.</p>
           ]]>
       </Details>
   </BugPattern>
@@ -5223,16 +5631,11 @@ different types.  The result of this comparison will always be false at runtime.
     <Details>
 <![CDATA[
 <p> This method calls equals(Object) on two references of different
-class types with no common subclasses.
-Therefore, the objects being compared
-are unlikely to be members of the same class at runtime
-(unless some application classes were not analyzed, or dynamic class
-loading can occur at runtime).
-According to the contract of equals(),
-objects of different
-classes should always compare as unequal; therefore, according to the
-contract defined by java.lang.Object.equals(Object),
-the result of this comparison will always be false at runtime.
+class types and analysis suggests they will be to objects of different classes 
+at runtime. Further, examination of the equals methods that would be invoked suggest that either
+this call will always return false, or else the equals method is not be symmetric (which is 
+a property required by the contract
+for equals in class Object). 
 </p>
 ]]>
     </Details>
@@ -5558,11 +5961,11 @@ value of the result of the remainder operation (i.e., use
     </Details>
   </BugPattern>
   <BugPattern type="INT_BAD_COMPARISON_WITH_NONNEGATIVE_VALUE">
-    <ShortDescription>Bad comparison of nonnegative value with negative constant</ShortDescription>
+    <ShortDescription>Bad comparison of nonnegative value with negative constant or zero</ShortDescription>
     <LongDescription>Bad comparison of nonnegative value with {2} in {1}</LongDescription>
     <Details>
 <![CDATA[
-<p> This code compares a value that is guaranteed to be non-negative with a negative constant.
+<p> This code compares a value that is guaranteed to be non-negative with a negative constant or zero.
 </p>
 ]]>
     </Details>
@@ -5963,6 +6366,72 @@ a StringBuffer (or StringBuilder in Java 1.5) explicitly.</p>
 ]]>
     </Details>
   </BugPattern>
+  <BugPattern type="IIL_PREPARE_STATEMENT_IN_LOOP">
+    <ShortDescription>Method calls prepareStatement in a loop</ShortDescription>
+    <LongDescription>{1} calls prepareStatement with the constant arguments in a loop</LongDescription>
+    <Details>
+<![CDATA[
+<p> The method calls Connection.prepareStatement inside the loop passing the constant arguments.
+If the PreparedStatement should be executed several times there's no reason to recreate it for each loop iteration.
+Move this call outside of the loop.</p>
+]]>
+    </Details>
+  </BugPattern>
+  <BugPattern type="IIL_ELEMENTS_GET_LENGTH_IN_LOOP">
+    <ShortDescription>NodeList.getLength() called in a loop</ShortDescription>
+    <LongDescription>{1} calls NodeList.getLength() in a loop for getElementsByTagName return value</LongDescription>
+    <Details>
+<![CDATA[
+<p> The method calls NodeList.getLength() inside the loop and NodeList was produced by getElementsByTagName call.
+This NodeList doesn't store its length, but computes it every time in not very optimal way.
+Consider storing the length to the variable before the loop.
+</p>
+]]>
+    </Details>
+  </BugPattern>
+  <BugPattern type="IIL_PATTERN_COMPILE_IN_LOOP">
+    <ShortDescription>Method calls Pattern.compile in a loop</ShortDescription>
+    <LongDescription>{1} calls Pattern.compile with the constant arguments in a loop</LongDescription>
+    <Details>
+<![CDATA[
+<p> The method calls Pattern.compile inside the loop passing the constant arguments.
+If the Pattern should be used several times there's no reason to compile it for each loop iteration.
+Move this call outside of the loop or even into static final field.</p>
+]]>
+    </Details>
+  </BugPattern>
+  <BugPattern type="IIL_PATTERN_COMPILE_IN_LOOP_INDIRECT">
+    <ShortDescription>Method compiles the regular expression in a loop</ShortDescription>
+    <LongDescription>{1} compiles the regular expression in a loop</LongDescription>
+    <Details>
+<![CDATA[
+<p> The method creates the same regular expression inside the loop, so it will be compiled every iteration.
+It would be more optimal to precompile this regular expression using Pattern.compile outside of the loop.</p>
+]]>
+    </Details>
+  </BugPattern>
+  <BugPattern type="IIO_INEFFICIENT_INDEX_OF">
+    <ShortDescription>Inefficient use of String.indexOf(String)</ShortDescription>
+    <LongDescription>{1} uses String.indexOf(String) instead of String.indexOf(int)</LongDescription>
+    <Details>
+<![CDATA[
+<p> This code passes a constant string of length 1 to String.indexOf().
+It is more efficient to use the integer implementations of String.indexOf().
+f. e. call <code>myString.indexOf('.')</code> instead of <code>myString.indexOf(".")</code></p>
+]]>
+    </Details>
+  </BugPattern>
+  <BugPattern type="IIO_INEFFICIENT_LAST_INDEX_OF">
+    <ShortDescription>Inefficient use of String.lastIndexOf(String)</ShortDescription>
+    <LongDescription>{1} uses String.lastIndexOf(String) instead of String.lastIndexOf(int)</LongDescription>
+    <Details>
+<![CDATA[
+<p> This code passes a constant string of length 1 to String.lastIndexOf().
+It is more efficient to use the integer implementations of String.lastIndexOf().
+f. e. call <code>myString.lastIndexOf('.')</code> instead of <code>myString.lastIndexOf(".")</code></p>
+]]>
+    </Details>
+  </BugPattern>
   <BugPattern type="ITA_INEFFICIENT_TO_ARRAY">
     <ShortDescription>Method uses toArray() with zero-length array argument</ShortDescription>
     <LongDescription>{1} uses Collection.toArray() with zero-length array argument</LongDescription>
@@ -6142,7 +6611,7 @@ less confusing to explicitly check pointer equality using <code>==</code>.
   </BugPattern>
   <BugPattern type="EC_INCOMPATIBLE_ARRAY_COMPARE">
     <ShortDescription>equals(...) used to compare incompatible arrays</ShortDescription>
-    <LongDescription>using equals to compare a {2.simpleClass} and a {3.simpleClass} in {1}</LongDescription>
+    <LongDescription>Using equals to compare a {2.simpleClass} and a {3.simpleClass} in {1}</LongDescription>
     <Details>
 <![CDATA[
 <p>
@@ -6227,6 +6696,7 @@ there is no easy way to eliminate these false positives.
 ]]>
     </Details>
   </BugPattern>
+
   <BugPattern type="DLS_DEAD_LOCAL_STORE_IN_RETURN">
     <ShortDescription>Useless assignment in return statement</ShortDescription>
     <LongDescription>Useless assignment in return from {1}</LongDescription>
@@ -6239,6 +6709,22 @@ has effect. Please verify that this statement does the right thing.
 ]]>
     </Details>
   </BugPattern>
+  <BugPattern type="DLS_DEAD_LOCAL_INCREMENT_IN_RETURN">
+    <ShortDescription>Useless increment in return statement</ShortDescription>
+    <LongDescription>Useless increment in return from {1}</LongDescription>
+    <Details>
+      <![CDATA[
+<p>This statement has a return such as <code>return x++;</code>.
+A postfix increment/decrement does not impact the value of the expression,
+so this increment/decrement has no effect.
+Please verify that this statement does the right thing.
+</p>
+]]>
+    </Details>
+  </BugPattern>
+
+
+
   <BugPattern type="DLS_DEAD_STORE_OF_CLASS_LITERAL">
     <ShortDescription>Dead store of class literal</ShortDescription>
     <LongDescription>Dead store of {3}.class in {1}</LongDescription>
@@ -6572,7 +7058,7 @@ This code converts a 32-bit int value to a 64-bit long value, and then
 passes that value for a method parameter that requires an absolute time value.
 An absolute time value is the number
 of milliseconds since the standard base time known as "the epoch", namely January 1, 1970, 00:00:00 GMT.
-For example, the following method, intended to convert seconds since the epoc into a Date, is badly
+For example, the following method, intended to convert seconds since the epoch into a Date, is badly
 broken:</p>
 <pre>
 Date getDate(int seconds) { return new Date(seconds * 1000); }
@@ -6613,8 +7099,8 @@ floating point arithmetic.
     </Details>
   </BugPattern>
   <BugPattern type="ICAST_INT_CAST_TO_DOUBLE_PASSED_TO_CEIL">
-    <ShortDescription>integral value cast to double and then passed to Math.ceil</ShortDescription>
-    <LongDescription>integral value cast to double and then passed to Math.ceil in {1}</LongDescription>
+    <ShortDescription>Integral value cast to double and then passed to Math.ceil</ShortDescription>
+    <LongDescription>Integral value cast to double and then passed to Math.ceil in {1}</LongDescription>
     <Details>
 <![CDATA[
 <p>
@@ -6633,8 +7119,8 @@ floating point arithmetic.
     </Details>
   </BugPattern>
   <BugPattern type="ICAST_IDIV_CAST_TO_DOUBLE">
-    <ShortDescription>integral division result cast to double or float</ShortDescription>
-    <LongDescription>integral division result cast to double or float in {1}</LongDescription>
+    <ShortDescription>Integral division result cast to double or float</ShortDescription>
+    <LongDescription>Integral division result cast to double or float in {1}</LongDescription>
     <Details>
 <![CDATA[
 <p>
@@ -6735,7 +7221,7 @@ the String "1" is incompatible with the format specifier %d.
 <![CDATA[
 <p>
 An argument not of type Boolean is being formatted with a %b format specifier. This won't throw an
-exception; instead, it will print true for any nonnull value, and false for null.
+exception; instead, it will print true for any non-null value, and false for null.
 This feature of format strings is strange, and may not be what you intended.
 </p>
 ]]>
@@ -6814,7 +7300,7 @@ this statement is executed.
   </BugPattern>
   <BugPattern type="VA_FORMAT_STRING_MISSING_ARGUMENT">
     <ShortDescription>Format string references missing argument</ShortDescription>
-    <LongDescription>format string "{3}" needs argument {5} but only {6} are provided in {1}</LongDescription>
+    <LongDescription>Format string "{3}" needs argument {5} but only {6} are provided in {1}</LongDescription>
     <Details>
 <![CDATA[
 <p>
@@ -6997,7 +7483,7 @@ an indication of some misunderstanding or some other logic error.
   </BugPattern>
   <BugPattern type="BC_VACUOUS_INSTANCEOF">
     <ShortDescription>instanceof will always return true</ShortDescription>
-    <LongDescription>instanceof will always return true for all nonnull values in {1}, since all {2} are instances of {3}</LongDescription>
+    <LongDescription>instanceof will always return true for all non-null values in {1}, since all {2} are instances of {3}</LongDescription>
     <Details>
 <![CDATA[
 <p>
@@ -7054,17 +7540,18 @@ collection class.
     </Details>
   </BugPattern>
   <BugPattern type="RE_POSSIBLE_UNINTENDED_PATTERN">
-    <ShortDescription>"." used for regular expression</ShortDescription>
-    <LongDescription>"." used for regular expression in {1}</LongDescription>
+    <ShortDescription>"." or "|" used for regular expression</ShortDescription>
+    <LongDescription>"." or "|" used for regular expression in {1}</LongDescription>
     <Details>
 <![CDATA[
 <p>
-A String function is being invoked and "." is being passed
+A String function is being invoked and "." or "|" is being passed
 to a parameter that takes a regular expression as an argument. Is this what you intended?
 For example
-s.replaceAll(".", "/") will return a String in which <em>every</em>
-character has been replaced by a / character,
-and s.split(".") <em>always</em> returns a zero length array of String.
+<li>s.replaceAll(".", "/") will return a String in which <em>every</em> character has been replaced by a '/' character
+<li>s.split(".") <em>always</em> returns a zero length array of String
+<li>"ab|cd".replaceAll("|", "/") will return "/a/b/|/c/d/"
+<li>"ab|cd".split("|") will return array with six (!) elements: [, a, b, |, c, d]
 </p>
 ]]>
     </Details>
@@ -7122,6 +7609,19 @@ The code performs an unsigned right shift, whose result is then
 cast to a short or byte, which discards the upper bits of the result.
 Since the upper bits are discarded, there may be no difference between
 a signed and unsigned right shift (depending upon the size of the shift).
+</p>
+]]>
+    </Details>
+  </BugPattern>
+  <BugPattern type="BSHIFT_WRONG_ADD_PRIORITY">
+    <ShortDescription>Possible bad parsing of shift operation</ShortDescription>
+    <LongDescription>Possible bad parsing of shift operation in {1}</LongDescription>
+    <Details>
+<![CDATA[
+<p>
+The code performs an operation like (x &lt;&lt; 8 + y). Although this might be correct, probably it was meant 
+to perform (x &lt;&lt; 8) + y, but shift operation has
+a lower precedence, so it's actually parsed as x &lt;&lt; (8 + y).
 </p>
 ]]>
     </Details>
@@ -7244,7 +7744,7 @@ for oddness, consider using x &amp; 1 == 1, or x % 2 != 0.
   </BugPattern>
   <BugPattern type="DMI_BAD_MONTH">
     <ShortDescription>Bad constant value for month</ShortDescription>
-    <LongDescription>bad month value of {2} passed to {3} in {1}</LongDescription>
+    <LongDescription>Bad month value of {2} passed to {3} in {1}</LongDescription>
     <Details>
 <![CDATA[
 <p>
@@ -7665,14 +8165,14 @@ public @NonNegative Integer example(@Negative Integer value) {
       <![CDATA[
         <p>
         A value is being used in a way that requires the value be annotation with a type qualifier.
-	The type qualifier is strict, so the tool rejects any values that do not have
-	the appropriate annotation.
+    The type qualifier is strict, so the tool rejects any values that do not have
+    the appropriate annotation.
         </p>
 
         <p>
         To coerce a value to have a strict annotation, define an identity function where the return value is annotated
-	with the strict annotation.
-	This is the only way to turn a non-annotated value into a value with a strict type qualifier annotation.
+    with the strict annotation.
+    This is the only way to turn a non-annotated value into a value with a strict type qualifier annotation.
         </p>
 
       ]]>
@@ -8011,6 +8511,41 @@ after the call to initLogging, the logger configuration is lost
 ]]>
       </Details>
   </BugPattern>
+  <BugPattern type="NP_METHOD_PARAMETER_RELAXING_ANNOTATION">
+    <ShortDescription>Method tightens nullness annotation on parameter</ShortDescription>
+    <LongDescription>Method {1} overrides the nullness annotation relaxing the ancestor method requirements on parameter.</LongDescription>
+    <Details>
+        <![CDATA[<p>
+        A method should always implement the contract of a method it overrides. Thus, if a method takes a parameter
+    that is marked as @Nullable, you shouldn't override that method in a subclass with a method where that parameter is @Nonnull.
+    Doing so violates the contract that the method should handle a null parameter.
+        </p>]]>
+    </Details>
+  </BugPattern>
+  <BugPattern type="NP_METHOD_PARAMETER_TIGHTENS_ANNOTATION">
+    <ShortDescription>Method tightens nullness annotation on parameter</ShortDescription>
+    <LongDescription>Method {1} overrides the nullness annotation of parameter {2} in an incompatible way</LongDescription>
+    <Details>
+        <![CDATA[<p>
+        A method should always implement the contract of a method it overrides. Thus, if a method takes a parameter
+    that is marked as @Nullable, you shouldn't override that method in a subclass with a method where that parameter is @Nonnull.
+    Doing so violates the contract that the method should handle a null parameter.
+        </p>]]>
+      </Details>
+  </BugPattern>
+
+  <BugPattern type="NP_METHOD_RETURN_RELAXING_ANNOTATION">
+    <ShortDescription>Method relaxes nullness annotation on return value</ShortDescription>
+    <LongDescription>Method {1} overrides the return value nullness annotation in an incompatible way.</LongDescription>
+    <Details>
+        <![CDATA[<p>
+        A method should always implement the contract of a method it overrides. Thus, if a method takes is annotated
+    as returning a @Nonnull value,
+    you shouldn't override that method in a subclass with a method annotated as returning a @Nullable or @CheckForNull value.
+    Doing so violates the contract that the method shouldn't return null.
+        </p>]]>
+      </Details>
+  </BugPattern>
   <!--
   **********************************************************************
    BugCodes
@@ -8025,6 +8560,7 @@ after the call to initLogging, the logger configuration is lost
   <BugCode abbrev="TEST">Testing prototype and incomplete bug pattern</BugCode>
   <BugCode abbrev="IMSE">Dubious catching of IllegalMonitorStateException</BugCode>
   <BugCode abbrev="CN">Bad implementation of cloneable idiom</BugCode>
+  <BugCode abbrev="CAA">Covariant array assignment</BugCode>
   <BugCode abbrev="AT">Possible atomicity violation</BugCode>
   <BugCode abbrev="FI">Incorrect use of finalizers</BugCode>
   <BugCode abbrev="ES">Checking String equality using == or !=</BugCode>
@@ -8046,7 +8582,7 @@ after the call to initLogging, the logger configuration is lost
   <BugCode abbrev="NN">Naked notify</BugCode>
   <BugCode abbrev="UW">Unconditional wait</BugCode>
   <BugCode abbrev="SP">Method spins on field</BugCode>
-  <BugCode abbrev="DC">Possible double check of field</BugCode>
+  <BugCode abbrev="DC">Double check pattern</BugCode>
   <BugCode abbrev="Wa">Wait not in loop</BugCode>
   <BugCode abbrev="No">Using notify() rather than notifyAll()</BugCode>
   <BugCode abbrev="DE">Dropped or ignored exception</BugCode>
@@ -8058,6 +8594,7 @@ after the call to initLogging, the logger configuration is lost
   <BugCode abbrev="RS">Class's readObject() method is synchronized</BugCode>
   <BugCode abbrev="SC">Constructor invokes Thread.start()</BugCode>
   <BugCode abbrev="MS">Mutable static field</BugCode>
+  <BugCode abbrev="ME">Mutable enum field</BugCode>
   <BugCode abbrev="EI">Method returning array may expose internal representation</BugCode>
   <BugCode abbrev="Nm">Confusing method name</BugCode>
   <BugCode abbrev="SS">Unread field should be static</BugCode>
@@ -8066,6 +8603,7 @@ after the call to initLogging, the logger configuration is lost
   <BugCode abbrev="UwF">Unwritten field</BugCode>
   <BugCode abbrev="SIC">Inner class could be made static</BugCode>
   <BugCode abbrev="TLW">Wait with two locks held</BugCode>
+  <BugCode abbrev="RANGE">Range checks</BugCode>
   <BugCode abbrev="RV">Bad use of return value from method</BugCode>
   <BugCode abbrev="LG">Logger problem</BugCode>
   <BugCode abbrev="IA">Ambiguous invocation</BugCode>
@@ -8095,6 +8633,8 @@ after the call to initLogging, the logger configuration is lost
   <BugCode abbrev="NS">Suspicious use of non-short-circuit boolean operator</BugCode>
   <BugCode abbrev="ODR">Database resource not closed on all paths</BugCode>
   <BugCode abbrev="SBSC">String concatenation in loop using + operator</BugCode>
+  <BugCode abbrev="IIL">Inefficient code which can be moved outside of the loop</BugCode>
+  <BugCode abbrev="IIO">Inefficient use of String.indexOf(String) or String.lastIndexOf(String)</BugCode>
   <BugCode abbrev="ITA">Inefficient use of collection.toArray(new Foo[0])</BugCode>
   <BugCode abbrev="SW">Swing coding rules</BugCode>
   <BugCode abbrev="IJU">Improperly implemented JUnit TestCase</BugCode>
@@ -8112,6 +8652,8 @@ after the call to initLogging, the logger configuration is lost
   <BugCode abbrev="REC">RuntimeException capture</BugCode>
   <BugCode abbrev="FE">Test for floating point equality</BugCode>
   <BugCode abbrev="UM">Unnecessary Math on constants</BugCode>
+  <BugCode abbrev="UC">Useless code</BugCode>
+  <BugCode abbrev="CNT">Rough value of known constant</BugCode>
   <BugCode abbrev="CD">Circular Dependencies</BugCode>
   <BugCode abbrev="RI">Redundant Interfaces</BugCode>
   <BugCode abbrev="MTIA">Multithreaded Instance Access</BugCode>
