@@ -22,7 +22,7 @@ public class FindBugsMessagesTest {
     /** Error message. */
     private static final String WRONG_WARNING_MESSAGE = "Wrong warning message.";
     /** Expected number of patterns. */
-    private static final int EXPECTED_PATTERNS = 432;
+    private static final int EXPECTED_PATTERNS = 468;
     /** Expected number of patterns in fb-contrib. */
     private static final int EXPECTED_CONTRIB_PATTERNS = 172;
     /** Expected number of patterns in find-sec-bugs. */
@@ -104,9 +104,9 @@ public class FindBugsMessagesTest {
      */
     @Test
     public void parse() {
-        assertTrue(WRONG_WARNING_MESSAGE, FindBugsMessages.getInstance().getMessage(NP_STORE_INTO_NONNULL_FIELD, Locale.ENGLISH).contains("A value that could be null is stored into a field that has been annotated as NonNull."));
-        assertTrue(WRONG_WARNING_MESSAGE, FindBugsMessages.getInstance().getMessage(NP_STORE_INTO_NONNULL_FIELD, Locale.GERMAN).contains("A value that could be null is stored into a field that has been annotated as NonNull."));
-        assertEquals(WRONG_WARNING_MESSAGE, "Store of null value into field annotated NonNull", FindBugsMessages.getInstance().getShortMessage(NP_STORE_INTO_NONNULL_FIELD, Locale.ENGLISH));
+        assertTrue(WRONG_WARNING_MESSAGE, FindBugsMessages.getInstance().getMessage(NP_STORE_INTO_NONNULL_FIELD, Locale.ENGLISH).contains("A value that could be null is stored into a field that has been annotated as @Nonnull."));
+        assertTrue(WRONG_WARNING_MESSAGE, FindBugsMessages.getInstance().getMessage(NP_STORE_INTO_NONNULL_FIELD, Locale.GERMAN).contains("A value that could be null is stored into a field that has been annotated as @Nonnull."));
+        assertEquals(WRONG_WARNING_MESSAGE, "Store of null value into field annotated @Nonnull", FindBugsMessages.getInstance().getShortMessage(NP_STORE_INTO_NONNULL_FIELD, Locale.ENGLISH));
         assertTrue(WRONG_WARNING_MESSAGE, FindBugsMessages.getInstance().getMessage("NMCS_NEEDLESS_MEMBER_COLLECTION_SYNCHRONIZATION", Locale.ENGLISH).contains("This class defines a private collection member as synchronized. It appears however"));
         assertEquals(WRONG_WARNING_MESSAGE, "Class defines unneeded synchronization on member collection", FindBugsMessages.getInstance().getShortMessage("NMCS_NEEDLESS_MEMBER_COLLECTION_SYNCHRONIZATION", Locale.ENGLISH));
     }
