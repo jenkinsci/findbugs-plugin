@@ -9,7 +9,7 @@
 
       <h2>${%Warnings Trend}</h2>
 
-      <table class="pane" id="summary">
+      <table class="pane" id="trend.summary">
         <tr>
           <td class="pane-header">${%All Warnings}</td>
           <td class="pane-header">${%New this build}</td>
@@ -29,10 +29,10 @@
         </tr>
         <tbody>
           <tr>
-            <td class="pane">
+            <td class="pane" id="all">
               ${it.numberOfAnnotations}
             </td>
-            <td class="pane">
+            <td class="pane" id="new">
               <j:if test="${it.numberOfNewWarnings == 0}">
                 0
               </j:if>
@@ -41,7 +41,7 @@
               </j:if>
             </td>
             <j:if test="${it.newThisWeek != 0}">
-              <td class="pane">
+              <td class="pane" >
                 ${it.newThisWeek}
               </td>
             </j:if>
@@ -50,7 +50,7 @@
                 ${it.notInCloud}
               </td>
             </j:if>
-            <td class="pane">
+            <td class="pane" id="fixed">
               <j:if test="${it.numberOfFixedWarnings == 0}">
                 0
               </j:if>
