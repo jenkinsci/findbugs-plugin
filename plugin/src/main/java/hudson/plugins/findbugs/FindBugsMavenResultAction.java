@@ -41,7 +41,8 @@ public class FindBugsMavenResultAction extends MavenResultAction<FindBugsResult>
     @Override
     public MavenAggregatedReport createAggregatedAction(final MavenModuleSetBuild build, final Map<MavenModule, List<MavenBuild>> moduleBuilds) {
         return new FindBugsMavenResultAction(build, getHealthDescriptor(), getDefaultEncoding(),
-                new FindBugsResult(build, getDefaultEncoding(), new ParserResult(), false, false));
+                new FindBugsResult(build, getDefaultEncoding(), new ParserResult(),
+                        usePreviousBuildAsStable(), useOnlyStableBuildsAsReference()));
     }
 
     @Override
