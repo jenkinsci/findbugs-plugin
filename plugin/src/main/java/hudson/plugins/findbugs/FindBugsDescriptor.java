@@ -1,5 +1,7 @@
 package hudson.plugins.findbugs;
 
+import net.sf.json.JSONObject;
+import org.kohsuke.stapler.StaplerRequest;
 import hudson.Extension;
 import hudson.plugins.analysis.core.PluginDescriptor;
 

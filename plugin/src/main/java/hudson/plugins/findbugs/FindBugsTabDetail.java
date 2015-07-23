@@ -1,6 +1,7 @@
 package hudson.plugins.findbugs;
 
-import hudson.model.AbstractBuild;
+import hudson.model.Run;
+
 import hudson.plugins.analysis.util.model.FileAnnotation;
 import hudson.plugins.analysis.views.DetailFactory;
 import hudson.plugins.analysis.views.TabDetail;
@@ -29,7 +30,7 @@ public class FindBugsTabDetail extends TabDetail {
      * @param defaultEncoding
      *            the default encoding to be used when reading and parsing files
      */
-    public FindBugsTabDetail(final AbstractBuild<?, ?> owner, final DetailFactory detailFactory, final Collection<FileAnnotation> annotations, final String url, final String defaultEncoding) {
+    public FindBugsTabDetail(final Run<?, ?> owner, final DetailFactory detailFactory, final Collection<FileAnnotation> annotations, final String url, final String defaultEncoding) {
         super(owner, detailFactory, annotations, url, defaultEncoding);
     }
 

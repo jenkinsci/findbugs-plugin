@@ -1,6 +1,7 @@
 package hudson.plugins.findbugs;
 
-import hudson.model.AbstractBuild;
+import hudson.model.Run;
+
 import hudson.plugins.analysis.core.HealthDescriptor;
 import hudson.plugins.analysis.core.PluginDescriptor;
 import hudson.plugins.analysis.core.AbstractResultAction;
@@ -27,7 +28,7 @@ public class FindBugsResultAction extends AbstractResultAction<FindBugsResult> {
      * @param result
      *            the result in this build
      */
-    public FindBugsResultAction(final AbstractBuild<?, ?> owner, final HealthDescriptor healthDescriptor, final FindBugsResult result) {
+    public FindBugsResultAction(final Run<?, ?> owner, final HealthDescriptor healthDescriptor, final FindBugsResult result) {
         super(owner, new FindBugsHealthDescriptor(healthDescriptor), result);
     }
 

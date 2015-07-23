@@ -1,11 +1,12 @@
 package hudson.plugins.findbugs;
 
-import hudson.model.AbstractBuild;
+import java.util.Collection;
+
+import hudson.model.Run;
+
 import hudson.plugins.analysis.util.model.FileAnnotation;
 import hudson.plugins.analysis.views.DetailFactory;
 import hudson.plugins.analysis.views.TabDetail;
-
-import java.util.Collection;
 
 /**
  * A detail factory that creates a FindBugs specific warnings table.
@@ -14,7 +15,7 @@ import java.util.Collection;
  */
 public class FindBugsDetailFactory extends DetailFactory {
     @Override
-    protected TabDetail createTabDetail(final AbstractBuild<?, ?> owner,
+    protected TabDetail createTabDetail(final Run<?, ?> owner,
             final Collection<FileAnnotation> annotations, final String url, final String defaultEncoding) {
         return new FindBugsTabDetail(owner, this, annotations, url, defaultEncoding);
     }

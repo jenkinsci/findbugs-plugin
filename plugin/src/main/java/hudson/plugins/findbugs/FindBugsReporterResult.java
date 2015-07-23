@@ -1,6 +1,7 @@
 package hudson.plugins.findbugs;
 
-import hudson.model.AbstractBuild;
+import hudson.model.Run;
+
 import hudson.plugins.analysis.core.ParserResult;
 import hudson.plugins.analysis.core.ResultAction;
 import hudson.plugins.analysis.core.BuildResult;
@@ -29,7 +30,7 @@ public class FindBugsReporterResult extends FindBugsResult {
      *            determines whether only stable builds should be used as
      *            reference builds or not
      */
-    public FindBugsReporterResult(final AbstractBuild<?, ?> build, final String defaultEncoding, final ParserResult result,
+    public FindBugsReporterResult(final Run<?, ?> build, final String defaultEncoding, final ParserResult result,
             final boolean usePreviousBuildAsReference, final boolean useStableBuildAsReference) {
         super(build, defaultEncoding, result, usePreviousBuildAsReference, useStableBuildAsReference,
                 FindBugsMavenResultAction.class);
