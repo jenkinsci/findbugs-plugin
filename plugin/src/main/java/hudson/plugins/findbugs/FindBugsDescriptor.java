@@ -1,8 +1,7 @@
 package hudson.plugins.findbugs;
 
-import net.sf.json.JSONObject;
-import org.kohsuke.stapler.StaplerRequest;
 import hudson.Extension;
+
 import hudson.plugins.analysis.core.PluginDescriptor;
 
 /**
@@ -13,6 +12,7 @@ import hudson.plugins.analysis.core.PluginDescriptor;
  */
 @Extension(ordinal = 100)
 public final class FindBugsDescriptor extends PluginDescriptor {
+
     /** The ID of this plug-in is used as URL. */
     static final String PLUGIN_ID = "findbugs";
     /** The URL of the result action. */
