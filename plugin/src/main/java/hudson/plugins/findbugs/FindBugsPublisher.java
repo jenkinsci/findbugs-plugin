@@ -239,7 +239,7 @@ public class FindBugsPublisher extends HealthAwarePublisher {
         logger.log("Collecting findbugs analysis files...");
 
         String defaultPattern = ANT_DEFAULT_PATTERN;
-        boolean isMavenBuild = build instanceof AbstractBuild && isMavenBuild((AbstractBuild) build);
+        boolean isMavenBuild = isMavenBuild(build);
         if (isMavenBuild) {
             defaultPattern = MAVEN_DEFAULT_PATTERN;
         }
