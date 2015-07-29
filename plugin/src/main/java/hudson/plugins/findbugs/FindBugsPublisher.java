@@ -166,7 +166,7 @@ public class FindBugsPublisher extends HealthAwarePublisher {
     /**
      * Added to properly uncoercing.
      */
-    public boolean getIsRankActivated() {
+    public boolean isIsRankActivated() {
         return isRankActivated;
     }
 
