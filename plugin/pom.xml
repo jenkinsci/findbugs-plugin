@@ -45,7 +45,7 @@
     <dependency>
       <groupId>org.jvnet.hudson.plugins</groupId>
       <artifactId>analysis-core</artifactId>
-      <version>1.73-SNAPSHOT</version>
+      <version>1.73-beta-SNAPSHOT</version><!-- TODO: change to 1.73 before release -->
     </dependency>
     <dependency>
       <groupId>org.jvnet.hudson.plugins</groupId>
