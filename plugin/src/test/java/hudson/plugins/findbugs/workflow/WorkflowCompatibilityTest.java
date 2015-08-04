@@ -1,8 +1,5 @@
 package hudson.plugins.findbugs.workflow;
 
-import java.io.File;
-import java.util.Set;
-
 import org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition;
 import org.jenkinsci.plugins.workflow.job.WorkflowJob;
 import org.junit.ClassRule;
@@ -13,7 +10,6 @@ import hudson.FilePath;
 
 import hudson.model.Result;
 
-import hudson.plugins.analysis.util.model.FileAnnotation;
 import hudson.plugins.findbugs.FindBugsResultAction;
 import hudson.plugins.findbugs.FindBugsPublisher;
 
@@ -32,11 +28,9 @@ public class WorkflowCompatibilityTest {
      */
     @Test
     public void findbugsPublisherWorkflowStep() throws Exception {
-        j.jenkins.getInjector().injectMembers(this);
         WorkflowJob job = j.jenkins.createProject(WorkflowJob.class, "wf");
-        File wfile = new File(j.jenkins.getRootDir() + "/workspace/wf/target");
-        wfile.mkdirs();
-        FilePath report = new FilePath(wfile).child("findbugs.xml");
+        FilePath workspace = j.jenkins.getWorkspaceFor(job);
+        FilePath report = workspace.child("target").child("findbugs.xml");
         report.copyFrom(WorkflowCompatibilityTest.class.getResourceAsStream("/hudson/plugins/findbugs/parser/findbugs-native.xml"));
         job.setDefinition(new CpsFlowDefinition(
         "node {" +
@@ -53,17 +47,17 @@ public class WorkflowCompatibilityTest {
      */
     @Test
     public void findbugsPublisherWorkflowStepSetLimits() throws Exception {
-        j.jenkins.getInjector().injectMembers(this);
         WorkflowJob job = j.jenkins.createProject(WorkflowJob.class, "wf2");
-        File wfile = new File(j.jenkins.getRootDir() + "/workspace/wf2/target");
-        wfile.mkdirs();
-        FilePath report = new FilePath(wfile).child("findbugsXml.xml");
+        FilePath workspace = j.jenkins.getWorkspaceFor(job);
+        FilePath report = workspace.child("target").child("findbugsXml.xml");
         report.copyFrom(WorkflowCompatibilityTest.class.getResourceAsStream("/hudson/plugins/findbugs/parser/findbugs-native.xml"));
         job.setDefinition(new CpsFlowDefinition(
         "node {" +
         "  step([$class: 'FindBugsPublisher', pattern: '**/findbugsXml.xml', failedTotalAll: '0', usePreviousBuildAsReference: false])" +
         "}"));
         j.assertBuildStatus(Result.FAILURE, job.scheduleBuild2(0).get());
+        FindBugsResultAction result = job.getLastBuild().getAction(FindBugsResultAction.class);
+        assertTrue(result.getResult().getAnnotations().size() == 2);
     }
 
     /**
@@ -72,11 +66,9 @@ public class WorkflowCompatibilityTest {
      */
     @Test
     public void findbugsPublisherWorkflowStepFailure() throws Exception {
-        j.jenkins.getInjector().injectMembers(this);
         WorkflowJob job = j.jenkins.createProject(WorkflowJob.class, "wf3");
-        File wfile = new File(j.jenkins.getRootDir() + "/workspace/wf3/target");
-        wfile.mkdirs();
-        FilePath report = new FilePath(wfile).child("findbugsXml.xml");
+        FilePath workspace = j.jenkins.getWorkspaceFor(job);
+        FilePath report = workspace.child("target").child("findbugsXml.xml");
         report.copyFrom(WorkflowCompatibilityTest.class.getResourceAsStream("/hudson/plugins/findbugs/parser/findbugs-native.xml"));
         job.setDefinition(new CpsFlowDefinition(
         "node {" +

@@ -1,7 +1,6 @@
 package hudson.plugins.findbugs;
 
 import hudson.Extension;
-
 import hudson.plugins.analysis.core.PluginDescriptor;
 
 /**
