@@ -38,7 +38,7 @@ public class WorkflowCompatibilityTest {
         "}"));
         j.assertBuildStatusSuccess(job.scheduleBuild2(0));
         FindBugsResultAction result = job.getLastBuild().getAction(FindBugsResultAction.class);
-        assertTrue(result.getResult().getAnnotations().size() == 2);
+        assertEquals(result.getResult().getAnnotations().size(), 2);
     }
 
     /**
@@ -57,7 +57,7 @@ public class WorkflowCompatibilityTest {
         "}"));
         j.assertBuildStatus(Result.FAILURE, job.scheduleBuild2(0).get());
         FindBugsResultAction result = job.getLastBuild().getAction(FindBugsResultAction.class);
-        assertTrue(result.getResult().getAnnotations().size() == 2);
+        assertEquals(result.getResult().getAnnotations().size(), 2);
     }
 
     /**
@@ -76,6 +76,6 @@ public class WorkflowCompatibilityTest {
         "}"));
         j.assertBuildStatus(Result.UNSTABLE, job.scheduleBuild2(0).get());
         FindBugsResultAction result = job.getLastBuild().getAction(FindBugsResultAction.class);
-        assertTrue(result.getResult().getAnnotations().size() == 2);
+        assertEquals(result.getResult().getAnnotations().size(), 2);
     }
 }

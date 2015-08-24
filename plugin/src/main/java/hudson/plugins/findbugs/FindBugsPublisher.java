@@ -13,7 +13,6 @@ import hudson.matrix.MatrixBuild;
 
 import hudson.model.Action;
 import hudson.model.BuildListener;
-import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.Run;
 
@@ -147,6 +146,10 @@ public class FindBugsPublisher extends HealthAwarePublisher {
     }
     // CHECKSTYLE:ON
 
+    /**
+     * Default data bound constructor.
+     * Use setters to initialize the object if needed.
+     */
     @DataBoundConstructor
     public FindBugsPublisher() {
         super(PLUGIN_NAME);
@@ -255,8 +258,6 @@ public class FindBugsPublisher extends HealthAwarePublisher {
 
         return result;
     }
-
-
 
     @Override
     public FindBugsDescriptor getDescriptor() {
