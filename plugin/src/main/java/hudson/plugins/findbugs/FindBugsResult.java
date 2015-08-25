@@ -157,23 +157,4 @@ public class FindBugsResult extends BuildResult {
     protected Class<? extends ResultAction<? extends BuildResult>> getResultActionType() {
         return FindBugsResultAction.class;
     }
-
-    /**
-     * @deprecated use {@link #FindBugsResult(Run, String, ParserResult, boolean, boolean)} instead
-     */
-    @Deprecated
-    public FindBugsResult(final AbstractBuild<?, ?> build, final String defaultEncoding, final ParserResult result,
-            final boolean usePreviousBuildAsReference, final boolean useStableBuildAsReference) {
-        this((Run<?, ?>) build, defaultEncoding, result, usePreviousBuildAsReference, useStableBuildAsReference);
-    }
-
-    /**
-     * @deprecated use {@link #FindBugsResult(Run, String, ParserResult, boolean, boolean, Class)} instead
-     */
-    @Deprecated
-    protected FindBugsResult(final AbstractBuild<?, ?> build, final String defaultEncoding, final ParserResult result,
-            final boolean usePreviousBuildAsReference, final boolean useStableBuildAsReference,
-            final Class<? extends ResultAction<FindBugsResult>> actionType) {
-        this((Run<?, ?>) build, defaultEncoding, result, usePreviousBuildAsReference, useStableBuildAsReference, actionType);
-    }
 }
