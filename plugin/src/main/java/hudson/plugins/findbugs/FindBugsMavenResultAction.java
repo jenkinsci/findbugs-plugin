@@ -7,8 +7,10 @@ import java.util.List;
 import java.util.Map;
 
 import hudson.maven.*;
-import hudson.model.AbstractBuild;
+
+import hudson.model.Run;
 import hudson.model.Action;
+
 import hudson.plugins.analysis.core.HealthDescriptor;
 import hudson.plugins.analysis.core.MavenResultAction;
 import hudson.plugins.analysis.core.ParserResult;
@@ -33,7 +35,7 @@ public class FindBugsMavenResultAction extends MavenResultAction<FindBugsResult>
      * @param result
      *            the result in this build
      */
-    public FindBugsMavenResultAction(final AbstractBuild<?, ?> owner, final HealthDescriptor healthDescriptor,
+    public FindBugsMavenResultAction(final Run<?, ?> owner, final HealthDescriptor healthDescriptor,
             final String defaultEncoding, final FindBugsResult result) {
         super(new FindBugsResultAction(owner, healthDescriptor, result), defaultEncoding, "FINDBUGS");
     }
