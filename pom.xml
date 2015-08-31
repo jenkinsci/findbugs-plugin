@@ -6,6 +6,7 @@
     <groupId>org.jenkins-ci</groupId>
     <artifactId>jenkins</artifactId>
     <version>1.31</version>
+    <relativePath></relativePath>
   </parent>
 
   <groupId>org.jvnet.hudson.plugins.findbugs</groupId>
