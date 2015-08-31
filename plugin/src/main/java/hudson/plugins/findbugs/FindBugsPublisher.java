@@ -143,11 +143,8 @@ public class FindBugsPublisher extends HealthAwarePublisher {
     public BuildResult perform(final Run<?, ?> build, final FilePath workspace, final PluginLogger logger) throws InterruptedException, IOException {
         logger.log("Collecting findbugs analysis files...");
 
-        String defaultPattern = ANT_DEFAULT_PATTERN;
         boolean isMavenBuild = isMavenBuild(build);
-        if (isMavenBuild) {
-            defaultPattern = MAVEN_DEFAULT_PATTERN;
-        }
+        String defaultPattern = isMavenBuild ? MAVEN_DEFAULT_PATTERN : ANT_DEFAULT_PATTERN;
         FilesParser collector = new FilesParser(PLUGIN_NAME, StringUtils.defaultIfEmpty(getPattern(), defaultPattern),
                 new FindBugsParser(isRankActivated, getExcludePattern(), getIncludePattern()), shouldDetectModules(), isMavenBuild);
 
