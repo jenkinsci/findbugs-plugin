@@ -20,6 +20,7 @@ import org.xml.sax.SAXException;
 import com.google.common.collect.Sets;
 
 import edu.umd.cs.findbugs.*;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import edu.umd.cs.findbugs.ba.SourceFile;
 import edu.umd.cs.findbugs.ba.SourceFinder;
 import edu.umd.cs.findbugs.cloud.Cloud;
@@ -52,7 +53,7 @@ public class FindBugsParser implements AnnotationParser {
     private static final int NORMAL_PRIORITY_LOWEST_RANK = 9;
 
     /** Collection of source folders. */
-    @edu.umd.cs.findbugs.annotations.SuppressWarnings("SE")
+    @SuppressFBWarnings("SE")
     private final List<String> mavenSources = new ArrayList<String>();
 
     /** Determines whether to use the rank when evaluation the priority. @since 4.26 */
@@ -377,7 +378,7 @@ public class FindBugsParser implements AnnotationParser {
      *            the bug
      * @return true, if this warning is not a bug and should be ignored
      */
-    @edu.umd.cs.findbugs.annotations.SuppressWarnings("NP")
+    @SuppressFBWarnings("NP")
     private boolean setCloudInformation(final SortedBugCollection collection, final BugInstance warning, final Bug bug) {
         Cloud cloud = collection.getCloud();
         cloud.waitUntilIssueDataDownloaded();

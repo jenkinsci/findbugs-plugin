@@ -3,6 +3,8 @@ package hudson.plugins.findbugs;
 import java.util.List;
 import java.util.Map;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import hudson.maven.AggregatableAction;
 import hudson.maven.MavenAggregatedReport;
 import hudson.maven.MavenBuild;
@@ -22,6 +24,7 @@ import hudson.plugins.analysis.core.ParserResult;
  * @author Ulli Hafner
  * @deprecated not used anymore
  */
+@SuppressWarnings("deprecation")
 @Deprecated
 public class MavenFindBugsResultAction extends FindBugsResultAction implements AggregatableAction, MavenAggregatedReport {
     /** The default encoding to be used when reading and parsing files. */
@@ -79,7 +82,7 @@ public class MavenFindBugsResultAction extends FindBugsResultAction implements A
     }
 
     /** Backward compatibility. @deprecated */
-    @edu.umd.cs.findbugs.annotations.SuppressWarnings("")
+    @SuppressFBWarnings("")
     @SuppressWarnings("PMD")
     @Deprecated
     private transient String height;

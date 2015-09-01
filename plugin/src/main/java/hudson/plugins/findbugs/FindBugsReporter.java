@@ -11,21 +11,20 @@ import org.codehaus.plexus.component.configurator.ComponentConfigurationExceptio
 import org.codehaus.plexus.configuration.xml.XmlPlexusConfiguration;
 import org.kohsuke.stapler.DataBoundConstructor;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import hudson.FilePath;
 import hudson.maven.MavenAggregatedReport;
-import hudson.maven.MavenBuildProxy;
-import hudson.maven.MojoInfo;
 import hudson.maven.MavenBuild;
+import hudson.maven.MavenBuildProxy;
 import hudson.maven.MavenModule;
-
+import hudson.maven.MojoInfo;
 import hudson.model.BuildListener;
-
 import hudson.plugins.analysis.core.FilesParser;
 import hudson.plugins.analysis.core.HealthAwareReporter;
 import hudson.plugins.analysis.core.ParserResult;
 import hudson.plugins.analysis.util.PluginLogger;
 import hudson.plugins.findbugs.parser.FindBugsParser;
-
 import hudson.remoting.VirtualChannel;
 
 /**
@@ -228,7 +227,7 @@ public class FindBugsReporter extends HealthAwareReporter<FindBugsResult> {
     @Override
     protected FindBugsResult createResult(final MavenBuild build, final ParserResult project) {
         return new FindBugsReporterResult(build, getDefaultEncoding(), project,
-                usePreviousBuildAsStable(), useOnlyStableBuildsAsReference());
+                usePreviousBuildAsReference(), useOnlyStableBuildsAsReference());
     }
 
     @Override
@@ -272,7 +271,7 @@ public class FindBugsReporter extends HealthAwareReporter<FindBugsResult> {
 
     /** Ant file-set pattern of files to work with. @deprecated */
     @SuppressWarnings("PMD")
-    @edu.umd.cs.findbugs.annotations.SuppressWarnings("SE")
+    @SuppressFBWarnings("SE")
     @Deprecated
     private transient String pattern; // obsolete since release 2.5
 }

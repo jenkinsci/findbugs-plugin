@@ -2,7 +2,11 @@ package hudson.plugins.findbugs;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -10,6 +14,8 @@ import org.apache.commons.digester3.Digester;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.xml.sax.SAXException;
+
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import hudson.plugins.analysis.util.SaxSetup;
 
@@ -66,7 +72,7 @@ public final class FindBugsMessages {
      * @throws IOException
      *             if we can't read a file
      */
-    @edu.umd.cs.findbugs.annotations.SuppressWarnings({"DE", "REC"})
+    @SuppressFBWarnings({"DE", "REC"})
     private void initialize() throws IOException, SAXException {
         synchronized (messages) {
             loadMessages("messages.xml", messages, shortMessages);

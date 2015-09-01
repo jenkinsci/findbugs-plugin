@@ -1,15 +1,14 @@
 package hudson.plugins.findbugs.parser;
 
+import javax.annotation.CheckForNull;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.Random;
 
-import javax.annotation.CheckForNull;
-
 import org.apache.commons.lang.StringUtils;
 import org.jvnet.localizer.LocaleProvider;
 
-import hudson.model.Hudson;
+import jenkins.model.Jenkins;
 
 import hudson.plugins.analysis.util.model.AbstractAnnotation;
 import hudson.plugins.analysis.util.model.Priority;
@@ -303,7 +302,7 @@ public class Bug extends AbstractAnnotation {
     }
 
     private String getImage(final String image) {
-        Hudson hudson = Hudson.getInstance();
+        Jenkins hudson = Jenkins.getInstance();
         String rootUrl;
         if (hudson == null) {
             rootUrl = StringUtils.EMPTY;
