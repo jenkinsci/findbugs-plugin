@@ -8,6 +8,8 @@ import org.apache.commons.codec.binary.Hex;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 /**
  * Efficient representation for mostly hexadecimal strings.
  *
@@ -28,7 +30,7 @@ import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
  *
  * @author Kohsuke Kawaguchi
  */
-@edu.umd.cs.findbugs.annotations.SuppressFBWarnings("")
+@SuppressFBWarnings("")
 @SuppressWarnings({"PMD", "all"})
 //CHECKSTYLE:OFF
 public final class HexishString implements Serializable {

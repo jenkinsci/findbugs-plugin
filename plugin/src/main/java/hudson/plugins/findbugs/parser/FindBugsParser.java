@@ -5,7 +5,13 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -19,7 +25,11 @@ import org.xml.sax.SAXException;
 
 import com.google.common.collect.Sets;
 
-import edu.umd.cs.findbugs.*;
+import edu.umd.cs.findbugs.BugAnnotation;
+import edu.umd.cs.findbugs.BugInstance;
+import edu.umd.cs.findbugs.Project;
+import edu.umd.cs.findbugs.SortedBugCollection;
+import edu.umd.cs.findbugs.SourceLineAnnotation;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import edu.umd.cs.findbugs.ba.SourceFile;
 import edu.umd.cs.findbugs.ba.SourceFinder;
