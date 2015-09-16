@@ -26,7 +26,7 @@ public class FindBugsMessagesTest {
     /** Expected number of patterns in fb-contrib. */
     private static final int EXPECTED_CONTRIB_PATTERNS = 172;
     /** Expected number of patterns in find-sec-bugs. */
-    private static final int EXPECTED_SECURITY_PATTERNS = 56;
+    private static final int EXPECTED_SECURITY_PATTERNS = 67;
 
     /**
      * Verifies that the total number of supported bug messages is correct.
