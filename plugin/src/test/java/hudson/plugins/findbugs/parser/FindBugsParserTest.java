@@ -2,7 +2,14 @@ package hudson.plugins.findbugs.parser;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
 import org.dom4j.DocumentException;
@@ -12,8 +19,11 @@ import org.xml.sax.SAXException;
 import static org.junit.Assert.*;
 
 import hudson.plugins.analysis.test.AbstractEnglishLocaleTest;
-import hudson.plugins.analysis.util.SaxSetup;
-import hudson.plugins.analysis.util.model.*;
+import hudson.plugins.analysis.util.model.FileAnnotation;
+import hudson.plugins.analysis.util.model.JavaPackage;
+import hudson.plugins.analysis.util.model.LineRange;
+import hudson.plugins.analysis.util.model.MavenModule;
+import hudson.plugins.analysis.util.model.Priority;
 import hudson.plugins.findbugs.Messages;
 
 /**
@@ -140,46 +150,6 @@ public class FindBugsParserTest extends AbstractEnglishLocaleTest {
                 "issue12314.xml", Priority.NORMAL,
                 "com/sedsystems/core/valid/Transformers.java", "com.sedsystems.core.valid",
                 60, 60, 1);
-    }
-
-    /**
-     * Checks that the SAX property is overwritten with Xerces if it has been set to another value.
-     *
-     * @throws IOException
-     *             in case of an error
-     * @throws SAXException
-     *             in case of an error
-     * @throws DocumentException
-     *             in case of an error
-     * @see <a href="http://issues.jenkins-ci.org/browse/JENKINS-7312">Issue 7312</a>
-     * @see <a href="http://issues.jenkins-ci.org/browse/JENKINS-7932">Issue 7932</a>
-     */
-    @Test
-    public void issue7312and7932() throws IOException, SAXException, DocumentException {
-        String saxParser = this.getClass().getName();
-        System.setProperty(SaxSetup.SAX_DRIVER_PROPERTY, saxParser);
-        MavenModule module = parseFile("issue7312.xml", false);
-        assertEquals("Wrong number of warnings", 0, module.getNumberOfAnnotations());
-        assertEquals("Wrong sax parser property", saxParser, System.getProperty(SaxSetup.SAX_DRIVER_PROPERTY));
-    }
-
-    /**
-     * Checks that the SAX property is not touched if it is null.
-     *
-     * @throws IOException
-     *             in case of an error
-     * @throws SAXException
-     *             in case of an error
-     * @throws DocumentException
-     *             in case of an error
-     * @see <a href="http://issues.jenkins-ci.org/browse/JENKINS-7932">Issue 7932</a>
-     */
-    @Test
-    public void issue7932Null() throws IOException, SAXException, DocumentException {
-        System.clearProperty(SaxSetup.SAX_DRIVER_PROPERTY);
-        MavenModule module = parseFile("issue7312.xml", false);
-        assertEquals("Wrong number of warnings", 0, module.getNumberOfAnnotations());
-        assertNull("Wrong sax parser property", System.getProperty(SaxSetup.SAX_DRIVER_PROPERTY));
     }
 
     /**

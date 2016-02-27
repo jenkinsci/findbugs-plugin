@@ -36,7 +36,6 @@ import edu.umd.cs.findbugs.ba.SourceFinder;
 import edu.umd.cs.findbugs.cloud.Cloud;
 
 import hudson.plugins.analysis.core.AnnotationParser;
-import hudson.plugins.analysis.util.SaxSetup;
 import hudson.plugins.analysis.util.TreeStringBuilder;
 import hudson.plugins.analysis.util.model.FileAnnotation;
 import hudson.plugins.analysis.util.model.LineRange;
@@ -363,7 +362,6 @@ public class FindBugsParser implements AnnotationParser {
     }
 
     private SortedBugCollection readXml(final InputStream file) throws IOException, DocumentException {
-        SaxSetup sax = new SaxSetup();
         ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader(FindBugsParser.class.getClassLoader());
@@ -373,7 +371,6 @@ public class FindBugsParser implements AnnotationParser {
         }
         finally {
             Thread.currentThread().setContextClassLoader(contextClassLoader);
-            sax.cleanup();
         }
     }
 

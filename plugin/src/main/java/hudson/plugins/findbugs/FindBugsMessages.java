@@ -17,8 +17,6 @@ import org.xml.sax.SAXException;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-import hudson.plugins.analysis.util.SaxSetup;
-
 /**
  * Parses the FindBugs pattern descriptions and provides access to these HTML messages.
  *
@@ -39,19 +37,15 @@ public final class FindBugsMessages {
     }
 
     private static FindBugsMessages initializeSingleton() {
-        FindBugsMessages res = new FindBugsMessages();
-        SaxSetup sax = new SaxSetup();
+        FindBugsMessages messages = new FindBugsMessages();
         try {
-            res.initialize();
+            messages.initialize();
         }
         catch (Exception exception) {
             Logger.getLogger(FindBugsMessages.class.getName()).log(Level.WARNING,
                     "FindBugsMessages initializeSingleton failed", exception);
         }
-        finally {
-            sax.cleanup();
-        }
-        return res;
+        return messages;
     }
 
     /**
