@@ -16,6 +16,7 @@ import hudson.model.BuildListener;
 import hudson.model.AbstractProject;
 import hudson.model.Run;
 
+import hudson.model.TaskListener;
 import hudson.plugins.analysis.core.FilesParser;
 import hudson.plugins.analysis.core.HealthAwarePublisher;
 import hudson.plugins.analysis.core.ParserResult;
@@ -145,7 +146,8 @@ public class FindBugsPublisher extends HealthAwarePublisher {
 
         boolean isMavenBuild = isMavenBuild(build);
         String defaultPattern = isMavenBuild ? MAVEN_DEFAULT_PATTERN : ANT_DEFAULT_PATTERN;
-        FilesParser collector = new FilesParser(PLUGIN_NAME, StringUtils.defaultIfEmpty(getPattern(), defaultPattern),
+        FilesParser collector = new FilesParser(PLUGIN_NAME,
+                StringUtils.defaultIfEmpty(expandFilePattern(getPattern(), build.getEnvironment(TaskListener.NULL)), defaultPattern),
                 new FindBugsParser(isRankActivated, getExcludePattern(), getIncludePattern()), shouldDetectModules(), isMavenBuild);
 
         ParserResult project = workspace.act(collector);
