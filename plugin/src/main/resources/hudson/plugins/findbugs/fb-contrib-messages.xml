@@ -4684,20 +4684,6 @@
 	       ]]>
 	   </Details>
 	</BugPattern>
-	
-	<BugPattern type="CD_CIRCULAR_DEPENDENCY">
-        <ShortDescription>Test for circular dependencies among classes</ShortDescription>
-        <LongDescription>Class {0} has a circular dependency with other classes</LongDescription>
-        <Details>
-		   <![CDATA[
-		    <p>
-		    This class has a circular dependency with other classes. This makes building these classes
-		    difficult, as each is dependent on the other to build correctly. Consider using interfaces
-		    to break the hard dependency.
-		    </p>
-		    ]]>
-        </Details>
-    </BugPattern>
     
     <BugPattern type="MUC_MODIFYING_UNMODIFIABLE_COLLECTION">
         <ShortDescription>This method attempts to modify collection that appears to possibly be immutable</ShortDescription>
