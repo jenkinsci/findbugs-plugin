@@ -32,6 +32,8 @@ public final class FindBugsMessages {
     private final Map<String, String> jaShortMessages = new HashMap<String, String>();
     private final Map<String, String> frShortMessages = new HashMap<String, String>();
 
+    private static Logger logger = Logger.getLogger(FindBugsMessages.class.getName());
+
     private static class FindBugsMessagesHolder {
         private static FindBugsMessages INSTANCE = FindBugsMessages.initializeSingleton();
     }
@@ -42,7 +44,7 @@ public final class FindBugsMessages {
             messages.initialize();
         }
         catch (Exception exception) {
-            Logger.getLogger(FindBugsMessages.class.getName()).log(Level.WARNING,
+            logger.log(Level.WARNING,
                     "FindBugsMessages initializeSingleton failed", exception);
         }
         return messages;
@@ -89,6 +91,9 @@ public final class FindBugsMessages {
             file = FindBugsMessages.class.getResourceAsStream(fileName);
             List<Pattern> patterns = parse(file);
             for (Pattern pattern : patterns) {
+                if(messagesCache.get(pattern.getType()) != null || shortMessagesCache.get(pattern.getType()) != null) {
+                    logger.warning("The bug pattern "+pattern.getType()+" was already loaded. It could be a duplicate.");
+                }
                 messagesCache.put(pattern.getType(), pattern.getDescription());
                 shortMessagesCache.put(pattern.getType(), pattern.getShortDescription());
             }
