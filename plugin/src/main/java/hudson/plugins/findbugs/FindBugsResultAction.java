@@ -1,5 +1,8 @@
 package hudson.plugins.findbugs;
 
+import java.util.Collection;
+
+import hudson.model.Action;
 import hudson.model.Run;
 
 import hudson.plugins.analysis.core.HealthDescriptor;
@@ -40,5 +43,10 @@ public class FindBugsResultAction extends AbstractResultAction<FindBugsResult> {
     @Override
     protected PluginDescriptor getDescriptor() {
         return new FindBugsDescriptor();
+    }
+
+    @Override
+    public Collection<? extends Action> getProjectActions() {
+        return asSet(new FindBugsProjectAction(getJob()));
     }
 }

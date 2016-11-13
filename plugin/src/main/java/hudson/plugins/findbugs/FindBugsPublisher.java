@@ -10,17 +10,13 @@ import hudson.FilePath;
 import hudson.Launcher;
 import hudson.matrix.MatrixAggregator;
 import hudson.matrix.MatrixBuild;
-
-import hudson.model.Action;
 import hudson.model.BuildListener;
-import hudson.model.AbstractProject;
 import hudson.model.Run;
-
 import hudson.model.TaskListener;
+import hudson.plugins.analysis.core.BuildResult;
 import hudson.plugins.analysis.core.FilesParser;
 import hudson.plugins.analysis.core.HealthAwarePublisher;
 import hudson.plugins.analysis.core.ParserResult;
-import hudson.plugins.analysis.core.BuildResult;
 import hudson.plugins.analysis.util.PluginLogger;
 import hudson.plugins.findbugs.parser.FindBugsParser;
 
@@ -133,11 +129,6 @@ public class FindBugsPublisher extends HealthAwarePublisher {
     @DataBoundSetter
     public void setIncludePattern(String includePattern) {
         this.includePattern = includePattern;
-    }
-
-    @Override
-    public Action getProjectAction(final AbstractProject<?, ?> project) {
-        return new FindBugsProjectAction(project);
     }
 
     @Override

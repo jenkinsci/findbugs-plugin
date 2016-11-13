@@ -1,14 +1,14 @@
 package hudson.plugins.findbugs;
 
-import hudson.model.AbstractProject;
-import hudson.plugins.analysis.core.ResultAction;
-import hudson.plugins.analysis.core.AbstractProjectAction;
-import hudson.plugins.analysis.graph.BuildResultGraph;
-import hudson.plugins.findbugs.dashboard.FindbugsEvaluationsGraph;
-
 import java.util.List;
 
 import com.google.common.collect.Lists;
+
+import hudson.model.Job;
+import hudson.plugins.analysis.core.AbstractProjectAction;
+import hudson.plugins.analysis.core.ResultAction;
+import hudson.plugins.analysis.graph.BuildResultGraph;
+import hudson.plugins.findbugs.dashboard.FindbugsEvaluationsGraph;
 
 /**
  * Entry point to visualize the FindBugs trend graph in the project screen.
@@ -20,24 +20,24 @@ public class FindBugsProjectAction extends AbstractProjectAction<ResultAction<Fi
     /**
      * Instantiates a new {@link FindBugsProjectAction}.
      *
-     * @param project
-     *            the project that owns this action
+     * @param job
+     *            the job that owns this action
      */
-    public FindBugsProjectAction(final AbstractProject<?, ?> project) {
-        this(project, FindBugsResultAction.class);
+    public FindBugsProjectAction(final Job<?, ?> job) {
+        this(job, FindBugsResultAction.class);
     }
 
     /**
      * Instantiates a new {@link FindBugsProjectAction}.
      *
-     * @param project
-     *            the project that owns this action
+     * @param job
+     *            the job that owns this action
      * @param type
      *            the result action type
      */
-    public FindBugsProjectAction(final AbstractProject<?, ?> project,
+    public FindBugsProjectAction(final Job<?, ?> job,
             final Class<? extends ResultAction<FindBugsResult>> type) {
-        super(project, type, Messages._FindBugs_ProjectAction_Name(), Messages._FindBugs_Trend_Name(),
+        super(job, type, Messages._FindBugs_ProjectAction_Name(), Messages._FindBugs_Trend_Name(),
                 FindBugsDescriptor.PLUGIN_ID, FindBugsDescriptor.ICON_URL, FindBugsDescriptor.RESULT_URL);
     }
 
