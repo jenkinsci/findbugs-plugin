@@ -1,18 +1,17 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
     <groupId>org.jenkins-ci</groupId>
     <artifactId>jenkins</artifactId>
     <version>1.31</version>
-    <relativePath></relativePath>
+    <relativePath />
   </parent>
 
   <groupId>org.jvnet.hudson.plugins.findbugs</groupId>
   <artifactId>parent</artifactId>
   <packaging>pom</packaging>
-  <version>1.3-SNAPSHOT</version>
+  <version>1.3</version>
   <name>FindBugs Parent</name>
   <description>Parent pom to build findbugs plug-in that is composed of plug-in and shaded findbugs library
   </description>
@@ -47,6 +46,7 @@
     <connection>scm:git:git://github.com/jenkinsci/findbugs-plugin.git</connection>
     <developerConnection>scm:git:git@github.com:jenkinsci/findbugs-plugin.git</developerConnection>
     <url>https://github.com/jenkinsci/findbugs-plugin</url>
+    <tag>parent-1.3</tag>
   </scm>
 
   <build>
