@@ -2,6 +2,7 @@ package hudson.plugins.findbugs;
 
 import hudson.Extension;
 import hudson.plugins.analysis.core.PluginDescriptor;
+import org.jenkinsci.Symbol;
 
 /**
  * Descriptor for the class {@link FindBugsPublisher}. Used as a singleton. The
@@ -9,7 +10,7 @@ import hudson.plugins.analysis.core.PluginDescriptor;
  *
  * @author Ulli Hafner
  */
-@Extension(ordinal = 100)
+@Extension(ordinal = 100) @Symbol("findbugs")
 public final class FindBugsDescriptor extends PluginDescriptor {
     /** The ID of this plug-in is used as URL. */
     static final String PLUGIN_ID = "findbugs";
