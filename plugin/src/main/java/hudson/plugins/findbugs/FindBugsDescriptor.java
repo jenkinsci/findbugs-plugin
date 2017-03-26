@@ -1,5 +1,7 @@
 package hudson.plugins.findbugs;
 
+import org.jenkinsci.Symbol;
+
 import hudson.Extension;
 import hudson.plugins.analysis.core.PluginDescriptor;
 
@@ -9,7 +11,7 @@ import hudson.plugins.analysis.core.PluginDescriptor;
  *
  * @author Ulli Hafner
  */
-@Extension(ordinal = 100)
+@Extension(ordinal = 100) @Symbol("findbugs")
 public final class FindBugsDescriptor extends PluginDescriptor {
     /** The ID of this plug-in is used as URL. */
     static final String PLUGIN_ID = "findbugs";
