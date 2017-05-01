@@ -24,9 +24,9 @@ public class FindBugsMessagesTest {
     /** Expected number of patterns. */
     private static final int EXPECTED_PATTERNS = 468;
     /** Expected number of patterns in fb-contrib. */
-    private static final int EXPECTED_CONTRIB_PATTERNS = 257;
+    private static final int EXPECTED_CONTRIB_PATTERNS = 277;
     /** Expected number of patterns in find-sec-bugs. */
-    private static final int EXPECTED_SECURITY_PATTERNS = 86;
+    private static final int EXPECTED_SECURITY_PATTERNS = 113;
 
     /**
      * Verifies that the total number of supported bug messages is correct.
@@ -120,4 +120,3 @@ public class FindBugsMessagesTest {
         assertTrue(WRONG_WARNING_MESSAGE, FindBugsMessages.getInstance().getMessage(NP_STORE_INTO_NONNULL_FIELD, Locale.FRANCE).contains("Une valeur qui pourrait"));
     }
 }
-
