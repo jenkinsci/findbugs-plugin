@@ -36,7 +36,7 @@
 			<![CDATA[
 			<p>Looks for appending strings inside of calls to StringBuffer or StringBuilder append.</p>
 			<pre>
-				StringBuffer sb = new StringBuffer();
+				StringBuilder sb = new StringBuilder();
 				sb.append(a + b);
 				return sb.toString();
 			</pre>
@@ -75,7 +75,7 @@
 		<Details>
 			<![CDATA[
 			<p>Looks for parameters that are defined by classes, but where the method only use methods defined by an
-			implemented interface or super class of that class. Relying on concrete classes in public signatures causes cohesion,
+			implemented interface or superclass of that class. Relying on concrete classes in public signatures causes cohesion,
 			and makes low impact changes more difficult.</p>
 			<p>It is a slow detector.</p>
 			]]>
@@ -115,6 +115,15 @@
 			If a RuntimeException is declared, it implies that this exception type is expected to happen,
 			which if true should be handled in code, and not propagated. </p>
 			<p>It is a fast detector.</p>
+			<p>As an example, every method could be declared like this:
+			<code>
+			public void foo() throws NullPointerException {
+			}
+			</code>
+			But what does that tell you? Is this method very very likely to throw NullPointerExceptions?
+			If it is, why isn't this method handling them so that exceptions aren't thrown. So don't do this.
+			If an NPE is very likely, then check for it, and handle the situation.
+			</p>
 			]]>
 		</Details>
 	</Detector>
@@ -146,7 +155,7 @@
 	<Detector class="com.mebigfatguy.fbcontrib.detect.PartiallyConstructedObjectAccess">
 		<Details>
 			<![CDATA[
-			<p>Looks for constructors of non final classes that make method calls to non final methods.
+			<p>Looks for constructors of non-final classes that make method calls to non-final methods.
 			As these methods could be overridden, the overridden method will be accessing an object that
 			is only partially constructed, perhaps causing problems. Making these called methods final is
 			an easy fix, where possible.</p>
@@ -252,17 +261,17 @@
 			<p>Looks for methods that have the same signature, except where one uses a
 			Character parameter, and the other uses an int, long, float, double parameter.
 			Since autoboxing is available in 1.5 one might assume that
-			<pre>
-				test('a')
-			</pre>
+<pre><code>
+test('a')
+</code></pre>
 			would map to
-			<pre>
-				public void test(Character c)
-			</pre>
+<pre><code>
+public void test(Character c)
+</code></pre>
 			but instead maps to one that takes an int, long, float or double, such as
-			<pre>
-				public void test(int i)
-			</pre>
+<pre><code>
+public void test(int i)
+</code></pre>
 			</p>
 			<p>It is a fast detector.</p>
 			]]>
@@ -344,7 +353,7 @@
 	<Detector class="com.mebigfatguy.fbcontrib.detect.CopiedOverriddenMethod">
 		<Details>
 			<![CDATA[
-			<p>Looks for methods that are direct copies of the implementation in the super class.</p>
+			<p>Looks for methods that are direct copies of the implementation in the superclass.</p>
 			<p>It is a fast detector.</p>
 			]]>
 		</Details>
@@ -353,7 +362,7 @@
 	<Detector class="com.mebigfatguy.fbcontrib.detect.ArrayBasedCollections">
 		<Details>
 			<![CDATA[
-			<p>Looks for methods that use arrays for items in the keyset of a map, or as
+			<p>Looks for methods that use arrays for items in the keySet of a map, or as
 			an element of a set, or in a list when using the contains method. Since arrays
 			do not, and cannot define an equals method, reference equality is used for these
 			collections, which is probably not desired. If it is, consider using the IdentityHashMap
@@ -377,7 +386,7 @@
 		<Details>
 			<![CDATA[
 			<p>Looks for methods that are declared as abstract that override concrete methods in a
-			super class. Doing this casts away the implementation of the super class, and breaks
+			superclass. Doing this casts away the implementation of the superclass, and breaks
 			the contract as set forth by the parent class.</p>
 			<p>It is a fast detector.</p>
 			]]>
@@ -491,7 +500,7 @@
 		<Details>
 			<![CDATA[
 			<p>Looks for uses of JDBC vendor specific classes and methods making the database
-			access code non portable.</p>
+			access code non-portable.</p>
 			<p>It is a fast detector.</p>
 			]]>
 		</Details>
@@ -762,8 +771,11 @@
 		<Details>
 			<![CDATA[
 			<p>Looks for calls to classes and methods that do not exist in the JDK for which this class is
-			compiled. This can happen if you specify the -source and -target options of the javac compiler, and
+			compiled. This can happen if you specify the <code>-source</code> and <code>-target</code> options of the javac compiler, and
 			specify a target that is less than the JDK version of the javac compiler.</p>
+			<p>It relies on the system property <code>-Dfb-contrib.sjvu.jdkhome=/path/to/older/jdk/to/check"</code> to specify
+			what JDK to compare against. On linux, you may need to give file permissions to findbugs to read these directories.
+			If this property is not set, this detector does nothing.</p>
 			<p>It is a slow detector.</p>
 			]]>
 		</Details>
@@ -820,9 +832,9 @@
 			<![CDATA[
 			<p>Looks for methods that catch checked exceptions, and throw unchecked
 			exceptions in their place. There are several levels of concern. Least
-			concerning are methods constrained by interface or super class contracts
+			concerning are methods constrained by interface or superclass contracts
 			not to throw checked exceptions but appear owned by the same author. Next
-			are methods constrained by interface or super class contracts and throw other
+			are methods constrained by interface or superclass contracts and throw other
 			types of checked exceptions. Most egregious are methods not constrained by any interface
 			or superclass contract.</p>
 			<p>It is a moderately fast detector.</p>
@@ -975,7 +987,7 @@
 		<Details>
 			<![CDATA[
 			<p>Looks for methods that are declared to return a Boolean, but return a null
-			value. As this now allows the method to return 3 values, the use of Boolean is
+			value. As this now allows the method to return three values, the use of Boolean is
 			dubious. It would be better to just define a new enumeration with three values,
 			and return that.</p>
 			<p>It is a fast detector.</p>
@@ -1057,14 +1069,14 @@
 			<p>Finds contravariant array assignments. Since arrays are mutable data structures, their use
 			must be restricted to covariant or invariant usage.</p>
 
-			<pre>
-				class A {}
-				class B extends A {}
+<pre><code>
+class A {}
+class B extends A {}
 
-				B[] b = new B[2];
-				A[] a = b;
-				a[0] = new A(); // results in ArrayStoreException (Runtime)
-			</pre>
+B[] b = new B[2];
+A[] a = b;
+a[0] = new A(); // results in ArrayStoreException (Runtime)
+</code></pre>
 			<p>It is a fast detector.</p>
 			]]>
 		</Details>
@@ -1186,9 +1198,9 @@
 			<![CDATA[
 			<p>This detector looks for Java bean getter-setter use where the value of a property is set
 			with the value retrieved from the same bean's correllary getter, like this:</p>
-			<pre>
-				person.setAge(person.getAge());
-			</pre>
+<pre><code>
+	person.setAge(person.getAge());
+</code></pre>
 			<p>Typically this is a copy paste typo.</p>
 			<p>It is a fast detector.</p>
 			]]>
@@ -1199,7 +1211,7 @@
 		<Details>
 			<![CDATA[
 			<p>This detector looks for creation of java.awt.Graphics object that do not have the
-			.dispose() method called on them when finished. These objects will be cleaned up by
+			<code>.dispose()</code> method called on them when finished. These objects will be cleaned up by
 			the Garbage collector, bug given the likelihood that large numbers of these objects can
 			be created in a short period of time, it is better to dispose them as soon as possible.</p>
 			<p>It is a fast detector.</p>
@@ -1222,7 +1234,7 @@
 	<Detector class="com.mebigfatguy.fbcontrib.detect.CommonsEqualsBuilderToEquals">
 		<Details>
 			<![CDATA[
-			<p>This detector looks for uses for Commons-lang EqualsBuilder where the
+			<p>This detector looks for uses for commons-lang EqualsBuilder where the
 			result of equals() is returned instead of calling the method isEquals().</p>
 			<p>It is a fast detector.</p>
 			]]>
@@ -1232,8 +1244,8 @@
 	<Detector class="com.mebigfatguy.fbcontrib.detect.CommonsHashcodeBuilderToHashcode">
 		<Details>
 			<![CDATA[
-			<p>This detector looks for uses for Commons-lang HashCodeBuilder where the
-			result of hashCode() is returned instead of calling the method toHashCode().</p>
+			<p>This detector looks for uses for commons-lang <code>HashCodeBuilder</code> where the
+			result of <code>hashCode()</code> is returned instead of calling the method <code>toHashCode()</code>.</p>
 			<p>It is a fast detector.</p>
 			]]>
 		</Details>
@@ -1242,8 +1254,8 @@
 	<Detector class="com.mebigfatguy.fbcontrib.detect.CommonsStringBuilderToString">
 		<Details>
 			<![CDATA[
-			<p>This detector looks for uses for Commons-lang ToStringBuilder where the
-			result of toString() is returned without an intermediate invocation of toString().</p>
+			<p>This detector looks for uses for commons-lang <code>ToStringBuilder</code> where the
+			result of <code>toString()</code> is returned without an intermediate invocation of toString().</p>
 			<p>It is a fast detector.</p>
 			]]>
 		</Details>
@@ -1265,9 +1277,9 @@
 	<Detector class="com.mebigfatguy.fbcontrib.detect.BackportReusePublicIdentifiers">
 		<Details>
 			<![CDATA[
-			<p>Detects use of Backport Utils concurrent classes. Updated/Efficient version of these
-			classes are available in versions of the JDK 5.0 and higher, and these
-			classes should only be used if you are targeting JDK 1.4 and lower.</p>
+			<p>Detects use of Backport Utils concurrent classes from Emory, or Time classes from ThreeTen. Updated/efficient versions of
+			classes from emory are available in versions of the JDK 5.0 and higher, and in JDK 8.0 and higher for ThreeTen, and these
+			classes should only be used if you are targeting a JDK lower than this.</p>
 			<p>It is a fast detector.</p>
 			]]>
 		</Details>
@@ -1365,7 +1377,7 @@
 	       <p>Looks for fields or local variables that are collections but the names have a different type
 	       of collection in the name. This is confusing, and is probably a left over from a type change, such as
 	       </p>
-	       <p>List<String> mySet;</p>
+	       <p>List&lt;String&gt; mySet;</p>
 	       <p>It is a fast detector.</p>
 	       ]]>
 	   </Details>
@@ -1392,7 +1404,7 @@
 	   </Details>
 	</Detector>
 	
-	<Detector class="com.mebigfatguy.fbcontrib.detect.CircularDependencies">
+	<Detector class="com.mebigfatguy.fbcontrib.detect.FindClassCircularDependencies">
         <Details>
             <![CDATA[
             <p>This detector looks circular dependencies among classes. </p>
@@ -1446,7 +1458,7 @@
     	<Details>
     		<![CDATA[
 			<p>Looks for methods that perform arithmetic operations on values representing time
-			where the time unit is incompatible, ie adding a millisecond value to a nanosecond value.
+			where the time unit is incompatible, i.e. adding a millisecond value to a nanosecond value.
 			</p>
 			<p>It is a fast detector.</p>
     		]]>
@@ -1550,7 +1562,7 @@
     	<Details>
     		<![CDATA[
     		<p>Looks for problems with the use of the JAX-RS specification.</p>
-    		<p>It is a fast detector</p>
+    		<p>It is a fast detector.</p>
     		]]>
     	</Details>
     </Detector>
@@ -1560,7 +1572,7 @@
     		<![CDATA[
     		<p>Looks for problems with the use of the JPA specification, including spring's
     		support of JPA</p>
-    		<p>It is a fast detector</p>
+    		<p>It is a fast detector.</p>
     		]]>
     	</Details>
     </Detector>
@@ -1570,9 +1582,9 @@
     		<![CDATA[
     		<p>Looks for conditional expressions that are a combination of simple local variable (in)equalities
     		and tests on the results of method calls where the method calls are done first. By placing the simple
-    		conditions first you may elminate costly calls in certain cases. This assumes that the method calls
+    		conditions first you may eliminate costly calls in certain cases. This assumes that the method calls
     		do not have side effects that should happen always.</p>
-    		<p>It is a fast detector</p>
+    		<p>It is a fast detector.</p>
     		]]>
     	</Details>
     </Detector>
@@ -1581,11 +1593,110 @@
     	<Details>
     		<![CDATA[
     		<p>Looks for various issues around doing I/O with streams and reader/writers.</p>
-    		<p>It is a fast detector</p>
+    		<p>It is a fast detector.</p>
     		]]>
     	</Details>
     </Detector>
+    
+    <Detector class="com.mebigfatguy.fbcontrib.detect.DubiousMapCollection">
+    	<Details>
+    		<![CDATA[
+    		<p>Looks for use of maps that are private fields in a List only way, that is, maps that are created in constructors
+    		or static initializers, and are only iterated over. Often this is done because the Map allows for two values, as opposed
+    		to a List. The Fix is to just create a List of some object that holds all the values.</p>
+    		<p>It is a fast detector.</p>
+    		]]>
+    	</Details>
+    </Detector>
+    
+    <Detector class="com.mebigfatguy.fbcontrib.detect.BuryingLogic">
+    	<Details>
+    		<![CDATA[
+    		<p>Looks for methods that needlessly push a large chunk of code to the right through indenting with braces.
+    		The code is basically an if/else-then-return structure. The if true test does the bulk of the logic, and the else
+    		just returns. It is more readable if the bulk of the logic is move as far to the left in the method as is possible.
+    		</p>
+    		<p>It is a fast detector.</p>
+    		]]>
+    	</Details>
+    </Detector>
+    
+    <Detector class="com.mebigfatguy.fbcontrib.detect.WiringIssues">
+    	<Details>
+	    	<![CDATA[
+	    	<p>Looks for various issues around @Autowired/@Inject fields in DI classes</p>
+	    	<p>It is a fast detector.</p>
+	    	]]>
+    	</Details>
+    </Detector>
+    
+    <Detector class="com.mebigfatguy.fbcontrib.detect.ConcurrentCollectionIssues">
+    	<Details>
+    		<![CDATA[
+    		<p>Looks for problems with using concurrent collections
+    		<ul>
+    			<li>Adding a collection as a value of Concurrent map, without the use of putIfAbsent</li>
+    		</ul>
+    		</p>
+    		<p>It is a fast detector.</p>
+    		]]>	
+    	</Details>
+    </Detector>
+    
+    <Detector class="com.mebigfatguy.fbcontrib.detect.UseTryWithResources">
+    	<Details>
+    		<![CDATA[
+    		<p>Looks for use of auto-closeable resources in JDK 7 or later that are not using
+    		the try-with-resources paradigm. To avoid problems, and ease the reader, use of try-with-resources 
+    		is recommended</p>
+    		<p>It is a fast detector.</p>
+    		]]>
+    	</Details>
+    </Detector>
+    
+    <Detector class="com.mebigfatguy.fbcontrib.detect.SuspiciousShadedClassUse">
+    	<Details>
+    		<![CDATA[
+			<p>Looks for use of shaded methods from 3rdparty jars, created by tools such as the maven shade plugin.
+			These methods are from classes that have been included in a jar, for internal use, and are copies of real 3rdparty jars. 
+			It is likely you meant to use the real class from the real jar, but your IDE picked the wrong import to use.
+			</p>
+			<p>It is a fast detector.</p>
+			]]>
+    	</Details>
+    </Detector>
 
+	<Detector class="com.mebigfatguy.fbcontrib.detect.UnsynchronizedSingletonFieldWrites">
+		<Details>
+			<![CDATA[
+			<p>Looks for writes to fields of classes that are believed to be classes used only as Singletons. These 
+			classes include Enums, as well as spring beans that are Singleton scoped.</p>
+			<p>It is a fast detector.</p>
+			]]>
+		</Details>
+	</Detector>
+	
+	<Detector class="com.mebigfatguy.fbcontrib.detect.OptionalIssues">
+		<Details>
+			<![CDATA[
+			<p>Looks for various issues with the use of the java.util.Optional class.</p>
+			<p>It is a fast detector</p>
+			]]>
+		</Details>
+	</Detector>
+	
+	<Detector class="com.mebigfatguy.fbcontrib.detect.UnnecessaryApiConversion">
+		<Details>
+			<![CDATA[
+			<p>Looks for code that appears to be using two forms of similar apis, an older one, and a new one.
+			It finds code that creates newer api objects by first instantiating older api objects, and converting
+			them into the new form. It is simpler just to create the new object directly.</p>
+			<p>It is a fast detector</p>
+			]]>
+		</Details>
+	</Detector>
+	
+	
 	<Detector class="com.mebigfatguy.fbcontrib.debug.OCSDebugger">
 		<Details></Details>
 	</Detector>
@@ -1603,33 +1714,33 @@
 			
 			<p>
 			Java will implicitly use StringBuilders, which can make this hard to detect or fix.  For example, <br/>
-			<code>
-			StringBuilder sb = new StringBuilder();<br/>
-			for (Map.Entry<Integer, String> e : map.entrySet()) {<br/>
-			&nbsp;&nbsp;&nbsp;&nbsp;sb.append(e.getKey() + e.getValue());		//bug detected here<br/>
-			}<br/>
-			</code><br/>
+<pre><code>
+StringBuilder sb = new StringBuilder();
+for (Map.Entry<Integer, String> e : map.entrySet()) {
+    sb.append(e.getKey() + e.getValue());		//bug detected here
+}
+</code></pre><br/>
 			
 			gets automatically turned into something like: <br/>
-			<code>
-			StringBuilder sb = new StringBuilder();<br/>
-			for (Map.Entry<Integer, String> e : map.entrySet()) {<br/>
-			&nbsp;&nbsp;&nbsp;&nbsp;StringBuilder tempBuilder = new StringBuilder();<br/>
-			&nbsp;&nbsp;&nbsp;&nbsp;tempBuilder.append(e.getKey());<br/>
-			&nbsp;&nbsp;&nbsp;&nbsp;tempBuilder.append(e.getValue());<br/>
-			&nbsp;&nbsp;&nbsp;&nbsp;sb.append(tempBuilder.toString());		//this isn't too efficient<br/>
-			}<br/>
-			</code><br/>
+<pre><code>
+StringBuilder sb = new StringBuilder();
+for (Map.Entry<Integer, String> e : map.entrySet()) {
+    StringBuilder tempBuilder = new StringBuilder();
+    tempBuilder.append(e.getKey());
+    tempBuilder.append(e.getValue());
+    <b>sb.append(tempBuilder.toString());</b>		//this isn't too efficient
+}
+</code></pre><br/>
 			
 			which involves a temporary <code>StringBuilder</code>, which is completely unnecessary.  To prevent this from happening, simply do:<br/>
 			
-			<code>
-			StringBuilder sb = new StringBuilder();<br/>
-			for (Map.Entry<Integer, String> e : map.entrySet()) {<br/>
-			&nbsp;&nbsp;&nbsp;&nbsp;sb.append(e.getKey()); <br/>
-			&nbsp;&nbsp;&nbsp;&nbsp;sb.append(e.getValue());<br/>
-			}<br/>
-			</code>
+<pre><code>
+StringBuilder sb = new StringBuilder();
+for (Map.Entry<Integer, String> e : map.entrySet()) {
+    sb.append(e.getKey());
+    sb.append(e.getValue());
+}
+</code></pre>
 			</p>
 			]]>
 		</Details>
@@ -1658,24 +1769,27 @@
 			does not suffer the potential for <code>NullPointerException</code>s, and is easier to read.</p>
 			
 			<p>
-			Keep in mind that Java compiles simple <code>String</code> concatenation to use <code>StringBuilder</code>s, so you may see this bug even when you don't use <code>StringBuilder</code>s explicitly.
+			Keep in mind that Java compiles simple <code>String</code> concatenation to use <code>StringBuilder</code>s, 
+			so you may see this bug even when you don't use <code>StringBuilder</code>s explicitly.
 			</p>
 			
 			<p>
 			Instead of: <br/>
-			<code>
-			StringBuilder builder = ... <br/>
-			builder.append(someObj.toString());<br/>
-			... <br/>
-			System.out.println("Problem with the object :" + someObj.toString());<br/>
-			</code>
-			just do: <br/>
-			<code>
-			StringBuilder builder = ... <br/>
-			builder.append(someObj);<br/>
-			... <br/>
-			System.out.println("Problem with the object :" + someObj);<br/>
-			</code>
+<pre><code>
+StringBuilder builder = ...;
+builder.append(someObj.toString());
+...
+System.out.println("Problem with the object :" + someObj.toString());
+</code></pre>
+
+just do: <br/>
+
+<pre><code>
+StringBuilder builder = ...
+builder.append(someObj);
+...
+System.out.println("Problem with the object :" + someObj);
+</code></pre>
 			to avoid the possibility of <code>NullPointerException</code>s when someObj is <code>null</code>.
 			</p>
 			]]>
@@ -1688,7 +1802,7 @@
 		<Details>
 			<![CDATA[
 			<p>This method uses a synchronized collection, built from Collections.synchronizedXXXX, but accesses it
-			through an iterator. Since an iterator is by definition, multithreaded unsafe, this is a conflict in
+			through an iterator. Since an iterator is, by definition, multithreaded unsafe, this is a conflict in
 			concept. When using iterators, you should do the synchronization manually.</p>
 			]]>
 		</Details>
@@ -1712,25 +1826,25 @@
 		<Details>
 			<![CDATA[
 			<p>This method uses concrete classes for parameters when only methods defined in an implemented
-			interface or super class are used. Consider increasing the abstraction of the interface to
+			interface or superclass are used. Consider increasing the abstraction of the interface to
 			make low impact changes easier to accomplish in the future.</p>
 
 			<p>Take the following example:<br/>
-				<code>
-					private void appendToList(ArrayList<String> list) {<br/>
-					&nbsp;&nbsp;&nbsp;&nbsp;if (list.size() < 100) {<br/>
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;list.add("Foo");<br/>
-					&nbsp;&nbsp;&nbsp;&nbsp;}<br/>
-					}<br/>
-				</code>
+<pre><code>
+private void appendToList(ArrayList&lt;String&gt; list) {
+    if (list.size() &lt; 100) {
+        list.add("Foo");
+    }
+}
+</code></pre>
 
 				The parameter list is currently defined as an <code>ArrayList</code>, which is a concrete implementation of the <code>List</code> interface.  
 				Specifying <code>ArrayList</code> is unnecessary here, because we aren't using any <code>ArrayList</code>-specific methods (like <code>ensureCapacity()</code> or <code>trimToSize()</code>).
 				Instead of using the concrete definition, it is better to do something like:<br/>
-				<code>
-					private void appendToList(List<String> list) {<br/>
-					...<br/>
-				</code>
+<pre><code>
+private void appendToList(List&lt;String&gt; list) {
+    ...
+</code></pre>
 				If the design ever changes, e.g. a <code>LinkedList</code> is used instead, this code won't have to change.
 
 			</p>
@@ -1798,15 +1912,16 @@
 		<Details>
 			<![CDATA[
 			<p>This line is in the form of <br/>
-			<code>String str = ...<br/>
-			str.equals("someOtherString");<br/>
-			//or<br/>
-			str.compareTo("someOtherString");</code></p>
+<pre><code>String str = ...
+str.equals("someOtherString");
+//or
+str.compareTo("someOtherString");</code></pre>
+		    </p>
 			<p>A <code>NullPointerException</code> may occur if the String variable <code>str</code> is <code>null</code>. If instead the code was restructured to<br/>
-			<code>String str = ...<br/>
-			"someOtherString".equals(str);<br/>
-			//or<br/>
-			"someOtherString".compareTo(str);</code><br/>
+<pre><code>String str = ...
+"someOtherString".equals(str);
+//or
+"someOtherString".compareTo(str);</code></pre><br/>
 			that is, call <code>equals()</code> or <code>compareTo()</code> on the string literal, passing the 
 			variable as an argument, this exception could never happen as both <code>equals()</code> and 
 			<code>compareTo()</code> check for <code>null</code>.</p>
@@ -1833,7 +1948,8 @@
 			<![CDATA[
 			<p>This class defines a field based on java.util.List, but uses it to some extent like a Set. Since
 			lookup type operations are performed using a linear search for Lists, the performance for large
-			Lists will be poor. Consider changing this fields implementation to a set based one. If order of
+			Lists will be poor. If the list is known to only contain a small number of items, (3, 4, etc) then it
+			doesn't matter. Otherwise, consider changing this field's implementation to a set-based one. If order of
 			iteration is important to maintain insert order, perhaps consider a LinkedHashSet.</p>
 			]]>
 		</Details>
@@ -1846,22 +1962,22 @@
 			<![CDATA[
 			<p>This class appears to maintain two or more lists or arrays whose contents are related in a parallel way.  That is,
 			you have something like:<br/>
-			<code> 
-			List<String> words = new ArrayList<String>();<br/>
-			List<Integer> wordCounts = new ArrayList<String>();<br/>
-			</code>
+<pre><code>
+List&lt;String&gt; words = new ArrayList&lt;String&gt;();
+List&lt;Integer&gt; wordCounts = new ArrayList&lt;String&gt;();
+</code></pre>
 			where the elements of the list at index 0 are related, the elements at index 1 are related and so on. </p>
 			<p>
 			Consider creating a separate class to hold all the related
 			pieces of information, and adding instances of this class to just one list or array, or if just two values, use
 			a Map to associate one value with the other like:<br/>
-			<code> 
-			private class WordAndCount{public String word;  public int count}
-			List<WordAndCount> wordsAndCounts = new ArrayList<WordAndCount>();<br/>
-			<br/>
-			//or, for just two elements<br/>
-			Map<String,Integer> wordCounts = new HashMap<String,Integer>();<br/>
-			</code>
+<pre><code>
+private class WordAndCount{public String word;  public int count}
+
+List&lt;WordAndCount&gt; wordsAndCounts = new ArrayList&lt;WordAndCount&gt;();
+//or, for just two elements
+Map<String,Integer> wordCounts = new HashMap<String,Integer>();
+</code></pre>
 			
 			</p>
 			]]>
@@ -1878,7 +1994,7 @@
 			as final.</p>
 			
 			<p>Performance gains are debatable as "the final keyword does not appear in the class file for 
-			local variables and parameters, thus it cannot impact the runtime performance. It's only use 
+			local variables and parameters, thus it cannot impact the runtime performance. Its only use 
 			is to clarify the coders intent that the variable not be changed (which many consider dubious 
 			reason for its usage), and dealing with anonymous inner classes." - http://stackoverflow.com/a/266981/1447621 </p>
 			]]>
@@ -1917,6 +2033,14 @@
 			math is imprecise, rounding errors will accumulate over time each time the loop is
 			executed. It is usually better to use integer indexing, and calculate the new value
 			of the floating point number at the top of the loop body.</p>
+			<p>Example:
+<pre><code>
+for (float f = 1.0f; f &lt;= 10.0f; f += 0.1f) {
+    System.out.println(f);
+}
+</code></pre>
+			The last value printed may not be 10.0, but instead might be 9.900001 or such.
+			</p>
 			]]>
 		</Details>
 	</BugPattern>
@@ -1940,7 +2064,7 @@
 			<![CDATA[
 			<p>This class defines two methods that differ only by a parameter being defined
 			as Character vs. int, long, float or double. As autoboxing is present, it may be
-			assumed that a parameter of 'a' would map to the Character version, but does not.</p>
+			assumed that a parameter of 'a' would map to the Character version, but it does not.</p>
 			]]>
 		</Details>
 	</BugPattern>
@@ -2002,20 +2126,20 @@
 			<p>This method passes a primitive value retrieved from a <code>BoxedPrimitive.parseBoxedPrimitive("1")</code> call to
 			the same class's constructor. It is simpler to just pass the string to the BoxedPrimitives constructor or, better yet, use the static valueOf.</p>
 			<p>Instead of something like:<br/>
-			<code>
-			Boolean bo = new Boolean(Boolean.parseBoolean("true")); <br/>
-			Float f = new Float(Float.parseFloat("1.234"));<br/>
-			</code>
+<pre><code>
+Boolean bo = new Boolean(Boolean.parseBoolean("true"));
+Float f = new Float(Float.parseFloat("1.234"));
+</code></pre>
 			Simply do: <br/>
-			<code>
-			Boolean bo = new Boolean("true"); <br/>
-			Float f = new Float("1.234");<br/>
-			</code>
+<pre><code>
+Boolean bo = new Boolean("true");
+Float f = new Float("1.234");
+</code></pre>
 			or, to be more memory efficient: <br/>
-			<code>
-			Boolean bo = Boolean.valueOf("true"); <br/>
-			Float f = Float.valueOf("1.234");<br/>
-			</code>
+<pre><code>
+Boolean bo = Boolean.valueOf("true");
+Float f = Float.valueOf("1.234");
+</code></pre>
 			</p>
 			]]>
 		</Details>
@@ -2044,21 +2168,21 @@
 			method. </p>
 			
 			<p>Instead of something like:<br/>
-			<code>
-			public int someMethod(String data) {<br/>
-			&nbsp;&nbsp;&nbsp;&nbsp;long l = Long.valueOf(data).longValue(); <br/>
-			&nbsp;&nbsp;&nbsp;&nbsp;float f = Float.valueOf(data).floatValue(); <br/>
-			&nbsp;&nbsp;&nbsp;&nbsp;return Integer.valueOf(data); &nbsp;&nbsp;// There is an implicit .intValue() call<br/>
-			}<br/>
-			</code>
+<pre><code>
+public int someMethod(String data) {
+long l = Long.valueOf(data).longValue();
+float f = Float.valueOf(data).floatValue();
+return Integer.valueOf(data); // There is an implicit .intValue() call
+}
+</code></pre>
 			Simply do: <br/>
-			<code>
-			public int someMethod(String data) {<br/>
-			&nbsp;&nbsp;&nbsp;&nbsp;long l = Long.parseLong(data); <br/>
-			&nbsp;&nbsp;&nbsp;&nbsp;float f = Float.parseFloat(data); <br/>
-			&nbsp;&nbsp;&nbsp;&nbsp;return Integer.parseInt(data); <br/>
-			}<br/>
-			</code>
+<pre><code>
+public int someMethod(String data) {
+	long l = Long.parseLong(data);
+	float f = Float.parseFloat(data);
+	return Integer.parseInt(data);
+}
+</code></pre>
 			</p>
 			
 			]]>
@@ -2075,15 +2199,15 @@
 			to a boxed primitive object, it is simpler to use the BoxedPrimitive.valueOf(String) method.</p>
 			
 			<p>Instead of something like:<br/>
-			<code>
-			Boolean bo = Boolean.valueOf(Boolean.parseBoolean("true")); <br/>
-			Float f = Float.valueOf(Float.parseFloat("1.234"));<br/>
-			</code>
+<pre><code>
+Boolean bo = Boolean.valueOf(Boolean.parseBoolean("true"));
+Float f = Float.valueOf(Float.parseFloat("1.234"));
+</code></pre>
 			Simply do: <br/>
-			<code>
-			Boolean bo = Boolean.valueOf("true"); <br/>
-			Float f = Float.valueOf("1.234");<br/>
-			</code>
+<pre><code>
+Boolean bo = Boolean.valueOf("true");
+Float f = Float.valueOf("1.234");
+</code></pre>
 			</p>
 			]]>
 		</Details>
@@ -2097,15 +2221,15 @@
 			<p>This method constructs a Boxed Primitive from a primitive only to call the primitiveValue() method to
 			convert it back to a primitive. Just use the primitive value instead.</p>
 			<p>Instead of something like:<br/>
-			<code>
-			boolean bo = new Boolean(true).booleanValue(); <br/>
-			float f = new Float(1.234f).floatValue();<br/>
-			</code>
+<pre><code>
+boolean bo = new Boolean(true).booleanValue();
+float f = new Float(1.234f).floatValue();
+</code></pre>
 			Simply do: <br/>
-			<code>
-			boolean bo = true; <br/>
-			float f = 1.234f;<br/>
-			</code>
+<pre><code>
+boolean bo = true;
+float f = 1.234f;
+</code></pre>
 			</p>
 			
 			]]>
@@ -2120,21 +2244,21 @@
 			<p>This method constructs a Boxed Primitive from a primitive only to call the primitiveValue() method to
 			cast the value to another primitive type. It is simpler to just use casting.</p>
 			<p>Instead of something like:<br/>
-			<code>
-			double someDouble = ...<br/>
-			float f = new Double(someDouble).floatValue();<br/>
-			<br/>
-			int someInt = ...<br/>
-			byte b = new Integer(someInt).byteValue();<br/>
-			</code>
+<pre><code>
+double someDouble = ...
+float f = new Double(someDouble).floatValue();
+
+int someInt = ...
+byte b = new Integer(someInt).byteValue();
+</code></pre>
 			Simply do: <br/>
-			<code>
-			double someDouble = ...<br/>
-			float f = (float) someDouble;<br/>
-			<br/>
-			int someInt = ...<br/>
-			byte b = (byte)someInt;<br/>
-			</code>
+<pre><code>
+double someDouble = ...
+float f = (float) someDouble;
+
+int someInt = ...
+byte b = (byte)someInt;
+</code></pre>
 			</p>
 			]]>
 		</Details>
@@ -2147,37 +2271,37 @@
 			<![CDATA[
 			<p>This method assigns a Boxed boolean constant to a primitive boolean variable, or assigns a primitive boolean
 			constant to a Boxed boolean variable. Use the correct constant for the variable desired. Use <br/>
-			<code>
-				boolean b = true;<br/>
-				boolean b = false;<br/>
-			</code>
+<pre><code>
+boolean b = true;
+boolean b = false;
+</code></pre>
 			or <br/>
-			<code>
-				Boolean b = Boolean.TRUE;<br/>
-				Boolean b = Boolean.FALSE;
-			</code>
+<pre><code>
+Boolean b = Boolean.TRUE;
+Boolean b = Boolean.FALSE;
+</code></pre>
 			</p>
 			
 			<p>Be aware that this boxing happens automatically when you might not expect it.  For example, <br/>
-			<code>
-			Map<String, Boolean> statusMap = ... <br/>
-			<br/>
-			public Boolean someMethod() {<br/>
-			&nbsp;&nbsp;&nbsp;&nbsp;statusMap.put("foo", true);  //the "true" here is boxed<br/>
-			&nbsp;&nbsp;&nbsp;&nbsp;return false;  //the "false" here is boxed<br/>
-			}<br/>
-			</code>
+<pre><code>
+Map<String, Boolean> statusMap = ...
+
+public Boolean someMethod() {
+    statusMap.put("foo", true);  //the "true" here is boxed
+    return false;  //the "false" here is boxed
+}
+</code></pre>
 			has two cases of this needless autoboxing.  This can be made more efficient by simply substituting 
 			in the constant values: <br/>
 			
-			<code>
-			Map<String, Boolean> statusMap = ... <br/>
-			<br/>
-			public Boolean someMethod() {<br/>
-			&nbsp;&nbsp;&nbsp;&nbsp;statusMap.put("foo", Boolean.TRUE);  <br/>
-			&nbsp;&nbsp;&nbsp;&nbsp;return Boolean.FALSE; <br/>
-			}<br/>
-			</code>
+<pre><code>
+Map<String, Boolean> statusMap = ...
+
+public Boolean someMethod() {
+    statusMap.put("foo", Boolean.TRUE);
+    return Boolean.FALSE;
+}
+</code></pre>
 			</p>
 			]]>
 		</Details>
@@ -2193,26 +2317,29 @@
 			assigned to the local variable, directly.</p>
 			<p>
 				Instead of the following: <br/>
-				<code>
-				public float average(int[] arr) { <br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;float sum = 0;<br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i < arr.length; i++) {<br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sum += arr[i];<br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;}<br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;float ave = sum / arr.length;<br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;return ave;<br/>
-				}<br/>
-				</code>
-				simply change the method to return the result of the division: <br/>		
-				<code>
-				public float average(int[] arr) {<br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;float sum = 0;<br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i < arr.length; i++) {<br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sum += arr[i];<br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;}<br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;<b>return sum / arr.length;</b><br/>
-				}
-				</code>
+
+<pre><code>
+public float average(int[] arr) {
+    float sum = 0;
+    for (int i = 0; i &lt; arr.length; i++) {
+        sum += arr[i];
+    }
+    float ave = sum / arr.length;
+    return ave;
+}
+</code></pre>
+
+				Simply change the method to return the result of the division: <br/>
+
+<pre><code>
+public float average(int[] arr) {
+    float sum = 0;
+    for (int i = 0; i &lt; arr.length; i++) {
+        sum += arr[i];
+    }
+    <b>return sum / arr.length;</b> //Change
+}
+</code></pre>
 			</p>
 			]]>
 		</Details>
@@ -2223,7 +2350,7 @@
 		<LongDescription>Method {1} is implemented with an exact copy of its superclass's method</LongDescription>
 		<Details>
 			<![CDATA[
-			<p>This method is implemented using an exact copy of its super class method's
+			<p>This method is implemented using an exact copy of its superclass method's
 			implementation, which usually means that this method can just be removed.</p>
 			]]>
 		</Details>
@@ -2246,7 +2373,7 @@
 		<Details>
 			<![CDATA[
 			<p>This method passes an array as the key to a Map, element in a Set, or item in a List when
-			the contains method is used on the List. Since arrays do not, and cannot override the equals
+			the contains method is used on the List. Since arrays do not and cannot override the equals
 			method, collection inclusion is based on the reference's address, which is probably not desired.
 			In the case that this is a TreeMap or TreeSet, consider passing a Comparator to the map's
 			constructor.</p>
@@ -2270,7 +2397,7 @@
 		<Details>
 			<![CDATA[
 			<p>This abstract method is derived from a concrete method implementation. It is highly
-			suspect that the super class method's implementation would be cast away.</p>
+			suspect that the superclass method's implementation would be cast away.</p>
 			]]>
 		</Details>
 	</BugPattern>
@@ -2282,7 +2409,7 @@
 			<![CDATA[
 			<p>This method generates an XML based string by concatenating together various
 			XML fragments, and variable values. Doing so makes the code difficult to read, modify
-			and validate. It is much more clean to built XML structures in external files that are
+			and validate. It is much more clean to build XML structures in external files that are
 			read in and transformed into the final product, through modification by Transformer.setParameter.</p>
 			]]>
 		</Details>
@@ -2295,7 +2422,7 @@
 			<![CDATA[
 			<p>This method implements a synchronized block, but the code found at the beginning
 			of this block only accesses local variables, and not member variables, or this.
-			To be better performance move the code that access local variables only, above the
+			For better performance, move the code that accesses local variables only, above the
 			synchronized block, and leave the synchronized block only for field accesses, or access
 			to this object.</p>
 			]]>
@@ -2333,7 +2460,7 @@
 		<LongDescription>Method {1} uses 1 element array to simulate call by reference</LongDescription>
 		<Details>
 			<![CDATA[
-			<p>This method uses a one element array to wrap an object that is to be passed to a method as an argument
+			<p>This method uses a one-element array to wrap an object that is to be passed to a method as an argument
 			to simulate call by pointer ala C++. It is better to define a proper return class type that holds all
 			the relevant information retrieved from the called method.</p>
 			]]>
@@ -2373,31 +2500,40 @@
 			<![CDATA[
 			<p>This method compares dates with two comparisons, rather than using the reverse comparison.
 			So this pattern</p>
-			<code>
-				if ((date1.equals( date2 )) || (date1.after( date2 )))<br/>
-			</code>
+
+<pre><code>
+if ((date1.equals( date2 )) || (date1.after( date2 )))
+</code></pre>
+
 			could become:<br/>
-			<code>
-				if (date1.compareTo( date2 ) >= 0) <br/>
-			</code>
-			<br/>
+
+<pre><code>
+if (date1.compareTo( date2 ) >= 0)
+</code></pre><br/>
+
 			and<br/>
-			<code>
-				if ((date1.equals( date2 )) || (date1.before( date2 ))) <br/>
-			</code>
+
+<pre><code>
+if ((date1.equals( date2 )) || (date1.before( date2 )))
+</code></pre>
+
 			could become <br/>
-			<code>
-				if (date1.compareTo( date2 ) <= 0) <br/>
-			</code>
-			<br/>
+
+<pre><code>
+if (date1.compareTo( date2 ) <= 0)
+</code></pre><br/>
+
 			and<br/>
-			<code>
-				if ((date1.before( date2 )) || (date1.after( date2 ))) <br/>
-			</code>
+
+<pre><code>
+if ((date1.before( date2 )) || (date1.after( date2 )))
+</code></pre>
+
 			could become<br/>
-			<code>
-				if (!date1.equals( date2 ))<br/>
-			</code>
+
+<pre><code>
+if (!date1.equals( date2 ))
+</code></pre>
 			]]>
 		</Details>
 	</BugPattern>
@@ -2440,17 +2576,17 @@
 			a potential cause of memory bloat.</p>
 			
 			<p>
-			If this collection is a list, set or otherwise of static things (e.g. a List<String> for month names), consider
+			If this collection is a list, set or otherwise of static things (e.g. a List&gt;String&gt; for month names), consider
 			adding all of the elements in a static initializer, which can only be called once:<br/>
-			<code>
-			private static List<String> monthNames = new ArrayList<String>();<br/>
-			static {<br/>
-				&nbsp;&nbsp;&nbsp;monthNames.add("January");<br/>
-				&nbsp;&nbsp;&nbsp;monthNames.add("February");<br/>
-				&nbsp;&nbsp;&nbsp;monthNames.add("March");<br/>
-				&nbsp;&nbsp;&nbsp;...<br/>
-			}
-			</code>
+<pre><code>
+private static List&lt;String&gt; monthNames = new ArrayList&lt;String&gt;();
+static {
+    monthNames.add("January");
+    monthNames.add("February");
+    monthNames.add("March");
+    ...
+}
+</code></pre>
 			</p>
 			
 			]]>
@@ -2477,7 +2613,7 @@
 		<LongDescription>Method {1} creates local variable-based synchronized collection</LongDescription>
 		<Details>
 			<![CDATA[
-			<p>This method creates a synchronized collection and store the reference to it
+			<p>This method creates a synchronized collection and stores the reference to it
 			in a local variable. As local variables are by definition thread-safe, it seems
 			questionable that this collection needs to be synchronized.</p>
 			<p>
@@ -2512,7 +2648,7 @@
 			<![CDATA[
 			<p>This method uses a synchronize block where the object that is being synchronized on,
 			is not owned by this current instance. This means that other instances may use this same
-			object for synchronization for its own purposes causing synchronization confusion. It is
+			object for synchronization for their own purposes, causing synchronization confusion. It is
 			always cleaner and safer to only synchronize on private fields of this class. Note that 'this'
 			is not owned by the current instance, but is owned by whomever assigns it to a field of its
 			class. Synchronizing on 'this' is also not a good idea.</p>
@@ -2525,8 +2661,8 @@
 		<LongDescription>Tag library {0} is not recycleable</LongDescription>
 		<Details>
 			<![CDATA[
-			<p>This tag library class implements an attribute who's associated backing store field
-			is modified at another point in the tag library. In order for a taglibrary to be
+			<p>This tag library class implements an attribute whose associated backing store field
+			is modified at another point in the tag library. In order for a tag library to be
 			recycleable, only the container is allowed to change this attribute, through the use
 			of the setXXX method of the taglib. By modifying the value programmatically, the
 			container will not initialize the attribute correctly on reuse.</p>
@@ -2563,8 +2699,8 @@
 		<LongDescription>Window {0} sets size manually, and doesn't use pack</LongDescription>
 		<Details>
 			<![CDATA[
-			<p>This class creates a window, and sizes the window using setSize. It is better
-			to handle font size changes to use the pack method.</p>
+			<p>This class creates a window, and sizes the window using setSize. It is better,
+			for handling font size changes, to use the pack method.</p>
 			]]>
 		</Details>
 	</BugPattern>
@@ -2610,7 +2746,7 @@
 		<LongDescription>Method {1} passes appended string to title/label of component</LongDescription>
 		<Details>
 			<![CDATA[
-			<p>This method creates a component and passes a string that was build up from a number of
+			<p>This method creates a component and passes a string that was built up from a number of
 			strings through appending multiple strings together. As foreign languages may order phrases
 			differently, this will make translations difficult.</p>
 			]]>
@@ -2648,7 +2784,7 @@
 		<Details>
 			<![CDATA[
 			<p>This class defines a private collection member as synchronized. It appears however
-			that this collection isn't only modified in a static initializer, or constructor. As these
+			that this collection is only modified in a static initializer, or constructor. As these
 			two areas are guaranteed to be thread safe, defining this collection as synchronized is
 			unnecessary and a potential performance bottleneck.</p>
 			]]>
@@ -2689,7 +2825,7 @@
 			parameters, on the same instance without any intervening changes to the objects. If this
 			method does not make changes to the object, which it appears it doesn't, then making
 			two calls is just a waste. These method calls could be combined by assigning the
-			result into a temporary, and using the temporary the second time.</p>
+			result into a temporary variable, and using the variable the second time.</p>
 			]]>
 		</Details>
 	</BugPattern>
@@ -2702,7 +2838,7 @@
 			<p>This method manually loops over a collection, pulling each element out and storing
 			it in an array to build an array from the collection. It is easier, and clearer to use
 			the built in collections method toArray. Given a collection 'mycollection' of type T, use
-			mycollection.toArray(new T[mycollection.size()]);</p>
+			<code>mycollection.toArray(new T[mycollection.size()]);</code></p>
 			]]>
 		</Details>
 	</BugPattern>
@@ -2715,7 +2851,15 @@
 			<p>This method catches an exception, and throws a different exception, without incorporating the
 			original exception. Doing so hides the original source of the exception making debugging and fixing
 			these problems difficult. It is better to use the constructor of this new exception that takes an
-			original exception so that this detail can be passed along to the user.</p>
+			original exception so that this detail can be passed along to the user. If this exception has no constructor
+			that takes an initial cause parameter, use the initCause method to initialize it instead.</p>
+			<p>
+<pre><code>
+catch (IOException e) {
+    throw new MySpecialException("Failed to open configuration", e);
+}
+</code></pre>
+			</p>
 			]]>
 		</Details>
 	</BugPattern>
@@ -2731,26 +2875,26 @@
 			
 			<p>
 			Instead of making calls like: <br/>
-			<code>
-			String myString = ... <br/>
-			if (myString.indexOf("e") != -1) {<br/>
-			int i = myString.lastIndexOf("e");<br/>
-			System.out.println(myString + ":" + i);  //the Java compiler will use a StringBuilder internally here [builder.append(":")]<br/>
-			...<br/>
-			return myString.replace("m","z");<br/>
-			}<br/>
-			</code>
+<pre><code>
+String myString = ...
+if (myString.indexOf("e") != -1) {
+    int i = myString.lastIndexOf("e");
+    System.out.println(myString + ":" + i);  //the Java compiler will use a StringBuilder internally here [builder.append(":")]
+    ...
+    return myString.replace("m","z");
+}
+</code></pre>
 			Replace the single letter <code>String</code>s with their <code>char</code> equivalents like so:<br/>
 			
-			<code>
-			String myString = ... <br/>
-			if (myString.indexOf('e') != -1) {<br/>
-			int i = myString.lastIndexOf('e');<br/>
-			System.out.println(myString + ':' + i);  //the Java compiler will use a StringBuilder internally here [builder.append(':')]<br/>
-			...<br/>
-			return myString.replace('m','z');<br/>
-			}<br/>
-			</code>
+<pre><code>
+String myString = ...
+if (myString.indexOf('e') != -1) {
+    int i = myString.lastIndexOf('e');
+    System.out.println(myString + ':' + i);  //the Java compiler will use a StringBuilder internally here [builder.append(':')]
+    ...
+    return myString.replace('m','z');
+}
+</code></pre>
 			</p>
 			]]>
 		</Details>
@@ -2811,7 +2955,7 @@
 		<Details>
 			<![CDATA[
 			<p>This method implements Serializable but is derived from a
-			class that does not. The super class has fields that are not serialized
+			class that does not. The superclass has fields that are not serialized
 			because this class does not take the responsibility of writing these fields out
 			either using Serializable's writeObject method, or Externalizable's writeExternal
 			method. Therefore when this class is read from a stream, the superclass fields
@@ -2827,8 +2971,8 @@
 		<LongDescription>Comparator method {1} doesn't seem to return all ordering values</LongDescription>
 		<Details>
 			<![CDATA[
-			<p>This compareTo or compare method returns constant values for to represent less than,
-			equals and greater than. However it does not return each type, or it unconditionally returns a non zero value. 
+			<p>This compareTo or compare method returns constant values to represent less than,
+			equals, and greater than. However, it does not return each type, or it unconditionally returns a non zero value. 
 			Given that comparators are transitive, this seems incorrect.</p>
 			]]>
 		</Details>
@@ -2948,13 +3092,13 @@
 			<p>This method attempts to check for null by just referring to the variable name
 			as would be done in C++. This ordinarily would be considered a compile error, except the
 			variable in question is a Boolean, which does an auto unbox to boolean.
-			<code><br/>
-				if (b && b.booleanValue())<br/>
-			</code>
+<pre><code>
+if (b && b.booleanValue())
+</code></pre>
 			should be<br/>
-			<code>
-				if ((b != null) && b.booleanValue())<br/>
-			</code>
+<pre><code>
+if ((b != null) && b.booleanValue())
+</code></pre>
 			</p>
 			]]>
 		</Details>
@@ -2965,7 +3109,7 @@
 		<LongDescription>Method {1} fetches character array just to do the equivalent of the charAt method</LongDescription>
 		<Details>
 			<![CDATA[
-			<p>This method calls the toCharArray method on a String the fetch an array of characters, only
+			<p>This method calls the toCharArray method on a String to fetch an array of characters, only
 			to retrieve one of those characters by index. It is more performant to just use the charAt method.</p>
 			]]>
 		</Details>
@@ -2990,27 +3134,27 @@
 			<![CDATA[
 			<p>This method tests a string, and groups null values with real strings, leaving empty strings as another
 			case. That is, FindBugs has detected a structure like: <br/>
-			<code>
-			String a = null, b = "", c = "someString"; <br/>
-			...<br/>
-			String testStr = ...;  //one of a, b or c<br/>
-			if (<b>FLAWED_TEST_LOGIC</b>) { <br/>
-			// Strings a and c fall into this branch... which is not typical.  <br/>
-			} else { <br/>
-			// String b falls into this branch. <br/>
-			} <br/>
-			</code>
+<pre><code>
+String a = null, b = "", c = "someString";
+
+String testStr = ...;  //one of a, b or c
+if ({{FLAWED_TEST_LOGIC}}) {
+    // Strings a and c fall into this branch... which is not typical.
+} else {
+    // String b falls into this branch.
+}
+</code></pre>
 			
 			This might be perfectly valid, but normally, null strings and empty strings are logically handled the same way,
 			and so this test may be flawed.</p>
 			<p>Pattern found is one of the following:
 			<ul>
-				<li><code>if ((s == null) || (s.length() > 0))</code> --- did you mean 
+				<li><code>if ((s == null) || (s.length() &gt; 0))</code> --- did you mean
 				<code>((s == null) || (s.length() == 0))</code>?</li>
 				<li><code>if ((s == null) || (s.length() != 0))</code> -- did you mean 
 				<code>((s == null) || (s.length() == 0))</code>? </li>
 				<li><code>if ((s != null) && (s.length() == 0))</code> -- did you mean 
-				<code>((s != null) && (s.length() > 0))</code> or perhaps 
+				<code>((s != null) && (s.length() &gt; 0))</code> or perhaps
 				<code>((s == null) || (s.length() == 0))</code>? </li>
 			</ul>
 			</p>
@@ -3085,7 +3229,7 @@
 			<![CDATA[
 			<p>This class defines a static field 'serialVersionUID' to define the serialization
 			version for this class. This field is marked as non private. As the serialVersionUID only
-			controls the current class, and doesn't effect any derived classes, defining it as non
+			controls the current class, and doesn't affect any derived classes, defining it as non
 			private is confusing. It is suggested you change this variable to be private.</p>
 			]]>
 		</Details>
@@ -3120,8 +3264,8 @@
 		<LongDescription>Method {1} passes an empty string to equalsIgnoreCase or compareToIgnoreCase</LongDescription>
 		<Details>
 			<![CDATA[
-			<p>This method passes the empty string "" to equalsIgnoreCase or compareToIgnoreCase, as the empty string
-			is not case-sensitive using equals is simpler. It would be even simpler to do a length() == 0 test.</p>
+			<p>This method passes the empty string "" to equalsIgnoreCase or compareToIgnoreCase. As the empty string
+			is not case-sensitive, using equals is simpler. It would be even simpler to do a length() == 0 test.</p>
 			]]>
 		</Details>
 	</BugPattern>
@@ -3147,7 +3291,7 @@
 			<![CDATA[
 			<p>This method calls StringBuilder.append and assigns the results to the same StringBuilder like:</p>
 			<code>sb = sb.append("foo")</code>
-			<p>StringBuilder is mutable this is not necessary.
+			<p>StringBuilder is mutable, so this is not necessary.
 			This is also true of StringBuffer.</p>
 			]]>
 		</Details>
@@ -3171,24 +3315,24 @@
 			<![CDATA[
 			<p>This method appends two literal strings to a <code>StringBuilder</code> back to back. 
 			Modern compilers will optimize something like:<br/>
-			<code>
-				public static final string CONST_VAL = "there";<br/>
-				...<br/>
-				String str = "Hello" + " "+ CONST_VAL + " " +"world!";<br/>
-			</code>
+<pre><code>
+public static final string CONST_VAL = "there";
+...
+String str = "Hello" + " "+ CONST_VAL + " " +"world!";
+</code></pre>
 			to: <br/>
-			<code>
-				public static final string CONST_VAL = "there";<br/>
-				...<br/>
-				String str = "Hello there world!";<br/>
-			</code>
+<pre><code>
+public static final string CONST_VAL = "there";
+...
+String str = "Hello there world!";
+</code></pre>
 			This means the concatenation is done during compile time, not at runtime, so there's <b>no need</b> to do: <br/>
-			<code>
-			public static final string CONST_VAL = "there";<br/>
-			...<br/>
-			StringBuilder sb = new StringBuilder("Hello").append(" ").append(CONST_VAL).append(" ").append("world!");<br/>
-			String str = sb.toString();<br/>
-			</code>
+<pre><code>
+public static final string CONST_VAL = "there";
+...
+StringBuilder sb = new StringBuilder("Hello").append(" ").append(CONST_VAL).append(" ").append("world!");
+String str = sb.toString();
+</code></pre>
 			which is harder to read and will result in more complex bytecode.
 			</p>
 			
@@ -3242,14 +3386,15 @@
 		   
 		   <p>
 		   For example, instead of :<br/>
-		   <code>
-		   return "ThisIsAConstantString ".toLowerCase().trim(); <br/>
-		   </code>
+<pre><code>
+return "ThisIsAConstantString".toLowerCase().trim();
+</code></pre>
 		   just do <br/>
-		   <code>
-		   return "thisisaconstantstring"; <br/>
-		   </code>
-		   for shorter and easier to read code.  An exception might be made when locale-specific transformations need to be done (in the case of <code>toUpperCase()</code> and <code>toLowerCase()</code>.
+<pre><code>
+return "thisisaconstantstring";
+</code></pre>
+		   for shorter and easier to read code.  An exception might be made when locale-specific transformations need
+		   to be done (in the case of <code>toUpperCase()</code> and <code>toLowerCase()</code>.
 		   </p>
 	       ]]>
 	   </Details>
@@ -3275,7 +3420,7 @@
 			<![CDATA[
 			<p>This method calls String.format passing a static string as the format string that has no replacement markers
 			(starting with %). Thus no replacement will happen, and the format method is superfluous. If parameters were intended,
-			add the appropriate format markers as needed, otherwise, just remove the call to String.format and use the static
+			add the appropriate format markers as needed; otherwise, just remove the call to String.format and use the static
 			string as is.</p>
 			]]>
 		</Details>
@@ -3294,6 +3439,33 @@
 			]]>
 		</Details>
 	</BugPattern>
+	
+	<BugPattern type="SPP_WRONG_COMMONS_TO_STRING_OBJECT">
+		<ShortDescription>Method does not pass an object to commons-lang's ToStringBuilder</ShortDescription>
+		<LongDescription>Method {1} does not pass an object to commons-lang's ToStringBuilder</LongDescription>
+		<Details>
+			<![CDATA[
+			This method uses commons-lang, or commons-lang3's ToStringBuilder to attempt to output a representation of an object.
+			However, no object was passed, just the style specifier, and so the output will be of the ToStringStyle object itself.
+			Don't forget to include the object you wish to output as the first parameter, such as
+			<pre>
+			ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+			</pre>
+			]]>
+		</Details>
+	</BugPattern>
+	
+	<BugPattern type="SPP_NULL_CHECK_ON_MAP_SUBSET_ACCESSOR">
+		<ShortDescription>Method checks whether the keySet(), entrySet() or values() collection of a Map is null</ShortDescription>
+		<LongDescription>Method {1} checks whether the keySet(), entrySet() or values() collection of a Map is null</LongDescription>
+		<Details>
+			<![CDATA[
+			This method checks to see if the return value from a keySet(), entrySet() or values() method call on a Map is null.
+			For any valid functioning Map these collections will always be non-null, and so the call is superfluous. Maybe you intended
+			to check whether those sets where empty() instead.
+			]]>
+		</Details>
+	</BugPattern>
 
 	<BugPattern type="BAS_BLOATED_ASSIGNMENT_SCOPE">
 		<ShortDescription>Method assigns a variable in a larger scope than is needed</ShortDescription>
@@ -3304,9 +3476,9 @@
 			<p>This method assigns a value to a variable in an outer scope compared to where the variable is actually used.
 			Assuming this evaluation does not have side effects, the assignment can be moved into the inner scope (if block)
 			so that its execution time isn't taken up if the if guard is false. Care should be
-			taken however that the right hand side of the assignment does not contain side
-			effects that are required to happen, or that changes are not made further down that
-			will effect the execution of the assignment when done later on.</p>
+			taken, however, that the right hand side of the assignment does not contain side
+			effects that are required to happen, and that changes are not made further down that
+			will affect the execution of the assignment when done later on.</p>
 			]]>
 		</Details>
 	</BugPattern>
@@ -3332,7 +3504,7 @@
 			<![CDATA[
 			<p>This method removes items from a collection using the remove method of the collection, while
 			at the same time iterating across the collection. Doing this will invalidate the iterator, and further
-			use of it, will cause ConcurrentModificationExceptions to be thrown. To avoid this, the remove
+			use of it will cause ConcurrentModificationExceptions to be thrown. To avoid this, the remove
 			method of the iterator should be used.</p>
 			]]>
 		</Details>
@@ -3345,7 +3517,7 @@
 			<![CDATA[
 			<p>This method modifies the contents of a collection using the collection API methods, while
 			at the same time iterating across the collection. Doing this will invalidate the iterator, and further
-			use of it, will cause ConcurrentModificationExceptions to be thrown.</p>
+			use of it will cause ConcurrentModificationExceptions to be thrown.</p>
 			]]>
 		</Details>
 	</BugPattern>
@@ -3361,11 +3533,11 @@
 			<p>PLEASE NOTE: String.split will return an array of 1 element when passed the
 			empty string, as opposed to using StringTokenizer which returns false on the first
 			hasMoreElements/hasMoreTokens call. So you may need to use:</p>
-			<code>
-				if (s.length() > 0) <br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;return s.split(";");<br/>
-				return new String[0];<br/>
-			</code>
+<pre><code>
+if (s.length() &gt; 0) <br/>
+    return s.split(";");<br/>
+return new String[0];<br/>
+</code></pre>
 			]]>
 		</Details>
 	</BugPattern>
@@ -3436,7 +3608,7 @@
 		<Details>
 			<![CDATA[
 			<p>This method is not constrained by an interface or superclass, but converts a caught checked exception
-			to unchecked exception and thrown. It would be more appropriate just throw the checked exception, adding
+			to unchecked exception and thrown. It would be more appropriate just to throw the checked exception, adding
 			the exception to the throws clause of the method.</p>
 			]]>
 		</Details>
@@ -3447,7 +3619,7 @@
 		<LongDescription>Constrained method {1} converts checked exception to unchecked instead of another allowable checked exception</LongDescription>
 		<Details>
 			<![CDATA[
-			<p>This method's exception signature is constrained by an interface of super class to not throw a
+			<p>This method's exception signature is constrained by an interface of superclass not to throw a
 			checked exception that was caught. Therefore this exception was converted to an unchecked exception and
 			thrown. It would probably be better to throw the closest checked exception allowed, and to annotate
 			the new exception with the original exception using the initial cause field.</p>
@@ -3460,10 +3632,10 @@
 		<LongDescription>Constrained method {1} converts checked exception to unchecked</LongDescription>
 		<Details>
 			<![CDATA[
-			<p>This method's exception signature is constrained by an interface or super class to not throw
+			<p>This method's exception signature is constrained by an interface or superclass not to throw
 			any checked exceptions. Therefore a caught checked exception was converted to an unchecked exception
-			and thrown. However it appears that the class in question is owned by the same author as the constraining
-			interface or superclass. Consider changes the signature of this method to include the checked exception.</p>
+			and thrown. However, it appears that the class in question is owned by the same author as the constraining
+			interface or superclass. Consider changing the signature of this method to include the checked exception.</p>
 			]]>
 		</Details>
 	</BugPattern>
@@ -3473,7 +3645,7 @@
 	   <LongDescription>method {1} converts an exception into a boolean 'error code' value</LongDescription>
 	   <Details>
 	       <![CDATA[
-	       <p>This method catches and exception and returns a boolean that represents whether an exception occurred or not.
+	       <p>This method catches an exception and returns a boolean that represents whether an exception occurred or not.
 	       This throws away the value of exception handling and lets code ignore the resultant 'error code' return value.
 	       You should just throw the exception to the caller instead.</p>
 	       ]]>
@@ -3486,7 +3658,7 @@
 		<Details>
 			<![CDATA[
 			<p>This method appears to modify a parameter, and then return this parameter as the
-			methods return value. This will be confusing to callers of this method, as it won't be
+			method's return value. This will be confusing to callers of this method, as it won't be
 			apparent that the 'original' passed in parameter will be changed as well. If the purpose
 			of this method is to change the parameter, it would be more clear to change the method to
 			a have a void return value. If a return type is required due to interface or superclass contract,
@@ -3582,7 +3754,7 @@
 			<![CDATA[
 			<p>This method evaluates a boolean expression and passes that to Assert.assertFalse / Assert.assertTrue.
 			It is better to pass the two values that are being equated to the Assert.assertEquals method so that the
-			JUnit failure method is more meaningful of the intended test.</p>
+			JUnit failure method is more descriptive of the intended test.</p>
 			]]>
 		</Details>
 	</BugPattern>
@@ -3594,7 +3766,7 @@
 			<![CDATA[
 			<p>This method evaluates a boolean expression and passes that to Assert.assertFalse / Assert.assertTrue.
 			It is better to pass the two values that are being equated to the Assert.assertNotEquals method so that the
-			JUnit failure method is more meaningful of the intended test.</p>
+			JUnit failure method is more descriptive of the intended test.</p>
 			]]>
 		</Details>
 	</BugPattern>
@@ -3687,7 +3859,7 @@
 		<Details>
 			<![CDATA[
 			<p>This method compares an object's equality to null. It is better to use the Assert.assertNull
-			method so that the TestNG failure method is more meaningful of the intended test.</p>
+			method so that the TestNG failure method is more descriptive of the intended test.</p>
 			]]>
 		</Details>
 	</BugPattern>
@@ -3698,7 +3870,7 @@
 		<Details>
 			<![CDATA[
 			<p>This method compares an object's inequality to null. It is better to use the Assert.assertNotNull
-			method so that the TestNG failure method is more meaningful of the intended test.</p>
+			method so that the TestNG failure method is more descriptive of the intended test.</p>
 			]]>
 		</Details>
 	</BugPattern>
@@ -3770,18 +3942,19 @@
 		<LongDescription>Method {1} throws a java.lang.Exception that wraps a more useful exception</LongDescription>
 		<Details>
 			<![CDATA[
-			<p>This method catches an exception and generates a new exception of type java.lang.Exception, passing the
-			original exception as the new Exception's cause.  If the original Exception was actually an java.lang.Error, this
-			is dubious as you should not be handling errors. If the original exception is a more specific exception, there is no
-			reason to wrap it in an exception of the java.lang.Exception class, and just obfuscates the type of error that is occurring.
+			<p>This method catches an exception and generates a new exception of type java.lang.Exception,
+			passing the original exception as the new Exception's cause.  If the original Exception was actually
+			a java.lang.Error, this is dubious as you should not be handling errors. If the original exception
+			is a more specific exception, there is no reason to wrap it in a java.lang.Exception;
+			this just obfuscates the type of error that is occurring.
 			</p>
 			]]>
 		</Details>
 	</BugPattern>
 
 	<BugPattern type="SCSS_SUSPICIOUS_CLUSTERED_SESSION_SUPPORT">
-		<ShortDescription>Method modifies http session attribute without calling setAttribute</ShortDescription>
-		<LongDescription>Method {1} modifies http session attribute without calling setAttribute</LongDescription>
+		<ShortDescription>Method modifies an http session attribute without calling setAttribute</ShortDescription>
+		<LongDescription>Method {1} modifies an http session attribute without calling setAttribute</LongDescription>
 		<Details>
 			<![CDATA[
 			<p>This method fetches a complex object from an HttpSession object, modifies this object, but does
@@ -3851,6 +4024,28 @@
 			<p>This method attempts to use an SLF4J logger to log a parameterized expression using formatting anchors.
 			However, SLF4J uses simple non numbered anchors such as {}, rather than anchors with digits in them as the
 			code uses. Thus no parameter replacement will occur.</p>
+			<p>This pattern is invalid:
+			<code>LOGGER.error("{0} is broken", theThing);</code>
+			Use instead
+			<code>LOGGER.error("{} is broken", theThing);</code>
+			</p>			
+			]]>
+		</Details>
+	</BugPattern>
+	
+		<BugPattern type="LO_INVALID_STRING_FORMAT_NOTATION">
+		<ShortDescription>Method attempts to log using String.format notation</ShortDescription>
+		<LongDescription>Method {1} attempts to log using String.format notation</LongDescription>
+		<Details>
+			<![CDATA[
+			<p>This method attempts to use an SLF4J logger to log a parameterized expression using String.format notation.
+			However, SLF4J uses simple non numbered anchors such as {}, rather than anchors with percent signs in them as the
+			code uses. Thus no parameter replacement will occur.</p>
+			<p>This pattern is invalid:
+			<code>LOGGER.error("%s is broken", theThing);</code>
+			Use instead
+			<code>LOGGER.error("{} is broken", theThing);</code>
+			</p>			
 			]]>
 		</Details>
 	</BugPattern>
@@ -3860,7 +4055,7 @@
 		<LongDescription>Method {1} passes an incorrect number of parameters to an SLF4J logging statement</LongDescription>
 		<Details>
 			<![CDATA[
-			<p>This method passes the wrong number of parameters to a SLF4J logging method (error, warn, info, debug) based on the number of anchors {} in the
+			<p>This method passes the wrong number of parameters to an SLF4J logging method (error, warn, info, debug) based on the number of anchors {} in the
 			format string. An additional exception argument is allowed if found.</p>
 			]]>
 		</Details>
@@ -3872,8 +4067,8 @@
 	   <Details>
 	       <![CDATA[
 	       <p>This method passes a standard exception as a logger parameter, and expects this exception to be substituted in
-	        an SLF4J style parameter marker '{}'. This marker will not be translated as SLF4J doesn't process the Exception class
-	        for markers.
+	        an SLF4J style parameter marker '{}'. This marker will not be translated as SLF4J doesn't process the Exception
+	        class for markers.
 	       </p>
 	       ]]>
 	   </Details>
@@ -3890,8 +4085,29 @@
 	       will never be executed.</p>
 	       ]]>
 	   </Details>
-	</BugPattern>'
-
+	</BugPattern>
+	
+	
+	<BugPattern type="LO_EMBEDDED_SIMPLE_STRING_FORMAT_IN_FORMAT_STRING">
+	   <ShortDescription>Method passes a simple String.format result to an SLF4J's format string</ShortDescription>
+	   <LongDescription>Method {1} passes a simple String.format result to an SLF4J's format string</LongDescription>
+	   <Details>
+	       <![CDATA[
+	       <p>This method uses an SLF4J logger to log a string, which was produced through a call to String.format, where
+	       the format string passed was a constant string containing only simple format markers that could be directly handled
+	       by slf4j. Rather than doing
+	       <pre>
+	          logger.error("String.format("This %s is an error", s));
+	       <pre>
+	       do
+	       <pre>
+	          logger.error(This {} is an error", s);
+	       </pre>
+	       </p>
+	       ]]>
+	   </Details>
+	</BugPattern>
+	
 	<BugPattern type="IICU_INCORRECT_INTERNAL_CLASS_USE">
 		<ShortDescription>Class relies on internal API classes</ShortDescription>
 		<LongDescription>Class {0} relies on internal API classes</LongDescription>
@@ -3947,8 +4163,9 @@
 		<LongDescription>Method {1} declares throwing two or more exceptions related by inheritance</LongDescription>
 		<Details>
 			<![CDATA[
-			<p>This method declares that it throws an exception that is the child of another exception that is also declared to be thrown.
-			Given that the parent exception is declared, there is no need for the child exception to also be declared, and just adds confusion.</p>
+			<p>This method declares that it throws an exception that is the child of another exception that is
+			also declared to be thrown. Given that the parent exception is declared, there is no need for the child
+			exception to also be declared; it just adds confusion.</p>
 			]]>
 		</Details>
 	</BugPattern>
@@ -3982,7 +4199,7 @@
 		<LongDescription>Method {1} returns null for Boolean type</LongDescription>
 		<Details>
 			<![CDATA[
-			<p>This method declares that it returns a Boolean value. However the code
+			<p>This method declares that it returns a Boolean value. However, the code
 			can return a null value. As this is now three values that can be returned;
 			Boolean.TRUE, Boolean.FALSE, null; you have changed what a Boolean means.
 			It would be clearer to just create a new Enum that has the three values
@@ -4071,6 +4288,21 @@
 			symmetry rule of equivalence is maintained, that being if a equals b, then b equals a. It does not
 			appear that the class that is being compared to this class knows about this class, and doesn't compare itself
 			to this.</p>
+			<p>
+			Here's an example of a BAD equals method, do NOT do this:
+<pre><code>
+class Person {
+    public boolean equals(Object o) {
+        if (o instanceof Person) {
+            return name.equals(((Person) o).name);
+        } else if (o instanceof String) {
+            return name.equals(o);
+        }
+        return false;
+    }
+}
+</code></pre>
+			</p>
 			]]>
 		</Details>
 	</BugPattern>
@@ -4083,13 +4315,13 @@
 			<p>This method contains a contravariant array assignment. Since arrays are mutable data structures, their use
 			must be restricted to covariant or invariant usage.</p>
 
-			<code>
-				class A {}<br/>
-				class B extends A {}<br/>
-				<br/>
-				B[] b = new B[2];<br/>
-				A[] a = b;<br/>
-			</code>
+<pre><code>
+class A {}
+class B extends A {}
+
+B[] b = new B[2];
+A[] a = b;
+</code></pre>
 			]]>
 		</Details>
 	</BugPattern>
@@ -4102,14 +4334,14 @@
 			<p>This method contains a contravariant array element assignment. Since arrays are mutable
 			data structures, their use must be restricted to covariant or invariant usage.</p>
 
-			<code>
-				class A {}<br/>
-				class B extends A {}<br/>
-				<br/>
-				B[] b = new B[2];<br/>
-				A[] a = b;<br/>
-				a[0] = new A(); // results in ArrayStoreException (Runtime)<br/>
-			</code>
+<pre><code>
+class A {}
+class B extends A {}
+
+B[] b = new B[2];
+A[] a = b;
+a[0] = new A(); // results in ArrayStoreException (Runtime)
+</code></pre>
 			]]>
 		</Details>
 	</BugPattern>
@@ -4121,7 +4353,7 @@
 			<![CDATA[
 			<p>This serializable class defines a field as both transient and final. As transient fields
 			are not serialized across the stream, it is required that some piece of code reinitialize that field
-			when it is deserialized. But since constructors aren't called when deserialization, the field is not initialized.
+			when it is deserialized. But since constructors aren't called when deserializing, the field is not initialized.
 			And since the field is final, no other method can initialize it as well.</p>
 			]]>
 		</Details>
@@ -4133,8 +4365,16 @@
 		<Details>
 			<![CDATA[
 			<p>This method tests a field to make sure it's not null before executing a conditional block of
-			code. However in the conditional block it reassigns the field. It is likely that the guard
+			code. However, in the conditional block it reassigns the field. It is likely that the guard
 			should have been a check to see if the field is null, not that the field was not null.</p>
+			<p>example:
+<pre><code>
+if (name != null) {
+    name = person.getName();
+}
+</code></pre>
+			It is possible this is correct, but it seems likely the guard was meant to be <code>if (name == null)</code>
+			</p>
 			]]>
 		</Details>
 	</BugPattern>
@@ -4145,8 +4385,16 @@
 		<Details>
 			<![CDATA[
 			<p>This method tests a local variable to make sure it's not null before executing a conditional block of
-			code. However in the conditional block it reassigns the local variable. It is likely that the guard
+			code. However, in the conditional block it reassigns the local variable. It is likely that the guard
 			should have been a check to see if the local variable is null, not that the local variable was not null.</p>
+			<p>example:
+<pre><code>
+if (name != null) {
+    name = person.getName();
+}
+</code></pre>
+			It is possible this is correct, but it seems likely the guard was meant to be <code>if (name == null)</code>
+			</p>
 			]]>
 		</Details>
 	</BugPattern>
@@ -4156,7 +4404,9 @@
 		<LongDescription>Method {1} calls {2}</LongDescription>
 		<Details>
 			<![CDATA[
-			<p>Calling <code>Runtime.exit()</code> or <code>Runtime.halt()</code> shuts down the entire Java virtual machine. This should only been done when it is appropriate. Such calls make it hard or impossible for your code to be invoked by other code. Consider throwing a RuntimeException instead.</p>
+			<p>Calling <code>Runtime.exit()</code> or <code>Runtime.halt()</code> shuts down the entire Java virtual machine.
+			This should only be done in very rare circumstances. Such calls make it hard or impossible for your code to be
+			invoked by other code. Consider throwing a RuntimeException instead.</p>
 			]]>
 		</Details>
 	</BugPattern>
@@ -4166,7 +4416,8 @@
 		<LongDescription>Method {1} triggers finalization when calling {2}</LongDescription>
 		<Details>
 			<![CDATA[
-			<p>Manually triggering finalization can result in serious performance problems and may be masking resource cleanup bugs.</p>
+			<p>Manually triggering finalization can result in serious performance problems and may be masking resource cleanup bugs. 
+			Only the garbage collector, not application code, should be concerned with finalization.</p>
 			]]>
 		</Details>
 	</BugPattern>
@@ -4176,7 +4427,10 @@
 		<LongDescription>Method {1} calls BigDecimal.equals(), which is normally a mistake</LongDescription>
 		<Details>
 			<![CDATA[
-			<p><code>equals()</code> being called to compare two <code>java.math.BigDecimal</code> numbers. This is normally a mistake, as two <code>BigDecimal</code> objects are only equal if they are equal in both value and scale, so that <i>2.0</i> is not equal to <i>2.00</i>. To compare <code>BigDecimal</code> objects for mathematical equality, use <code>compareTo()</code> instead.</p>
+			<p>This method calls <code>equals()</code> to compare two <code>java.math.BigDecimal</code> numbers. 
+			This is normally a mistake, as two <code>BigDecimal</code> objects are only equal if they are 
+			equal in both value and scale, so that <i>2.0</i> is not equal to <i>2.00</i>. 
+			To compare <code>BigDecimal</code> objects for mathematical equality, use <code>compareTo()</code> instead.</p>
 			]]>
 		</Details>
 	</BugPattern>
@@ -4186,7 +4440,10 @@
 		<LongDescription>Method {1} calls InetAddress.getLocalHost(), which may be a security risk</LongDescription>
 		<Details>
 			<![CDATA[
-			<p>Do not call <code>InetAddress.getLocalHost()</code> on multihomed servers. On a multihomed server, <code>InetAddress.getLocalHost()</code> simply returns the IP address associated with the server's internal hostname. This could be any of the network interfaces, which could expose the machine to security risks. Server applications that need to listen on sockets should add configurable properties to define which network interfaces the server should bind.</p>
+			<p>Do not call <code>InetAddress.getLocalHost()</code> on multihomed servers. On a multihomed server, 
+			<code>InetAddress.getLocalHost()</code> simply returns the IP address associated with the server's internal hostname. 
+			This could be any of the network interfaces, which could expose the machine to security risks. Server applications 
+			that need to listen on sockets should add configurable properties to define which network interfaces the server should bind.</p>
 			]]>
 		</Details>
 	</BugPattern>
@@ -4196,7 +4453,11 @@
 		<LongDescription>Method {1} creates a promiscuous ServerSocket, which may be a security risk</LongDescription>
 		<Details>
 			<![CDATA[
-			<p>Do not use the <code>ServerSocket</code> constructor or <code>ServerSocketFactory.createServerSocket()</code> factory methods that accepts connections on any network interface. By default, an application that listens on a socket will listen for connection attempts on any network interface, which can be a security risk. Only the long form the <code>ServerSocket</code> constructor or <code>ServerSocketFactory.createServerSocket()</code> factory methods take a specific local address to define which network interface the socket should bind.</p>
+			<p>Do not use the <code>ServerSocket</code> constructor or <code>ServerSocketFactory.createServerSocket()</code> factory methods that 
+			accept connections on any network interface. By default, an application that listens on a socket will listen for connection attempts 
+			on any network interface, which can be a security risk. Only the long form of the <code>ServerSocket</code> constructor or 
+			<code>ServerSocketFactory.createServerSocket()</code> factory methods take a specific local address to define which network interface 
+			the socket should bind.</p>
 			]]>
 		</Details>
 	</BugPattern>
@@ -4206,7 +4467,9 @@
 		<LongDescription>Method {1} creates an insecure Random object, which may be a security risk</LongDescription>
 		<Details>
 			<![CDATA[
-			<p><code>Random()</code> constructor without a seed is insecure because it defaults to easily guessable seed: <code>System.currentTimeMillis()</code>. Initialize seed like <code>new Random(SecureRandom.getInstance("SHA1PRNG").nextLong())</code> or replace <code>Random()</code> with <code>SecureRandom.getInstance("SHA1PRNG")</code> instead.
+			<p><code>Random()</code> constructor without a seed is insecure because it defaults to an easily guessable seed: 
+			<code>System.currentTimeMillis()</code>. Initialize a seed like <code>new Random(SecureRandom.getInstance("SHA1PRNG").nextLong())</code> 
+			or replace <code>Random()</code> with <code>SecureRandom.getInstance("SHA1PRNG")</code> instead.
 			"SHA1PRNG" is the random algorithm supported on all platforms.
 		</p>
 
@@ -4222,7 +4485,8 @@
 		<LongDescription>Method {1} calls deprecated SecureRandom method {2}</LongDescription>
 		<Details>
 			<![CDATA[
-			<p>In JDK 1.5 or less, the <code>SecureRandom()</code> constructors and <code>SecureRandom.getSeed()</code> method are recommended against using. Call <code>SecureRandom.getInstance()</code> and <code>SecureRandom.getInstance().generateSeed()</code> instead.</p>
+			<p>In JDK 1.5 or less, the <code>SecureRandom()</code> constructors and <code>SecureRandom.getSeed()</code> method are recommended against using. 
+			Call <code>SecureRandom.getInstance()</code> and <code>SecureRandom.getInstance().generateSeed()</code> instead.</p>
 			]]>
 		</Details>
 	</BugPattern>
@@ -4242,7 +4506,9 @@
 		<LongDescription>Method {1} attempts to manually schedule threads by calling method {2}</LongDescription>
 		<Details>
 			<![CDATA[
-			<p>Manual thread scheduling with <code>Thread.sleep()</code> or <code>Thread.yield()</code> has no guaranteed semantics and is often used to mask race conditions.</p>
+			<p>Manual thread scheduling with <code>Thread.sleep()</code> or <code>Thread.yield()</code> has no guaranteed semantics and is often used to mask race conditions.
+			These methods exist for supporting early processors when java was first released, and are not advised for modern processors. The operating system will take care
+			of yielding threads for you.</p>
 			]]>
 		</Details>
 	</BugPattern>
@@ -4252,7 +4518,18 @@
 		<LongDescription>Method {1} sleeps without timeout when calling {2}</LongDescription>
 		<Details>
 			<![CDATA[
-			<p>Calling one of the following methods without timeout could block forever. Consider using a timeout to detect deadlocks or performance problems. Methods: Thread.join(), Object.wait(), Condition.await(), Lock.lock(), Lock.lockInterruptibly(), ReentrantLock.lock(), ReentrantLock.lockInterruptibly()</p>
+			<p>Calling one of the following methods without timeout could block forever. Consider using a timeout to detect deadlocks or performance problems. 
+			Methods: 
+			<ul>
+			<li>Thread.join()</li>
+			<li>Object.wait()</li>
+			<li>Condition.await()</li>
+			<li>Lock.lock()</li> 
+			<li>Lock.lockInterruptibly()</li>
+			<li>ReentrantLock.lock()</li>
+			<li>ReentrantLock.lockInterruptibly()</li>
+			</ul>
+			</p>
 			]]>
 		</Details>
 	</BugPattern>
@@ -4333,6 +4610,12 @@
 			of a design flaw in the Properties class by deriving from Hashtable instead of using aggregation.
 			If you want a collection that holds other types of objects, use a Hashtable, or better still newer collections
 			like HashMap or TreeMap.</p>
+			<p>
+			Don't use <code>properties.put("foo", bar);</code>
+			</p>
+			<p>
+			Do use <code>properties.setProperty("foo", "bar");</code>
+			</p>
 			]]>
 		</Details>
 	</BugPattern>
@@ -4345,6 +4628,12 @@
 			<p>This method uses the inherited method from Hashtable put(String key, Object value) in
 			a Properties object. Since the Properties object was intended to be only a String to String
 			map, use of the derived put method is discouraged. Use the Properties.setProperty method instead.</p>
+			<p>
+			Don't use <code>properties.put("foo", "bar");</code>
+			</p>
+			<p>
+			Do use <code>properties.setProperty("foo", "bar");</code>
+			</p>
 			]]>
 		</Details>
 	</BugPattern>
@@ -4489,7 +4778,7 @@
 		<LongDescription>Method {1} returns the result of invoking toString() without intermediate invocation of append() in ToStringBuilder</LongDescription>
 		<Details>
 			<![CDATA[
-			<p>This method returns the result of toString() on ToStringBuilder without an
+			<p>This method returns the result of toString() on a ToStringBuilder without an
 			intermediate invocation of append().</p>
 			]]>
 		</Details>
@@ -4510,13 +4799,14 @@
 	</BugPattern>
 
 	<BugPattern type="BRPI_BACKPORT_REUSE_PUBLIC_IDENTIFIERS">
-		<ShortDescription>Method uses backport concurrency utils</ShortDescription>
-		<LongDescription>Method {1} backport concurrency utils</LongDescription>
+		<ShortDescription>Method uses backported libraries that are now built in</ShortDescription>
+		<LongDescription>Method {1} uses backported libraries that are now built in</LongDescription>
 		<Details>
 			<![CDATA[
-			<p>This class uses Backport Utils concurrent classes. Updated/Efficient version of these
-			classes are available in versions of the JDK 5.0 and higher, and these
-			classes should only be used if you are targeting JDK 1.4 and lower.</p>
+			<p>This class uses either Backport Utils concurrent classes from Emory, or Time classes from ThreeTen Backport. 
+			Updated/Efficient version of these classes are available in the version of the JDK that this code is compiled against; 
+			JDK 1.5 for the concurrent classes, and JDK 1.8 for the time classes, and these
+			classes should only be used if you are targeting a JDK lower than this.</p>
 			]]>
 		</Details>
 	</BugPattern>
@@ -4551,9 +4841,9 @@
 			<![CDATA[
 			<p>This class implements the Cloneable interface but defines its clone method to still return
 			a CloneNotSupportedException. Since you are implementing clone() it would make sense that the method
-			in question will <em>not</em> throw that exception, so annotating your method with it just makes client use
-			of your more painful as they have to handle an exception that will never happen. Just remove the
-			throws clause from your method.</p>
+			in question will <em>not</em> throw that exception, so annotating your method with it just makes clients'
+			use of your class more painful as they have to handle an exception that will never happen.
+			Just remove the throws clause from your method.</p>
 			]]>
 		</Details>
 	</BugPattern>
@@ -4565,7 +4855,7 @@
 			<![CDATA[
 			<p>This method passes an array of primitive values to the Array.asList call. As primitive
 			values in arrays aren't automatically promoted to boxed primitives in arrays, the asList call
-			cannot convert this array in a list of boxed primitives. It therefore just creates an array
+			cannot convert this array to a list of boxed primitives. It therefore just creates an array
 			with one item in it, the array itself. This is rarely what is desired.</p>
 			]]>
 		</Details>
@@ -4577,7 +4867,7 @@
 		<Details>
 			<![CDATA[
 			<p>This method allocates a collection using the default constructor even though it is known
-			a priori how many items are going to be placed in the collection (or at least a reasonable guess)
+			a priori how many items are going to be placed in the collection (or at least can be reasonably guessed)
 			and thus needlessly causes intermediate reallocations of the collection.</p>
 			<p>You can use the constructor that takes an initial size and that will be much better, but
 			due to the loadFactor of Maps and Sets, even this will not be a correct estimate.</p>
@@ -4587,6 +4877,7 @@
 			    <li>Sets.newHashSetWithExpectedSize(int)</li>
 			    <li>Maps.newHashMapWithExpectedSize(int)</li>
 			</ul>
+			If not, a good estimate would be the expectedSize / {LOADING_FACTOR} which by default is 0.75
 			</p>
 			]]>
 		</Details>
@@ -4609,7 +4900,7 @@
 		<LongDescription>Method {1} ignores return value of a non mutating method</LongDescription>
 		<Details>
 			<![CDATA[
-			<p>This method ignores the return value of a common method that is assumed to be none mutating.
+			<p>This method ignores the return value of a common method that is assumed to be non-mutating.
 			If this method does in fact not modify the object it is called on, there is no reason to call
 			this method, and it can be removed.</p>
 			]]>
@@ -4621,8 +4912,8 @@
 		<LongDescription>Method {1} attempts to access an array element outside the array's size</LongDescription>
 		<Details>
 			<![CDATA[
-			<p>This method access an array element using a literal index that is know to be outside the size of the specified
-			array. This will cause an ArrayIndexOutOfBoundsException at runtime.</p>
+			<p>This method accesses an array element using a literal index that is known to be outside the size
+			of the specified array. This will cause an ArrayIndexOutOfBoundsException at runtime.</p>
 			]]>
 		</Details>
 	</BugPattern>
@@ -4632,7 +4923,7 @@
 		<LongDescription>Method {1} attempts to store an array element to an array that does not appear to be allocated</LongDescription>
 		<Details>
 			<![CDATA[
-			<p>This method attempts to store an array element into an array that appears to not have been allocated.</p>
+			<p>This method attempts to store an array element into an array that appears not to have been allocated.</p>
 			]]>
 		</Details>
 	</BugPattern>
@@ -4655,7 +4946,8 @@
             <![CDATA[
             <p>This class defines a field or local collection variable with a name that contains a different type
             of collection in its name. An example would be a Set<User> called userList. This is confusing to the reader,
-            and likely caused by a previous refactor of type, without changing the name.</p>
+            and likely caused by a previous refactor of type, without changing the name. This detector is obviously
+            only checking for English names.</p>
             ]]> 
         </Details>
 	</BugPattern>
@@ -4677,13 +4969,29 @@
 	   <LongDescription>Static or private method {1} has unused parameters</LongDescription>
 	   <Details>
 	       <![CDATA[
-	       <p>This method defines parameters that are never used. As this method is either static of private,
+	       <p>This method defines parameters that are never used. As this method is either static or private,
 	       and can't be derived from, it is safe to remove these parameters and simplify your method.
 	       You should consider, while unlikely, that this method may be used reflectively, and thus you will
-	       want to change that call as well.</p>
+	       want to change that call as well. In this case, it is likely that once you remove the parameter,
+	       there will be a chain of method calls that have spent time creating this parameter and passing it
+	       down the line. All of this may be able to be removed.</p>
 	       ]]>
 	   </Details>
 	</BugPattern>
+	
+	<BugPattern type="FCCD_FIND_CLASS_CIRCULAR_DEPENDENCY">
+        <ShortDescription>Class has a circular dependency with other classes</ShortDescription>
+        <LongDescription>Class {0} has a circular dependency with other classes</LongDescription>
+        <Details>
+		   <![CDATA[
+		    <p>
+		    This class has a circular dependency with other classes. This makes building these classes
+		    difficult, as each is dependent on the other to build correctly. Consider using interfaces
+		    to break the hard dependency. The dependency chain can be seen in the GUI version of FindBugs.
+		    </p>
+		    ]]>
+        </Details>
+    </BugPattern>
     
     <BugPattern type="MUC_MODIFYING_UNMODIFIABLE_COLLECTION">
         <ShortDescription>This method attempts to modify collection that appears to possibly be immutable</ShortDescription>
@@ -4740,27 +5048,27 @@
             <p>Most <code>ExecutorService</code> objects must be explicitly shutdown, otherwise, their internal threads can prevent the JVM from ever shutting down, even when everything else has stopped.</p>
             
             <p>FindBugs has detected that something like the following is happening:<br/>
-            <code>
-            ExecutorService executor = ... //e.g. Executors.newCachedThreadPool();<br/>
-            ...<br/>
-            public void reset() {<br/>
-            &nbsp;&nbsp;&nbsp;this.executor = Executors.newCachedThreadPool(); <br/>
-            &nbsp;&nbsp;&nbsp;this.executor.execute(new SampleExecutable()); <br/>
-            }<br/>
-            </code>
+<pre><code>
+ExecutorService executor = ... //e.g. Executors.newCachedThreadPool();
+...
+public void reset() {
+    this.executor = Executors.newCachedThreadPool();
+    this.executor.execute(new SampleExecutable());
+}<br/>
+</code></pre>
             For normal objects, losing the last reference to them like this would trigger the object to be cleaned up
             in garbage collection.  For <code>ExecutorService</code>s, this isn't enough to terminate the internal threads in the 
             thread pool, and the <code>ExecutorService</code> isn't guaranteed to shutdown, causing the JVM to never stop. <br/>
             To fix this, simply add a call to <code>shutdown()</code> like this:<br/>
-            <code>
-            ExecutorService executor = ... //e.g. Executors.newCachedThreadPool();<br/>
-            ...<br/>
-            public void reset() {<br/>
-            <b>&nbsp;&nbsp;&nbsp;this.executor.shutDown();</b> <br/>
-            &nbsp;&nbsp;&nbsp;this.executor = Executors.newCachedThreadPool(); <br/>
-            &nbsp;&nbsp;&nbsp;this.executor.execute(new SampleExecutable()); <br/>
-            }
-            </code>
+<pre><code>
+ExecutorService executor = ... //e.g. Executors.newCachedThreadPool();
+...
+public void reset() {
+    this.executor.shutDown(); //Fix
+    this.executor = Executors.newCachedThreadPool();
+    this.executor.execute(new SampleExecutable());
+}
+</code></pre>
             </p>
             			
 			<p>Even though there are some exceptions to this, particularly when a custom <code>ThreadFactory</code> is 
@@ -4782,42 +5090,42 @@
             <![CDATA[
             <p>FindBugs has detected an <code>org.apache.http.HttpRequest</code> (e.g. <code>HttpGet</code>, <code>HttpPost</code>, etc)
 				that didn't release its associated resources.  Code like the following: <br/>
-				<code>
-				private HttpGet httpGet; <br/>
-				...<br/>
-				public String requestInfo(URI u) {<br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;this.httpGet = new HttpGet(u);<br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;try(CloseableHttpResponse response = client.execute(httpGet);) {<br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return getResponseAsString(response);<br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;}<br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;catch (IOException e) {<br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;e.printStackTrace();<br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;}<br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;return null;<br/>
-				}<br/>
-				</code>
+<pre>code>
+private HttpGet httpGet;
+
+public String requestInfo(URI u) {
+    this.httpGet = new HttpGet(u);
+    try(CloseableHttpResponse response = client.execute(httpGet);) {
+        return getResponseAsString(response);
+    }
+    catch (IOException e) {
+        e.printStackTrace();
+    }
+    return null;
+}
+</code></pre>
 				will freeze after a few requests, usually with no indication as to why.  </p>
 				
 			<p>
-				The reason this code freezes is because <code>org.apache.http.HttpRequest</code>s need explicitly release their connection
+				The reason this code freezes is because <code>org.apache.http.HttpRequest</code>s need to explicitly release their connection
 				with a call to either <code>reset()</code> or <code>releaseConnection()</code>.  The above example can be easily fixed:<br/>
-				<code>
-				private HttpGet httpGet; <br/>
-				...<br/>
-				public String requestInfo(URI u) {<br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;this.httpGet = new HttpGet(u);<br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;try(CloseableHttpResponse response = client.execute(httpGet);) {<br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return getResponseAsString(response);<br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;}<br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;catch (IOException e) {<br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;e.printStackTrace();<br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;}<br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;<b>finally {<br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.httpGet.reset();<br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;}</b><br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;return null;<br/>
-				}<br/>
-				</code>
+<pre><code>
+private HttpGet httpGet;
+...
+public String requestInfo(URI u) {
+    this.httpGet = new HttpGet(u);
+    try(CloseableHttpResponse response = client.execute(httpGet);) {
+        return getResponseAsString(response);
+    }
+    catch (IOException e) {
+        e.printStackTrace();
+    }
+    <b>finally {
+        this.httpGet.reset();
+    }</b>
+    return null;
+}<br/>
+</code></pre>
 			</p>
             ]]>
         </Details>
@@ -4830,41 +5138,41 @@
             <![CDATA[
             <p>FindBugs has detected an <code>org.apache.http.HttpRequest</code> (e.g. <code>HttpGet</code>, <code>HttpPost</code>, etc)
 				that didn't release its associated resources.  Code like the following: <br/>
-				<code>
-				public String requestInfo(URI u) {<br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;HttpGet httpGet = new HttpGet(u);<br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;try(CloseableHttpResponse response = client.execute(httpGet);) {<br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return getResponseAsString(response);<br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;}<br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;catch (IOException e) {<br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;e.printStackTrace();<br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;}<br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;return null;<br/>
-				}<br/>
-				</code>
+<pre><code>
+public String requestInfo(URI u) {
+    HttpGet httpGet = new HttpGet(u);
+    try(CloseableHttpResponse response = client.execute(httpGet);) {
+        return getResponseAsString(response);
+    }
+    catch (IOException e) {
+        e.printStackTrace();
+    }
+    return null;
+}
+</code></pre>
 				will freeze after a few requests, usually with no indication as to why. </p>
 				
 			<p>
-				The reason this code freezes is because <code>org.apache.http.HttpRequest</code>s need explicitly release their connection
+				The reason this code freezes is because <code>org.apache.http.HttpRequest</code>s need to explicitly release their connection
 				with a call to either <code>reset()</code> or <code>releaseConnection()</code>, <b>even if the request is a local</b>. 
 				The garbage collector will not release these resources, leading to the frustrating freezing scenario described above.
 				
 				<br/>The above example can be easily fixed:<br/>
-				<code>
-				public String requestInfo(URI u) {<br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;HttpGet httpGet = new HttpGet(u);<br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;try(CloseableHttpResponse response = client.execute(httpGet);) {<br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return getResponseAsString(response);<br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;}<br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;catch (IOException e) {<br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;e.printStackTrace();<br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;}<br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;<b>finally {<br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;httpGet.reset();<br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;}</b><br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;return null;<br/>
-				}<br/>
-				</code>
+<pre><code>
+public String requestInfo(URI u) {
+    HttpGet httpGet = new HttpGet(u);
+    try(CloseableHttpResponse response = client.execute(httpGet);) {
+        return getResponseAsString(response);
+    }
+    catch (IOException e) {
+        e.printStackTrace();
+    }
+    <b>finally {
+        httpGet.reset();
+    }</b>
+    return null;
+}
+</code></pre>
 			</p>
             ]]>
         </Details>
@@ -4877,7 +5185,7 @@
     		<![CDATA[
     		<p>This method is longer than 8000 bytes. By default the JIT will not attempt to compile this method no matter
     		how hot it is, and so this method will always be interpreted. If performance is important, you should consider
-    		breaking this method up in smaller chunks. (And probably a good idea for readability too!).</p>
+    		breaking this method up into smaller chunks. (And probably a good idea for readability too!)</p>
     		]]>
     	</Details>
     </BugPattern>
@@ -4887,7 +5195,7 @@
     	<LongDescription>This method {1} performs arithmetic operations on time values with different units</LongDescription>
     	<Details>
     		<![CDATA[
-    		<p>This method takes two values that appear to be representing time, and performs arithmetic operations on this 
+    		<p>This method takes two values that appear to be representing time, and performs arithmetic operations on these 
     		two values directly, even though it appears that the two values are representing different time units, such as 
     		adding a millisecond value to a nanosecond value. You should convert the two values to the same time unit before
     		performing this calculation in order for it to be meaningful.</p>
@@ -4900,7 +5208,7 @@
     	<LongDescription>This method "{3}" needlessly uses a String literal to define an encoding.  A built-in Charset could be used instead like: {4}</LongDescription>
     	<Details>
     		<![CDATA[
-    		<p>This method uses a string literal to specify a <code>Charset</code> encoding. However the method invoked has an 
+    		<p>This method uses a string literal to specify a <code>Charset</code> encoding. However, the method invoked has an 
     		alternative signature that takes a <code>Charset</code> object. You should use this signature, as this class is compiled
     		with JDK 7 (or better), and the <code>Charset</code> in question is available as a constant from the 
     		<code>java.nio.charset.StandardCharsets</code> class.</p>
@@ -4934,9 +5242,9 @@
     		<![CDATA[
     		<p>This method specifies a <code>Charset</code> encoding with a String literal that is not recognized by the current
     		JDK. It's possible that this application will only be deployed on a JVM that does recognize this encoding, but
-    		it seem dubious that this is the case.</p>
+    		it seems dubious that this is the case.</p>
     		<p>
-    		The standard JDK encodings are "UTF-8", "US-ASCII", "ISO-8859-1", "UTF-16BE", "UTF-16LE", "UTF-16".  These are all case-sensitive.
+    		The standard JDK encodings (for Java 8) are "UTF-8", "US-ASCII", "ISO-8859-1", "UTF-16BE", "UTF-16LE", "UTF-16".  These are all case-sensitive.
     		</p>
     		]]>
     	</Details>
@@ -4948,7 +5256,7 @@
     	<Details>
     		<![CDATA[
     		<p>This method uses an overly complex if expression made up of multiple conditions joined by OR, where the same
-    		local variable is compared to a static value. When the number of conditions grow it is much cleaner
+    		local variable is compared to a static value. When the number of conditions grows, it is much cleaner
     		to build a static set of the possible values, and use the contains method on that set. This will
     		shorten the code, and make it more self documenting.</p>
     		]]>
@@ -5007,9 +5315,19 @@
     	<LongDescription>This method {1} continues a loop after finding an equality condition</LongDescription>
     	<Details>
     		<![CDATA[
-    		<p>This method continues with a loop, and does not break out of it, after finding an setting a variable in an if
+    		<p>This method continues with a loop, and does not break out of it, after finding and setting a variable in an if
     		condition based on equality. Since continuing on in the loop would seem to be unlikely to find the item again, breaking
     		at this point would seem to be the proper action.</p>
+    		<p>Example:
+<pre><code>
+int age = 0;
+for (Person p : people) {
+    if (p.getName().equals("Dave")) {
+        age = p.getAge();
+    }
+}
+</code></pre>
+    		It is likely you wanted a break after getting the age for "Dave".</p>
     		]]>
     	</Details>
     </BugPattern>
@@ -5020,7 +5338,7 @@
     	<Details>
     		<![CDATA[
     		<p>This method fetches a resource from a URL, and uses the File API to manipulate it. If this resource is a
-    		classpath resource, it will work if the resource is a file in a directory. If however the file is inside a JAR file
+    		classpath resource, it will work if the resource is a file in a directory. If, however, the file is inside a JAR file
     		this will fail. To avoid this confusing inconsistency, use the URL.openStream API instead to access the data of the classpath resource.
     		</p>
     		]]>
@@ -5033,7 +5351,7 @@
     	<Details>
     		<![CDATA[
     		<p>This class which has instance fields has no equals(Object o) method. It is possible that this
-    		class is never used in a context where this is required, it is often assumed, however, from clients 
+    		class is never used in a context where this is required; it is often assumed, however, from clients 
     		of this class that it is, so it is good to add such methods when you create them.
     		</p>
     		]]>
@@ -5046,7 +5364,7 @@
     	<Details>
     		<![CDATA[
     		<p>This class which has instance fields has no hashCode() method. It is possible that this
-    		class is never used in a context where this is required, it is often assumed, however, from clients 
+    		class is never used in a context where this is required; it is often assumed, however, from clients 
     		of this class that it is, so it is good to add such methods when you create them.
     		</p>
     		]]>
@@ -5060,8 +5378,11 @@
     		<![CDATA[
     		<p>This class has been created in the default package. Classes should be defined in a 
     		proper package structure, typically defined by the reverse of the domain name of the 
-    		owner of the code base. Putting code in the default (no) package limits it usefulness, and
-    		leaves it open to name collisions.
+    		owner of the code base. Putting code in the default (no) package limits its usefulness, including:
+    		<ol>
+    		<li>Not being able to import this class into classes with packages</li>
+    		<li>Leaving it open to name collisions with other packages.</li>
+    		</ol>
     		</p>
     		]]>
     	</Details>
@@ -5085,10 +5406,10 @@
     	<LongDescription>Method {1} uses IDE generated parameter names</LongDescription>
     	<Details>
     		<![CDATA[
-    		<p>This method appears to have been generated from an interface or super class using an IDE.
+    		<p>This method appears to have been generated from an interface or superclass using an IDE.
     		As such the IDE generated generic names (arg0, arg1, arg2) for parameters for this method,
     		and the author of this method did not change them to be meaningful. For better understandability
-    		it is recommended that you name these parameters with regard to their function.
+    		it is recommended that you name these parameters with regard to their function.</p>
     		]]>
     	</Details>
     </BugPattern>
@@ -5100,10 +5421,24 @@
     		<![CDATA[
     		<p>This method prints a stack trace to the console. This is non configurable, and causes an 
     		application to look unprofessional. Switch to using loggers so that users can control what 
-    		is logged and where.
+    		is logged and where.</p>
     		]]>
     	</Details>
     </BugPattern>
+    
+    <BugPattern type="IMC_IMMATURE_CLASS_WRONG_FIELD_ORDER">
+    	<ShortDescription>Class orders instance fields before static fields</ShortDescription>
+    	<LongDescription>Class {0} orders instance fields before static fields</LongDescription>
+    	<Details>
+    		<![CDATA[
+    		<p>This class adds fields to the class in an order that is confusing, and not expected by 
+    		other developers. The standard is for static fields to be listed first, followed by instance 
+    		fields. when fields are listed out of order, developers may make assumptions about their
+    		behaviour that is incorrect and lead to bugs.</p>
+    		]]> 
+    	</Details>
+    </BugPattern>
+    
     
     <BugPattern type="JXI_GET_ENDPOINT_CONSUMES_CONTENT">
     	<ShortDescription>JAX-RS Method implements a GET request but consumes input</ShortDescription>
@@ -5113,7 +5448,7 @@
     		<p>This JAX-RS endpoint is annotated to be used as @GET requests, but also documents that it
     		consumes JSON or XML data. Since a GET request pulls parameters from the URL, and not
     		the body of request, this pattern is problematic. If you wish to consume JSON or XML data,
-    		this request should be annotated with @POST.
+    		this request should be annotated with @POST.</p>
     		]]>
        	</Details>
     </BugPattern>
@@ -5160,7 +5495,7 @@
     		<![CDATA[
     		<p>This JAX-RS endpoint declares parameters without specifying where the value of this parameter comes from.
     		You can specify this by using one of several 'Param' annotations (@PathParam, @CookieParam, @FormParam @HeaderParam @MatrixParam @QueryParam),
-    		by adding a @Context parameter annotation, or you can declare that the method @Consumes an XML or JSON stream.
+    		by adding a @Context parameter annotation, or you can declare that the method @Consumes an XML or JSON stream.</p>
     		]]>
        	</Details>
     </BugPattern>
@@ -5170,9 +5505,9 @@
     	<LongDescription>Method {1} has a Spring @Transactional annotation on it, but is non-public</LongDescription>
     	<Details>
     		<![CDATA[
-    		<p>This method specifies a Spring @Transactional annotation but the method is defined as being non public.
-    		Spring only creates transactional boundaries on methods that are public, and so this annotation not doing 
-    		anything for this method. Make the method public, or place the annotation on a more appropriate method.
+    		<p>This method specifies a Spring @Transactional annotation but the method is defined as being non-public.
+    		Spring only creates transactional boundaries on methods that are public, and so this annotation is not doing
+    		anything for this method. Make the method public, or place the annotation on a more appropriate method.</p>
     		]]>
     	</Details>
     </BugPattern>
@@ -5186,7 +5521,7 @@
     		Since you do not control when that Id is created directly, it is risky to implement hashCode/equals for this
     		class, and especially for use with Collections, as the data behind the algorithms will not be immutable, and
     		thus cause problems when those fields change, and the object is in the collection. It is usually safer
-    		to not define hashCode and equals for entity objects, but treat them as objects for IdentityHashSet/Maps instead.
+    		to not define hashCode and equals for entity objects, but treat them as objects for IdentityHashSet/Maps instead.</p>
     		]]>
     	</Details>
     </BugPattern>
@@ -5196,7 +5531,7 @@
     	<LongDescription>Method {1} annotated with @Transactional is called from a non Spring proxy</LongDescription>
     	<Details>
     		<![CDATA[
-    		<p>This method call is to a method that has a @Transactional annotation on it. However since this call is from the
+    		<p>This method call is to a method that has a @Transactional annotation on it. However, since this call is from the
     		same class, it is not going through any Spring proxy, and thus the transactional quality of this method is completely
     		lost. @Transactional method must always be called through a Spring bean that is autowired.</p>
     		]]>
@@ -5208,10 +5543,10 @@
     	<LongDescription>OneToMany join specifies 1+n EAGER join</LongDescription>
     	<Details>
     	<![CDATA[
-    	<p>This JPA entity specifies a @OneToMany join with a fetch type of EAGER. By Default EAGER joins perform
+    	<p>This JPA entity specifies a @OneToMany join with a fetch type of EAGER. By default EAGER joins perform
     	select operations on each element returned from the original query in sequence, thus producing 1 + n queries.
     	If you are going to use EAGER joins, it is wise to specify a Join type by using @Fetch annotations in
-    	Hibernate or @JoinFetch/@BatchFetch annotations (or hints) in EclipseLink, for example. Even so, These
+    	Hibernate or @JoinFetch/@BatchFetch annotations (or hints) in EclipseLink, for example. Even so, these
     	annotations may only apply in limited cases, such as in the use of find.</p>
     	]]>
     	</Details>
@@ -5236,7 +5571,7 @@
     		<![CDATA[
     		<p>This method declares that it throws one or more non-runtime exceptions. It also is annotated with a
     		@Transactional annotation but fails to describe whether to rollback the transaction or not based on this
-    		thrown exception. use 'rollbackFor' or 'noRollbackFor' attributes of the Transactional annotation to 
+    		thrown exception. Use 'rollbackFor' or 'noRollbackFor' attributes of the Transactional annotation to 
     		document this.</p>
     		]]> 
     	</Details>
@@ -5248,8 +5583,8 @@
     	<Details>
     		<![CDATA[
     		<p>This method declares that it either rolls back or does not rollback a transaction based on an
-    		expected exception being thrown. However this exception, nor any derived exceptions can not be thrown from this method, and so the
-    		annotation is useless.</p>
+    		expected exception being thrown. However, neither this exception, nor any derived exceptions can be thrown
+    		from this method, and so the annotation is useless.</p>
     		]]> 
     	</Details>
     </BugPattern>
@@ -5267,6 +5602,15 @@
 			calls do not have side effects. If the method do have side effects, it is probably a better idea to pull these calls out of
 			the condition and execute them first, assigning a value to a local variable. In this way you give a hint that the call may have
 			side effects.</p>
+			<p>Example:
+<pre><code>
+if ((calculateHaltingProbability() &gt; 0) && shouldCalcHalting) { }
+</code></pre>
+			would be better as
+<pre><code>
+if (shouldCalcHalting && (calculateHaltingProbability() &gt; 0) { }
+</code></pre>
+			</p>
 			]]>
 		</Details>
     </BugPattern>
@@ -5277,10 +5621,10 @@
     	<Details>
     		<![CDATA[
     		<p>This method copies data from input to output using streams or reader/writers using a well known copy method, from java.nio, commons-io, 
-    		springframework, guava or poi. These methods are efficient in that they copy these files using buffers. However this method is also 
-    		buffering the streams, causing a double buffering to occur. So data first goes to one buffer, then is copied too another buffer, before
-    		making it to the destination (or vice-versa). This just causes the copy operation to be inefficent both from a time perspective, as well
-    		as a memory allocation one. When using these copy methods, do not pass buffered streams/readers/writers.
+    		springframework, guava or poi. These methods are efficient in that they copy these files using buffers. However, this method is also 
+    		buffering the streams, causing a double buffering to occur. So data first goes to one buffer, then is copied to another buffer, before
+    		making it to the destination (or vice-versa). This just causes the copy operation to be inefficient both from a time perspective, as well
+    		as a memory allocation one. When using these copy methods, do not pass buffered streams/readers/writers.</p>
     		]]>
     	</Details>
     </BugPattern>
@@ -5292,8 +5636,210 @@
     		<![CDATA[
     		<p>This method copies data from a java.io.Reader derived class to an output class, using a bulk copy method
     		supplied by java.nio, commons-io, springframework, guava or poi. Since you are copying the entire stream, you
-    		don't care about it's contents, and thus using a Reader is wasteful as a reader has to do the hard work of
+    		don't care about its contents, and thus using a Reader is wasteful as a reader has to do the hard work of
     		converting byte data to characters, when there is no need to do this. Use stream based inputs for better performance.</p>
+    		]]>
+    	</Details>
+    </BugPattern>
+    
+    <BugPattern type="IOI_USE_OF_FILE_STREAM_CONSTRUCTORS">
+    	<ShortDescription>Method uses a FileInputStream or FileOutputStream constructor</ShortDescription>
+    	<LongDescription>Method {1} uses a FileInputStream or FileOutputStream constructor</LongDescription>
+    	<Details>
+    		<![CDATA[
+    		<p>This method creates and uses a java.io.FileInputStream or java.io.FileOutputStream object. Unfortunately both
+    		of these classes implement a finalize method, which means that objects created will likely hang around until a 
+    		full garbage collection occurs, which will leave excessive garbage on the heap for longer, and potentially much
+    		longer than expected. Java 7 introduced two ways to create streams for reading and writing files that do not have this concern.
+    		You should consider switching from these above classes to
+    		<code>
+    		InputStream is = java.nio.file.Files.newInputStream(myfile.toPath());
+    		OutputStream os = java.nio.file.Files.newOutputStream(myfile.toPath());
+    		</code>
+    		</p>
+    		]]>
+    	</Details>
+    </BugPattern>
+    
+    
+    <BugPattern type="DMC_DUBIOUS_MAP_COLLECTION">
+    	<ShortDescription>Class holds a map-type field, but uses it as only a List</ShortDescription>
+    	<LongDescription>Class {0} holds a map-type field {1}, but uses it as only a List</LongDescription>
+    	<Details>
+			<![CDATA[
+			<p>This method instantiates a map-type field in a static initializer or constructor, but then only uses it
+			through iteration. This means that this data structure should really just be a List&lt;SomeObject&gt;,
+			where the class held by the list contains the two fields held by the key and value of the Map.
+			It was likely done this way to avoid having to create a class, but this just obfuscates the purpose of the field.
+			</p>
+			]]>	
+    	</Details>
+    </BugPattern>
+    
+    <BugPattern type="BL_BURYING_LOGIC">
+    	<ShortDescription>Method buries logic to the right (indented) more than it needs to be</ShortDescription>
+    	<LongDescription>Method {1} buries logic to the right (indented) more than it needs to be</LongDescription>
+    	<Details>
+    		<![CDATA[
+    		<p>Looks for relatively large if blocks of code, where you unconditionally return from them, and then follow that with an unconditional 
+    		return of a small block. This places the bulk of the logic to the right indentation-wise, making it more difficult to read than needed. 
+    		It would be better to invert the logic of the if block, and immediately return, allowing the bulk of the logic to be move to the left 
+    		for easier reading.</p>
+    		]]>
+    	</Details>
+    </BugPattern>
+    
+    <BugPattern type="WI_DUPLICATE_WIRED_TYPES">
+    	<ShortDescription>Class auto wires the same object into two separate fields in a class hierarchy</ShortDescription>
+    	<LongDescription>Class {0} auto wires the same object into two separate fields in a class hierarchy</LongDescription>
+    	<Details>
+    		<![CDATA[
+    		<p>this class has two fields in either itself or a parent class which autowire (without specialization), the same object
+    		for both fields. This is likely caused by a developer just not being aware that the field already is available for your use, 
+    		and just causes wasted space, and confusing code access to the same object through two different pathways.</p>
+    		]]>
+    	</Details>
+    </BugPattern>
+    
+    <BugPattern type="CCI_CONCURRENT_COLLECTION_ISSUES_USE_PUT_IS_RACY">
+    	<ShortDescription>Method gets and sets a value of a ConcurrentHashMap in a racy manner</ShortDescription>
+    	<LongDescription>Method {1} gets and sets a value of a ConcurrentHashMap in a racy manner </LongDescription>
+    	<Details>
+    		<![CDATA[
+    		<p>This method retrieves the value of a key from a ConcurrentHashMap, where the value is itself a collection. It checks this
+    		value for null, and if it is so, creates a new collection and places it in the map. This may cause thread race conditions
+    		where two threads overwrite each other's values. You should be using
+    		<code>
+    			ConcurrentHashMap.putIfAbsent(K, V)
+    		</code>
+    		instead.
+    		]]>
+    	</Details>
+    </BugPattern>
+    
+    <BugPattern type="UTWR_USE_TRY_WITH_RESOURCES">
+    	<ShortDescription>Method manually handles closing an auto-closeable resource</ShortDescription>
+    	<LongDescription>Method {1} manually handles closing an auto-closeable resource</LongDescription>
+    	<Details>
+    		<![CDATA[[
+    		<p>This method allocates and uses an auto closeable resources. However it manually closes the resource in a finally block.
+    		While this is correct management, it doesn't rely on the Idiomatic way available to JDK 7 and above, and allows for possible
+    		subtle problems, and complicates the reading of code by developers expecting the use of try-with-resources. 
+    		</p>
+    		<p>Switch to using try with resources, as:
+    		<pre>
+    		    try (InputStream is = getAStream()) {
+    		        useTheStream(is);
+    		    }
+    		</pre>
+    		]]>
+    	</Details>
+    </BugPattern>
+    
+    <BugPattern type="SSCU_SUSPICIOUS_SHADED_CLASS_USE">
+    	<ShortDescription>Method calls a method from a class that has been shaded by a 3rdparty jar</ShortDescription>
+    	<LongDescription>Method {1} calls a method from a class that has been shaded by a 3rdparty jar</LongDescription>
+    	<Details>
+    		<![CDATA[
+    		<p>This method calls a method found in a 3rdparty library, which appears to be shaded from another 3rdparty library.
+    		This occurs when a jar includes other code using tools like the maven shade plugin. It is likely you wanted to use the
+    		"first-class" class from the original jar, rather than the class with the shaded package structure, but your IDE pulled in
+    		the wrong import.</p>
+    		<p>An example might be, you attempted to use a method from the class:
+    		<pre><code>
+    		com.google.common.collect.Sets
+    		</code></pre>
+    		But instead, you import:
+    		<pre><code>
+    		org.apache.jena.ext.com.google.common.collect.Sets
+    		</code></pre>
+    		</p>
+    		]]>
+    	</Details>
+    </BugPattern>
+    
+    <BugPattern type="USFW_UNSYNCHRONIZED_SINGLETON_FIELD_WRITES">
+    	<ShortDescription>Method of Singleton class writes to a field in an unsynchronized manner</ShortDescription>
+    	<LongDescription>Method {1} of Singleton class writes to a field in an unsynchronized manner</LongDescription>
+    	<Details>
+    		<![CDATA[
+    		<p>This method writes to a field of this class. Since this class is seen as a Singleton this can produce race
+    		conditions, or cause non-visible changes to other threads, because the field isn't accessed synchronously.
+    		]]>
+    	</Details>
+    </BugPattern>
+    
+    <BugPattern type="OI_OPTIONAL_ISSUES_USES_IMMEDIATE_EXECUTION">
+    	<ShortDescription>Method uses immediate execution of a block of code that is often not used</ShortDescription>
+    	<LongDescription>Method {1} uses immediate execution of a block of code that is often not used</LongDescription>
+    	<Details>
+    		<![CDATA[
+    		<p>This method uses the Optional.orElse() method passing in some code that will execute immediately, whether 
+    		or not the else case of the Optional is needed. This may cause incorrect side effects to happen, or at the 
+    		minimum, code to execute for no reason. It would be better to use Optional.orElseGet()
+    		]]>
+    	</Details>
+    </BugPattern>
+    
+    <BugPattern type="OI_OPTIONAL_ISSUES_USES_DELAYED_EXECUTION">
+    	<ShortDescription>Method uses delayed execution of a block of code that is trivial</ShortDescription>
+    	<LongDescription>Method {1} uses immediate execution of a block of code that is trivial</LongDescription>
+    	<Details>
+    		<![CDATA[
+    		<p>This method uses the Optional.orElseGet() method passing in a simple variable or constant value.
+    		As this value takes not time to execute or causes no side effects, the use of Optional.orElseGet is
+    		unnecessary and potentially confusing. You can use Optional.orElse() instead.
+    		]]>
+    	</Details>
+    </BugPattern>
+    
+    <BugPattern type="OI_OPTIONAL_ISSUES_CHECKING_REFERENCE">
+    	<ShortDescription>Method checks an Optional reference for null</ShortDescription>
+    	<LongDescription>Method {1} checks an Optional reference for null</LongDescription>
+    	<Details>
+    		<![CDATA[
+    		<p>This method compares an Optional reference variable against null. As the whole point of the
+    		Optional class is to avoid the null pointer exception, this use pattern is highly suspect. 
+    		The code should always make sure the Optional reference is valid, and should count on the apis
+    		of this class to check for the held reference instead.
+    		]]>
+    	</Details>
+    </BugPattern>
+    
+    <BugPattern type="OI_OPTIONAL_ISSUES_PRIMITIVE_VARIANT_PREFERRED">
+    	<ShortDescription>Method uses a java.util.Optional when use of OptionalInt, OptionalLong, OptionalDouble would be more clear</ShortDescription>
+    	<LongDescription>Method {1} uses a java.util.Optional when use of OptionalInt, OptionalLong, OptionalDouble would be more clear</LongDescription>
+    	<Details>
+    		<![CDATA[
+    		<p>This method creates an Optional object to hold an int, double or long. In these cases it
+    		is more natural to use the Optional variants OptionalInt, OptionalDouble and OptionalLong.
+    		</p>
+    		]]>
+    	</Details>
+    </BugPattern>
+    
+    <BugPattern type="UAC_UNNECESSARY_API_CONVERSION_DATE_TO_INSTANT">
+    	<ShortDescription>Method constructs a Date object, merely to convert it to an Instant object</ShortDescription>
+    	<LongDescription>Method {1} constructs a Date object, merely to convert it to an Instant object</LongDescription>
+    	<Details>
+    		<![CDATA[
+    		<p>This method creates a java.time.Instant object by first creating a java.util.Date object, and then calling
+    		toInstant() on it. It is simpler to just construct the Instant object directly, say by using
+    		{@code Instant.now()} to get the current time, of by using {@code Instant.parse(CharSequence)} to convert a String.
+    		</p>
+    		]]>
+    	</Details>
+    </BugPattern>
+    
+    <BugPattern type="UAC_UNNECESSARY_API_CONVERSION_FILE_TO_PATH">
+    	<ShortDescription>Method constructs a File object, merely to convert it to a Path object</ShortDescription>
+    	<LongDescription>Method {1} constructs a File object, merely to convert it to a Path object</LongDescription>
+    	<Details>
+    		<![CDATA[
+    		<p>This method creates a java.nio.file.Path object by first creating a java.io.File object, and then calling
+    		toPath() on it. It is simpler to just construct the Path object directly, say by using
+    		{@code Path.get(String...)}.
+    		</p>
     		]]>
     	</Details>
     </BugPattern>
@@ -5414,7 +5960,7 @@
 	<BugCode abbrev="CNC">Collection Naming Confusion</BugCode>
 	<BugCode abbrev="PME">Poor Mans Enum</BugCode>
 	<BugCode abbrev="UP">Unused Parameter</BugCode>
-	<BugCode abbrev="CD">Circular Dependencies</BugCode>
+	<BugCode abbrev="FCCD">Find Class Circular Dependencies</BugCode>
 	<BugCode abbrev="MUC">Modifying Unmodifiable Collection</BugCode>
 	<BugCode abbrev="UJM">Unjitable method</BugCode>
 	<BugCode abbrev="HES">Hanging ExecutorService</BugCode>
@@ -5431,4 +5977,13 @@
 	<BugCode abbrev="JPAI">JPA Issues</BugCode>
 	<BugCode abbrev="SEO">Suboptimal Expression Order</BugCode>
 	<BugCode abbrev="IOI">IO Issues</BugCode>
+	<BugCode abbrev="DMC">Dubious Map Collection</BugCode>
+	<BugCode abbrev="BL">Burying Logic</BugCode>
+	<BugCode abbrev="WI">Wiring issues</BugCode>
+	<BugCode abbrev="CCI">Concurrent Collection Issues</BugCode>
+	<BugCode abbrev="UTWR">Use Try With Resources</BugCode>
+	<BugCode abbrev="SSCU">Suspicious Shaded Class Use</BugCode>
+	<BugCode abbrev="USFW">Unsynchronized Singleton Field Writes</BugCode>
+	<BugCode abbrev="OI">Optional Issues</BugCode>
+	<BugCode abbrev="UAC">Unnecessary Api Conversion</BugCode>
 </MessageCollection>
