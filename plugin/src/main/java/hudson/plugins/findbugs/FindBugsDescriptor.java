@@ -4,6 +4,7 @@ import org.jenkinsci.Symbol;
 
 import hudson.Extension;
 import hudson.plugins.analysis.core.PluginDescriptor;
+import org.jenkinsci.Symbol;
 
 /**
  * Descriptor for the class {@link FindBugsPublisher}. Used as a singleton. The
