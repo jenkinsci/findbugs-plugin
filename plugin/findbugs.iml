@@ -13,7 +13,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Maven: org.jvnet.hudson.plugins:analysis-core:1.86" level="project" />
+    <orderEntry type="module" module-name="analysis-core" />
     <orderEntry type="library" name="Maven: org.jenkins-ci.plugins:script-security:1.25" level="project" />
     <orderEntry type="library" name="Maven: org.kohsuke:groovy-sandbox:1.10" level="project" />
     <orderEntry type="library" name="Maven: de.java2html:java2html:5.0" level="project" />
@@ -23,7 +23,7 @@
     <orderEntry type="library" name="Maven: joda-time:joda-time:1.6" level="project" />
     <orderEntry type="library" name="Maven: org.jenkins-ci.plugins:structs:1.2" level="project" />
     <orderEntry type="library" name="Maven: org.jenkins-ci:symbol-annotation:1.2" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.jvnet.hudson.plugins:analysis-test:1.18" level="project" />
+    <orderEntry type="module" module-name="analysis-test" scope="TEST" />
     <orderEntry type="library" scope="TEST" name="Maven: org.jenkins-ci.plugins.workflow:workflow-job:1.5" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.jenkins-ci.plugins.workflow:workflow-support:1.5" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.jboss.marshalling:jboss-marshalling-river:1.4.9.Final" level="project" />
