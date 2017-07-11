@@ -143,6 +143,9 @@ public class FindBugsPublisher extends HealthAwarePublisher {
 
         ParserResult project = workspace.act(collector);
         logger.logLines(project.getLogMessages());
+
+        blame(project.getAnnotations(), build, workspace);
+
         FindBugsResult result = new FindBugsResult(build, getDefaultEncoding(), project,
                 usePreviousBuildAsReference(), useOnlyStableBuildsAsReference());
 
