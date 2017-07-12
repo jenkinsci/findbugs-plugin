@@ -1,12 +1,5 @@
 package hudson.plugins.findbugs.parser;
 
-import static org.junit.Assert.*;
-import hudson.plugins.analysis.core.AnnotationDifferencer;
-import hudson.plugins.analysis.test.AnnotationDifferencerTest;
-import hudson.plugins.analysis.util.model.AnnotationStream;
-import hudson.plugins.analysis.util.model.FileAnnotation;
-import hudson.plugins.analysis.util.model.Priority;
-
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -17,8 +10,16 @@ import org.junit.Test;
 
 import com.google.common.collect.Sets;
 
+import static org.junit.Assert.*;
+
+import hudson.plugins.analysis.core.IssueDifference;
+import hudson.plugins.analysis.test.AnnotationDifferencerTest;
+import hudson.plugins.analysis.util.model.AnnotationStream;
+import hudson.plugins.analysis.util.model.FileAnnotation;
+import hudson.plugins.analysis.util.model.Priority;
+
 /**
- * Tests the {@link AnnotationDifferencer} for bugs.
+ * Tests the {@link IssueDifference} for bugs.
  */
 public class BugsDifferencerTest extends AnnotationDifferencerTest {
     @Override
@@ -61,9 +62,9 @@ public class BugsDifferencerTest extends AnnotationDifferencerTest {
         HashSet<FileAnnotation> currentSet = Sets.newHashSet(Arrays.asList(current));
         HashSet<FileAnnotation> previousSet = Sets.newHashSet(Arrays.asList(previous));
         assertEquals("Wrong number of fixed bugs", 0,
-                AnnotationDifferencer.getFixedAnnotations(currentSet, previousSet).size());
+                new IssueDifference(currentSet, previousSet).getFixedIssues().size());
         assertEquals("Wrong number of new bugs", 0,
-                AnnotationDifferencer.getNewAnnotations(currentSet, previousSet).size());
+                new IssueDifference(currentSet, previousSet).getNewIssues().size());
     }
 }
 
