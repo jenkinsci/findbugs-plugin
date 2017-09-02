@@ -1,5 +1,6 @@
 package hudson.plugins.findbugs;
 
+import hudson.Extension;
 import java.io.IOException;
 
 import org.apache.commons.lang.StringUtils;
@@ -8,6 +9,7 @@ import org.kohsuke.stapler.DataBoundSetter;
 
 import hudson.FilePath;
 import hudson.Launcher;
+import hudson.matrix.MatrixAggregatable;
 import hudson.matrix.MatrixAggregator;
 import hudson.matrix.MatrixBuild;
 import hudson.model.BuildListener;
@@ -159,10 +161,17 @@ public class FindBugsPublisher extends HealthAwarePublisher {
         return (FindBugsDescriptor)super.getDescriptor();
     }
 
-    @Override
-    public MatrixAggregator createAggregator(final MatrixBuild build, final Launcher launcher,
-            final BuildListener listener) {
-        return new FindBugsAnnotationsAggregator(build, launcher, listener, this, getDefaultEncoding(),
-                usePreviousBuildAsReference(), useOnlyStableBuildsAsReference());
+    @Extension(optional = true)
+    public static class MatrixBridge implements MatrixAggregatable {
+
+        @Override
+        public MatrixAggregator createAggregator(MatrixBuild build, Launcher launcher, BuildListener listener) {
+            FindBugsPublisher p = build.getParent().getPublishersList().get(FindBugsPublisher.class);
+            return p != null ? new FindBugsAnnotationsAggregator(build, launcher, listener, p, p.getDefaultEncoding(),
+                p.usePreviousBuildAsReference(), p.useOnlyStableBuildsAsReference()) :
+                    null;
+        }
+
     }
+
 }
