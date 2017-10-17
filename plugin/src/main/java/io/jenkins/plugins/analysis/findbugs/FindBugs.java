@@ -37,7 +37,7 @@ public class FindBugs extends StaticAnalysisTool {
 
     @Override
     public Collection<FileAnnotation> parse(final File file, final String moduleName) throws InvocationTargetException {
-        return new FindBugsParser(false).parse(file, moduleName); // FIXME: this parser requires an extra parameter
+        return new FindBugsParser(useRankAsPriority).parse(file, moduleName);
     }
 
     @Override
@@ -71,5 +71,9 @@ public class FindBugs extends StaticAnalysisTool {
 
     /** Descriptor for FindBugs. */
     @Extension
-    public static final StaticAnalysisToolDescriptor D = new StaticAnalysisToolDescriptor(FindBugs.class);
+    public static final class FindBugsToolDescriptor extends StaticAnalysisToolDescriptor {
+        public FindBugsToolDescriptor() {
+            super(FindBugs.class);
+        }
+    }
 }
