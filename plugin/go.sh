@@ -1,3 +1,5 @@
+#!/bin/sh
+
 rm -rf $JENKINS_HOME/plugins/findbugs*
 
 mvn install || { echo "Build failed"; exit 1; }
