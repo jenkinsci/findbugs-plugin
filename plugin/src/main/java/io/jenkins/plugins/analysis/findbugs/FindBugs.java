@@ -71,9 +71,5 @@ public class FindBugs extends StaticAnalysisTool {
 
     /** Descriptor for FindBugs. */
     @Extension
-    public static final class Descriptor extends StaticAnalysisToolDescriptor {
-        public Descriptor() {
-            super(FindBugs.class);
-        }
-    }
+    public static final class Descriptor extends StaticAnalysisToolDescriptor {}
 }
