@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 
 import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.DataBoundSetter;
 
 import io.jenkins.plugins.analysis.core.steps.StaticAnalysisTool;
 
@@ -15,19 +16,31 @@ import hudson.plugins.findbugs.Messages;
 import hudson.plugins.findbugs.parser.FindBugsParser;
 
 /**
- * Provides customized messages for PMD.
+ * Provides a parser and customized messages for FindBugs.
  *
  * @author Ullrich Hafner
  */
 public class FindBugs extends StaticAnalysisTool {
-    private final boolean useRankAsPriority;
+    // FIXME: enum and not boolean
+    private boolean useRankAsPriority;
 
     /**
      * Creates a new instance of {@link FindBugs}.
      */
     @DataBoundConstructor
-    public FindBugs(final boolean useRankAsPriority) {
-        super(FindBugsDescriptor.PLUGIN_ID);
+    public FindBugs() {
+        // empty constructor required for stapler
+    }
+
+    /**
+     * If useRankAsPriority is {@code true}, then the FindBugs parser will use the rank when evaluation the priority.
+     * Otherwise the priority of the FindBugs warning will be mapped.
+     *
+     * @param useRankAsPriority
+     *         {@code true} to use the rank, {@code false} to use the
+     */
+    @DataBoundSetter
+    public void setUseRankAsPriority(final boolean useRankAsPriority) {
         this.useRankAsPriority = useRankAsPriority;
     }
 
@@ -40,36 +53,40 @@ public class FindBugs extends StaticAnalysisTool {
         return new FindBugsParser(useRankAsPriority).parse(file, moduleName);
     }
 
-    @Override
-    protected String getName() {
-        return "FindBugs";
-    }
-
-    @Override
-    public String getLinkName() {
-        return Messages.FindBugs_ProjectAction_Name();
-    }
-
-    @Override
-    public String getTrendName() {
-        return Messages.FindBugs_Trend_Name();
-    }
-
-    @Override
-    public String getSmallIconUrl() {
-        return get().getIconUrl();
-    }
-
-    private FindBugsDescriptor get() {
-        return new FindBugsDescriptor();
-    }
-
-    @Override
-    public String getLargeIconUrl() {
-        return get().getSummaryIconUrl();
-    }
-
-    /** Descriptor for FindBugs. */
+    /** Registers this tool as extension point implementation. */
     @Extension
-    public static final class Descriptor extends StaticAnalysisToolDescriptor {}
+    public static final class Descriptor extends StaticAnalysisToolDescriptor {
+        public Descriptor() {
+            super(FindBugsDescriptor.PLUGIN_ID);
+        }
+
+        @Override
+        public String getName() {
+            return "FindBugs";
+        }
+
+        @Override
+        public String getLinkName() {
+            return Messages.FindBugs_ProjectAction_Name();
+        }
+
+        @Override
+        public String getTrendName() {
+            return Messages.FindBugs_Trend_Name();
+        }
+
+        @Override
+        public String getSmallIconUrl() {
+            return get().getIconUrl();
+        }
+
+        private FindBugsDescriptor get() {
+            return new FindBugsDescriptor();
+        }
+
+        @Override
+        public String getLargeIconUrl() {
+            return get().getSummaryIconUrl();
+        }
+    }
 }
