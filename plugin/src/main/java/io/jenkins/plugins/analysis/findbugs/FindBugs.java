@@ -7,6 +7,7 @@ import java.util.Collection;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 
+import io.jenkins.plugins.analysis.core.steps.DefaultLabelProvider;
 import io.jenkins.plugins.analysis.core.steps.StaticAnalysisTool;
 
 import hudson.Extension;
@@ -57,6 +58,12 @@ public class FindBugs extends StaticAnalysisTool {
     @Extension
     public static final class Descriptor extends StaticAnalysisToolDescriptor {
         public Descriptor() {
+            super(new FindBugsLabelProvider());
+        }
+    }
+
+    private static final class FindBugsLabelProvider extends DefaultLabelProvider {
+        private FindBugsLabelProvider() {
             super(FindBugsDescriptor.PLUGIN_ID);
         }
 
