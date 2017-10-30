@@ -25,6 +25,7 @@ import org.xml.sax.SAXException;
 
 import com.google.common.collect.Sets;
 
+import edu.hm.hafner.analysis.Issues;
 import edu.umd.cs.findbugs.BugAnnotation;
 import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.Project;
@@ -35,6 +36,7 @@ import edu.umd.cs.findbugs.ba.SourceFile;
 import edu.umd.cs.findbugs.ba.SourceFinder;
 import edu.umd.cs.findbugs.cloud.Cloud;
 
+import hudson.plugins.analysis.core.AbstractAnnotationParser;
 import hudson.plugins.analysis.core.AnnotationParser;
 import hudson.plugins.analysis.util.TreeStringBuilder;
 import hudson.plugins.analysis.util.model.FileAnnotation;
@@ -63,7 +65,7 @@ public class FindBugsParser implements AnnotationParser {
 
     /** Collection of source folders. */
     @SuppressFBWarnings("SE")
-    private final List<String> mavenSources = new ArrayList<String>();
+    private final List<String> mavenSources = new ArrayList<>();
 
     /** Determines whether to use the rank when evaluation the priority. @since 4.26 */
     private final boolean isRankActivated;
@@ -94,7 +96,7 @@ public class FindBugsParser implements AnnotationParser {
      *            RegEx patterns of files to include in the report
      */
     public FindBugsParser(final boolean isRankActivated, final String excludePattern, final String includePattern) {
-        this(new ArrayList<String>(), isRankActivated, excludePattern, includePattern);
+        this(new ArrayList<>(), isRankActivated, excludePattern, includePattern);
     }
 
     /**
@@ -136,11 +138,14 @@ public class FindBugsParser implements AnnotationParser {
         }
     }
 
+    public Issues parseIssues(final File file, final String moduleName) throws InvocationTargetException {
+        return AbstractAnnotationParser.toIssues(parse(file, moduleName));
+    }
 
     @Override
     public Collection<FileAnnotation> parse(final File file, final String moduleName) throws InvocationTargetException {
         try {
-            Collection<String> sources = new ArrayList<String>(mavenSources);
+            Collection<String> sources = new ArrayList<>(mavenSources);
             if (sources.isEmpty()) {
                 String moduleRoot = StringUtils.substringBefore(file.getAbsolutePath().replace('\\', '/'), "/target/");
                 sources.add(moduleRoot + "/src/main/java");
@@ -149,13 +154,7 @@ public class FindBugsParser implements AnnotationParser {
             }
             return parse(file, sources, moduleName);
         }
-        catch (IOException exception) {
-            throw new InvocationTargetException(exception);
-        }
-        catch (SAXException exception) {
-            throw new InvocationTargetException(exception);
-        }
-        catch (DocumentException exception) {
+        catch (IOException | SAXException | DocumentException exception) {
             throw new InvocationTargetException(exception);
         }
     }
@@ -192,8 +191,8 @@ public class FindBugsParser implements AnnotationParser {
         InputStream input = null;
         try {
             input = file.getInputStream();
-            Map<String, String> hashToMessageMapping = new HashMap<String, String>();
-            Map<String, String> categories = new HashMap<String, String>();
+            Map<String, String> hashToMessageMapping = new HashMap<>();
+            Map<String, String> categories = new HashMap<>();
             for (XmlBugInstance bug : preParse(input)) {
                 hashToMessageMapping.put(bug.getInstanceHash(), bug.getMessage());
                 categories.put(bug.getType(), bug.getCategory());
@@ -234,7 +233,7 @@ public class FindBugsParser implements AnnotationParser {
         digester.addCallMethod(fileXPath, "setMessage", 0);
 
         digester.addSetNext(rootXPath, "add", Object.class.getName());
-        ArrayList<XmlBugInstance> bugs = new ArrayList<XmlBugInstance>();
+        ArrayList<XmlBugInstance> bugs = new ArrayList<>();
         digester.push(bugs);
         digester.parse(file);
 
@@ -274,7 +273,7 @@ public class FindBugsParser implements AnnotationParser {
         String actualName = extractModuleName(moduleName, project);
 
         TreeStringBuilder stringPool = new TreeStringBuilder();
-        List<FileAnnotation> annotations = new ArrayList<FileAnnotation>();
+        List<FileAnnotation> annotations = new ArrayList<>();
         Collection<BugInstance> bugs = collection.getCollection();
 
         for (BugInstance warning : bugs) {
@@ -327,7 +326,7 @@ public class FindBugsParser implements AnnotationParser {
             includedAnnotations = allAnnotations;
         }
         else {
-            includedAnnotations = new ArrayList<FileAnnotation>();
+            includedAnnotations = new ArrayList<>();
             for (FileAnnotation annotation : allAnnotations) {
                 for (Pattern include : includePatterns) {
                     if (include.matcher(annotation.getFileName()).matches()) {
@@ -340,7 +339,7 @@ public class FindBugsParser implements AnnotationParser {
             return includedAnnotations;
         }
         else {
-            List<FileAnnotation> excludedAnnotations = new ArrayList<FileAnnotation>(includedAnnotations);
+            List<FileAnnotation> excludedAnnotations = new ArrayList<>(includedAnnotations);
             for (FileAnnotation annotation : includedAnnotations) {
                 for (Pattern exclude : excludePatterns) {
                     if (exclude.matcher(annotation.getFileName()).matches()) {

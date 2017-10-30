@@ -2,16 +2,15 @@ package io.jenkins.plugins.analysis.findbugs;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Collection;
 
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 
+import edu.hm.hafner.analysis.Issues;
 import io.jenkins.plugins.analysis.core.steps.DefaultLabelProvider;
 import io.jenkins.plugins.analysis.core.steps.StaticAnalysisTool;
 
 import hudson.Extension;
-import hudson.plugins.analysis.util.model.FileAnnotation;
 import hudson.plugins.findbugs.FindBugsDescriptor;
 import hudson.plugins.findbugs.Messages;
 import hudson.plugins.findbugs.parser.FindBugsParser;
@@ -50,8 +49,8 @@ public class FindBugs extends StaticAnalysisTool {
     }
 
     @Override
-    public Collection<FileAnnotation> parse(final File file, final String moduleName) throws InvocationTargetException {
-        return new FindBugsParser(useRankAsPriority).parse(file, moduleName);
+    public Issues parse(final File file, final String moduleName) throws InvocationTargetException {
+        return new FindBugsParser(useRankAsPriority).parseIssues(file, moduleName).withOrigin(FindBugsDescriptor.PLUGIN_ID);
     }
 
     /** Registers this tool as extension point implementation. */
