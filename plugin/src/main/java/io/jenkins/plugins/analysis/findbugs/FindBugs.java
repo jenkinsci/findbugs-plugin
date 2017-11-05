@@ -50,7 +50,8 @@ public class FindBugs extends StaticAnalysisTool {
 
     @Override
     public Issues parse(final File file, final String moduleName) throws InvocationTargetException {
-        return new FindBugsParser(useRankAsPriority).parseIssues(file, moduleName).withOrigin(FindBugsDescriptor.PLUGIN_ID);
+        Issues issues = new FindBugsParser(useRankAsPriority).parseIssues(file, moduleName);
+        return withOrigin(issues, FindBugsDescriptor.PLUGIN_ID);
     }
 
     /** Registers this tool as extension point implementation. */
