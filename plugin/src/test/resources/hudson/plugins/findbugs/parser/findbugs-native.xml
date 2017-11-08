@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <BugCollection version="1.2.1" sequence="0" timestamp="1186259374191" analysisTimestamp="1186259377278" release="">
-  <Project filename="&lt;&lt;unnamed project&gt;&gt;" projectName="">
+  <Project filename="&lt;&lt;unnamed project&gt;&gt;" projectName="findbugs-native.xml">
     <Jar>/home/johan/hudson/hudson-findbugs/work/jobs/Hadoop/workspace/hadoop/build/hadoop-0.13.1-dev-core.jar</Jar>
     <Jar>/home/johan/hudson/hudson-findbugs/work/jobs/Hadoop/workspace/hadoop/build/hadoop-0.13.1-dev-examples.jar</Jar>
     <Jar>/home/johan/hudson/hudson-findbugs/work/jobs/Hadoop/workspace/hadoop/build/hadoop-streaming.jar</Jar>

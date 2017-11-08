@@ -6,6 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 
+import edu.hm.hafner.analysis.IssueBuilder;
 import edu.hm.hafner.analysis.Issues;
 import io.jenkins.plugins.analysis.core.steps.DefaultLabelProvider;
 import io.jenkins.plugins.analysis.core.steps.StaticAnalysisTool;
@@ -13,7 +14,6 @@ import io.jenkins.plugins.analysis.core.steps.StaticAnalysisTool;
 import hudson.Extension;
 import hudson.plugins.findbugs.FindBugsDescriptor;
 import hudson.plugins.findbugs.Messages;
-import hudson.plugins.findbugs.parser.FindBugsParser;
 
 /**
  * Provides a parser and customized messages for FindBugs.
@@ -49,9 +49,8 @@ public class FindBugs extends StaticAnalysisTool {
     }
 
     @Override
-    public Issues parse(final File file, final String moduleName) throws InvocationTargetException {
-        Issues issues = new FindBugsParser(useRankAsPriority).parseIssues(file, moduleName);
-        return withOrigin(issues, FindBugsDescriptor.PLUGIN_ID);
+    public Issues parse(final File file, final IssueBuilder builder) throws InvocationTargetException {
+        return new FindBugsParser(useRankAsPriority).parse(file, builder);
     }
 
     /** Registers this tool as extension point implementation. */

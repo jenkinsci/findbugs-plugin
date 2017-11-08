@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <BugCollection version="2.0.0" sequence="0" timestamp="1326216705398" analysisTimestamp="1326216705410" release="">
-  <Project projectName="">
+  <Project projectName="issue12314.xml">
     <Jar>/home/hancock/sedsystems/aggw-TRUNK/sw/sedsystems/sedsystems-core/target/build</Jar>
     <AuxClasspathEntry>/home/hancock/.ivy2/cache/net.jcip/jcip-annotations/jars/jcip-annotations-1.0.jar</AuxClasspathEntry>
     <SrcDir>/home/hancock/sedsystems/aggw-TRUNK/sw/sedsystems/sedsystems-core/src/main/java</SrcDir>
