@@ -49,7 +49,7 @@ public class FindBugs extends StaticAnalysisTool {
     }
 
     @Override
-    public Issues parse(final File file, final IssueBuilder builder) throws InvocationTargetException {
+    public Issues<Issue> parse(final File file, final IssueBuilder builder) throws InvocationTargetException {
         return new FindBugsParser(useRankAsPriority).parse(file, builder);
     }
 

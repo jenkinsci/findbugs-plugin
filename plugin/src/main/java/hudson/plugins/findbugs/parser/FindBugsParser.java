@@ -138,7 +138,7 @@ public class FindBugsParser implements AnnotationParser {
         }
     }
 
-    public Issues parseIssues(final File file, final String moduleName) throws InvocationTargetException {
+    public Issues<Issue> parseIssues(final File file, final String moduleName) throws InvocationTargetException {
         return AbstractAnnotationParser.toIssues(parse(file, moduleName));
     }
 
