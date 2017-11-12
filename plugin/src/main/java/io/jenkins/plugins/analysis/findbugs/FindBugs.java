@@ -6,6 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 
+import edu.hm.hafner.analysis.Issue;
 import edu.hm.hafner.analysis.IssueBuilder;
 import edu.hm.hafner.analysis.Issues;
 import io.jenkins.plugins.analysis.core.steps.DefaultLabelProvider;

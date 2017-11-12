@@ -13,7 +13,7 @@ import edu.hm.hafner.analysis.Issues;
 import static edu.hm.hafner.analysis.Issues.*;
 import edu.hm.hafner.analysis.Priority;
 import static edu.hm.hafner.analysis.assertj.Assertions.*;
-import edu.hm.hafner.analysis.assertj.SoftAssertions;
+import static edu.hm.hafner.analysis.assertj.SoftAssertions.*;
 import io.jenkins.plugins.analysis.findbugs.FindBugsParser.InputStreamProvider;
 
 import hudson.plugins.findbugs.parser.XmlBugInstance;
@@ -54,7 +54,8 @@ class FindBugsParserTest {
     @Test
     void issue7238() {
         Issues<Issue> issues = parseFile("issue7238.xml", false);
-        assertThat(issues).hasSize(1820);
+
+        assertThat(issues).hasSize(1802).hasDuplicatesSize(18);
     }
 
     /**
@@ -67,7 +68,7 @@ class FindBugsParserTest {
         Issues<Issue> issues = parseFile("issue12314.xml", false);
         assertThat(issues).hasSize(1);
 
-        SoftAssertions.assertSoftly(softly -> {
+        assertSoftly(softly -> {
             softly.assertThat(issues.get(0))
                     .hasFileName("com/sedsystems/core/valid/Transformers.java")
                     .hasPackageName("com.sedsystems.core.valid")
@@ -167,7 +168,7 @@ class FindBugsParserTest {
         Issue first = issues.filter(byFileName(fileName1)).get(0);
         Issue second = issues.filter(byFileName(fileName2)).get(0);
 
-        SoftAssertions.assertSoftly((softly1) -> {
+        assertSoftly((softly1) -> {
             softly1.assertThat(first)
                     .hasFileName(fileName1)
                     .hasPackageName(packageName1)
@@ -176,7 +177,7 @@ class FindBugsParserTest {
                     .hasLineStart(start1)
                     .hasLineEnd(end1);
         });
-        SoftAssertions.assertSoftly((softly) -> {
+        assertSoftly(softly -> {
             softly.assertThat(second)
                     .hasFileName(fileName2)
                     .hasPackageName(packageName2)

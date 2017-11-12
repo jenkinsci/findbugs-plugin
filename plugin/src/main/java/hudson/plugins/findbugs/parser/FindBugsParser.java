@@ -25,7 +25,6 @@ import org.xml.sax.SAXException;
 
 import com.google.common.collect.Sets;
 
-import edu.hm.hafner.analysis.Issues;
 import edu.umd.cs.findbugs.BugAnnotation;
 import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.Project;
@@ -36,7 +35,6 @@ import edu.umd.cs.findbugs.ba.SourceFile;
 import edu.umd.cs.findbugs.ba.SourceFinder;
 import edu.umd.cs.findbugs.cloud.Cloud;
 
-import hudson.plugins.analysis.core.AbstractAnnotationParser;
 import hudson.plugins.analysis.core.AnnotationParser;
 import hudson.plugins.analysis.util.TreeStringBuilder;
 import hudson.plugins.analysis.util.model.FileAnnotation;
@@ -136,10 +134,6 @@ public class FindBugsParser implements AnnotationParser {
                 patterns.add(Pattern.compile(StringUtils.replace(directoriesReplaced, "*", ".*"))); // NOCHECKSTYLE
             }
         }
-    }
-
-    public Issues<Issue> parseIssues(final File file, final String moduleName) throws InvocationTargetException {
-        return AbstractAnnotationParser.toIssues(parse(file, moduleName));
     }
 
     @Override
