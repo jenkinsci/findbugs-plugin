@@ -36,7 +36,6 @@ import edu.umd.cs.findbugs.ba.SourceFinder;
 import io.jenkins.plugins.analysis.core.steps.IssueParser;
 
 import hudson.plugins.analysis.util.TreeStringBuilder;
-import hudson.plugins.findbugs.FindBugsDescriptor;
 import hudson.plugins.findbugs.FindBugsMessages;
 import hudson.plugins.findbugs.parser.Bug;
 import hudson.plugins.findbugs.parser.XmlBugInstance;
@@ -72,11 +71,6 @@ public class FindBugsParser implements IssueParser {
      */
     public FindBugsParser(final boolean isRankActivated) {
         this.isRankActivated = isRankActivated;
-    }
-
-    @Override
-    public String getId() {
-        return FindBugsDescriptor.PLUGIN_ID;
     }
 
     @Override
