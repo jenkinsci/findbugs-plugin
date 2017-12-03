@@ -1,7 +1,7 @@
 package io.jenkins.plugins.analysis.findbugs;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
+import java.nio.charset.Charset;
 
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
@@ -50,8 +50,8 @@ public class FindBugs extends StaticAnalysisTool {
     }
 
     @Override
-    public Issues<Issue> parse(final File file, final IssueBuilder builder) throws InvocationTargetException {
-        return new FindBugsParser(useRankAsPriority).parse(file, builder);
+    public Issues<Issue> parse(final File file, final Charset charset, final IssueBuilder builder) {
+        return new FindBugsParser(useRankAsPriority).parse(file, charset, builder);
     }
 
     /** Registers this tool as extension point implementation. */

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -74,7 +75,7 @@ public class FindBugsParser implements IssueParser {
     }
 
     @Override
-    public Issues<Issue> parse(final File file, final IssueBuilder builder) throws ParsingCanceledException, ParsingException {
+    public Issues<Issue> parse(final File file, final Charset charset, final IssueBuilder builder) throws ParsingCanceledException, ParsingException {
         Collection<String> sources = new ArrayList<>();
         String moduleRoot = StringUtils.substringBefore(file.getAbsolutePath().replace('\\', '/'), "/target/");
         sources.add(moduleRoot + "/src/main/java");
