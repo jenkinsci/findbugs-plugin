@@ -34,7 +34,6 @@ import edu.umd.cs.findbugs.SortedBugCollection;
 import edu.umd.cs.findbugs.SourceLineAnnotation;
 import edu.umd.cs.findbugs.ba.SourceFile;
 import edu.umd.cs.findbugs.ba.SourceFinder;
-import io.jenkins.plugins.analysis.core.steps.IssueParser;
 
 import hudson.plugins.analysis.util.TreeStringBuilder;
 import hudson.plugins.findbugs.FindBugsMessages;
@@ -47,7 +46,7 @@ import hudson.plugins.findbugs.parser.XmlBugInstance;
  * @author Ulli Hafner
  */
 // CHECKSTYLE:COUPLING-OFF
-public class FindBugsParser implements IssueParser {
+public class FindBugsParser {
     /** Unique ID of this class. */
     private static final long serialVersionUID = 8306319007761954027L;
 
@@ -74,7 +73,6 @@ public class FindBugsParser implements IssueParser {
         this.isRankActivated = isRankActivated;
     }
 
-    @Override
     public Issues<Issue> parse(final File file, final Charset charset, final IssueBuilder builder) throws ParsingCanceledException, ParsingException {
         Collection<String> sources = new ArrayList<>();
         String moduleRoot = StringUtils.substringBefore(file.getAbsolutePath().replace('\\', '/'), "/target/");
