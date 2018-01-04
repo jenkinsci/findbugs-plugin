@@ -16,7 +16,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
-import org.apache.commons.digester3.Digester;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.dom4j.DocumentException;
@@ -36,6 +35,7 @@ import edu.umd.cs.findbugs.ba.SourceFinder;
 import edu.umd.cs.findbugs.cloud.Cloud;
 
 import hudson.plugins.analysis.core.AnnotationParser;
+import hudson.plugins.analysis.util.SecureDigester;
 import hudson.plugins.analysis.util.TreeStringBuilder;
 import hudson.plugins.analysis.util.model.FileAnnotation;
 import hudson.plugins.analysis.util.model.LineRange;
@@ -222,10 +222,7 @@ public class FindBugsParser implements AnnotationParser {
      *             signals that an I/O exception has occurred.
      */
     List<XmlBugInstance> preParse(final InputStream file) throws SAXException, IOException {
-        Digester digester = new Digester();
-        digester.setValidating(false);
-        digester.setClassLoader(FindBugsParser.class.getClassLoader());
-
+        SecureDigester digester = new SecureDigester(FindBugsParser.class);
         String rootXPath = "BugCollection/BugInstance";
         digester.addObjectCreate(rootXPath, XmlBugInstance.class);
         digester.addSetProperties(rootXPath);

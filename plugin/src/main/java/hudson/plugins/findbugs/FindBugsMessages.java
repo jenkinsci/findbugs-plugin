@@ -10,12 +10,13 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.commons.digester3.Digester;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.xml.sax.SAXException;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
+import hudson.plugins.analysis.util.SecureDigester;
 
 /**
  * Parses the FindBugs pattern descriptions and provides access to these HTML messages.
@@ -115,9 +116,7 @@ public final class FindBugsMessages {
      *             if we can't read the file
      */
     public List<Pattern> parse(final InputStream file) throws IOException, SAXException {
-        Digester digester = new Digester();
-        digester.setValidating(false);
-        digester.setClassLoader(FindBugsMessages.class.getClassLoader());
+        SecureDigester digester = new SecureDigester(FindBugsMessages.class);
 
         List<Pattern> patterns = new ArrayList<Pattern>();
         digester.push(patterns);
