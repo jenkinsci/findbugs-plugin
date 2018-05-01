@@ -61,7 +61,11 @@
               <relocations>
                 <relocation>
                   <pattern>org.apache.bcel</pattern>
-                  <shadedPattern>org.shaded.apache.bcel</shadedPattern>
+                  <shadedPattern>shaded.org.apache.bcel</shadedPattern>
+                </relocation>
+                <relocation>
+                  <pattern>org.dom4j.io</pattern>
+                  <shadedPattern>shaded.org.dom4j.io</shadedPattern>
                 </relocation>
               </relocations>
             </configuration>
