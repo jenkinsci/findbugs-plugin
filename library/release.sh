@@ -1,4 +1,4 @@
 git pull
-mvn -B -Djava.net.id=drulli -Dusername=drulli release:prepare release:perform
+mvn -B -Djava.net.id=drulli -Dusername=uhafner release:prepare release:perform
 
 
