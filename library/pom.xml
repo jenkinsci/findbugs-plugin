@@ -11,7 +11,7 @@
   <groupId>org.jvnet.hudson.plugins.findbugs</groupId>
   <artifactId>library</artifactId>
   <packaging>jar</packaging>
-  <version>3.0.1-SNAPSHOT</version>
+  <version>3.0.1</version>
   <name>FindBugs Plug-in shaded libraries</name>
 
   <properties>
@@ -104,6 +104,7 @@
     <connection>scm:git:git://github.com/jenkinsci/findbugs-plugin.git</connection>
     <developerConnection>scm:git:git@github.com:jenkinsci/findbugs-plugin.git</developerConnection>
     <url>https://github.com/jenkinsci/findbugs-plugin</url>
+    <tag>library-3.0.1</tag>
   </scm>
 
   <repositories>
