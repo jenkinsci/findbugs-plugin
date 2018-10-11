@@ -11,7 +11,7 @@
   <groupId>org.jvnet.hudson.plugins.findbugs</groupId>
   <artifactId>library</artifactId>
   <packaging>jar</packaging>
-  <version>3.0.0</version>
+  <version>3.0.2-SNAPSHOT</version>
   <name>FindBugs Plug-in shaded libraries</name>
 
   <properties>
