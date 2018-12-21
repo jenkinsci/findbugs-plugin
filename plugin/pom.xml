@@ -11,7 +11,7 @@
   <artifactId>findbugs</artifactId>
   <packaging>hpi</packaging>
   <name>FindBugs Plug-in</name>
-  <version>5.0.0</version>
+  <version>5.0.1-SNAPSHOT</version>
   <url>http://wiki.jenkins-ci.org/x/GYAs</url>
   <description>This plug-in generates the trend report for FindBugs,
     an open source program which uses static analysis to look for bugs
@@ -70,7 +70,7 @@
     <connection>scm:git:git://github.com/jenkinsci/${project.artifactId}-plugin.git</connection>
     <developerConnection>scm:git:git@github.com:jenkinsci/${project.artifactId}-plugin.git</developerConnection>
     <url>https://github.com/jenkinsci/${project.artifactId}-plugin</url>
-    <tag>findbugs-5.0.0</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <repositories>
