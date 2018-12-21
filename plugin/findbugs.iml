@@ -13,6 +13,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/resources" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/target/generated-sources/localizer" isTestSource="false" generated="true" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
@@ -61,7 +62,7 @@
     <orderEntry type="library" name="Maven: org.kohsuke:groovy-sandbox:1.10" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.jenkins-ci.modules:sshd:1.11" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.apache.sshd:sshd-core:0.14.0" level="project" />
-    <orderEntry type="library" name="Maven: org.jvnet.hudson.plugins.findbugs:library:3.0.3" level="project" />
+    <orderEntry type="library" name="Maven: org.jvnet.hudson.plugins.findbugs:library:4.0.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-digester3:3.2" level="project" />
     <orderEntry type="library" name="Maven: cglib:cglib:2.2.2" level="project" />
     <orderEntry type="library" name="Maven: asm:asm:3.3.1" level="project" />
