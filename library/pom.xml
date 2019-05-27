@@ -11,7 +11,7 @@
   <groupId>org.jvnet.hudson.plugins.findbugs</groupId>
   <artifactId>library</artifactId>
   <packaging>jar</packaging>
-  <version>5.0.0-SNAPSHOT</version>
+  <version>6.0.0-SNAPSHOT</version>
   <name>SpotBugs Plug-in shaded libraries</name>
 
   <properties>
