@@ -11,8 +11,8 @@
   <groupId>org.jvnet.hudson.plugins.findbugs</groupId>
   <artifactId>library</artifactId>
   <packaging>jar</packaging>
-  <version>4.0.1-SNAPSHOT</version>
-  <name>FindBugs Plug-in shaded libraries</name>
+  <version>5.0.0-SNAPSHOT</version>
+  <name>SpotBugs Plug-in shaded libraries</name>
 
   <properties>
     <project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
@@ -20,13 +20,13 @@
 
   <dependencies>
     <dependency>
-      <groupId>com.google.code.findbugs</groupId>
-      <artifactId>findbugs</artifactId>
-      <version>2.0.3</version>
+      <groupId>com.github.spotbugs</groupId>
+      <artifactId>spotbugs</artifactId>
+      <version>3.1.11</version>
       <exclusions>
         <exclusion>
-          <groupId>com.google.code.findbugs</groupId>
-          <artifactId>jsr305</artifactId>
+          <groupId>com.github.spotbugs</groupId>
+          <artifactId>spotbugs-annotations</artifactId>
         </exclusion>
         <exclusion>
           <groupId>com.google.code.findbugs</groupId>
@@ -50,7 +50,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
-        <version>1.3.1</version>
+        <version>3.1.0</version>
         <executions>
           <execution>
             <phase>package</phase>
@@ -62,6 +62,10 @@
                 <relocation>
                   <pattern>org.apache.bcel</pattern>
                   <shadedPattern>shaded.org.apache.bcel</shadedPattern>
+                </relocation>
+                <relocation>
+                  <pattern>org.objectweb.asm</pattern>
+                  <shadedPattern>shaded.org.objectweb.asm</shadedPattern>
                 </relocation>
                 <relocation>
                   <pattern>org.dom4j.io</pattern>
@@ -94,22 +98,13 @@
         </configuration>
       </plugin>
     </plugins>
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-release-plugin</artifactId>
-          <version>2.5.1</version>
-        </plugin>
-      </plugins>
-    </pluginManagement>
   </build>
 
   <scm>
     <connection>scm:git:git://github.com/jenkinsci/findbugs-plugin.git</connection>
     <developerConnection>scm:git:git@github.com:jenkinsci/findbugs-plugin.git</developerConnection>
     <url>https://github.com/jenkinsci/findbugs-plugin</url>
-    <tag>library-3.0.0</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <repositories>
