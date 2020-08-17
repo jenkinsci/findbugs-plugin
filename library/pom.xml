@@ -22,7 +22,7 @@
     <dependency>
       <groupId>com.github.spotbugs</groupId>
       <artifactId>spotbugs</artifactId>
-      <version>3.1.11</version>
+      <version>4.1.1</version>
       <exclusions>
         <exclusion>
           <groupId>com.github.spotbugs</groupId>
@@ -45,7 +45,7 @@
     <dependency>
       <groupId>xerces</groupId>
       <artifactId>xercesImpl</artifactId>
-      <version>2.11.0</version>
+      <version>2.12.0</version>
     </dependency>
   </dependencies>
 
